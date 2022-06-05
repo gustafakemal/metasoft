@@ -1,0 +1,129 @@
+@import url(https://fonts.googleapis.com/css2?family=Roboto:wght@300;400;500;700;900&display=swap);
+body {
+  font-family: "Roboto", sans-serif;
+  background-color: #fff;
+  box-sizing: border-box;
+  overflow-x: hidden;
+  font-size: 0.9rem;
+  line-height: 1.6;
+}
+
+.form-control::-webkit-input-placeholder {
+  /* Edge */
+  color: rgba(0, 0, 0, 0.3);
+}
+.form-control:-ms-input-placeholder {
+  /* Internet Explorer 10-11 */
+  color: rgba(0, 0, 0, 0.3);
+}
+.form-control::placeholder {
+  color: rgba(0, 0, 0, 0.3);
+}
+
+#page {
+  min-height: 100vh;
+  display: flex;
+  flex-direction: column;
+}
+
+.page-title-wrapper {
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  margin: 0 0 40px 0;
+  padding: 0;
+  border-bottom: 1px solid #eee;
+}
+.page-title-wrapper.no-border {
+  border: 0;
+}
+.page-title-wrapper .back-btn-icon {
+  display: block;
+  border: 1px solid #eee;
+  padding: 7px 15px;
+  color: #999;
+  border-radius: 3px;
+  text-transform: uppercase;
+  font-weight: 500;
+}
+.page-title-wrapper .back-btn-icon:hover {
+  text-decoration: none;
+  border: 1px solid #ddd;
+}
+.page-title {
+  flex: 1;
+  margin: 0;
+  padding: 0 0 15px 0;
+  font-size: 24px;
+  font-weight: 900;
+}
+
+.main-menu {
+  margin: 40px 0 0 0;
+  padding: 0 25px;
+}
+.main-menu ul {
+  list-style: none;
+  padding: 0;
+}
+.main-menu ul li a {
+  color: #222;
+  font-weight: 500;
+  display: block;
+  padding: 3px 0 3px 20px;
+  position: relative;
+  transition: all 0.3s ease;
+}
+.main-menu ul li a:before {
+  font-family: "Font Awesome 5 Free";
+  position: absolute;
+  font-weight: 900;
+  left: 0;
+  top: 2px;
+  opacity: .5;
+  content: "\f101";
+  transition: all 0.3s ease;
+}
+.main-menu ul li a:hover,
+.main-menu ul li.active a {
+  text-decoration: none;
+  padding: 3px 0 3px 25px;
+  /*opacity: .7;*/
+  color: #729be9;
+}
+.main-menu ul li a:hover:before,
+.main-menu ul li.active a:before {
+  left: 5px;
+}
+
+#customerForm .modal-footer {
+  justify-content: space-between;
+}
+
+#customerForm button[name="submit"]:disabled {
+  background-color: #ccc;
+  color: #999;
+  border-color: #999;
+}
+#customerForm button[name="cancel"]:disabled {
+  color: #ccc !important;
+}
+
+.spinner-icon {
+  display: flex;
+  align-items: center;
+}
+.spinner-icon span {
+  display: inline-block;
+}
+.spinner-icon .caption {
+  margin: 0 0 0 15px;
+  font-weight: 500;
+}
+
+@media only screen and (max-width: 1120px) {
+}
+@media only screen and (max-width: 992px) {
+}
+@media only screen and (max-width: 768px) {
+}

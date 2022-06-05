@@ -8,6 +8,10 @@ body {
   line-height: 1.6;
 }
 
+.form-control {
+  font-size: inherit;
+}
+
 .form-control::-webkit-input-placeholder {
   /* Edge */
   color: rgba(0, 0, 0, 0.3);
@@ -26,41 +30,109 @@ body {
   flex-direction: column;
 }
 
-.page-title-wrapper {
-  display: flex;
-  justify-content: center;
-  align-items: center;
-  margin: 0 0 40px 0;
-  padding: 0;
-  border-bottom: 1px solid #eee;
+.page-container {
+  height: 100%;
+  margin: auto;
 }
-.page-title-wrapper.no-border {
-  border: 0;
+.login-wrapper .login-box {
+  width: 450px;
 }
-.page-title-wrapper .back-btn-icon {
-  display: block;
+.login-wrapper .login-box {
   border: 1px solid #eee;
-  padding: 7px 15px;
-  color: #999;
-  border-radius: 3px;
+  border-radius: 5px;
+  padding: 30px 35px;
+  box-shadow: 0px 2px 2px 0px rgba(0,0,0,0.2);
+  -webkit-box-shadow: 0px 0px 5px 0px rgba(0,0,0,0.2);
+  -moz-box-shadow: 0px 2px 2px 0px rgba(0,0,0,0.2);
+}
+.login-wrapper .login-box .title {
+  font-weight: 700;
+  font-size: 24px;
+  margin: 0 0 30px 0;
   text-transform: uppercase;
+  padding: 0;
+}
+.login-wrapper .login-box label {
   font-weight: 500;
+  margin-bottom: 4px;
 }
-.page-title-wrapper .back-btn-icon:hover {
-  text-decoration: none;
-  border: 1px solid #ddd;
+.login-wrapper .copyright,
+.login-wrapper .logo {
+  text-align: center;
 }
-.page-title {
+.login-wrapper .logo {
+  margin: 0 0 30px 0;
+}
+.login-wrapper .copyright {
+  margin: 30px 0 0 0;
+  font-size: 85%;
+  color: rgba(0,0,0,.5);
+}
+
+.app-header {
+  position: fixed;
+  top: 0;
+  left: 0;
+  width: 100%;
+  height: 90px;
+  z-index: 99;
+  background-color: #644c32;
+  padding: 0 55px;
+  display: flex;
+  justify-content: space-around;
+  align-items: center;
+  box-shadow: 0px 2px 5px 0px rgba(0,0,0,0.7);
+  -webkit-box-shadow: 0px 2px 5px 0px rgba(0,0,0,0.2);
+  -moz-box-shadow: 0px 2px 5px 0px rgba(0,0,0,0.3);
+}
+.app-header .sidebar-nav {
+  margin: 0 20px 0;
+  cursor: pointer;
+  color: rgba(255,255,255,1);
+}
+.app-header .top-nav {
   flex: 1;
-  margin: 0;
+  text-align: right;
+  color: #fff;
+}
+
+.sidebar {
+  position: fixed;
+  top: 90px;
+  left: 0;
+  height: calc(100% - 90px);
+  width: 240px;
+  overflow: hidden;
+  z-index: 89;
+  border-right: 2px solid #e8d4be;
+  background-color: #eee;
+}
+
+.content-wrapper {
+  width: calc(100% - 240px);
+  margin-left: 240px;
+  margin-top: 90px;
+  min-height: calc(100vh - 90px);
+  display: flex;
+  flex-direction: column;
+}
+
+.content {
+  padding: 20px 30px;
+  flex: 1;
+}
+
+.page-title {
+  margin: 0 0 40px 0;
   padding: 0 0 15px 0;
   font-size: 24px;
   font-weight: 900;
+  border-bottom: 1px solid #eee;
 }
 
 .main-menu {
   margin: 40px 0 0 0;
-  padding: 0 25px;
+  padding: 0 20px;
 }
 .main-menu ul {
   list-style: none;
@@ -69,16 +141,19 @@ body {
 .main-menu ul li a {
   color: #222;
   font-weight: 500;
-  display: block;
-  padding: 3px 0 3px 20px;
+  display: inline-block;
+  padding: 3px 15px 3px 30px;
+  background-color: transparent;
+  margin-bottom: 1px;
+  border-radius: 5px;
   position: relative;
-  transition: all 0.3s ease;
+  transition: all 0.1s ease;
 }
 .main-menu ul li a:before {
   font-family: "Font Awesome 5 Free";
   position: absolute;
   font-weight: 900;
-  left: 0;
+  left: 10px;
   top: 2px;
   opacity: .5;
   content: "\f101";
@@ -87,17 +162,19 @@ body {
 .main-menu ul li a:hover,
 .main-menu ul li.active a {
   text-decoration: none;
-  padding: 3px 0 3px 25px;
-  /*opacity: .7;*/
-  color: #729be9;
-}
-.main-menu ul li a:hover:before,
-.main-menu ul li.active a:before {
-  left: 5px;
+  background-color: rgba(100,76,50, .3);
 }
 
 #customerForm .modal-footer {
   justify-content: space-between;
+}
+#customerForm .modal-body {
+  background-color: #f9f9f9;
+  padding: 20px 30px;
+}
+#customerForm .modal-body label {
+  font-weight: 500;
+  margin-bottom: 4px;
 }
 
 #customerForm button[name="submit"]:disabled {
@@ -119,6 +196,41 @@ body {
 .spinner-icon .caption {
   margin: 0 0 0 15px;
   font-weight: 500;
+}
+
+.btn-add:before,
+.btn-save:before {
+  font-family: "Font Awesome 5 Free";
+  position: absolute;
+  font-weight: 700;
+  font-size: 20px;
+  top: 0;
+  left: 10px;
+}
+.btn-add:before {
+  content: "\f055";
+}
+.btn-add,
+.btn-save {
+  position: relative;
+  text-transform: uppercase;
+  padding-left: 36px;
+  font-size: 14px;
+  font-weight: 500;
+}
+.btn-save:before {
+  content: "\f0c7";
+}
+
+.app-footer {
+  margin: 30px 0 0 0;
+  padding: 0 30px;
+}
+.app-footer .copyright {
+  border-top: 1px solid #eee;
+  padding: 30px 0;
+  font-size: 85%;
+  color: rgba(0,0,0,.5);
 }
 
 @media only screen and (max-width: 1120px) {

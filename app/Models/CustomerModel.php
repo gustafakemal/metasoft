@@ -38,4 +38,17 @@ class CustomerModel extends Model
 
         return (int)$query->getResult()[0]->NoPemesan;
     }
+
+    public function updateById($NoPemesan, $data)
+    {
+        return $this->where('NoPemesan', $NoPemesan)
+                    ->set($data)
+                    ->update();
+    }
+
+    public function deleteById($NoPemesan)
+    {
+        return $this->where('NoPemesan', $NoPemesan)
+                    ->delete();
+    }
 }

@@ -6,13 +6,12 @@
 
 <?= $this->section('content')?>
 
-<div class="page-title-wrapper">
-    <h3 class="page-title"><?= $page_title;?></h3>
-</div>
+<h3 class="page-title"><?= $page_title;?></h3>
 
-<div class="row">
-	<div class="col-lg-12 col-sm-12">
-		
+<?php if(session()->has('success')) : ?>
+	<div class="alert alert-success"><?= session()->get('success');?></div>
+<?php endif;?>
+
 		<table id="customerList" class="table table-bordered table-striped" style="width: 100%">
 			<thead>
 				<tr>
@@ -26,94 +25,79 @@
 			</thead>
 		</table>
 
-	</div>
-</div>
-
 <!-- Modal -->
 <div class="modal fade" id="customerForm" tabindex="-1" aria-labelledby="customerFormLabel" aria-hidden="true">
 	<div class="modal-dialog modal-lg">
-		<form name="addCustomer">
-
+		<form>
+			<input type="hidden" name="NoPemesan" value="" />
 			<div class="modal-content">
 				<div class="modal-header">
-					<h5 class="modal-title" id="customerFormLabel">Modal title</h5>
+					<h5 class="modal-title" id="customerFormLabel"></h5>
 					<button type="button" class="close" data-dismiss="modal" aria-label="Close">
 						<span aria-hidden="true">&times;</span>
 					</button>
 				</div>
 				<div class="modal-body">
-					<div class="form-group row">
-						<label for="namaPemesan" class="col-sm-4 col-form-label">Nama pemesan</label>
-						<div class="col-sm-8">
-							<input name="NamaPemesan" type="text" class="form-control" id="namaPemesan">
+					<div class="msg"></div>
+					<div class="row">
+						<div class="col-6">
+							<div class="form-group">
+								<label for="namaPemesan">Nama pemesan</label>
+								<input name="NamaPemesan" type="text" class="form-control" id="namaPemesan">
+							</div>
+							<div class="form-group">
+								<label for="alamat">Alamat</label>
+								<textarea name="Alamat" rows="4" class="form-control" id="alamat"></textarea>
+							</div>
+							<div class="form-group">
+								<label for="noTelp">No Telp</label>
+								<input name="NoTelp" type="text" class="form-control" id="noTelp">
+							</div>
+							<div class="form-group">
+								<label for="noFax">No Fax</label>
+								<input name="NoFax" type="text" class="form-control" id="noFax">
+							</div>
+							<div class="form-group">
+								<label for="contactPerson1">Contact person 1</label>
+								<input name="ContactPerson1" type="text" class="form-control" id="contactPerson1">
+							</div>
+							<div class="form-group">
+								<label for="contactPerson2">Contact person 2</label>
+								<input name="ContactPerson2" type="text" class="form-control" id="contactPerson2">
+							</div>
+
+
 						</div>
-					</div>
-					<div class="form-group row">
-						<label for="alamat" class="col-sm-4 col-form-label">Alamat</label>
-						<div class="col-sm-8">
-							<input name="Alamat" type="text" class="form-control" id="alamat">
-						</div>
-					</div>
-					<div class="form-group row">
-						<label for="noTelp" class="col-sm-4 col-form-label">No Telp</label>
-						<div class="col-sm-8">
-							<input name="NoTelp" type="text" class="form-control" id="noTelp">
-						</div>
-					</div>
-					<div class="form-group row">
-						<label for="noFax" class="col-sm-4 col-form-label">No Fax</label>
-						<div class="col-sm-8">
-							<input name="NoFax" type="text" class="form-control" id="noFax">
-						</div>
-					</div>
-					<div class="form-group row">
-						<label for="contactPerson1" class="col-sm-4 col-form-label">Contact person 1</label>
-						<div class="col-sm-8">
-							<input name="ContactPerson1" type="text" class="form-control" id="contactPerson1">
-						</div>
-					</div>
-					<div class="form-group row">
-						<label for="contactPerson2" class="col-sm-4 col-form-label">Contact person 2</label>
-						<div class="col-sm-8">
-							<input name="ContactPerson2" type="text" class="form-control" id="contactPerson2">
-						</div>
-					</div>
-					<div class="form-group row">
-						<label for="wajibPajak" class="col-sm-4 col-form-label">Wajib pajak</label>
-						<div class="col-sm-8">
-							<input name="WajibPajak" type="text" class="form-control" id="wajibPajak">
-						</div>
-					</div>
-					<div class="form-group row">
-						<label for="npwp" class="col-sm-4 col-form-label">NPWP</label>
-						<div class="col-sm-8">
-							<input name="NPWP" type="text" class="form-control" id="npwp">
-						</div>
-					</div>
-					<div class="form-group row">
-						<label for="alamatPengiriman1" class="col-sm-4 col-form-label">Alamat pengiriman 1</label>
-						<div class="col-sm-8">
-							<input name="AlamatPengiriman1" type="text" class="form-control" id="alamatPengiriman1">
-						</div>
-					</div>
-					<div class="form-group row">
-						<label for="alamatPengiriman2" class="col-sm-4 col-form-label">Alamat pengiriman 2</label>
-						<div class="col-sm-8">
-							<input name="AlamatPengiriman2" type="text" class="form-control" id="alamatPengiriman2">
-						</div>
-					</div>
-					<div class="form-group row">
-						<label for="alamatPenagihan" class="col-sm-4 col-form-label">Alamat penagihan</label>
-						<div class="col-sm-8">
-							<input name="AlamatPenagihan" type="text" class="form-control" id="alamatPenagihan">
+						<div class="col-6">
+							<div class="form-group">
+								<label for="wajibPajak">Wajib pajak</label>
+								<input name="WajibPajak" type="text" class="form-control" id="wajibPajak">
+							</div>
+							<div class="form-group">
+								<label for="npwp">NPWP</label>
+								<input name="NPWP" type="text" class="form-control" id="npwp">
+							</div>
+							<div class="form-group">
+								<label for="alamatPengiriman1">Alamat pengiriman 1</label>
+								<textarea name="AlamatPengiriman1" rows="3" class="form-control" id="alamatPengiriman1"></textarea>
+							</div>
+							<div class="form-group">
+								<label for="alamatPengiriman2">Alamat pengiriman 2</label>
+								<textarea name="AlamatPengiriman2" rows="3" class="form-control" id="alamatPengiriman2"></textarea>
+							</div>
+							<div class="form-group">
+								<label for="alamatPenagihan">Alamat penagihan</label>
+								<textarea name="AlamatPenagihan" rows="3" class="form-control" id="alamatPenagihan"></textarea>
+							</div>
+
 						</div>
 					</div>
 				</div>
 				<div class="modal-footer">
 					<div class="loading-indicator"></div>
 					<div class="form-navigation">
-						<button name="submit" type="submit" class="btn btn-primary">Simpan</button>
-						<button name="cancel" type="button" class="btn btn-link text-danger" data-dismiss="modal">Batal</button>
+						<button name="submit" type="submit" class="btn btn-primary btn-save">Simpan</button>
+						<button name="cancel" type="button" class="btn btn-link btn-cancel text-danger" data-dismiss="modal">Batal</button>
 					</div>
 				</div>
 			</div>

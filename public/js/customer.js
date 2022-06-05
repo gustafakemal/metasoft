@@ -18,11 +18,11 @@ $(function () {
 		order: [[ 1, 'desc' ]],
 		createdRow: function (row, data, dataIndex) {
 			$(row).find("td:eq(0)").attr("data-label", "No");
-			$(row).find("td:eq(1)").attr("data-label", "SPMB");
-			$(row).find("td:eq(2)").attr("data-label", "Site");
-			$(row).find("td:eq(3)").attr("data-label", "Step1");
-			$(row).find("td:eq(4)").attr("data-label", "Step2");
-			$(row).find("td:eq(5)").attr("data-label", "Step3");
+			$(row).find("td:eq(1)").attr("data-label", "Tanggal dibuat");
+			$(row).find("td:eq(2)").attr("data-label", "Nama Pemesan");
+			$(row).find("td:eq(3)").attr("data-label", "Contact person");
+			$(row).find("td:eq(4)").attr("data-label", "Wajib pajak");
+			$(row).find("td:eq(5)").attr("data-label", "&nbsp;");
 		},
 		initComplete: function () {
 			const btn = `<a href="#" class="btn btn-primary btn-add mr-2 add-customer-btn">Add customer</a>`;
@@ -58,18 +58,23 @@ $(function () {
 
 	$('.add-customer-btn').on('click', function(e) {
 		e.preventDefault();
-		$('#customerForm').modal('show')
+		$('#customerForm').modal({
+			show: true,
+			backdrop: 'static'
+		})
+		$('#customerForm form').attr('name', 'addCustomer')
+		$('#customerForm .modal-title').html('Add customer')
 	})
 
 	$('#customerForm').on('submit', 'form[name="addCustomer"]', function(e) {
 		e.preventDefault();
-		const formObj = new FormData(this);
+		const formData = new FormData(this);
 
 		$.ajax({
 			type: "POST",
 			url: `${HOST}/customer/apiAddProcess`,
 			dataType: 'JSON',
-			data: formObj,
+			data: formData,
 			contentType: false,
 			processData: false,
 			beforeSend: function () {
@@ -78,20 +83,32 @@ $(function () {
 						'<span class="spinner-border text-info"></span>' +
 						'<span class="caption">Memproses data...</span>' +
 					'</div>')
-				$('form[name="addCustomer"] input, form[name="addCustomer"] button').attr('disabled', true)
+				$('form[name="addCustomer"] input, form[name="addCustomer"] textarea, form[name="addCustomer"] button').attr('disabled', true)
 			},
 			success: function (response) {
-				console.log(response)
+				if(response.success) {
+					location.reload();
+				} else {
+					$('#customerForm .msg').html(`<div class="alert alert-danger">${response.msg}</div>`)
+					$('#customerForm, html, body').animate({
+						scrollTop: 0
+					}, 500);
+				}
 			},
 			error: function () {},
 			complete: function () {
 				$('#customerForm .modal-footer .loading-indicator').html('');
-				$('form[name="addCustomer"] input, form[name="addCustomer"] button').attr('disabled', false)
+				$('form[name="addCustomer"] input, form[name="addCustomer"] textarea, form[name="addCustomer"] button').attr('disabled', false)
 			}
 		})
 	})
 
-	$('#customerList').on('click', '.customer-detail', function(e) {
+	$('#customerForm').on('hidden.bs.modal', function (event) {
+		$('#customerForm form[name="addCustomer"], #customerForm form[name="editCustomer"]')[0].reset();
+		$('#customerForm .msg').html('')
+	})
+
+	$('#customerList').on('click', '.item-detail', function(e) {
 		e.preventDefault();
 		$('#customerDetail').modal('show')
 		const noPemesan = $(this).attr('data-id')
@@ -113,4 +130,72 @@ $(function () {
 		})
 	})
 
+	$('#customerList').on('click', '.item-edit', function(e) {
+		e.preventDefault();
+		$('#customerForm').modal({
+			show: true,
+			backdrop: 'static'
+		})
+		$('#customerForm .modal-title').html('Edit customer')
+		$('#customerForm form').attr('name', 'editCustomer')
+
+		const noPemesan = $(this).attr('data-id')
+		$('#customerForm form input[name="NoPemesan"]').val(noPemesan)
+
+		$.ajax({
+			type: "POST",
+			url: `${HOST}/customer/apiGetById`,
+			dataType: 'JSON',
+			data: { noPemesan },
+			beforeSend: function () {},
+			success: function (response) {
+				console.log(response)
+				if(response.success) {
+					for(const property in response.data) {
+						$(`#customerForm input[name="${property}"], #customerForm textarea[name="${property}"]`).val(response.data[property])
+					}
+				}
+			},
+			error: function () {},
+			complete: function () {}
+		})
+	});
+
+	$('#customerForm').on('submit', 'form[name="editCustomer"]', function(e) {
+		e.preventDefault();
+		const formData = new FormData(this);
+
+		$.ajax({
+			type: "POST",
+			url: `${HOST}/customer/apiEditProcess`,
+			dataType: 'JSON',
+			data: formData,
+			contentType: false,
+			processData: false,
+			beforeSend: function () {
+				$('#customerForm .modal-footer .loading-indicator').html(
+					'<div class="spinner-icon">' +
+						'<span class="spinner-border text-info"></span>' +
+						'<span class="caption">Memproses data...</span>' +
+					'</div>')
+				$('form[name="editCustomer"] input, form[name="editCustomer"] textarea, form[name="editCustomer"] button').attr('disabled', true)
+			},
+			success: function (response) {
+				console.log(response)
+				if(response.success) {
+					location.reload();
+				} else {
+					$('#customerForm .msg').html(`<div class="alert alert-danger">${response.msg}</div>`)
+					$('#customerForm, html, body').animate({
+						scrollTop: 0
+					}, 500);
+				}
+			},
+			error: function () {},
+			complete: function () {
+				$('#customerForm .modal-footer .loading-indicator').html('');
+				$('form[name="editCustomer"] input, form[name="editCustomer"] textarea, form[name="editCustomer"] button').attr('disabled', false)
+			}
+		})
+	})
 });

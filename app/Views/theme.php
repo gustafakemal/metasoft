@@ -28,7 +28,19 @@
                 <img src="<?= site_url('images/logo.png');?>" alt="" />
             </div>
             <div class="top-nav">
-                Hallo alfin
+                
+                <div class="account-nav dropdown">
+                    <button type="button" class="dropdown-toggle" data-toggle="dropdown">
+                        <div class="name">
+                            Halo Alfin
+                        </div>
+                        <div class="dropdown-menu dropdown-menu-right">
+                            <a href="#" class="dropdown-item">Profil</a>
+                            <a href="#" class="dropdown-item">Logout</a>
+                        </div>
+                    </button>
+                </div>
+
             </div>
         </header>
 

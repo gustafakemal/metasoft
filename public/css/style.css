@@ -95,6 +95,75 @@ body {
   text-align: right;
   color: #fff;
 }
+.top-nav .account-nav {
+  text-align: right;
+  display: flex;
+  justify-content: right;
+}
+.top-nav .account-nav.show .dropdown-toggle {
+  border: 1px solid transparent;
+  color: #222;
+}
+.top-nav .account-nav.show .dropdown-toggle:hover {
+  border: 1px solid transparent;
+}
+.top-nav .account-nav.show .dropdown-menu {
+  border-radius: 0;
+  border: 0;
+  border-left: 1px solid rgba(0,0,0,.15);
+  border-right: 1px solid rgba(0,0,0,.15);
+  border-bottom: 1px solid rgba(0,0,0,.15);
+  font-size: inherit;
+  background-clip: inherit;
+}
+.top-nav .account-nav.show .dropdown-menu.show {
+  top: 27px !important;
+}
+.top-nav .account-nav .dropdown-toggle {
+  border: 1px solid transparent;
+  background-color: transparent;
+  display: flex;
+  padding: 4px 10px;
+  border-radius: 3px;
+  color: #fff;
+}
+.top-nav .account-nav .dropdown-toggle:after {
+  margin-top: 10px;
+  margin-left: 10px;
+}
+.top-nav .account-nav .dropdown-toggle:hover {
+  border: 1px solid transparent;
+}
+.top-nav .account-nav .dropdown-toggle .icon {
+  margin: 0 10px 0 0;
+}
+.top-nav .account-nav .dropdown-toggle .fungsi {
+  font-weight: 700;
+}
+.top-nav .account-nav .dropdown-toggle .dropdown-menu.show .dropdown-item {
+  transition: all .5s ease;
+}
+.top-nav .account-nav .dropdown-toggle .dropdown-menu.show .dropdown-item.active {
+  background-color: transparent;
+  color: inherit;
+  font-weight: 700;
+  padding-left: 25px;
+  position: relative;
+}
+.top-nav .account-nav .dropdown-toggle .dropdown-menu.show .dropdown-item.active:before {
+  font-family: "Font Awesome 5 Free";
+  position: absolute;
+  font-weight: 900;
+  left: 7px;
+  top: 8px;
+  font-size: 80%;
+  color: rgba(0,0,0,.5);
+  content: "\f08d";
+}
+.top-nav .account-nav .dropdown-toggle .dropdown-menu.show .dropdown-item:hover {
+  background-color: transparent;
+  color: rgba(0,0,0,.5);
+}
 
 .sidebar {
   position: fixed;
@@ -106,6 +175,10 @@ body {
   z-index: 89;
   border-right: 2px solid #e8d4be;
   background-color: #eee;
+  transition: left .3s ease;
+}
+.sidebar.hide {
+  left: -240px;
 }
 
 .content-wrapper {
@@ -115,6 +188,11 @@ body {
   min-height: calc(100vh - 90px);
   display: flex;
   flex-direction: column;
+  transition: margin-left .3s ease, width .3s ease;
+}
+.content-wrapper.wide {
+  margin-left: 0;
+  width: 100%;
 }
 
 .content {

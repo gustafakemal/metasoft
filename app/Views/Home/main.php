@@ -13,18 +13,7 @@
 <div class="row">
 	<div class="col-lg-12 col-sm-12">
 		
-		<table id="customerList" class="table table-bordered table-striped" style="width: 100%">
-			<thead>
-				<tr>
-					<th style="width: 25px;">No</th>
-					<th>Tanggal dibuat</th>
-					<th>Nama Pemesan</th>
-					<th>Contact person</th>
-					<th>Wajib pajak</th>
-					<th>&nbsp;</th>
-				</tr>
-			</thead>
-		</table>
+		Dashboard
 
 	</div>
 </div>

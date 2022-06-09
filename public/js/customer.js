@@ -11,10 +11,10 @@ $(function () {
 			"targets": [0, 5]
 		},{
 			"width": 60,
-			"targets": 5
+			"targets": 18
 		},{
 			"width": 150,
-			"targets": 1
+			"targets": 2
 		},{
 			"visible": false,
 			"targets": [1,4, 5, 6, 8, 10, 11, 12, 13, 14, 15, 16, 17]

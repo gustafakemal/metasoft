@@ -16,10 +16,23 @@
 			<thead>
 				<tr>
 					<th style="width: 25px;">No</th>
+					<th>No Pemesan</th>
 					<th>Tanggal dibuat</th>
 					<th>Nama Pemesan</th>
+					<th>Alamat</th>
+					<th>No Fax</th>
+					<th>No Telp</th>
 					<th>Contact person</th>
+					<th>Contact person 2</th>
 					<th>Wajib pajak</th>
+					<th>NPWP</th>
+					<th>Alamat pengiriman 1</th>
+					<th>Alamat pengiriman 2</th>
+					<th>Alamat penagihan</th>
+					<th>Flag aktif</th>
+					<th>Create By</th>
+					<th>Update By</th>
+					<th>Last update</th>
 					<th>&nbsp;</th>
 				</tr>
 			</thead>

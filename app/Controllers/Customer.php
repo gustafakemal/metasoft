@@ -31,10 +31,23 @@ class Customer extends BaseController
             $hapus = '<a href="'.site_url('customer/delete/'.$value->NoPemesan).'" onclick="return confirm(\'Apa Anda yakin menghapus user ini?\')" title="Delete"><i class="fas fa-trash-alt"></i></a>';
     		$data[] = [
     			$key + 1,
+                $value->NoPemesan,
     			$value->CreateDate,
     			$value->NamaPemesan,
+                $value->Alamat,
+                $value->NoFax,
+                $value->NoTelp,
     			$value->ContactPerson1,
+                $value->ContactPerson2,
     			$value->WajibPajak,
+                $value->NPWP,
+                $value->AlamatPengiriman1,
+                $value->AlamatPengiriman2,
+                $value->AlamatPenagihan,
+                $value->FlagAktif,
+                $value->CreateBy,
+                $value->UpdateBy,
+                $value->LastUpdate,
     			$detail . $edit . $hapus
     		];
     	}

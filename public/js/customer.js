@@ -15,6 +15,9 @@ $(function () {
 		},{
 			"width": 150,
 			"targets": 1
+		},{
+			"visible": false,
+			"targets": [1,4, 5, 6, 8, 10, 11, 12, 13, 14, 15, 16, 17]
 		}],
 		order: [[ 1, 'desc' ]],
 		createdRow: function (row, data, dataIndex) {

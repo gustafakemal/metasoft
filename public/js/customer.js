@@ -4,6 +4,7 @@ $(function () {
 
 	$("#customerList").DataTable({
 		data: customerData,
+        buttons: ['excel'],
 		columnDefs: [{
 			"searchable": false,
 			"orderable": false,
@@ -25,15 +26,20 @@ $(function () {
 			$(row).find("td:eq(5)").attr("data-label", "&nbsp;");
 		},
 		initComplete: function () {
-			const btn = `<a href="#" class="btn btn-primary btn-add mr-2 add-customer-btn">Add customer</a>`;
-			$("#customerList_wrapper .dataTables_length").prepend(btn);
+			const dropdown = `<div class="dropdown d-inline mr-2">` +
+								`<button class="btn btn-primary dropdown-toggle" type="button" id="customersDropdown" data-toggle="dropdown" aria-expanded="false"><i class="fas fa-cog"></i></button>` +
+								`<div class="dropdown-menu" aria-labelledby="customersDropdown">` +
+								`<a class="dropdown-item customers-reload" href="#">Reload data</a>` +
+								`<a class="dropdown-item customers-to-csv" href="#">Export to excel</a>` +
+							`</div>` +
+						`</div>`
+			const add_btn = `<a href="#" class="btn btn-primary btn-add mr-2 add-customer-btn">Add customer</a>`;
+			$("#customerList_wrapper .dataTables_length").prepend(dropdown + add_btn);
 		},
 	});
 
 	setTimeout(() => {
-		$.ajax({
-			type: "POST",
-			url: `${HOST}/customer/apiGetAll`,
+		const obj = {
 			beforeSend: function () {
 				$('#customerList .dataTables_empty').html('<div class="spinner-icon"><span class="spinner-grow text-info"></span><span class="caption">Fetching data...</span></div>')
 			},
@@ -45,8 +51,10 @@ $(function () {
 			error: function () {
 				$('#customerList .dataTables_empty').html('Data gagal di retrieve.')
 			},
-			complete: function () {}
-		})
+			complete: function() {}
+		}
+
+		getAllCustomers(obj);
 	}, 50)
 
 	$('#customerList').DataTable().on( 'order.dt search.dt', function () {
@@ -198,4 +206,42 @@ $(function () {
 			}
 		})
 	})
+
+	$('.customers-to-csv').on('click', function(e) {
+		e.preventDefault();
+		$("#customerList").DataTable().button( '.buttons-excel' ).trigger();
+	})
+
+	$('.customers-reload').on('click', function(e) {
+		e.preventDefault();
+		const obj = {
+			beforeSend: function () {
+				$('#statusList').DataTable().clear();
+				$('#statusList').DataTable().draw();
+				$('#customerList .dataTables_empty').html('<div class="spinner-icon"><span class="spinner-grow text-info"></span><span class="caption">Fetching data...</span></div>')
+			},
+			success: function (response) {
+				$('#customerList').DataTable().clear();
+				$('#customerList').DataTable().rows.add(response);
+				$('#customerList').DataTable().draw();
+			},
+			error: function () {
+				$('#customerList .dataTables_empty').html('Data gagal di retrieve.')
+			},
+			complete: function() {}
+		}
+		getAllCustomers(obj);
+	})
 });
+
+function getAllCustomers(obj)
+{
+	$.ajax({
+		type: "POST",
+		url: `${HOST}/customer/apiGetAll`,
+		beforeSend: obj.beforeSend,
+		success: obj.success,
+		error: obj.error,
+		complete: obj.complete
+	})
+}

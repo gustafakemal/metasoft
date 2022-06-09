@@ -4,8 +4,8 @@
 
 Untuk instalasi:
 
-- Clone project dengan perintah `git clone https://github.com/alfisahr/goman-mis-spmb.git`
-- Akan ada folder `goman-mis-spmb`. Silahkan rename folder tsb sesuai yang dikehendaki, misalkan `spmb`
+- Clone project dengan perintah `git clone https://github.com/alfisahr/metasoft.git`
+- Akan ada folder `metasoft`. Silahkan rename folder tsb sesuai yang dikehendaki, misalkan `metaform`
 - Jalankan perintah `composer install` untuk menginstall dependency
 - Buat file `.env` dengan kode kurang lebih spt ini
 ```
@@ -14,21 +14,17 @@ CI_ENVIRONMENT = production
 # Masukkan URL
 app.baseURL = 'http://10.14.80.13/metaform/'
 
-# Iframe untuk link di bawah, true untuk mengaktifkan
-app.bottomFrame = false
-
-database.default.DSN = sqlsrv:Server=PRINTING,5000;Database=BekalDB
-database.default.hostname = PRINTING
-database.default.database = BekalDB
-database.default.username = 
-database.default.password = 
+database.default.hostname = 10.14.80.54
+database.default.database = MetaProduksi
+database.default.username = developer
+database.default.password = Developer2022
 database.default.DBDriver = sqlsrv
-database.default.port = 5000
+database.default.port = 1433
 database.default.DBPrefix =
 ```
-- Jika ingin me-running aplikasi dengan subfolder, contohnya `http://localhost/spmb` atau `http://10.14.83.2/spmb` silahkan ubah file `.htaccess` di `public/.htaccess` menjadi spt ini:
+- Jika ingin me-running aplikasi dengan subfolder, contohnya `http://localhost/metaform` atau `http://10.14.80.13/metaform` silahkan ubah file `.htaccess` di `public/.htaccess` menjadi spt ini:
 ```
-# spmb/public/.htacess
+# metasoft/public/.htacess
 
 RewriteEngine on
 
@@ -45,7 +41,7 @@ RewriteRule (.*) index.php/$1 [L]
 ```
 Kemudian tambahkan pula file `.htaccess` baru di root aplikasi, dengan kode spt ini:
 ```
-# spmb/.htacess
+# metasoft/.htacess
 
 DirectoryIndex index.php
 Options -Indexes

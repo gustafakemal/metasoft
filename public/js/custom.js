@@ -2,7 +2,7 @@ $(function () {
 
   $('.sidebar-nav .burger-icon').tooltip({
     title: function() {
-      return ($(this).hasClass('active')) ? 'Hide sidebar' : 'Show sidebar'
+      return ($(this).hasClass('active')) ? 'Hilangkan sidebar' : 'Tampilkan sidebar'
     },
   });
 

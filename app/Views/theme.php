@@ -36,7 +36,7 @@
                         </div>
                         <div class="dropdown-menu dropdown-menu-right">
                             <a href="#" class="dropdown-item">Profil</a>
-                            <a href="#" class="dropdown-item">Logout</a>
+                            <a href="<?= site_url('logout');?>" class="dropdown-item">Logout</a>
                         </div>
                     </button>
                 </div>

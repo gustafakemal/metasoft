@@ -38,15 +38,18 @@
 
                         <div class="form-group">
                             <label for="username">Username</label>
-                            <input value="dummy" name="username" type="text" class="form-control" id="username">
+                            <input name="username" type="text" class="form-control" id="username">
                         </div>
                         <div class="form-group">
                             <label for="password">Password</label>
-                            <input value="dummy" name="password" type="password" class="form-control" id="password">
+                            <input name="password" type="password" class="form-control" id="password">
                         </div>
                         <div class="form-group">
                             <button type="submit" name="login" class="btn btn-primary">Login</button>
                         </div>
+                        <p class="text-muted">
+                            Masukkan dengan UserID berikut passwordnya.
+                        </p>
                     </form>
                 </div>
 

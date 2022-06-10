@@ -246,7 +246,8 @@ body {
 #customerForm .modal-footer {
   justify-content: space-between;
 }
-#customerForm .modal-body {
+#customerForm .modal-body,
+#customerDetail .modal-body {
   background-color: #f9f9f9;
   padding: 20px 30px;
 }
@@ -263,6 +264,18 @@ body {
 #customerForm button[name="cancel"]:disabled {
   color: #ccc !important;
 }
+
+#customerDetail .item {
+  margin: 0 0 20px 0;
+}
+#customerDetail .item label {
+  text-transform: uppercase;
+  color: rgba(0,0,0,.4);
+  font-weight: 600;
+  font-size: 80%;
+  margin: 0 0 3px 0;
+}
+
 
 .spinner-icon {
   display: flex;

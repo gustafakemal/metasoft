@@ -55,8 +55,19 @@
 					<div class="row">
 						<div class="col-6">
 							<div class="form-group">
-								<label for="namaPemesan">Nama pemesan</label>
+								<label for="namaPemesan">Nama pemesan <span class="text-danger">*</span></label>
 								<input name="NamaPemesan" type="text" class="form-control" id="namaPemesan">
+							</div>
+							<div class="form-group">
+								<label>Tipe</label>
+								<div class="form-check">
+									<input class="form-check-input" checked="checked" type="radio" name="InternEkstern" id="InternExtern2" value="E">
+									<label class="form-check-label" for="InternExtern2">Eksternal</label>
+								</div>
+								<div class="form-check">
+									<input class="form-check-input" type="radio" name="InternEkstern" id="InternExtern1" value="I">
+									<label class="form-check-label" for="InternExtern1">Internal</label>
+								</div>
 							</div>
 							<div class="form-group">
 								<label for="alamat">Alamat</label>
@@ -79,28 +90,42 @@
 								<input name="ContactPerson2" type="text" class="form-control" id="contactPerson2">
 							</div>
 
-
 						</div>
 						<div class="col-6">
 							<div class="form-group">
-								<label for="wajibPajak">Wajib pajak</label>
-								<input name="WajibPajak" type="text" class="form-control" id="wajibPajak">
+								<label class="d-block">Wajib pajak</label>
+								<div class="form-check">
+									<input class="form-check-input" checked="checked" type="radio" name="wajibPajak" id="wajibPajak1" value="Y">
+									<label class="form-check-label" for="wajibPajak1">Ya</label>
+								</div>
+								<div class="form-check">
+									<input class="form-check-input" type="radio" name="wajibPajak" id="wajibPajak2" value="T">
+									<label class="form-check-label" for="wajibPajak2">Tidak</label>
+								</div>
 							</div>
 							<div class="form-group">
 								<label for="npwp">NPWP</label>
 								<input name="NPWP" type="text" class="form-control" id="npwp">
 							</div>
 							<div class="form-group">
-								<label for="alamatPengiriman1">Alamat pengiriman 1</label>
-								<textarea name="AlamatPengiriman1" rows="3" class="form-control" id="alamatPengiriman1"></textarea>
-							</div>
-							<div class="form-group">
-								<label for="alamatPengiriman2">Alamat pengiriman 2</label>
-								<textarea name="AlamatPengiriman2" rows="3" class="form-control" id="alamatPengiriman2"></textarea>
+								<label for="alamatPengiriman1">Alamat pengiriman</label>
+								<textarea name="AlamatPengiriman1" rows="3" class="form-control mb-1" id="alamatPengiriman1" maxlength="255"></textarea>
+								<textarea name="AlamatPengiriman2" rows="3" class="form-control" id="alamatPengiriman2" maxlength="255" disabled="disabled"></textarea>
 							</div>
 							<div class="form-group">
 								<label for="alamatPenagihan">Alamat penagihan</label>
 								<textarea name="AlamatPenagihan" rows="3" class="form-control" id="alamatPenagihan"></textarea>
+							</div>
+							<div class="form-group">
+								<label>Status</label>
+								<div class="form-check">
+									<input class="form-check-input" checked="checked" type="radio" name="FlagAktif" id="CustomerAktif" value="A">
+									<label class="form-check-label" for="CustomerAktif">Aktif</label>
+								</div>
+								<div class="form-check">
+									<input class="form-check-input" type="radio" name="FlagAktif" id="CustomerNonaktif" value="N">
+									<label class="form-check-label" for="CustomerNonaktif">Nonaktif</label>
+								</div>
 							</div>
 
 						</div>
@@ -129,75 +154,81 @@
 				</button>
 			</div>
 			<div class="modal-body">
-				<table class="table table-striped mb-0">
-					<tbody>
-						<tr>
-							<td class="text-right" style="width: 45%">Nama pemesan</td>
-							<td class="custDet NamaPemesan"></td>
-						</tr>
-						<tr>
-							<td class="text-right">Alamat</td>
-							<td class="custDet Alamat"></td>
-						</tr>
-						<tr>
-							<td class="text-right">No Telp</td>
-							<td class="custDet NoTelp"></td>
-						</tr>
-						<tr>
-							<td class="text-right">No Fax</td>
-							<td class="custDet NoFax"></td>
-						</tr>
-						<tr>
-							<td class="text-right">Contact person 1</td>
-							<td class="custDet ContactPerson1"></td>
-						</tr>
-						<tr>
-							<td class="text-right">Contact person 2</td>
-							<td class="custDet ContactPerson2"></td>
-						</tr>
-						<tr>
-							<td class="text-right">Wajib pajak</td>
-							<td class="custDet WajibPajak"></td>
-						</tr>
-						<tr>
-							<td class="text-right">NPWP</td>
-							<td class="custDet NPWP"></td>
-						</tr>
-						<tr>
-							<td class="text-right">Alamat pengiriman 1</td>
-							<td class="custDet AlamatPengiriman1"></td>
-						</tr>
-						<tr>
-							<td class="text-right">Alamat pengiriman 2</td>
-							<td class="custDet AlamatPengiriman2"></td>
-						</tr>
-						<tr>
-							<td class="text-right">Alamat penagihan</td>
-							<td></td>
-						</tr>
-						<tr>
-							<td class="text-right">Flag aktif</td>
-							<td></td>
-						</tr>
-						<tr>
-							<td class="text-right">Dibuat oleh</td>
-							<td></td>
-						</tr>
-						<tr>
-							<td class="text-right">Dibuat pada</td>
-							<td></td>
-						</tr>
-						<tr>
-							<td class="text-right">Diupdate oleh</td>
-							<td></td>
-						</tr>
-						<tr>
-							<td class="text-right">Update terakhir</td>
-							<td></td>
-						</tr>
-					</tbody>
-				</table>
+				<div class="row">
+					<div class="col-6">
+						<div class="item">
+							<label>Nama pemesan</label>
+							<div class="custDet NamaPemesan"></div>
+						</div>
+						<div class="item">
+							<label>Alamat</label>
+							<div class="custDet Alamat"></div>
+						</div>
+						<div class="item">
+							<label>No Fax</label>
+							<div class="custDet NoFax"></div>
+						</div>
+						<div class="item">
+							<label>No Telp</label>
+							<div class="custDet NoTelp"></div>
+						</div>
+						<div class="item">
+							<label>Contact person 1</label>
+							<div class="custDet ContactPerson1"></div>
+						</div>
+						<div class="item">
+							<label>Contact person 2</label>
+							<div class="custDet ContactPerson2"></div>
+						</div>
+						<div class="item">
+							<label>Wajib pajak</label>
+							<div class="custDet WajibPajak"></div>
+						</div>
+						<div class="item">
+							<label>NPWP</label>
+							<div class="custDet NPWP"></div>
+						</div>
+						<div class="item">
+							<label>Alamat Pengiriman 1</label>
+							<div class="custDet AlamatPengiriman1"></div>
+						</div>
+						<div class="item">
+							<label>Alamat Pengiriman 2</label>
+							<div class="custDet AlamatPengiriman2"></div>
+						</div>
+						<div class="item">
+							<label>Alamat penagihan</label>
+							<div class="custDet AlamatPenagihan"></div>
+						</div>
+					</div>
+					<div class="col-6">
+						<div class="item">
+							<label>Status</label>
+							<div class="custDet FlagAktif"></div>
+						</div>
+						<div class="item">
+							<label>Dibuat pada</label>
+							<div class="custDet CreateDate"></div>
+						</div>
+						<div class="item">
+							<label>Dibuat oleh</label>
+							<div class="custDet CreateBy"></div>
+						</div>
+						<div class="item">
+							<label>Diupdate pada</label>
+							<div class="custDet LastUpdate"></div>
+						</div>
+						<div class="item">
+							<label>Diupdate oleh</label>
+							<div class="custDet UpdateBy"></div>
+						</div>
+					</div>
+				</div>
+				
 			</div>
+			<div class="modal-footer">
+						<button name="cancel" type="button" class="btn btn-outline-secondary" data-dismiss="modal">Close</button>
+				</div>
 		</div>
 	</div>
 </div>

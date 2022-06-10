@@ -32,7 +32,7 @@
                 <div class="account-nav dropdown">
                     <button type="button" class="dropdown-toggle" data-toggle="dropdown">
                         <div class="name">
-                            Halo Alfin
+                            <?= (current_user()) ? current_user()->Nama : 'UNAUTHENTICATED' ?>
                         </div>
                         <div class="dropdown-menu dropdown-menu-right">
                             <a href="#" class="dropdown-item">Profil</a>

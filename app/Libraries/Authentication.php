@@ -4,17 +4,20 @@ namespace App\Libraries;
 
 class Authentication
 {
-    public function login($username, $password)
+    private $user;
+    
+    public function login($UserID, $password)
     {
-        if($username != 'dummy' && $password != 'dummy') {
+        $model = new \App\Models\UsersModel;
+        $user = $model->getByUserID($UserID);
+
+        if($user === null) {
             return false;
         }
-        // $model = new \App\Models\UsersModel;
-        // $user = $model->findByEmail($email);
 
-        // if($user === null) {
-        //     return false;
-        // }
+        if($password !== $UserID) {
+            return false;
+        }
 
         // if(!$user->verifyPassword($password)) {
         //     return false;
@@ -22,8 +25,7 @@ class Authentication
 
         $session = session();
         $session->regenerate();
-        // $session->set('user_id', $user->id);
-        $session->set('user_id', 'dummy');
+        $session->set('UserID', $user->UserID);
 
         return true;
     }
@@ -33,20 +35,20 @@ class Authentication
     }
 
     public function isLoggedIn() {
-        return session()->has('user_id');
+        return session()->has('UserID');
     }
 
     public function getCurrentUser() {
-        // if(!$this->isLoggedIn()) {
-        //     return null;
-        // }
+        if(!$this->isLoggedIn()) {
+            return null;
+        }
 
-        // if($this->user === null) {
-        //     $model = new \App\Models\UsersModel;
+        if($this->user === null) {
+            $model = new \App\Models\UsersModel;
 
-        //     $this->user = $model->find(session()->get('user_id'));
-        // }
+            $this->user = $model->asObject()->where('UserID', session()->get('UserID'))->first();
+        }
 
-        // return $this->user;
+        return $this->user;
     }
 }

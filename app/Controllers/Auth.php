@@ -14,6 +14,11 @@ class Auth extends BaseController
         $username = $this->request->getPost('username');
         $password = $this->request->getPost('password');
 
+        // $model = new \App\Models\UsersModel;
+        // $user = $model->getByUserID($username);
+
+        // dd($user);
+
         $auth = service('auth');
 
         if($auth->login($username, $password)) {

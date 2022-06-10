@@ -4,20 +4,32 @@ $(function () {
 
 	$("#customerList").DataTable({
 		data: customerData,
-        buttons: ['excel'],
+        buttons: [{
+                extend: 'excelHtml5',
+                exportOptions: { orthogonal: 'export' }
+            }],
 		columnDefs: [{
 			"searchable": false,
 			"orderable": false,
-			"targets": [0, 5]
+			"targets": [0, 18]
 		},{
 			"width": 60,
 			"targets": 18
+		},{
+			"targets": 14,
+			render: function ( data, type, row, meta ) {
+				if(type === 'export') {
+					return data;
+				} else {
+					return (data == 'A') ? 'Aktif' : 'Nonaktif';
+				}
+			}
 		},{
 			"width": 150,
 			"targets": 2
 		},{
 			"visible": false,
-			"targets": [1,4, 5, 6, 8, 10, 11, 12, 13, 14, 15, 16, 17]
+			"targets": [1,4, 5, 6, 8, 9, 10, 11, 12, 13, 15, 16, 17]
 		}],
 		order: [[ 1, 'desc' ]],
 		createdRow: function (row, data, dataIndex) {
@@ -127,7 +139,7 @@ $(function () {
 			type: "POST",
 			url: `${HOST}/customer/apiGetById`,
 			dataType: 'JSON',
-			data: { noPemesan },
+			data: { noPemesan, modified: true },
 			beforeSend: function () {},
 			success: function (response) {
 				if(response.success) {
@@ -235,6 +247,17 @@ $(function () {
 		}
 		getAllCustomers(obj);
 	})
+
+	$('textarea[name=AlamatPengiriman1]').on('keyup', function() {
+		const maxlength = $(this).attr('maxlength');
+		const characterCount = $(this).val().length;
+		const current = $('#current');
+		const maximum = parseInt(maxlength) - parseInt(characterCount);
+		current.text(maximum);
+		if(maximum == 0) {
+			$('textarea[name=AlamatPengiriman2]').attr('disabled', false).focus();
+		}
+	});
 });
 
 function getAllCustomers(obj)

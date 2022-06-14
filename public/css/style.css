@@ -1,0 +1,332 @@
+@import url(https://fonts.googleapis.com/css2?family=Roboto:wght@300;400;500;700;900&display=swap);
+body {
+  font-family: "Roboto", sans-serif;
+  background-color: #fff;
+  box-sizing: border-box;
+  overflow-x: hidden;
+  font-size: 0.9rem;
+  line-height: 1.6;
+}
+
+.form-control {
+  font-size: inherit;
+}
+
+.form-control::-webkit-input-placeholder {
+  /* Edge */
+  color: rgba(0, 0, 0, 0.3);
+}
+.form-control:-ms-input-placeholder {
+  /* Internet Explorer 10-11 */
+  color: rgba(0, 0, 0, 0.3);
+}
+.form-control::placeholder {
+  color: rgba(0, 0, 0, 0.3);
+}
+
+#page {
+  min-height: 100vh;
+  display: flex;
+  flex-direction: column;
+}
+
+.page-container {
+  height: 100%;
+  margin: auto;
+}
+.login-wrapper .login-box {
+  width: 450px;
+}
+.login-wrapper .login-box {
+  border: 1px solid #eee;
+  border-radius: 5px;
+  padding: 30px 35px;
+  box-shadow: 0px 2px 2px 0px rgba(0,0,0,0.2);
+  -webkit-box-shadow: 0px 0px 5px 0px rgba(0,0,0,0.2);
+  -moz-box-shadow: 0px 2px 2px 0px rgba(0,0,0,0.2);
+}
+.login-wrapper .login-box .title {
+  font-weight: 700;
+  font-size: 24px;
+  margin: 0 0 30px 0;
+  text-transform: uppercase;
+  padding: 0;
+}
+.login-wrapper .login-box label {
+  font-weight: 500;
+  margin-bottom: 4px;
+}
+.login-wrapper .copyright,
+.login-wrapper .logo {
+  text-align: center;
+}
+.login-wrapper .logo {
+  margin: 0 0 30px 0;
+}
+.login-wrapper .copyright {
+  margin: 30px 0 0 0;
+  font-size: 85%;
+  color: rgba(0,0,0,.5);
+}
+
+.app-header {
+  position: fixed;
+  top: 0;
+  left: 0;
+  width: 100%;
+  height: 90px;
+  z-index: 99;
+  background-color: #644c32;
+  padding: 0 55px;
+  display: flex;
+  justify-content: space-around;
+  align-items: center;
+  box-shadow: 0px 2px 5px 0px rgba(0,0,0,0.7);
+  -webkit-box-shadow: 0px 2px 5px 0px rgba(0,0,0,0.2);
+  -moz-box-shadow: 0px 2px 5px 0px rgba(0,0,0,0.3);
+}
+.app-header .sidebar-nav {
+  margin: 0 20px 0;
+  cursor: pointer;
+  color: rgba(255,255,255,1);
+}
+.app-header .top-nav {
+  flex: 1;
+  text-align: right;
+  color: #fff;
+}
+.top-nav .account-nav {
+  text-align: right;
+  display: flex;
+  justify-content: right;
+}
+.top-nav .account-nav.show .dropdown-toggle {
+  border: 1px solid transparent;
+  color: #222;
+}
+.top-nav .account-nav.show .dropdown-toggle:hover {
+  border: 1px solid transparent;
+}
+.top-nav .account-nav.show .dropdown-menu {
+  border-radius: 0;
+  border: 0;
+  border-left: 1px solid rgba(0,0,0,.15);
+  border-right: 1px solid rgba(0,0,0,.15);
+  border-bottom: 1px solid rgba(0,0,0,.15);
+  font-size: inherit;
+  background-clip: inherit;
+}
+.top-nav .account-nav.show .dropdown-menu.show {
+  top: 27px !important;
+}
+.top-nav .account-nav .dropdown-toggle {
+  border: 1px solid transparent;
+  background-color: transparent;
+  display: flex;
+  padding: 4px 10px;
+  border-radius: 3px;
+  color: #fff;
+}
+.top-nav .account-nav .dropdown-toggle:after {
+  margin-top: 10px;
+  margin-left: 10px;
+}
+.top-nav .account-nav .dropdown-toggle:hover {
+  border: 1px solid transparent;
+}
+.top-nav .account-nav .dropdown-toggle .icon {
+  margin: 0 10px 0 0;
+}
+.top-nav .account-nav .dropdown-toggle .fungsi {
+  font-weight: 700;
+}
+.top-nav .account-nav .dropdown-toggle .dropdown-menu.show .dropdown-item {
+  transition: all .5s ease;
+}
+.top-nav .account-nav .dropdown-toggle .dropdown-menu.show .dropdown-item.active {
+  background-color: transparent;
+  color: inherit;
+  font-weight: 700;
+  padding-left: 25px;
+  position: relative;
+}
+.top-nav .account-nav .dropdown-toggle .dropdown-menu.show .dropdown-item.active:before {
+  font-family: "Font Awesome 5 Free";
+  position: absolute;
+  font-weight: 900;
+  left: 7px;
+  top: 8px;
+  font-size: 80%;
+  color: rgba(0,0,0,.5);
+  content: "\f08d";
+}
+.top-nav .account-nav .dropdown-toggle .dropdown-menu.show .dropdown-item:hover {
+  background-color: transparent;
+  color: rgba(0,0,0,.5);
+}
+
+.sidebar {
+  position: fixed;
+  top: 90px;
+  left: 0;
+  height: calc(100% - 90px);
+  width: 240px;
+  overflow: hidden;
+  z-index: 89;
+  border-right: 2px solid #e8d4be;
+  background-color: #eee;
+  transition: left .3s ease;
+}
+.sidebar.hide {
+  left: -240px;
+}
+
+.content-wrapper {
+  width: calc(100% - 240px);
+  margin-left: 240px;
+  margin-top: 90px;
+  min-height: calc(100vh - 90px);
+  display: flex;
+  flex-direction: column;
+  transition: margin-left .3s ease, width .3s ease;
+}
+.content-wrapper.wide {
+  margin-left: 0;
+  width: 100%;
+}
+
+.content {
+  padding: 20px 30px;
+  flex: 1;
+}
+
+.page-title {
+  margin: 0 0 40px 0;
+  padding: 0 0 15px 0;
+  font-size: 24px;
+  font-weight: 900;
+  border-bottom: 1px solid #eee;
+}
+
+.main-menu {
+  margin: 40px 0 0 0;
+  padding: 0 20px;
+}
+.main-menu ul {
+  list-style: none;
+  padding: 0;
+}
+.main-menu ul li a {
+  color: #222;
+  font-weight: 500;
+  display: inline-block;
+  padding: 3px 15px 3px 30px;
+  background-color: transparent;
+  margin-bottom: 1px;
+  border-radius: 5px;
+  position: relative;
+  transition: all 0.1s ease;
+}
+.main-menu ul li a:before {
+  font-family: "Font Awesome 5 Free";
+  position: absolute;
+  font-weight: 900;
+  left: 10px;
+  top: 2px;
+  opacity: .5;
+  content: "\f101";
+  transition: all 0.3s ease;
+}
+.main-menu ul li a:hover,
+.main-menu ul li.active a {
+  text-decoration: none;
+  background-color: rgba(100,76,50, .3);
+}
+
+#customerForm .modal-footer {
+  justify-content: space-between;
+}
+#customerForm .modal-body,
+#customerDetail .modal-body {
+  background-color: #f9f9f9;
+  padding: 20px 30px;
+}
+#customerForm .modal-body label {
+  font-weight: 500;
+  margin-bottom: 4px;
+}
+
+#customerForm button[name="submit"]:disabled {
+  background-color: #ccc;
+  color: #999;
+  border-color: #999;
+}
+#customerForm button[name="cancel"]:disabled {
+  color: #ccc !important;
+}
+
+#customerDetail .item {
+  margin: 0 0 20px 0;
+}
+#customerDetail .item label {
+  text-transform: uppercase;
+  color: rgba(0,0,0,.4);
+  font-weight: 600;
+  font-size: 80%;
+  margin: 0 0 3px 0;
+}
+
+
+.spinner-icon {
+  display: flex;
+  align-items: center;
+}
+.spinner-icon span {
+  display: inline-block;
+}
+.spinner-icon .caption {
+  margin: 0 0 0 15px;
+  font-weight: 500;
+}
+
+.btn-add:before,
+.btn-save:before {
+  font-family: "Font Awesome 5 Free";
+  position: absolute;
+  font-weight: 700;
+  font-size: 20px;
+  top: 0;
+  left: 10px;
+}
+.btn-add:before {
+  content: "\f055";
+}
+.btn-add,
+.btn-save {
+  position: relative;
+  text-transform: uppercase;
+  padding-left: 36px;
+  font-size: 14px;
+  font-weight: 500;
+}
+.btn-save:before {
+  content: "\f0c7";
+}
+
+.app-footer {
+  margin: 30px 0 0 0;
+  padding: 0 30px;
+}
+.app-footer .copyright {
+  border-top: 1px solid #eee;
+  padding: 30px 0;
+  font-size: 85%;
+  color: rgba(0,0,0,.5);
+}
+
+@media only screen and (max-width: 1120px) {
+}
+@media only screen and (max-width: 992px) {
+}
+@media only screen and (max-width: 768px) {
+}

@@ -17,7 +17,7 @@ class Customer extends BaseController
     public function index()
     {
         return view('Customer/main', [
-        	'page_title' => 'Data Pelanggan',
+        	'page_title' => 'Data Customer',
         ]);
     }
 

@@ -1,42 +1,42 @@
-<?= $this->extend('theme')?>
+<?= $this->extend('theme') ?>
 
-<?= $this->section('title')?>
-<?= $page_title;?>
-<?= $this->endSection();?>
+<?= $this->section('title') ?>
+<?= $page_title; ?>
+<?= $this->endSection(); ?>
 
-<?= $this->section('content')?>
+<?= $this->section('content') ?>
 
-<h3 class="page-title"><?= $page_title;?></h3>
+<h3 class="page-title"><?= $page_title; ?></h3>
 
-<?php if(session()->has('success')) : ?>
-	<div class="alert alert-success"><?= session()->get('success');?></div>
-<?php endif;?>
+<?php if (session()->has('success')) : ?>
+	<div class="alert alert-success"><?= session()->get('success'); ?></div>
+<?php endif; ?>
 
-		<table id="customerList" class="table table-bordered table-striped" style="width: 100%">
-			<thead>
-				<tr>
-					<th style="width: 25px;">No</th>
-					<th>No Pemesan</th>
-					<th>Tanggal dibuat</th>
-					<th>Nama Pemesan</th>
-					<th>Alamat</th>
-					<th>No Fax</th>
-					<th>No Telp</th>
-					<th>Contact person</th>
-					<th>Contact person 2</th>
-					<th>Wajib pajak</th>
-					<th>NPWP</th>
-					<th>Alamat pengiriman 1</th>
-					<th>Alamat pengiriman 2</th>
-					<th>Alamat penagihan</th>
-					<th>Flag aktif</th>
-					<th>Create By</th>
-					<th>Update By</th>
-					<th>Last update</th>
-					<th>&nbsp;</th>
-				</tr>
-			</thead>
-		</table>
+<table id="customerList" class="table table-bordered table-striped" style="width: 100%">
+	<thead>
+		<tr>
+			<th style="width: 25px;">No</th>
+			<th>No Pemesan</th>
+			<th>Tanggal dibuat</th>
+			<th>Nama Pemesan</th>
+			<th>Alamat</th>
+			<th>No Fax</th>
+			<th>No Telp</th>
+			<th>Contact person</th>
+			<th>Contact person 2</th>
+			<th>Wajib pajak</th>
+			<th>NPWP</th>
+			<th>Alamat pengiriman 1</th>
+			<th>Alamat pengiriman 2</th>
+			<th>Alamat penagihan</th>
+			<th>Flag aktif</th>
+			<th>Dibuat oleh</th>
+			<th>Diupdate oleh</th>
+			<th>Update terakhir</th>
+			<th>&nbsp;</th>
+		</tr>
+	</thead>
+</table>
 
 <!-- Modal -->
 <div class="modal fade" id="customerForm" tabindex="-1" aria-labelledby="customerFormLabel" aria-hidden="true">
@@ -224,13 +224,13 @@
 						</div>
 					</div>
 				</div>
-				
+
 			</div>
 			<div class="modal-footer">
-						<button name="cancel" type="button" class="btn btn-outline-secondary" data-dismiss="modal">Close</button>
-				</div>
+				<button name="cancel" type="button" class="btn btn-outline-secondary" data-dismiss="modal">Close</button>
+			</div>
 		</div>
 	</div>
 </div>
 
-<?= $this->endSection()?>
+<?= $this->endSection() ?>

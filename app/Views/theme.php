@@ -45,6 +45,43 @@
         </header>
 
         <div class="sidebar">
+            <ul class="main-menu accordion" id="mainmenu">
+                <li class="<?= (current_url() == site_url()) ? 'active' : '' ?>">
+                    <a href="<?= site_url() ?>">
+                        <i class="fas fa-home"></i> Dashbor
+                    </a>
+                </li>
+                <li>
+                    <a href="<?= site_url('customer');?>">
+                        <i class="fas fa-users"></i> Customer
+                    </a>
+                </li>
+                <li>
+                    <a href="#" data-toggle="collapse" data-target="#dropdown"
+                        aria-expanded="<?= (url_is('mail*') || url_is('stats')) ? 'true' : 'false'; ?>">
+                        <i class="fas fa-envelope"></i> Dropdown
+                    </a>
+                    <div id="dropdown" class="collapse"
+                        data-parent="#mainmenu">
+                        <ul>
+                            <li class="">
+                                <a href="#">Sub1</a>
+                            </li>
+                            <li class="">
+                                <a href="#">Sub2</a>
+                            </li>
+                            <li class="">
+                                <a href="#">Sub3</a>
+                            </li>
+                        </ul>
+                    </div>
+                </li>
+                <li>
+                    <a href="<?= site_url('logout');?>" onclick="return confirm('Anda yakin untuk Logout?')">
+                        <i class="fas fa-users"></i> Logout
+                    </a>
+                </li>
+            </ul>
             <div class="main-menu">
                 <ul>
                     <li>

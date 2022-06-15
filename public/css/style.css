@@ -243,32 +243,32 @@ body {
   background-color: rgba(100,76,50, .3);
 }
 
-#customerForm .modal-footer {
+#dataForm .modal-footer {
   justify-content: space-between;
 }
-#customerForm .modal-body,
-#customerDetail .modal-body {
+#dataForm .modal-body,
+#dataDetail .modal-body {
   background-color: #f9f9f9;
   padding: 20px 30px;
 }
-#customerForm .modal-body label {
+#dataForm .modal-body label {
   font-weight: 500;
   margin-bottom: 4px;
 }
 
-#customerForm button[name="submit"]:disabled {
+#dataForm button[name="submit"]:disabled {
   background-color: #ccc;
   color: #999;
   border-color: #999;
 }
-#customerForm button[name="cancel"]:disabled {
+#dataForm button[name="cancel"]:disabled {
   color: #ccc !important;
 }
 
-#customerDetail .item {
+#dataDetail .item {
   margin: 0 0 20px 0;
 }
-#customerDetail .item label {
+#dataDetail .item label {
   text-transform: uppercase;
   color: rgba(0,0,0,.4);
   font-weight: 600;

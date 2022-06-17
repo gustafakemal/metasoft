@@ -209,66 +209,100 @@ body {
 }
 
 .main-menu {
-  margin: 40px 0 0 0;
-  padding: 0 20px;
-}
-.main-menu ul {
   list-style: none;
   padding: 0;
+  margin: 20px 0 40px 0;
 }
-.main-menu ul li a {
-  color: #222;
-  font-weight: 500;
-  display: inline-block;
-  padding: 3px 15px 3px 30px;
-  background-color: transparent;
-  margin-bottom: 1px;
-  border-radius: 5px;
-  position: relative;
-  transition: all 0.1s ease;
-}
-.main-menu ul li a:before {
-  font-family: "Font Awesome 5 Free";
-  position: absolute;
-  font-weight: 900;
-  left: 10px;
-  top: 2px;
-  opacity: .5;
-  content: "\f101";
+.main-menu > li a {
+  color: #111;
+  display: block;
+  padding: 10px 0;
   transition: all 0.3s ease;
 }
-.main-menu ul li a:hover,
-.main-menu ul li.active a {
+.main-menu > li a:hover {
   text-decoration: none;
-  background-color: rgba(100,76,50, .3);
+}
+.main-menu > li a .fa,
+.main-menu > li a .fas,
+.main-menu > li a .far,
+.main-menu > li a .fab {
+  margin-right: 10px;
+  color: rgba(0, 0, 0, 0.35);
+}
+.main-menu > li a[data-toggle="collapse"] {
+  position: relative;
+}
+.main-menu > li a[data-toggle="collapse"]:after {
+  font-family: "Font Awesome 5 Free";
+  font-weight: 900;
+  position: absolute;
+  right: 30px;
+  top: 10px;
+}
+.main-menu > li a[data-toggle="collapse"][aria-expanded="true"]:after {
+  content: "\f107";
+}
+.main-menu > li a[data-toggle="collapse"][aria-expanded="false"]:after {
+  content: "\f105";
+}
+.main-menu > li ul {
+  padding: 0;
+  list-style: none;
+}
+.main-menu > li ul > li a {
+  padding: 5px 20px 5px 58px;
+  position: relative;
+}
+.main-menu > li ul > li a:hover,
+.main-menu > li ul > li.active a {
+  background-color: transparent;
+}
+.main-menu > li ul > li a:before {
+  position: absolute;
+  left: 35px;
+  color: #999;
+  top: 4px;
+  
+}
+.main-menu > li > a {
+  font-weight: 500;
+  padding: 10px 30px;
+}
+.main-menu > li > a:hover {
+  background-color: transparent;
+  color: rgba(0,0,0,.5);
+}
+.main-menu > .active a {
+  background-color: transparent;
 }
 
-#customerForm .modal-footer {
+
+#dataForm .modal-footer {
   justify-content: space-between;
 }
-#customerForm .modal-body,
-#customerDetail .modal-body {
+#dataForm .modal-body,
+#dataDetail .modal-body {
   background-color: #f9f9f9;
   padding: 20px 30px;
 }
-#customerForm .modal-body label {
+#dataForm .modal-body label {
   font-weight: 500;
   margin-bottom: 4px;
 }
 
-#customerForm button[name="submit"]:disabled {
+#dataForm button[name="submit"]:disabled {
   background-color: #ccc;
   color: #999;
   border-color: #999;
 }
-#customerForm button[name="cancel"]:disabled {
+#dataForm button[name="cancel"]:disabled {
   color: #ccc !important;
 }
 
-#customerDetail .item {
+#dataDetail .item {
   margin: 0 0 20px 0;
 }
-#customerDetail .item label {
+#dataDetail .item label {
   text-transform: uppercase;
   color: rgba(0,0,0,.4);
   font-weight: 600;

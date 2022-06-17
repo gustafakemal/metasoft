@@ -45,23 +45,46 @@
         </header>
 
         <div class="sidebar">
-            <div class="main-menu">
-                <ul>
-                    <li>
-                        <a href="<?= site_url('/'); ?>">Dashboard</a>
-                    </li>
-                    <li>
-                        <a href="<?= site_url('customer'); ?>">Pelanggan</a>
-                    </li>
-                    <li>
-                        <a href="<?= site_url('mfjeniskertas'); ?>">Jenis Kertas</a>
-                    </li>
-
-                    <li>
-                        <a href="<?= site_url('logout'); ?>" onclick="return confirm('Anda yakin untuk Logout?')">Logout</a>
-                    </li>
-                </ul>
-            </div>
+        <ul class="main-menu accordion" id="mainmenu">
+  <li class="<?= (current_url() == site_url()) ? 'active' : '' ?>">
+      <a href="<?= site_url() ?>">
+          <i class="fas fa-home text-dark"></i> Dashbor
+      </a>
+  </li>
+  
+  <li>
+      <a href="#" data-toggle="collapse" data-target="#dropdown"
+          aria-expanded="<?= (url_is('mail*') || url_is('stats')) ? 'true' : 'false'; ?>">
+          <i class="fas fa-envelope text-dark"></i> Master Data
+      </a>
+      <div id="dropdown" class="collapse"
+          data-parent="#mainmenu">
+          <ul class="">
+              <li class="">
+           
+                <a href="<?= site_url('customer');?>">
+                    <i class="fas fa-arrow-circle-right text-dark"></i> Pelanggan
+                </a>
+                </li>
+              <li class="">
+              <a href="<?= site_url('mfjeniskertas');?>">
+                    <i class="fas fa-arrow-circle-right text-dark"></i> Jenis Kertas MF
+                </a>
+              </li>
+              <li class="">
+              <a href="<?= site_url('mfjenistinta');?>">
+                    <i class="fas fa-arrow-circle-right text-dark"></i> Jenis Tinta MF
+                </a>
+              </li>
+          </ul>
+      </div>
+  </li>
+  <li>
+      <a href="<?= site_url('logout');?>" onclick="return confirm('Anda yakin untuk Logout?')">
+          <i class="fas fa-users text-dark"></i> Logout
+      </a>
+  </li>
+</ul>
         </div>
 
         <div class="content-wrapper">
@@ -114,6 +137,9 @@
     <?php endif; ?>
     <?php if (url_is('mfjeniskertas')) : ?>
         <script src="<?= site_url('js/mfjeniskertas.js'); ?>"></script>
+    <?php endif; ?>
+    <?php if (url_is('mfjenistinta')) : ?>
+        <script src="<?= site_url('js/mfjenistinta.js'); ?>"></script>
     <?php endif; ?>
     <script src="<?= site_url('js/custom.js'); ?>"></script>
     <!-- -->

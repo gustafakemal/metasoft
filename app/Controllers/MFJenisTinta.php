@@ -2,42 +2,42 @@
 
 namespace App\Controllers;
 
-use App\Models\MFJenisKertasModel;
+use App\Models\MFJenisTintaModel;
 use CodeIgniter\I18n\Time;
 
-class MFJenisKertas extends BaseController
+class MFJenisTinta extends BaseController
 {
 	private $model;
 
 	public function __construct()
 	{
-		$this->model = new MFJenisKertasModel();
+		$this->model = new MFJenisTintaModel();
 	}
 
 	public function index()
 	{
-		return view('MFJenisKertas/main', [
-			'page_title' => 'Data Jenis Kertas MF',
+		return view('MFJenisTinta/main', [
+			'page_title' => 'Data Jenis Tinta MF',
 		]);
 	}
 
 	public function apiGetAll()
 	{
 		if ($this->request->getMethod() !== 'post') {
-			return redirect()->to('mfjeniskertas');
+			return redirect()->to('mfjenistinta');
 		}
 
-		$query = $this->model->getMFJenisKertas();
+		$query = $this->model->getMFJenisTinta();
 
 		$data = [];
 		foreach ($query as $key => $value) {
 			//$detail = '<a href="#" data-id="' . $value->id . '" class=" btn item-detail" title="Detail"><i class="far fa-file-alt"></i></a> ';
 			//$edit = '<a href="#" data-id="' . $value->id . '" class="item-edit" title="Edit"><i class="far fa-edit"></i></a> ';
-			//$hapus = '<a href="' . site_url('mfjeniskertas/delete/' . $value->id) . '" onclick="return confirm(\'Apa Anda yakin menghapus user ini?\')" title="Delete"><i class="fas fa-trash-alt"></i></a>';
+			//$hapus = '<a href="' . site_url('mfjenistinta/delete/' . $value->id) . '" onclick="return confirm(\'Apa Anda yakin menghapus user ini?\')" title="Delete"><i class="fas fa-trash-alt"></i></a>';
 			 
 			$detail = '<a class="btn btn-primary btn-sm item-detail mr-1" href="#" data-id="' . $value->id . '" title="Detail"><i class="far fa-file-alt"></i></a>';
 			$edit = '<a class="btn btn-success btn-sm item-edit mr-1" href="#" data-id="' . $value->id . '" title="Edit"><i class="far fa-edit"></i></a>';
-			$hapus = '<a class="btn btn-danger btn-sm" href="' . site_url('mfjeniskertas/delete/' . $value->id) . '" data-id="' . $value->id . '" onclick="return confirm(\'Apa Anda yakin menghapus user ini?\')" title="Hapus"><i class="fas fa-trash-alt"></i></a>';
+			$hapus = '<a class="btn btn-danger btn-sm" href="' . site_url('mfjenistinta/delete/' . $value->id) . '" data-id="' . $value->id . '" onclick="return confirm(\'Apa Anda yakin menghapus user ini?\')" title="Hapus"><i class="fas fa-trash-alt"></i></a>';
 	
 		
 			$CreateDate = (Time::parse($value->added))->toDateTimeString();
@@ -62,7 +62,7 @@ class MFJenisKertas extends BaseController
 	public function apiGetById()
 	{
 		if ($this->request->getMethod() !== 'post') {
-			return redirect()->to('mfjeniskertas');
+			return redirect()->to('mfjenistinta');
 		}
 
 		$id = $this->request->getPost('id');
@@ -103,7 +103,7 @@ class MFJenisKertas extends BaseController
 	public function apiAddProcess()
 	{
 		if ($this->request->getMethod() !== 'post') {
-			return redirect()->to('mfjeniskertas');
+			return redirect()->to('mfjenistinta');
 		}
 
 		$data = $this->request->getPost();
@@ -136,7 +136,7 @@ class MFJenisKertas extends BaseController
 	public function apiEditProcess()
 	{
 		if ($this->request->getMethod() !== 'post') {
-			return redirect()->to('mfjeniskertas');
+			return redirect()->to('mfjenistinta');
 		}
 
 		$data = $this->request->getPost();

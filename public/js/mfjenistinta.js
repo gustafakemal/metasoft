@@ -1,9 +1,9 @@
 $(function () {
 
-	let mfJenisKertasData;
+	let mfJenisTintaData;
 
 	$("#dataList").DataTable({
-		data: mfJenisKertasData,
+		data: mfJenisTintaData,
         buttons: [{
                 extend: 'excelHtml5',
                 exportOptions: { orthogonal: 'export' }
@@ -46,7 +46,7 @@ $(function () {
 		createdRow: function (row, data, dataIndex) {
 			$(row).find("td:eq(0)").attr("data-label", "No");
 			$(row).find("td:eq(1)").attr("data-label", "Tanggal dibuat");
-			$(row).find("td:eq(2)").attr("data-label", "Jenis Kertas");
+			$(row).find("td:eq(2)").attr("data-label", "Jenis Tinta");
 			$(row).find("td:eq(3)").attr("data-label", "Harga");
 			$(row).find("td:eq(4)").attr("data-label", "Status Aktif");
 			$(row).find("td:eq(5)").attr("data-label", "&nbsp;");
@@ -67,6 +67,7 @@ $(function () {
 	setTimeout(() => {
 		const obj = {
 			beforeSend: function () {
+				
 				$('#dataList .dataTables_empty').html('<div class="spinner-icon"><span class="spinner-grow text-info"></span><span class="caption">Fetching data...</span></div>')
 			},
 			success: function (response) {
@@ -79,7 +80,7 @@ $(function () {
 			},
 			complete: function() {}
 		}
-
+		
 		getAllData(obj);
 	}, 50)
 
@@ -107,7 +108,7 @@ $(function () {
 
 		$.ajax({
 			type: "POST",
-			url: `${HOST}/mfjeniskertas/apiAddProcess`,
+			url: `${HOST}/mfjenistinta/apiAddProcess`,
 			dataType: 'JSON',
 			data: formData,
 			contentType: false,
@@ -149,7 +150,7 @@ $(function () {
 		const id = $(this).attr('data-id')
 		$.ajax({
 			type: "POST",
-			url: `${HOST}/mfjeniskertas/apiGetById`,
+			url: `${HOST}/mfjenistinta/apiGetById`,
 			dataType: 'JSON',
 			data: { id, modified: true },
 			beforeSend: function () {},
@@ -179,7 +180,7 @@ $(function () {
 
 		$.ajax({
 			type: "POST",
-			url: `${HOST}/mfjeniskertas/apiGetById`,
+			url: `${HOST}/mfjenistinta/apiGetById`,
 			dataType: 'JSON',
 			data: { id },
 			beforeSend: function () {},
@@ -202,7 +203,7 @@ $(function () {
 
 		$.ajax({
 			type: "POST",
-			url: `${HOST}/mfjeniskertas/apiEditProcess`,
+			url: `${HOST}/mfjenistinta/apiEditProcess`,
 			dataType: 'JSON',
 			data: formData,
 			contentType: false,
@@ -265,9 +266,10 @@ $(function () {
 
 function getAllData(obj)
 {
+	
 	$.ajax({
 		type: "POST",
-		url: `${HOST}/mfjeniskertas/apiGetAll`,
+		url: `${HOST}/mfjenistinta/apiGetAll`,
 		beforeSend: obj.beforeSend,
 		success: obj.success,
 		error: obj.error,

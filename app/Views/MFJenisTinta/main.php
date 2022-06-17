@@ -18,7 +18,7 @@
 			<th style="width: 25px;">No</th>
 			<th>ID</th>
 			<th>Tanggal dibuat</th>
-			<th>Jenis Kertas</th>
+			<th>Jenis Tinta</th>
 			<th>Harga</th>
 			<th>Status Aktif</th>
 			<th>Dibuat</th>
@@ -47,7 +47,7 @@
 					<div class="row">
 						<div class="col">
 							<div class="form-group">
-								<label for="nama">Jenis Kertas <span class="text-danger">*</span></label>
+								<label for="nama">Jenis Tinta <span class="text-danger">*</span></label>
 								<input name="nama" type="text" class="form-control" id="nama">
 							</div>
 							<div class="form-group">
@@ -57,12 +57,12 @@
 							<div class="form-group">
 								<label>Status</label>
 								<div class="form-check">
-									<input class="form-check-input" checked="checked" type="radio" name="aktif" id="msJenisKertasAktif" value="Y">
-									<label class="form-check-label" for="msJenisKertasAktif">Aktif</label>
+									<input class="form-check-input" checked="checked" type="radio" name="aktif" id="msJenisTintaAktif" value="Y">
+									<label class="form-check-label" for="msJenisTintaAktif">Aktif</label>
 								</div>
 								<div class="form-check">
-									<input class="form-check-input" type="radio" name="aktif" id="msJenisKertasNonaktif" value="T">
-									<label class="form-check-label" for="msJenisKertasNonaktif">Nonaktif</label>
+									<input class="form-check-input" type="radio" name="aktif" id="msJenisTintaNonaktif" value="T">
+									<label class="form-check-label" for="msJenisTintaNonaktif">Nonaktif</label>
 								</div>
 							</div>
 
@@ -95,7 +95,7 @@
 				<div class="row">
 					<div class="col">
 						<div class="item">
-							<label>Jenis Kertas</label>
+							<label>Jenis Tinta</label>
 							<div class="custDet nama"></div>
 						</div>
 						<div class="item">

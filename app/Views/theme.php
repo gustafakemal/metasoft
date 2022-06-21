@@ -51,7 +51,12 @@
           <i class="fas fa-home text-dark"></i> Dashbor
       </a>
   </li>
-  
+  <li class="<?= (current_url() == site_url()) ? 'active' : '' ?>">
+           
+                <a href="<?= site_url('customer');?>">
+                    <i class="fas fa-user-circle text-dark"></i> Pelanggan
+                </a>
+                </li>
   <li>
       <a href="#" data-toggle="collapse" data-target="#dropdown"
           aria-expanded="<?= (url_is('mail*') || url_is('stats')) ? 'true' : 'false'; ?>">
@@ -60,12 +65,7 @@
       <div id="dropdown" class="collapse"
           data-parent="#mainmenu">
           <ul class="">
-              <li class="">
-           
-                <a href="<?= site_url('customer');?>">
-                    <i class="fas fa-arrow-circle-right text-dark"></i> Pelanggan
-                </a>
-                </li>
+              
               <li class="">
               <a href="<?= site_url('mfjeniskertas');?>">
                     <i class="fas fa-arrow-circle-right text-dark"></i> Jenis Kertas MF
@@ -74,6 +74,31 @@
               <li class="">
               <a href="<?= site_url('mfjenistinta');?>">
                     <i class="fas fa-arrow-circle-right text-dark"></i> Jenis Tinta MF
+                </a>
+              </li>
+              <li class="">
+              <a href="<?= site_url('mfjenisflute');?>">
+                    <i class="fas fa-arrow-circle-right text-dark"></i> Jenis Flute MF
+                </a>
+              </li>
+              <li class="">
+              <a href="<?= site_url('mfprosesfinishing');?>">
+                    <i class="fas fa-arrow-circle-right text-dark"></i> Proses Finishing MF
+                </a>
+              </li>
+              <li class="">
+              <a href="<?= site_url('mfprosesmanual');?>">
+                    <i class="fas fa-arrow-circle-right text-dark"></i> Proses Manual MF
+                </a>
+              </li>
+              <li class="">
+              <a href="<?= site_url('mfproseskhusus');?>">
+                    <i class="fas fa-arrow-circle-right text-dark"></i> Proses Khusus MF
+                </a>
+              </li>
+              <li class="">
+              <a href="<?= site_url('mftujuankirim');?>">
+                    <i class="fas fa-arrow-circle-right text-dark"></i> Tujuan Kirim
                 </a>
               </li>
           </ul>
@@ -140,6 +165,21 @@
     <?php endif; ?>
     <?php if (url_is('mfjenistinta')) : ?>
         <script src="<?= site_url('js/mfjenistinta.js'); ?>"></script>
+    <?php endif; ?>
+    <?php if (url_is('mfjenisflute')) : ?>
+        <script src="<?= site_url('js/mfjenisflute.js'); ?>"></script>
+    <?php endif; ?>
+    <?php if (url_is('mfprosesfinishing')) : ?>
+        <script src="<?= site_url('js/mfprosesfinishing.js'); ?>"></script>
+    <?php endif; ?>
+    <?php if (url_is('mfprosesmanual')) : ?>
+        <script src="<?= site_url('js/mfprosesmanual.js'); ?>"></script>
+    <?php endif; ?>
+    <?php if (url_is('mfproseskhusus')) : ?>
+        <script src="<?= site_url('js/mfproseskhusus.js'); ?>"></script>
+    <?php endif; ?>
+    <?php if (url_is('mftujuankirim')) : ?>
+        <script src="<?= site_url('js/mftujuankirim.js'); ?>"></script>
     <?php endif; ?>
     <script src="<?= site_url('js/custom.js'); ?>"></script>
     <!-- -->

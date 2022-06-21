@@ -357,6 +357,10 @@ body {
   font-size: 85%;
   color: rgba(0,0,0,.5);
 }
+.labelDet{
+  font-weight: 600;
+  margin-top: 10pt;
+}
 
 @media only screen and (max-width: 1120px) {
 }

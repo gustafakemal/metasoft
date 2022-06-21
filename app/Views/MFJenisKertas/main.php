@@ -55,17 +55,15 @@
 								<input name="harga" type="number" class="form-control" id="harga" value="0">
 							</div>
 							<div class="form-group">
-								<label>Status</label>
-								<div class="form-check">
-									<input class="form-check-input" checked="checked" type="radio" name="aktif" id="msJenisKertasAktif" value="Y">
-									<label class="form-check-label" for="msJenisKertasAktif">Aktif</label>
-								</div>
-								<div class="form-check">
-									<input class="form-check-input" type="radio" name="aktif" id="msJenisKertasNonaktif" value="T">
-									<label class="form-check-label" for="msJenisKertasNonaktif">Nonaktif</label>
-								</div>
+								<label for="aktif">Status</label>
+								<select name="aktif" class="form-control" id="aktif">
+										<option value="Y">Aktif</option>
+										<option value="T">Nonaktif</option>
+								</select>
+
 							</div>
 
+							
 						</div>
 					</div>
 				</div>

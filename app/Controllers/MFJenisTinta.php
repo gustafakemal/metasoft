@@ -77,7 +77,7 @@ class MFJenisTinta extends BaseController
 				$data = [];
 				foreach ($query[0] as $key => $value) {
 					if ($key == 'aktif') {
-						$data[$key] = ($value == 'Y') ? 'Ya' : 'Tidak';
+						$data[$key] = ($value == 'Y') ? 'Aktif' : 'Nonaktif';
 					} elseif ($key == 'added' || $key == 'updated') {
 						$data[$key] = ($value != null) ? (Time::parse($value))->toDateTimeString() : '-';
 					} else {

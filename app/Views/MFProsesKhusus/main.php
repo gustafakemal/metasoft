@@ -18,7 +18,7 @@
 			<th style="width: 25px;">No</th>
 			<th>ID</th>
 			<th>Tanggal dibuat</th>
-			<th>Jenis Tinta</th>
+			<th>Proses Khusus</th>
 			<th>Harga</th>
 			<th>Status Aktif</th>
 			<th>Dibuat</th>
@@ -29,6 +29,18 @@
 		</tr>
 	</thead>
 </table>
+
+<!-- <form name="dummyform">
+<div class="form-check">
+									<input class="form-check-input" checked="checked" type="radio" name="aktif" id="msJenisFluteAktif" value="Y">
+									<label class="form-check-label" for="msJenisFluteAktif">Aktif</label>
+								</div>
+								<div class="form-check">
+									<input class="form-check-input" type="radio" name="aktif" id="msJenisFluteNonaktif" value="T">
+									<label class="form-check-label" for="msJenisFluteNonaktif">Nonaktif</label>
+								</div>
+<button type="submit" name="submit" class="btn btn-primary">Save</button>
+							</form> -->
 
 <!-- Modal -->
 <div class="modal fade" id="dataForm" tabindex="-1" aria-labelledby=dataFormLabel" aria-hidden="true">
@@ -47,8 +59,8 @@
 					<div class="row">
 						<div class="col">
 							<div class="form-group">
-								<label for="nama">Jenis Tinta <span class="text-danger">*</span></label>
-								<input name="nama" type="text" class="form-control" id="nama">
+								<label for="proses">Proses Khusus <span class="text-danger">*</span></label>
+								<input name="proses" type="text" class="form-control" id="proses">
 							</div>
 							<div class="form-group">
 								<label for="harga">Harga <span class="text-danger">*</span></label>
@@ -56,13 +68,20 @@
 							</div>
 							<div class="form-group">
 								<label for="aktif">Status</label>
+								<!-- <div class="form-check">
+									<input class="form-check-input" checked="checked" type="radio" name="aktif" id="msJenisFluteAktif" value="Y">
+									<label class="form-check-label" for="msJenisFluteAktif">Aktif</label>
+								</div>
+								<div class="form-check">
+									<input class="form-check-input" type="radio" name="aktif" id="msJenisFluteNonaktif" value="T">
+									<label class="form-check-label" for="msJenisFluteNonaktif">Nonaktif</label>
+								</div> -->
 								<select name="aktif" class="form-control" id="aktif">
-										<option value="Y">Aktif</option>
-										<option value="T">Nonaktif</option>
+									<option value="Y">Aktif</option>
+									<option value="T">Nonaktif</option>
 								</select>
-
 							</div>
-
+							
 						</div>
 					</div>
 				</div>
@@ -92,8 +111,8 @@
 				<div class="row">
 					<div class="col">
 						<div class="item">
-							<label>Jenis Tinta</label>
-							<div class="custDet nama"></div>
+							<label>Proses Khusus</label>
+							<div class="custDet proses"></div>
 						</div>
 						<div class="item">
 							<label>Harga</label>

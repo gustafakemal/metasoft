@@ -52,15 +52,24 @@
       </a>
   </li>
   <li class="<?= (current_url() == site_url()) ? 'active' : '' ?>">
-           
-                <a href="<?= site_url('customer');?>">
-                    <i class="fas fa-user-circle text-dark"></i> Pelanggan
-                </a>
-                </li>
+    <a href="<?= site_url('customer');?>">
+    <i class="fas fa-user-circle text-dark"></i> Data Pelanggan
+    </a>
+  </li>
+  <li class="<?= (current_url() == site_url()) ? 'active' : '' ?>">
+    <a href="<?= site_url('sales');?>">
+    <i class="fas fa-handshake text-dark"></i> Data Sales
+    </a>
+  </li>
+  <li class="<?= (current_url() == site_url()) ? 'active' : '' ?>">
+    <a href="<?= site_url('mftujuankirim');?>">
+        <i class="fas fa-car-alt text-dark"></i> Tujuan Kirim
+    </a>
+    </li>
   <li>
       <a href="#" data-toggle="collapse" data-target="#dropdown"
           aria-expanded="<?= (url_is('mail*') || url_is('stats')) ? 'true' : 'false'; ?>">
-          <i class="fas fa-envelope text-dark"></i> Master Data
+          <i class="fas fa-envelope text-dark"></i> Data Meta Fold
       </a>
       <div id="dropdown" class="collapse"
           data-parent="#mainmenu">
@@ -68,39 +77,35 @@
               
               <li class="">
               <a href="<?= site_url('mfjeniskertas');?>">
-                    <i class="fas fa-arrow-circle-right text-dark"></i> Jenis Kertas MF
+                    <i class="fas fa-arrow-circle-right text-dark"></i> Jenis Kertas
                 </a>
               </li>
               <li class="">
               <a href="<?= site_url('mfjenistinta');?>">
-                    <i class="fas fa-arrow-circle-right text-dark"></i> Jenis Tinta MF
+                    <i class="fas fa-arrow-circle-right text-dark"></i> Jenis Tinta
                 </a>
               </li>
               <li class="">
               <a href="<?= site_url('mfjenisflute');?>">
-                    <i class="fas fa-arrow-circle-right text-dark"></i> Jenis Flute MF
+                    <i class="fas fa-arrow-circle-right text-dark"></i> Jenis Flute
                 </a>
               </li>
               <li class="">
               <a href="<?= site_url('mfprosesfinishing');?>">
-                    <i class="fas fa-arrow-circle-right text-dark"></i> Proses Finishing MF
+                    <i class="fas fa-arrow-circle-right text-dark"></i> Proses Finishing
                 </a>
               </li>
               <li class="">
               <a href="<?= site_url('mfprosesmanual');?>">
-                    <i class="fas fa-arrow-circle-right text-dark"></i> Proses Manual MF
+                    <i class="fas fa-arrow-circle-right text-dark"></i> Proses Manual
                 </a>
               </li>
               <li class="">
               <a href="<?= site_url('mfproseskhusus');?>">
-                    <i class="fas fa-arrow-circle-right text-dark"></i> Proses Khusus MF
+                    <i class="fas fa-arrow-circle-right text-dark"></i> Proses Khusus
                 </a>
               </li>
-              <li class="">
-              <a href="<?= site_url('mftujuankirim');?>">
-                    <i class="fas fa-arrow-circle-right text-dark"></i> Tujuan Kirim
-                </a>
-              </li>
+              
           </ul>
       </div>
   </li>
@@ -159,6 +164,9 @@
 
     <?php if (url_is('customer')) : ?>
         <script src="<?= site_url('js/customer.js'); ?>"></script>
+    <?php endif; ?>
+    <?php if (url_is('sales')) : ?>
+        <script src="<?= site_url('js/sales.js'); ?>"></script>
     <?php endif; ?>
     <?php if (url_is('mfjeniskertas')) : ?>
         <script src="<?= site_url('js/mfjeniskertas.js'); ?>"></script>

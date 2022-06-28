@@ -1,9 +1,17 @@
 <?php
 
 namespace App\Controllers;
+use App\Models\UsersModel;
 
 class Auth extends BaseController
 {
+	private $model;
+
+	public function __construct()
+	{
+		$this->model = new UsersModel();
+	}
+
     public function login()
     {
         return view('login');
@@ -14,18 +22,16 @@ class Auth extends BaseController
         $username = $this->request->getPost('username');
         $password = $this->request->getPost('password');
 
-        // $model = new \App\Models\UsersModel;
-        // $user = $model->getByUserID($username);
-
-        // dd($user);
+        
+        
 
         $auth = service('auth');
-
-        if($auth->login($username, $password)) {
+        $result=$auth->login($username, $password);
+        if($result['isValid']) {
             return redirect()->to('/');
         } else {
             return redirect()->back()
-                            ->with('error', 'Username atau password salah.');
+                            ->with('error', $result['msg']);
         }
     }
 

@@ -190,10 +190,11 @@ $(function () {
 					for(const property in response.data) {
 						$(`#dataForm input[name="${property}"], #dataForm textarea[name="${property}"]`).val(response.data[property])
 					}
+					$(`#dataForm select[name="aktif"] option`).removeAttr('selected')
 					if(response.data['aktif'] == "Y") {
-						$(`#dataForm select[name="aktif"] option:first-child`).attr('selected', 'selected')
+						$(`#dataForm select[name="aktif"] option[value="Y"]`).attr('selected', 'selected')
 					} else {
-						$(`#dataForm select[name="aktif"] option:last-child`).attr('selected', 'selected')
+						$(`#dataForm select[name="aktif"] option[value="T"]`).attr('selected', 'selected')
 					}
 					
 				}

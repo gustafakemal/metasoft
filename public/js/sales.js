@@ -1,9 +1,8 @@
 $(function () {
 
-	let mfProsesFinishingData;
-
+	let salesData;
 	$("#dataList").DataTable({
-		data: mfProsesFinishingData,
+		data: salesData,
         buttons: [{
                 extend: 'excelHtml5',
                 exportOptions: { orthogonal: 'export' }
@@ -11,50 +10,47 @@ $(function () {
 		columnDefs: [{
 			"searchable": false,
 			"orderable": false,
-			"targets": [0, 10]
+			"targets": [0,5]
 		},
-		// {
-		// 	"width": 60,
-		// 	"targets": 18
-		// },{
-		// 	"targets": 14,
-		// 	render: function ( data, type, row, meta ) {
-		// 		if(type === 'export') {
-		// 			return data;
-		// 		} else {
-		// 			return (data == 'Y') ? 'Ya' : 'Tidak';
-		// 		}
-		// 	}
-		// },
 		{
-			"width": 150,
+			"width": 250,
 			"targets": 2
 		},
 		{
 			"width": 100,
-			"targets": 5
+			"targets": 3
+		},{
+			"targets": 4,
+			render: function ( data, type, row, meta ) {
+				if(type === 'export') {
+					return data;
+				} else {
+					return (data == 'A') ? 'Ya' : 'Tidak';
+				}
+			}
 		},
 		{
 			className: 'dt-body-nowrap',
-			"targets": 10
+			"targets": 5
 		},
 		{
 			 "visible": false,
-			 "targets": [1,6,7,8,9]
-		}],
+			 "targets": 1
+		},
+		],
 		order: [[ 1, 'desc' ]],
 		createdRow: function (row, data, dataIndex) {
 			$(row).find("td:eq(0)").attr("data-label", "No");
-			$(row).find("td:eq(1)").attr("data-label", "Tanggal dibuat");
-			$(row).find("td:eq(2)").attr("data-label", "Jenis Flute");
-			$(row).find("td:eq(3)").attr("data-label", "Harga");
+			$(row).find("td:eq(1)").attr("data-label", "ID Sales");
+			$(row).find("td:eq(2)").attr("data-label", "Nama Sales");
+			$(row).find("td:eq(3)").attr("data-label", "NIK Sales");
 			$(row).find("td:eq(4)").attr("data-label", "Status Aktif");
 			$(row).find("td:eq(5)").attr("data-label", "&nbsp;");
 		},
 		initComplete: function () {
 			const dropdown = `<div class="dropdown d-inline mr-2">` +
-								`<button class="btn btn-primary dropdown-toggle" type="button" id="customersDropdown" data-toggle="dropdown" aria-expanded="false"><i class="fas fa-cog"></i></button>` +
-								`<div class="dropdown-menu" aria-labelledby="customersDropdown">` +
+								`<button class="btn btn-primary dropdown-toggle" type="button" id="dataTableDropdown" data-toggle="dropdown" aria-expanded="false"><i class="fas fa-cog"></i></button>` +
+								`<div class="dropdown-menu" aria-labelledby="dataTableDropdown">` +
 								`<a class="dropdown-item data-reload" href="#">Reload data</a>` +
 								`<a class="dropdown-item data-to-csv" href="#">Export to excel</a>` +
 							`</div>` +
@@ -74,14 +70,16 @@ $(function () {
 				$('#dataList').DataTable().clear();
 				$('#dataList').DataTable().rows.add(response);
 				$('#dataList').DataTable().draw();
+				
 			},
 			error: function () {
 				$('#dataList .dataTables_empty').html('Data gagal di retrieve.')
 			},
 			complete: function() {}
 		}
-		
+		console.log("test");
 		getAllData(obj);
+		
 	}, 50)
 
 	$('#dataList').DataTable().on( 'order.dt search.dt', function () {
@@ -108,7 +106,7 @@ $(function () {
 
 		$.ajax({
 			type: "POST",
-			url: `${HOST}/mfprosesfinishing/apiAddProcess`,
+			url: `${HOST}/sales/apiAddProcess`,
 			dataType: 'JSON',
 			data: formData,
 			contentType: false,
@@ -150,7 +148,7 @@ $(function () {
 		const id = $(this).attr('data-id')
 		$.ajax({
 			type: "POST",
-			url: `${HOST}/mfprosesfinishing/apiGetById`,
+			url: `${HOST}/sales/apiGetById`,
 			dataType: 'JSON',
 			data: { id, modified: true },
 			beforeSend: function () {},
@@ -164,6 +162,25 @@ $(function () {
 			error: function () {},
 			complete: function () {}
 		})
+	})
+	$('input[name="NIK"]').keyup(function() {
+		var nik=$(this).val();
+		var panjang = nik.length;
+		console.log(nik);
+		if(panjang==6){
+		$.ajax({
+		  type: 'POST',
+		  url: `${HOST}/users/apiGetNamaById`,
+		  dataType: 'JSON',
+		  data: {nik},
+		  beforeSend: function() {},
+		  success: function(response) {
+			console.log(response);
+			var nama=response.Nama;
+			$('input[name="SalesName"]').val(nama);
+		  }
+	  })
+		}
 	})
 
 	$('#dataList').on('click', '.item-edit', function(e) {
@@ -180,7 +197,7 @@ $(function () {
 		//alert("cek")
 		$.ajax({
 			type: "POST",
-			url: `${HOST}/mfprosesfinishing/apiGetById`,
+			url: `${HOST}/sales/apiGetById`,
 			dataType: 'JSON',
 			data: { id },
 			beforeSend: function () {},
@@ -190,11 +207,11 @@ $(function () {
 					for(const property in response.data) {
 						$(`#dataForm input[name="${property}"], #dataForm textarea[name="${property}"]`).val(response.data[property])
 					}
-					$(`#dataForm select[name="aktif"] option`).removeAttr('selected')
-					if(response.data['aktif'] == "Y") {
-						$(`#dataForm select[name="aktif"] option[value="Y"]`).attr('selected', 'selected')
+					$(`#dataForm select[name="FlagAktif"] option`).removeAttr('selected')
+					if(response.data['FlagAktif'] == "A") {
+						$(`#dataForm select[name="FlagAktif"] option[value="A"]`).attr('selected', 'selected')
 					} else {
-						$(`#dataForm select[name="aktif"] option[value="T"]`).attr('selected', 'selected')
+						$(`#dataForm select[name="FlagAktif"] option[value="N"]`).attr('selected', 'selected')
 					}
 					
 				}
@@ -209,7 +226,7 @@ $(function () {
 
 		$.ajax({
 			type: "POST",
-			url: `${HOST}/mfprosesfinishing/apiEditProcess`,
+			url: `${HOST}/sales/apiEditProcess`,
 			dataType: 'JSON',
 			data: formData,
 			contentType: false,
@@ -272,10 +289,10 @@ $(function () {
 
 function getAllData(obj)
 {
-	
+	console.log("test");
 	$.ajax({
 		type: "POST",
-		url: `${HOST}/mfprosesfinishing/apiGetAll`,
+		url: `${HOST}/sales/apiGetAll`,
 		beforeSend: obj.beforeSend,
 		success: obj.success,
 		error: obj.error,

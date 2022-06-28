@@ -10,13 +10,30 @@ class Authentication
     {
         $model = new \App\Models\UsersModel;
         $user = $model->getByUserID($UserID);
+        $UserName = '';
+        $isValid = false;
+        $msg="";
+        $query = $model->getByUserID($UserID);
+		if($query->getNumRows()>0){
+            $UserName= $query->getResult()[0]->Nama;
+            $validData = $model->isValidPass($UserID,$password);
+            if($validData[0]->Valid)
+                $isValid=true;
+                //return "Pass OK";
+            else
+                $msg = "Password tidak sesuai";
+            
+        }else {
+            $msg =  "User tidak terdaftar";
+		}
+       
 
-        if($user === null) {
-            return false;
-        }
 
-        if($password !== $UserID) {
-            return false;
+        if(!($isValid)) {
+            return [
+                'isValid' => $isValid,
+                'msg' => $msg
+            ];
         }
 
         // if(!$user->verifyPassword($password)) {
@@ -25,9 +42,13 @@ class Authentication
 
         $session = session();
         $session->regenerate();
-        $session->set('UserID', $user->UserID);
+        $session->set('UserID', $UserID);
+        $session->set('UserName', $UserName);
 
-        return true;
+        return [
+            'isValid' => $isValid,
+            'msg' => $msg
+        ];;
     }
 
     public function logout() {

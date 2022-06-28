@@ -33,7 +33,7 @@ class MFProsesKhusus extends BaseController
 		foreach ($query as $key => $value) {
 			$detail = '<a class="btn btn-primary btn-sm item-detail mr-1" href="#" data-id="' . $value->id . '" title="Detail"><i class="far fa-file-alt"></i></a>';
 			$edit = '<a class="btn btn-success btn-sm item-edit mr-1" href="#" data-id="' . $value->id . '" title="Edit"><i class="far fa-edit"></i></a>';
-			$hapus = '<a class="btn btn-danger btn-sm" href="' . site_url('mfproseskhusus/delete/' . $value->id) . '" data-id="' . $value->id . '" onclick="return confirm(\'Apa Anda yakin menghapus user ini?\')" title="Hapus"><i class="fas fa-trash-alt"></i></a>';
+			$hapus = '<a class="btn btn-danger btn-sm" href="' . site_url('mfproseskhusus/delete/' . $value->id) . '" data-id="' . $value->id . '" onclick="return confirm(\'Apa Anda yakin menghapus data ini?\')" title="Hapus"><i class="fas fa-trash-alt"></i></a>';
 	
 		
 			$CreateDate = (Time::parse($value->added))->toDateTimeString();

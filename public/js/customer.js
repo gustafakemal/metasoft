@@ -182,20 +182,25 @@ $(function () {
 					for(const property in response.data) {
 						$(`#dataForm input[name="${property}"], #dataForm textarea[name="${property}"]`).val(response.data[property])
 					}
+					
+
+					$(`#dataForm select[name="FlagAktif"] option`).removeAttr('selected')
 					if(response.data['FlagAktif'] == "A") {
-						$(`#dataForm select[name="FlagAktif"] option:first-child`).attr('selected', 'selected')
+						$(`#dataForm select[name="FlagAktif"] option[value="A"]`).attr('selected', 'selected')
 					} else {
-						$(`#dataForm select[name="FlagAktif"] option:last-child`).attr('selected', 'selected')
+						$(`#dataForm select[name="FlagAktif"] option[value="N"]`).attr('selected', 'selected')
 					}
+					$(`#dataForm select[name="WajibPajak"] option`).removeAttr('selected')
 					if(response.data['WajibPajak'] == "Y") {
-						$(`#dataForm select[name="WajibPajak"] option:first-child`).attr('selected', 'selected')
+						$(`#dataForm select[name="WajibPajak"] option[value="Y"`).attr('selected', 'selected')
 					} else {
-						$(`#dataForm select[name="WajibPajak"] option:last-child`).attr('selected', 'selected')
+						$(`#dataForm select[name="WajibPajak"] option[value="T"`).attr('selected', 'selected')
 					}
+					$(`#dataForm select[name="InternEkstern"] option`).removeAttr('selected')
 					if(response.data['InternEkstern'] == "E") {
-						$(`#dataForm select[name="InternEkstern"] option:first-child`).attr('selected', 'selected')
+						$(`#dataForm select[name="InternEkstern"] option[value="E"`).attr('selected', 'selected')
 					} else {
-						$(`#dataForm select[name="InternEkstern"] option:last-child`).attr('selected', 'selected')
+						$(`#dataForm select[name="InternEkstern"] option[value="I"`).attr('selected', 'selected')
 					}
 				}
 				//console.log(response.data['InternEkstern'])

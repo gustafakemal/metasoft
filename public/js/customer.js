@@ -47,8 +47,8 @@ $(function () {
 		},
 		initComplete: function () {
 			const dropdown = `<div class="dropdown d-inline mr-2">` +
-								`<button class="btn btn-primary dropdown-toggle" type="button" id="customersDropdown" data-toggle="dropdown" aria-expanded="false"><i class="fas fa-cog"></i></button>` +
-								`<div class="dropdown-menu" aria-labelledby="customersDropdown">` +
+								`<button class="btn btn-primary dropdown-toggle" type="button" id="dataTableDropdown" data-toggle="dropdown" aria-expanded="false"><i class="fas fa-cog"></i></button>` +
+								`<div class="dropdown-menu" aria-labelledby="dataTableDropdown">` +
 								`<a class="dropdown-item customers-reload" href="#">Reload data</a>` +
 								`<a class="dropdown-item customers-to-csv" href="#">Export to excel</a>` +
 							`</div>` +

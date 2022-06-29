@@ -4,39 +4,25 @@ namespace App\Models;
 
 use CodeIgniter\Model;
 
-class MFJenisTintaModel extends Model
+class MFProdukModel extends Model
 {
-    protected $table = 'MF_JenisTinta';
+    protected $table = 'MF_Produk';
     protected $useTimestamps = true;
     protected $createdField  = 'added';
     protected $updatedField  = 'updated';
-    protected $allowedFields = ['id', 'nama', 'harga', 'aktif', "added", 'added_by', 'updated', 'updated_by'];
+    protected $allowedFields = ['id', 'fgd', 'revisi', 'nama_produk', 'aktif', "added", 'added_by', 'updated', 'updated_by'];
     protected $validationRules = [
-        'nama' => 'required',
-        'harga' => 'required',
+        'nama_produk' => 'required',
     ];
     protected $validationMessages = [
-        'nama'        => [
-            'required' => 'Field Jenis Tinta harus diisi.',
-        ],
-        'harga'        => [
-            'required' => 'Field Harga harus diisi.',
+        'nama_produk'        => [
+            'required' => 'Field Nama Produk harus diisi.',
         ],
     ];
-    public function getOpsi()
+
+    public function getMFProduk()
     {
-        $query = $this->where('aktif', 'Y')
-                    ->orderBy('nama', 'asc')
-                    ->get();
-        if($query->getNumRows() > 0) {
-            return $query->getResult();
-        } else {
-            return [];
-        }
-    }
-    public function getMFJenisTinta()
-    {
-        return $this->orderBy('nama', 'desc')
+        return $this->orderBy('nama_produk', 'asc')
             ->asObject()
             ->findAll();
     }

@@ -16,7 +16,17 @@ class SalesModel extends Model
             'required' => 'Field Nama Sales harus diisi.',
         ],
     ];
-
+    public function getOpsi()
+    {
+        $query = $this->where('FlagAktif', 'A')
+                    ->orderBy('SalesName', 'asc')
+                    ->get();
+        if($query->getNumRows() > 0) {
+            return $query->getResult();
+        } else {
+            return [];
+        }
+    }
     public function getSales()
     {
         return $this->orderBy('SalesName', 'desc')

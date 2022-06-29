@@ -23,7 +23,17 @@ class MFProsesFinishingModel extends Model
             'required' => 'Field Harga harus diisi.',
         ],
     ];
-
+    public function getOpsi()
+    {
+        $query = $this->where('aktif', 'Y')
+                    ->orderBy('proses', 'asc')
+                    ->get();
+        if($query->getNumRows() > 0) {
+            return $query->getResult();
+        } else {
+            return [];
+        }
+    }
     public function getMFProsesFinishing()
     {
         return $this->orderBy('proses', 'desc')

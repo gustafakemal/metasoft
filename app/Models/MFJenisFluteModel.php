@@ -23,7 +23,17 @@ class MFJenisFluteModel extends Model
             'required' => 'Field Harga harus diisi.',
         ],
     ];
-
+    public function getOpsi()
+    {
+        $query = $this->where('aktif', 'Y')
+                    ->orderBy('nama', 'asc')
+                    ->get();
+        if($query->getNumRows() > 0) {
+            return $query->getResult();
+        } else {
+            return [];
+        }
+    }
     public function getMFJenisFlute()
     {
         return $this->orderBy('nama', 'desc')

@@ -19,7 +19,17 @@ class CustomerModel extends Model
             'required' => 'Field Nama pemesan harus diisi.',
         ],
     ];
-
+    public function getOpsi()
+    {
+        $query = $this->where('FlagAktif', 'A')
+                    ->orderBy('NamaPemesan', 'asc')
+                    ->get();
+        if($query->getNumRows() > 0) {
+            return $query->getResult();
+        } else {
+            return [];
+        }
+    }
     public function getCustomers()
     {
         return $this->orderBy('NoPemesan', 'desc')

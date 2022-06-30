@@ -32,7 +32,7 @@
                 <div class="account-nav dropdown">
                     <button type="button" class="dropdown-toggle" data-toggle="dropdown">
                         <div class="name">
-                            <?= (current_user()) ? current_user()->Nama : 'UNAUTHENTICATED' ?>
+                            <?php //echo (current_user()) ? current_user()->Nama : 'UNAUTHENTICATED' ?>
                         </div>
                         <div class="dropdown-menu dropdown-menu-right">
                             <a href="#" class="dropdown-item">Profil</a>
@@ -66,12 +66,31 @@
         <i class="fas fa-car-alt text-dark"></i> Tujuan Kirim
     </a>
     </li>
+    <li>
+      <a href="#" data-toggle="collapse" data-target="#dropdown-mf"
+          aria-expanded="<?= (url_is('mail*') || url_is('stats')) ? 'true' : 'false'; ?>">
+          <i class="fas fa-flushed text-dark"></i> Meta Fold
+      </a>
+      <div id="dropdown-mf" class="collapse"
+          data-parent="#mainmenu">
+          <ul class="">
+              
+              <li class="">
+              <a href="<?= site_url('mfproduk');?>">
+                    <i class="fas fa-arrow-circle-right text-dark"></i> Input Produk
+                </a>
+              </li>
+              
+              
+          </ul>
+      </div>
+  </li>
   <li>
-      <a href="#" data-toggle="collapse" data-target="#dropdown"
+      <a href="#" data-toggle="collapse" data-target="#dropdown-mfmaster"
           aria-expanded="<?= (url_is('mail*') || url_is('stats')) ? 'true' : 'false'; ?>">
           <i class="fas fa-envelope text-dark"></i> Data Meta Fold
       </a>
-      <div id="dropdown" class="collapse"
+      <div id="dropdown-mfmaster" class="collapse"
           data-parent="#mainmenu">
           <ul class="">
               
@@ -161,7 +180,9 @@
     <script type="text/javascript">
         const HOST = "<?= base_url(); ?>"
     </script>
-
+    <?php if (url_is('mfproduk')) : ?>
+        <script src="<?= site_url('js/produk.js'); ?>"></script>
+    <?php endif; ?>
     <?php if (url_is('customer')) : ?>
         <script src="<?= site_url('js/customer.js'); ?>"></script>
     <?php endif; ?>

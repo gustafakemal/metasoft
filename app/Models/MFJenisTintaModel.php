@@ -23,7 +23,17 @@ class MFJenisTintaModel extends Model
             'required' => 'Field Harga harus diisi.',
         ],
     ];
-
+    public function getOpsi()
+    {
+        $query = $this->where('aktif', 'Y')
+                    ->orderBy('nama', 'asc')
+                    ->get();
+        if($query->getNumRows() > 0) {
+            return $query->getResult();
+        } else {
+            return [];
+        }
+    }
     public function getMFJenisTinta()
     {
         return $this->orderBy('nama', 'desc')

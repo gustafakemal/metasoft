@@ -3,6 +3,7 @@
 namespace App\Models;
 
 use CodeIgniter\Model;
+use CodeIgniter\I18n\Time;
 
 class MFProdukModel extends Model
 {
@@ -27,9 +28,44 @@ class MFProdukModel extends Model
             ->findAll();
     }
 
+    public function getByFgd($fgd)
+    {
+        $query = $this->like('fgd', $fgd)
+                    ->get();
+
+        if($query->getNumRows() == 0) {
+            return [];
+        }
+
+        return $query->getResult();
+    }
+
+    public function idGenerator()
+    {
+        return $this->datePrefix() . $this->lastIdCounter(8);
+    }
+
+    public function fgdGenerator()
+    {
+        return $this->datePrefix() . $this->lastIdCounter(4);
+    }
+
+    private function lastIdCounter($length)
+    {
+        $id = $this->get()->getLastRow()->id;
+        $last_id = (int)substr($id, 4);
+        $new_id = $last_id + 1;
+        return str_pad($new_id, $length, "0", STR_PAD_LEFT);
+    }
+
+    private function datePrefix()
+    {
+        return substr(Time::now()->getYear(), 2) . str_pad(Time::now()->getMonth(), 2, '0', STR_PAD_LEFT);
+    }
+
     public function getById($id)
     {
-        return $this->where('id', $id)->findAll();
+        return $this->asObject()->find($id);
     }
 
     public function getMaxId()

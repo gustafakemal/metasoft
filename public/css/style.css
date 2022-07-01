@@ -362,6 +362,15 @@ body {
   margin-top: 10pt;
 }
 
+.tbl-data-product,
+.csc-form {
+  display: none;
+}
+.tbl-data-product.show,
+.csc-form.show {
+  display: block;
+}
+
 @media only screen and (max-width: 1120px) {
 }
 @media only screen and (max-width: 992px) {

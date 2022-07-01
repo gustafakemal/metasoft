@@ -46,12 +46,43 @@ class MFProduk extends BaseController
 		]);
 	}
 
+	public function productSearch()
+	{
+		$keyword = $this->request->getPost('keyword');
+		$query = $this->model->getByFgd($keyword);
+
+		$data = [];
+		foreach($query as $key => $val) {
+			$edit_btn = '<button type="button" class="btn btn-primary edit-rev-item" data-id="'.$val->id.'">Edit</button>';
+			$revisi_btn = '<button type="button" class="btn btn-primary rev-item" data-id="'.$val->id.'">Revisi</button>';
+			$data[] = [
+				$key + 1,
+				$val->fgd,
+				$val->revisi,
+				$val->nama_produk,
+				$val->customer,
+				$val->sales,
+				$val->added,
+				$val->added_by,
+				$val->updated,
+				$val->updated_by,
+				$edit_btn . $revisi_btn
+			];
+		}
+
+		$response = [
+			'success' => true,
+			'data' => $data
+		];
+
+		return $this->response->setJSON($response);
+	}
+
 	public function apiGetAll()
 	{
 		if ($this->request->getMethod() !== 'post') {
 			return redirect()->to('mfproduk');
 		}
-
 
 	}
 
@@ -61,7 +92,14 @@ class MFProduk extends BaseController
 			return redirect()->to('mfproduk');
 		}
 
+		$id = $this->request->getPost('id');
 		
+		$response = [
+			'success' => (null !== $this->model->getById($id)) ? true : false,
+			'data' => $this->model->getById($id)
+		];
+
+		return $this->response->setJSON($response);
 	}
 
 	public function apiAddProcess()
@@ -69,6 +107,94 @@ class MFProduk extends BaseController
 		if ($this->request->getMethod() !== 'post') {
 			return redirect()->to('mfproduk');
 		}
+
+		$data = $this->request->getPost();
+		$id = $this->model->idGenerator();
+		$data['id'] = $id;
+		// return $this->response->setJSON(['data' => $data]);
+
+    	if( $this->model->insert($data) ) {
+    		$msg = 'Data berhasil ditambahkan.';
+    		session()->setFlashData('success', $msg);
+    		$response = [
+    			'success' => true,
+    			'msg' => $msg,
+    			'data' => [
+    				'id' => $data['id'],
+    			],
+    		];
+    	} else {
+    		$response = [
+    			'success' => false,
+    			'msg' => '<p>' . implode('</p><p>', $this->model->errors()) . '</p>',
+    			'data' => null,
+    		];
+    	}
+    	
+    	return $this->response->setJSON($response);
+	}
+
+	public function apiEditRevision()
+	{
+		if ($this->request->getMethod() !== 'post') {
+			return redirect()->to('mfproduk');
+		}
+
+		$data = $this->request->getPost();
+		unset($data['fgd']);
+		// return $this->response->setJSON(['data' => $data]);
+
+    	if( $this->model->save($data) ) {
+    		$msg = 'Data revisi berhasil ditambahkan';
+    		session()->setFlashData('success', $msg);
+    		$response = [
+    			'success' => true,
+    			'msg' => $msg,
+    			'data' => [
+    				'id' => $data['id'],
+    			],
+    		];
+    	} else {
+    		$response = [
+    			'success' => false,
+    			'msg' => '<p>' . implode('</p><p>', $this->model->errors()) . '</p>',
+    			'data' => null,
+    		];
+    	}
+    	
+    	return $this->response->setJSON($response);
+	}
+
+	public function apiAddRevision() {
+		if ($this->request->getMethod() !== 'post') {
+			return redirect()->to('mfproduk');
+		}
+
+		$data = $this->request->getPost();
+
+		$id = $this->model->idGenerator();
+		$data['id'] = $id;
+		// return $this->response->setJSON(['data' => $data]);
+
+    	if( $this->model->insert($data) ) {
+    		$msg = 'Data berhasil ditambahkan';
+    		session()->setFlashData('success', $msg);
+    		$response = [
+    			'success' => true,
+    			'msg' => $msg,
+    			'data' => [
+    				'id' => $data['id'],
+    			],
+    		];
+    	} else {
+    		$response = [
+    			'success' => false,
+    			'msg' => '<p>' . implode('</p><p>', $this->model->errors()) . '</p>',
+    			'data' => null,
+    		];
+    	}
+    	
+    	return $this->response->setJSON($response);
 	}
 
 	public function apiEditProcess()

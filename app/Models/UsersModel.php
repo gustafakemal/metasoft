@@ -13,7 +13,9 @@ class UsersModel extends Model
 
     public function getByUserID($UserID)
     {
-        $query = $this->where('UserID', $UserID)->get();;
+        $query = $this->where('UserID', $UserID)
+                    ->where('FlagAktif', 'A')
+                    ->get();
         return $query;
         // if($query->countAllResults()>0)
         // return   $this->where('UserID', $UserID)->get();

@@ -16,9 +16,9 @@
 
 <form name="form-cariproduk">
   <div class="form-row align-items-center">
-    <div class="col-auto">
+    <div class="col-6">
       <label class="sr-only" for="cariproduk">Cari Produk</label>
-      <input type="text" class="form-control mb-2" name="cariproduk" id="cariproduk" placeholder="Cari Produk">
+      <input type="text" style="text-transform:uppercase" class="form-control mb-2" name="cariproduk" id="cariproduk" placeholder="Cari Produk Berdasarkan No FGD atau Nama Produk">
     </div>
 	<div class="col-auto">
       <button type="submit" class="btn btn-primary mb-2">Cari</button>
@@ -34,18 +34,20 @@
 <div class="tbl-data-product">
 
 <table id="dataList" class="table table-bordered table-striped" style="width: 100%;">
+	
 	<thead>
 		<tr>
 			<th>No</th>
-			<th>No FGD</th>
-			<th>Revisi</th>
-			<th>Artikel</th>
+			<th>FGD</th>
+			<th>Rev</th>
+			<th>Produk</th>
+			<th>Segmen</th>
 			<th>Pemesan</th>
 			<th>Sales</th>
 			<th>Dibuat</th>
-			<th>Dibuat oleh</th>
-			<th>Update terakhir</th>
-			<th>Diupdate oleh</th>
+			<th>Dibuat<br>oleh</th>
+			<th>Update</th>
+			<th>Diupdate<br>oleh</th>
 			<th>&nbsp;</th>
 		</tr>
 	</thead>
@@ -56,14 +58,14 @@
 <form name="csc-form" class="csc-form">
 	<div class="msg"></div>
 	<div class="form-group row">
-		<label for="fgd" class="col-sm-2 col-form-label">No FGD <span class="text-danger">*</span></label>
+		<label for="fgd" class="col-sm-2 col-form-label">No FGD</span></label>
 		<div class="col-sm-4">
-			<input type="text" class="form-control" id="fgd" name="fgd">
+		<input type="text" class="form-control" id="tfgd" name="tfgd" disabled><input type="hidden" class="form-control" id="fgd" name="fgd">
 		</div>
-		<!-- <label for="revisi" class="col-sm-2 col-form-label">Revisi <span class="text-danger">*</span></label>
+		<label for="trevisi" class="col-sm-2 col-form-label">Revisi</span></label>
 		<div class="col-sm-4">
-			<input type="number" class="form-control" id="revisi" name="revisi">
-		</div> -->
+			<input type="text" class="form-control" id="trevisi" name="trevisi" disabled>
+		</div>
 	</div>
 	<div class="form-group row">
 		<label for="nama_produk" class="col-sm-2 col-form-label">Nama Produk <span class="text-danger">*</span></label>

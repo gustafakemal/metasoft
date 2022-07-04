@@ -14,6 +14,10 @@ class MFProduk extends BaseController
 		$this->model = new MFProdukModel();
 	}
 
+	// public function index2() {
+	// 	dd($this->model->getByFgdNama2('c'));
+	// }
+
 	public function index()
 	{
 		$segmen_model = new \App\Models\SegmenModel();
@@ -49,18 +53,22 @@ class MFProduk extends BaseController
 	public function productSearch()
 	{
 		$keyword = $this->request->getPost('keyword');
-		$query = $this->model->getByFgd($keyword);
+		$query = $this->model->getByFgdNama('C');
+		//dd($query);
+		//exit;
+
 
 		$data = [];
 		foreach($query as $key => $val) {
-			$edit_btn = '<button type="button" class="btn btn-primary edit-rev-item" data-id="'.$val->id.'">Edit</button>';
-			$revisi_btn = '<button type="button" class="btn btn-primary rev-item" data-id="'.$val->id.'">Revisi</button>';
+			$edit_btn = '<button type="button" class="btn btn-sm btn-success edit-rev-item mr-2" data-id="'.$val->id.'">Edit</button>';
+			$revisi_btn = '<button type="button" class="btn btn-sm btn-danger rev-item" data-id="'.$val->id.'">Revisi</button>';
 			$data[] = [
 				$key + 1,
 				$val->fgd,
 				$val->revisi,
 				$val->nama_produk,
-				$val->customer,
+				$val->segmen,
+				$val->pemesan,
 				$val->sales,
 				$val->added,
 				$val->added_by,
@@ -111,6 +119,7 @@ class MFProduk extends BaseController
 		$data = $this->request->getPost();
 		$id = $this->model->idGenerator();
 		$data['id'] = $id;
+		$data['added_by'] = current_user()->UserID;
 		// return $this->response->setJSON(['data' => $data]);
 
     	if( $this->model->insert($data) ) {
@@ -141,6 +150,7 @@ class MFProduk extends BaseController
 		}
 
 		$data = $this->request->getPost();
+		$data['updated_by'] = current_user()->UserID;
 		unset($data['fgd']);
 		// return $this->response->setJSON(['data' => $data]);
 
@@ -171,6 +181,7 @@ class MFProduk extends BaseController
 		}
 
 		$data = $this->request->getPost();
+		$data['added_by'] = current_user()->UserID;
 
 		$id = $this->model->idGenerator();
 		$data['id'] = $id;

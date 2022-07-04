@@ -39,7 +39,24 @@ class MFProdukModel extends Model
 
         return $query->getResult();
     }
+    public function getByFgdNama3() {
+        $db = \Config\Database::connect();
+        $query = $db->query('select * from v_MF_Produk');
 
+        return $query;
+    }
+    public function getByFgdNama($key)
+    {
+        $db = \Config\Database::connect();
+        $query = $db->query("select * from v_MF_Produk where upper(nama_produk) like upper('%$key%') or upper(fgd) like upper('%$key%')");         
+
+        if($query->getNumRows() == 0) {
+            return [];
+        }
+
+        return $query->getResult();
+    }
+    
     public function idGenerator()
     {
         return $this->datePrefix() . $this->lastIdCounter(8);

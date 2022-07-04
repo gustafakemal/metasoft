@@ -1,88 +1,44 @@
 $(function () {
 
-	let mfJenisFluteData;
+	let customerData;
 
 	$("#dataList").DataTable({
-		data: mfJenisFluteData,
+		data: customerData,
+		paging: false,
+		searching: false,
         buttons: [{
                 extend: 'excelHtml5',
                 exportOptions: { orthogonal: 'export' }
             }],
-		columnDefs: [{
-			"searchable": false,
-			"orderable": false,
-			"targets": [0, 10]
-		},
-		// {
-		// 	"width": 60,
-		// 	"targets": 18
-		// },{
-		// 	"targets": 14,
-		// 	render: function ( data, type, row, meta ) {
-		// 		if(type === 'export') {
-		// 			return data;
-		// 		} else {
-		// 			return (data == 'Y') ? 'Ya' : 'Tidak';
-		// 		}
-		// 	}
-		// },
-		{
-			"width": 150,
-			"targets": 2
-		},
-		{
-			"width": 100,
-			"targets": 5
-		},
-		{
-			className: 'dt-body-nowrap',
-			"targets": 10
-		},
-		{
-			 "visible": false,
-			 "targets": [1,6,7,8,9]
-		}],
-		order: [[ 1, 'desc' ]],
-		createdRow: function (row, data, dataIndex) {
-			$(row).find("td:eq(0)").attr("data-label", "No");
-			$(row).find("td:eq(1)").attr("data-label", "Tanggal dibuat");
-			$(row).find("td:eq(2)").attr("data-label", "Jenis Flute");
-			$(row).find("td:eq(3)").attr("data-label", "Harga");
-			$(row).find("td:eq(4)").attr("data-label", "Status Aktif");
-			$(row).find("td:eq(5)").attr("data-label", "&nbsp;");
-		},
-		initComplete: function () {
-			const dropdown = `<div class="dropdown d-inline mr-2">` +
-								`<button class="btn btn-primary dropdown-toggle" type="button" id="dataTableDropdown" data-toggle="dropdown" aria-expanded="false"><i class="fas fa-cog"></i></button>` +
-								`<div class="dropdown-menu" aria-labelledby="dataTableDropdown">` +
-								`<a class="dropdown-item data-reload" href="#">Reload data</a>` +
-								`<a class="dropdown-item data-to-csv" href="#">Export to excel</a>` +
-							`</div>` +
-						`</div>`
-			const add_btn = `<a href="#" class="btn btn-primary btn-add mr-2 add-data_btn">Tambah data</a>`;
-			$("#dataList_wrapper .dataTables_length").prepend(dropdown + add_btn);
-		},
+		columnDefs: [],
+		order: [[ 2, 'desc' ]],
+		initComplete: function () {},
 	});
 
-	setTimeout(() => {
-		const obj = {
-			beforeSend: function () {
-				
-				$('#dataList .dataTables_empty').html('<div class="spinner-icon"><span class="spinner-grow text-info"></span><span class="caption">Fetching data...</span></div>')
-			},
+	$('form[name="form-cariproduk"]').on('submit', function(e) {
+		e.preventDefault();
+		$('.csc-form')[0].reset();
+		$('.csc-form').removeClass('show')
+		const keyword = $('input[name="cariproduk"]').val();
+
+		$.ajax({
+			type: 'POST',
+			url: `${HOST}/mfproduk/productSearch`,
+			dataType: 'JSON',
+			data: { keyword },
+			beforeSend: function () {},
 			success: function (response) {
-				$('#dataList').DataTable().clear();
-				$('#dataList').DataTable().rows.add(response);
-				$('#dataList').DataTable().draw();
+				if(response.success) {
+					$('#dataList').DataTable().clear();
+					$('#dataList').DataTable().rows.add(response.data);
+					$('#dataList').DataTable().draw();
+					$('.tbl-data-product').addClass('show');
+				}
 			},
-			error: function () {
-				$('#dataList .dataTables_empty').html('Data gagal di retrieve.')
-			},
+			error: function () {},
 			complete: function() {}
-		}
-		
-		getAllData(obj);
-	}, 50)
+		})
+	})
 
 	$('#dataList').DataTable().on( 'order.dt search.dt', function () {
 		let i = 1;
@@ -91,194 +47,269 @@ $(function () {
 		});
 	}).draw();
 
-	$('.add-data_btn').on('click', function(e) {
-		e.preventDefault();
-		$('#dataForm').modal({
-			show: true,
-			backdrop: 'static'
-		})
-		$('#dataForm form').attr('name', 'addData')
-		$('#dataForm .modal-title').html('Tambah data')
-	})
-
-	$('#dataForm').on('submit', 'form[name="addData"]', function(e) {
-		e.preventDefault();
-		const formData = new FormData(this);
-		formData.delete('id')
-
-		$.ajax({
-			type: "POST",
-			url: `${HOST}/mfjenisflute/apiAddProcess`,
-			dataType: 'JSON',
-			data: formData,
-			contentType: false,
-			processData: false,
-			beforeSend: function () {
-				$('#dataForm .modal-footer .loading-indicator').html(
-					'<div class="spinner-icon">' +
-						'<span class="spinner-border text-info"></span>' +
-						'<span class="caption">Memproses data...</span>' +
-					'</div>')
-				$('form[name="addData"] input, form[name="addData"] textarea, form[name="addData"] button').attr('disabled', true)
-			},
-			success: function (response) {
-				if(response.success) {
-					location.reload();
-				} else {
-					$('#dataForm .msg').html(`<div class="alert alert-danger">${response.msg}</div>`)
-					$('#dataForm, html, body').animate({
-						scrollTop: 0
-					}, 500);
-				}
-			},
-			error: function () {},
-			complete: function () {
-				$('#dataForm .modal-footer .loading-indicator').html('');
-				$('form[name="addData"] input, form[name="addData"] textarea, form[name="addData"] button').attr('disabled', false)
-			}
-		})
-	})
-
-	$('#dataForm').on('hidden.bs.modal', function (event) {
-		$('#dataForm form[name="addData"], #dataForm form[name="editData"]')[0].reset();
-		$('#dataForm .msg').html('')
-	})
-
-	$('#dataList').on('click', '.item-detail', function(e) {
-		e.preventDefault();
-		$('#dataDetail').modal('show')
+	$('#dataList tbody').on('click', '.edit-rev-item', function(e) {
 		const id = $(this).attr('data-id')
 		$.ajax({
-			type: "POST",
-			url: `${HOST}/mfjenisflute/apiGetById`,
-			dataType: 'JSON',
-			data: { id, modified: true },
-			beforeSend: function () {},
-			success: function (response) {
-				if(response.success) {
-					for(const property in response.data) {
-						$(`#dataDetail .${property}`).html(response.data[property])
-					}
-				}
-			},
-			error: function () {},
-			complete: function () {}
-		})
-	})
-
-	$('#dataList').on('click', '.item-edit', function(e) {
-		e.preventDefault();
-		$('#dataForm').modal({
-			show: true,
-			backdrop: 'static'
-		})
-		$('#dataForm .modal-title').html('Edit Data')
-		$('#dataForm form').attr('name', 'editData')
-
-		const id = $(this).attr('data-id')
-		$('#dataForm form input[name="id"]').val(id)
-		//alert("cek")
-		$.ajax({
-			type: "POST",
-			url: `${HOST}/mfjenisflute/apiGetById`,
+			type: 'POST',
+			url: `${HOST}/mfproduk/apiGetById`,
 			dataType: 'JSON',
 			data: { id },
 			beforeSend: function () {},
 			success: function (response) {
-				console.log(response)
+				console.log(response.data.id)
 				if(response.success) {
+					$('.csc-form').addClass('show edit-revision-form');
+					$('.tbl-data-product').removeClass('show');
 					for(const property in response.data) {
-						$(`#dataForm input[name="${property}"], #dataForm textarea[name="${property}"]`).val(response.data[property])
+						$(`form[name="csc-form"] input[name="${property}"]`).val(response.data[property])
+						$(`form[name="csc-form"] select[name="${property}"] option[value="${response.data[property]}"]`).prop('selected', true)						
+						$(`form[name="csc-form"] textarea[name="${property}"]`).html(response.data[property])
 					}
-					$(`#dataForm select[name="aktif"] option`).removeAttr('selected')
-					if(response.data['aktif'] == "Y") {
-						$(`#dataForm select[name="aktif"] option[value="Y"]`).attr('selected', 'selected')
-					} else {
-						$(`#dataForm select[name="aktif"] option[value="T"]`).attr('selected', 'selected')
-					}
-					
+					$(`form[name="csc-form"]`).prepend(`<input type="hidden" name="id" value="${response.data.id}" />`);
+					$('.csc-form input[name="tfgd"]').val(response.data.fgd);
+					$('.csc-form input[name="trevisi"]').val(response.data.revisi);
 				}
 			},
 			error: function () {},
-			complete: function () {}
+			complete: function() {}
 		})
 	});
-	$('#dataForm').on('submit', 'form[name="editData"]', function(e) {
+
+	$('#dataList tbody').on('click', '.rev-item', function(e) {
+		const id = $(this).attr('data-id')
+		$.ajax({
+			type: 'POST',
+			url: `${HOST}/mfproduk/apiGetById`,
+			dataType: 'JSON',
+			data: { id },
+			beforeSend: function () {},
+			success: function (response) {
+				if(response.success) {
+					$('.csc-form').addClass('show add-revision-form');
+					$('.csc-form input[name="fgd"]').attr('readonly', 'readonly')
+					$('.tbl-data-product').removeClass('show');
+					$(`form[name="csc-form"] input[name="fgd"]`).val(response.data.fgd)
+					$('.csc-form input[name="tfgd"]').val(response.data.fgd);
+					$('.csc-form input[name="trevisi"]').val('(Auto)');
+				}
+			},
+			error: function () {},
+			complete: function() {}
+		})
+	});
+
+	$('#frontside-btn').on('click', function() {
+		const fs = $('#warnafrontside').find(':selected').text();
+		const fs_id = $('#warnafrontside').find(':selected').val();
+		const length = $('.frontside-selected').children().length
+
+		if(fs_id !== '') {
+			$('.frontside-selected').prepend(`
+				<div class="row mt-1" id="fs-row-${length}">
+					<div class="col-sm-9">${fs}</div>
+					<input type="hidden" value="${fs_id}" name="frontside[]" />
+					<div class="col-sm-3">
+						<button class="btn btn-danger btn-sm" data-id="${length}" id="del-frontside-btn"><i class="fas fa-minus"></i></button>
+					</div>
+				</div>
+			`)
+		}
+		$('#warnafrontside option:first').prop('selected', true)
+	})
+
+	$('#backside-btn').on('click', function() {
+		const fs = $('#warnabackside').find(':selected').text();
+		const fs_id = $('#warnabackside').find(':selected').val();
+		const length = $('.backside-selected').children().length
+
+		if(fs_id !== '') {
+			$('.backside-selected').prepend(`
+				<div class="row mt-1" id="bs-row-${length}">
+					<div class="col-sm-9">${fs}</div>
+					<input type="hidden" value="${fs_id}" name="backside[]" />
+					<div class="col-sm-3">
+						<button class="btn btn-danger btn-sm" data-id="${length}" id="del-backside-btn"><i class="fas fa-minus"></i></button>
+					</div>
+				</div>
+			`)
+		}
+		$('#warnabackside option:first').prop('selected', true)
+	})
+
+	$('.frontside-selected').on('click', '#del-frontside-btn', function() {
+		const id = $(this).attr('data-id');
+
+		$(`.frontside-selected #fs-row-${id}`).remove()
+	})
+
+	$('.backside-selected').on('click', '#del-backside-btn', function() {
+		const id = $(this).attr('data-id');
+
+		$(`.backside-selected #bs-row-${id}`).remove()
+	})
+
+	$('#finishing-btn').on('click', function() {
+		const fs = $('#finishing').find(':selected').text();
+		const fs_id = $('#finishing').find(':selected').val();
+		const length = $('.finishing-selected').children().length
+
+		if(fs_id !== '') {
+			$('.finishing-selected').prepend(`
+				<div class="row mt-1" id="row-${length}">
+					<div class="col-sm-9">${fs}</div>
+					<input type="hidden" value="${fs_id}" name="finishing[]" />
+					<div class="col-sm-3">
+						<button type="button" class="btn btn-danger btn-sm" data-id="${length}"><i class="fas fa-minus"></i></button>
+					</div>
+				</div>
+			`)
+		}
+		$('#finishing option:first').prop('selected', true)
+	})
+	$('.finishing-selected').on('click', '.btn', function() {
+		const id = $(this).attr('data-id');
+		$(`.frontside-selected #row-${id}`).remove()
+	})
+
+	$('#manual-btn').on('click', function() {
+		const fs = $('#manual').find(':selected').text();
+		const fs_id = $('#manual').find(':selected').val();
+		const length = $('.manual-selected').children().length
+
+		if(fs_id !== '') {
+			$('.manual-selected').prepend(`
+				<div class="row mt-1" id="row-${length}">
+					<div class="col-sm-9">${fs}</div>
+					<input type="hidden" value="${fs_id}" name="manual[]" />
+					<div class="col-sm-3">
+						<button type="button" class="btn btn-danger btn-sm" data-id="${length}"><i class="fas fa-minus"></i></button>
+					</div>
+				</div>
+			`)
+		}
+		$('#manual option:first').prop('selected', true)
+	})
+	$('.manual-selected').on('click', '.btn', function() {
+		const id = $(this).attr('data-id');
+		$(`.manual-selected #row-${id}`).remove()
+	})
+
+	$('#khusus-btn').on('click', function() {
+		const fs = $('#khusus').find(':selected').text();
+		const fs_id = $('#khusus').find(':selected').val();
+		const length = $('.khusus-selected').children().length
+
+		if(fs_id !== '') {
+			$('.khusus-selected').prepend(`
+				<div class="row mt-1" id="row-${length}">
+					<div class="col-sm-9">${fs}</div>
+					<input type="hidden" value="${fs_id}" name="khusus[]" />
+					<div class="col-sm-3">
+						<button type="button" class="btn btn-danger btn-sm" data-id="${length}"><i class="fas fa-minus"></i></button>
+					</div>
+				</div>
+			`)
+		}
+		$('#khusus option:first').prop('selected', true)
+	})
+	$('.khusus-selected').on('click', '.btn', function() {
+		const id = $(this).attr('data-id');
+		$(`.khusus-selected #row-${id}`).remove()
+	})
+
+	$('.dynamic-content').on('submit', '.edit-revision-form', function(e) {
 		e.preventDefault();
-		const formData = new FormData(this);
+		const formData = new FormData(this)
+
+		// for (var pair of formData.entries()) {
+		// 	console.log(pair[0]+ ', ' + pair[1]);
+		// }
 
 		$.ajax({
-			type: "POST",
-			url: `${HOST}/mfjenisflute/apiEditProcess`,
+			type: 'POST',
+			url: `${HOST}/mfproduk/apiEditRevision`,
 			dataType: 'JSON',
 			data: formData,
 			contentType: false,
 			processData: false,
-			beforeSend: function () {
-				$('#dataForm .modal-footer .loading-indicator').html(
-					'<div class="spinner-icon">' +
-						'<span class="spinner-border text-info"></span>' +
-						'<span class="caption">Memproses data...</span>' +
-					'</div>')
-				$('form[name="editData"] input, form[name="editData"] textarea, form[name="editData"] button').attr('disabled', true)
-			},
+			beforeSend: function () {},
 			success: function (response) {
-				//console.log(response)
+				console.log(response)
 				if(response.success) {
-					location.reload();
-				} else {
-					$('#dataForm .msg').html(`<div class="alert alert-danger">${response.msg}</div>`)
-					$('#dataForm, html, body').animate({
-						scrollTop: 0
-					}, 500);
+					$('.csc-form')[0].reset();
+					$('.csc-form').removeClass('show edit-revision-form')
+					$('input[name="cariproduk"]').val('')
+					$('.csc-form input[name="id"]').remove()
+					$('.msg_success').html(`
+						<div class="alert alert-success">${response.msg}</div>
+						`)
 				}
 			},
 			error: function () {},
-			complete: function () {
-				$('#dataForm .modal-footer .loading-indicator').html('');
-				$('form[name="editData"] input, form[name="editData"] textarea, form[name="editData"] button').attr('disabled', false)
-			}
+			complete: function() {}
 		})
 	})
 
-	$('.data-to-csv').on('click', function(e) {
+	$('.dynamic-content').on('submit', '.add-revision-form', function(e) {
 		e.preventDefault();
-		$("#dataList").DataTable().button( '.buttons-excel' ).trigger();
-	})
+		const formData = new FormData(this)
 
-	$('.data-reload').on('click', function(e) {
-		e.preventDefault();
-		const obj = {
-			beforeSend: function () {
-				$('#statusList').DataTable().clear();
-				$('#statusList').DataTable().draw();
-				$('#dataList .dataTables_empty').html('<div class="spinner-icon"><span class="spinner-grow text-info"></span><span class="caption">Fetching data...</span></div>')
-			},
+		$.ajax({
+			type: 'POST',
+			url: `${HOST}/mfproduk/apiAddRevision`,
+			dataType: 'JSON',
+			data: formData,
+			contentType: false,
+			processData: false,
+			beforeSend: function () {},
 			success: function (response) {
-				$('#dataList').DataTable().clear();
-				$('#dataList').DataTable().rows.add(response);
-				$('#dataList').DataTable().draw();
+				if(response.success) {
+					$('.csc-form')[0].reset();
+					$('.csc-form').removeClass('show add-revision-form')
+					$('input[name="cariproduk"]').val('')
+					$('.msg_success').html(`
+						<div class="alert alert-success">${response.msg}</div>
+						`)
+				}
 			},
-			error: function () {
-				$('#dataList .dataTables_empty').html('Data gagal di retrieve.')
-			},
+			error: function () {},
 			complete: function() {}
-		}
-		getAllData(obj);
+		})
 	})
 
-	
+	$('.dynamic-content').on('submit', '.add-new-fgd', function(e) {
+		e.preventDefault();
+		const formData = new FormData(this)
+
+		$.ajax({
+			type: 'POST',
+			url: `${HOST}/mfproduk/apiAddProcess`,
+			dataType: 'JSON',
+			data: formData,
+			contentType: false,
+			processData: false,
+			beforeSend: function () {},
+			success: function (response) {
+				if(response.success) {
+					$('.csc-form')[0].reset();
+					$('.csc-form').removeClass('show add-revision-form')
+					$('input[name="cariproduk"]').val('')
+					$('.msg_success').html(`
+						<div class="alert alert-success">${response.msg}</div>
+						`)
+				}
+			},
+			error: function () {},
+			complete: function() {}
+		})
+	})
+
+	$('.add-new').on('click', function() {
+		$('.csc-form')[0].reset();
+		$('.csc-form').addClass('show add-new-fgd')
+		$('.tbl-data-product').removeClass('show')
+		$('input[name="cariproduk"]').val('')
+		$('.csc-form input[name="tfgd"]').val('(Auto)');
+		$('.csc-form input[name="trevisi"]').val('0');
+	})
 });
-
-function getAllData(obj)
-{
-	
-	$.ajax({
-		type: "POST",
-		url: `${HOST}/mfjenisflute/apiGetAll`,
-		beforeSend: obj.beforeSend,
-		success: obj.success,
-		error: obj.error,
-		complete: obj.complete
-	})
-}

@@ -4,20 +4,14 @@ $(function () {
 
 	$("#dataList").DataTable({
 		data: customerData,
+		paging: false,
+		searching: false,
         buttons: [{
                 extend: 'excelHtml5',
                 exportOptions: { orthogonal: 'export' }
             }],
 		columnDefs: [],
-		order: [[ 1, 'desc' ]],
-		createdRow: function (row, data, dataIndex) {
-			$(row).find("td:eq(0)").attr("data-label", "No");
-			$(row).find("td:eq(1)").attr("data-label", "Tanggal dibuat");
-			$(row).find("td:eq(2)").attr("data-label", "Nama Pemesan");
-			$(row).find("td:eq(3)").attr("data-label", "Contact person");
-			$(row).find("td:eq(4)").attr("data-label", "Wajib pajak");
-			$(row).find("td:eq(5)").attr("data-label", "&nbsp;");
-		},
+		order: [[ 2, 'desc' ]],
 		initComplete: function () {},
 	});
 

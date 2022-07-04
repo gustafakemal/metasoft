@@ -181,7 +181,7 @@
         const HOST = "<?= base_url(); ?>"
     </script>
     <?php if (url_is('mfproduk')) : ?>
-        <script src="<?= site_url('js/produk.js'); ?>"></script>
+        <script src="<?= site_url('js/mfproduk.js'); ?>"></script>
     <?php endif; ?>
     <?php if (url_is('customer')) : ?>
         <script src="<?= site_url('js/customer.js'); ?>"></script>

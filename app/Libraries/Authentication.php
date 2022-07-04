@@ -8,30 +8,28 @@ class Authentication
     
     public function login($UserID, $password)
     {
-        $session = session();
-        $session->regenerate();
-        $session->set('UserID', '075716');
-        $session->set('UserName', 'Alfin A');
-
-        return [
-            'isValid' => true,
-            'msg' => ''
-        ];
+        
+        
         $model = new \App\Models\UsersModel;
         $user = $model->getByUserID($UserID);
         $UserName = '';
         $isValid = false;
         $msg="";
+       
         $query = $model->getByUserID($UserID);
-		if($query->getNumRows()>0){
+
+		if(($query->getNumRows()>0)){
             $UserName= $query->getResult()[0]->Nama;
             $validData = $model->isValidPass($UserID,$password);
-            if($validData[0]->Valid)
-                $isValid=true;
-                //return "Pass OK";
-            else
-                $msg = "Password tidak sesuai";
             
+                if(($validData[0]->Valid)){
+                    $isValid=true;
+                    //return "Pass OK";
+                }else{
+                    $msg = "Password tidak sesuai";
+                }
+            
+           
         }else {
             $msg =  "User tidak terdaftar";
 		}

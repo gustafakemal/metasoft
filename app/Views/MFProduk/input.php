@@ -64,7 +64,7 @@
 		</div>
 		<label for="trevisi" class="col-sm-2 col-form-label">Revisi</span></label>
 		<div class="col-sm-4">
-			<input type="text" class="form-control" id="trevisi" name="trevisi" disabled>
+			<input type="text" class="form-control" id="trevisi" name="trevisi" disabled><input type="hidden" class="form-control" id="revisi" name="revisi">
 		</div>
 	</div>
 	<div class="form-group row">

@@ -393,7 +393,7 @@
 
 <div class="row mt-4">
 	<div class="col-12">
-		<button type="submit" class="btn btn-primary">Submit</button>
+		<button type="submit" class="btn btn-primary">Simpan</button>
 	</div>
 </div>
 

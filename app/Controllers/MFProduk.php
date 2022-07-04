@@ -20,6 +20,8 @@ class MFProduk extends BaseController
 
 	public function index()
 	{
+		
+
 		$segmen_model = new \App\Models\SegmenModel();
 		$customer_model = new \App\Models\CustomerModel();
 		$sales_model = new \App\Models\SalesModel();
@@ -53,7 +55,7 @@ class MFProduk extends BaseController
 	public function productSearch()
 	{
 		$keyword = $this->request->getPost('keyword');
-		$query = $this->model->getByFgdNama('C');
+		$query = $this->model->getByFgdNama("$keyword");
 		//dd($query);
 		//exit;
 
@@ -185,6 +187,11 @@ class MFProduk extends BaseController
 
 		$id = $this->model->idGenerator();
 		$data['id'] = $id;
+
+		$fgd = $data['fgd'];
+		$revisi = $this->model->revGenerator($fgd);
+		$data['revisi'] = (int)$revisi;
+		//dd($data);
 		// return $this->response->setJSON(['data' => $data]);
 
     	if( $this->model->insert($data) ) {

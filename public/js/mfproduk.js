@@ -20,7 +20,7 @@ $(function () {
 		$('.csc-form')[0].reset();
 		$('.csc-form').removeClass('show')
 		const keyword = $('input[name="cariproduk"]').val();
-
+		//alert(keyword);
 		$.ajax({
 			type: 'POST',
 			url: `${HOST}/mfproduk/productSearch`,
@@ -84,10 +84,16 @@ $(function () {
 			data: { id },
 			beforeSend: function () {},
 			success: function (response) {
+				console.log(response.data.id)
 				if(response.success) {
 					$('.csc-form').addClass('show add-revision-form');
 					$('.csc-form input[name="fgd"]').attr('readonly', 'readonly')
 					$('.tbl-data-product').removeClass('show');
+					for(const property in response.data) {
+						$(`form[name="csc-form"] input[name="${property}"]`).val(response.data[property])
+						$(`form[name="csc-form"] select[name="${property}"] option[value="${response.data[property]}"]`).prop('selected', true)						
+						$(`form[name="csc-form"] textarea[name="${property}"]`).html(response.data[property])
+					}
 					$(`form[name="csc-form"] input[name="fgd"]`).val(response.data.fgd)
 					$('.csc-form input[name="tfgd"]').val(response.data.fgd);
 					$('.csc-form input[name="trevisi"]').val('(Auto)');

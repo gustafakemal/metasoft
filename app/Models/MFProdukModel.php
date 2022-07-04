@@ -48,8 +48,9 @@ class MFProdukModel extends Model
     public function getByFgdNama($key)
     {
         $db = \Config\Database::connect();
+        $sql = "select * from v_MF_Produk where upper(nama_produk) like upper('%$key%') or upper(fgd) like upper('%$key%')";
         $query = $db->query("select * from v_MF_Produk where upper(nama_produk) like upper('%$key%') or upper(fgd) like upper('%$key%')");         
-
+       
         if($query->getNumRows() == 0) {
             return [];
         }
@@ -66,7 +67,14 @@ class MFProdukModel extends Model
     {
         return $this->datePrefix() . $this->lastIdCounter(4);
     }
-
+    public function revGenerator($fgd)
+    {
+        $last_revisi = $this->selectMax('revisi')->where('fgd', $fgd)
+                    ->first();
+        $new_rev = $last_revisi['revisi'] + 1;
+        return $new_rev;
+        
+    }
     private function lastIdCounter($length)
     {
         $id = $this->get()->getLastRow()->id;

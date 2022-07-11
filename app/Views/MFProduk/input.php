@@ -60,7 +60,8 @@
 	<div class="form-group row">
 		<label for="fgd" class="col-sm-2 col-form-label">No FGD</span></label>
 		<div class="col-sm-4">
-		<input type="text" class="form-control" id="tfgd" name="tfgd" disabled><input type="hidden" class="form-control" id="fgd" name="fgd">
+		<!-- <input type="text" class="form-control" id="tfgd" name="tfgd" disabled><input type="hidden" class="form-control" id="fgd" name="fgd"> -->
+		<input type="text" class="form-control" id="fgd" name="fgd" readonly>
 		</div>
 		<label for="trevisi" class="col-sm-2 col-form-label">Revisi</span></label>
 		<div class="col-sm-4">
@@ -85,6 +86,7 @@
 		<label for="sales" class="col-sm-2 col-form-label">Sales <span class="text-danger">*</span></label>
 		<div class="col-sm-4">
 			<select name="sales" class="form-control" id="sales">
+				<!-- <option value="2" selected>--HARDCODED--</option> -->
 				<?php foreach ($opsi_sales as $key => $opsisales_item) : ?>
 					<option value="<?= $opsisales_item->SalesID;?>"><?= $opsisales_item->SalesName;?></option>
 				<?php endforeach;?>
@@ -125,7 +127,7 @@
 			<textarea name="special_req" class="form-control" id="special_req" row="3"></textarea>
 		</div>
 	</div>
-	<div class="form-group row">
+	<div class="form-group row row-change-request">
 		<label for="no_dokcr" class="col-sm-3 col-form-label">No Dokumen Change Request</label>
 		<div class="col-sm-4">
 			<input type="text" class="form-control" id="fgd" name="fgd">
@@ -139,11 +141,11 @@
 	<div class="form-group row">
 		<label for="frontside" class="col-sm-2 col-form-label">Warna Frontside</label>
 		<div class="col-sm-4">
-			<input type="number" class="form-control" id="frontside" name="frontside" value="0">
+			<input type="number" readonly class="form-control" id="frontside" name="frontside" value="0">
 		</div>
 		<label for="backside" class="col-sm-2 col-form-label">Warna Backside</label>
 		<div class="col-sm-4">
-			<input type="number" class="form-control" id="backside" name="backside" value="0">
+			<input type="number" readonly class="form-control" id="backside" name="backside" value="0">
 		</div>
 	</div>
 	<ul class="nav nav-tabs" id="myTab" role="tablist">
@@ -176,7 +178,7 @@
 					</div>
 					<label for="no_dokumen" class="col-sm-2 col-form-label">No Dokumen</label>
 					<div class="col-sm-4">
-						<input type="text" class="form-control" id="no_dokumen" name="no_dokumen" readonly>
+						<input type="text" class="form-control" id="no_dokumen" name="no_dokumen" disabled>
 					</div>
 				</div>
 				<div class="form-group row">
@@ -199,6 +201,7 @@
 					<label for="kertas" class="col-sm-2 col-form-label">Kertas</label>
 					<div class="col-sm-3">
 						<select name="kertas" class="form-control" id="kertas">
+							<option value="">--Pilih Kertas--</option>
 							<?php foreach ($opsi_jeniskertas as $key => $opsijkertas_item) : ?>
 								<option value="<?= $opsijkertas_item->id;?>"><?= $opsijkertas_item->nama;?></option>
 							<?php endforeach;?>
@@ -207,6 +210,7 @@
 					<label for="flute" class="col-sm-1 col-form-label">Flute</label>
 					<div class="col-sm-3">
 						<select name="flute" class="form-control" id="flute">
+							<option value="">--Pilih Flute--</option>
 							<?php foreach ($opsi_jenisflute as $key => $opsijflute_item) : ?>
 								<option value="<?= $opsijflute_item->id;?>"><?= $opsijflute_item->nama;?></option>
 							<?php endforeach;?>
@@ -228,6 +232,7 @@
 					<label for="inner_pack" class="col-sm-2 col-form-label">Inner Pack</label>
 					<div class="col-sm-3">
 						<select name="inner_pack" class="form-control" id="inner_pack">
+							<option value="">--None--</option>
 							<?php foreach ($opsi_innerpack as $key => $opsiinpack_item) : ?>
 								<option value="<?= $opsiinpack_item->id;?>"><?= $opsiinpack_item->nama;?></option>
 							<?php endforeach;?>
@@ -242,6 +247,7 @@
 					<label for="outer_pack" class="col-sm-2 col-form-label">Outer Pack</label>
 					<div class="col-sm-3">
 						<select name="outer_pack" class="form-control" id="outer_pack">
+							<option value="">--None--</option>
 							<?php foreach ($opsi_outerpack as $key => $opsioutpack_item) : ?>
 								<option value="<?= $opsioutpack_item->id;?>"><?= $opsioutpack_item->nama;?></option>
 							<?php endforeach;?>
@@ -256,6 +262,7 @@
 					<label for="deliver_pack" class="col-sm-2 col-form-label">Deliver Pack</label>
 					<div class="col-sm-3">
 						<select name="deliver_pack" class="form-control" id="deliver_pack">
+							<option value="">--None--</option>
 							<?php foreach ($opsi_deliverypack as $key => $opsidelpack_item) : ?>
 								<option value="<?= $opsidelpack_item->id;?>"><?= $opsidelpack_item->nama;?></option>
 							<?php endforeach;?>

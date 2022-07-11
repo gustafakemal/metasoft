@@ -19,6 +19,8 @@
 <body>
 
     <div id="page">
+      <div class="floating-msg">
+      </div>
 
         <header class="app-header">
             <div class="sidebar-nav">
@@ -181,6 +183,7 @@
         const HOST = "<?= base_url(); ?>"
     </script>
     <?php if (url_is('mfproduk')) : ?>
+        <script src="<?= site_url('js/bs-custom-file-input.min.js'); ?>"></script>
         <script src="<?= site_url('js/mfproduk.js'); ?>"></script>
     <?php endif; ?>
     <?php if (url_is('customer')) : ?>

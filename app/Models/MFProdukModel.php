@@ -11,7 +11,9 @@ class MFProdukModel extends Model
     protected $useTimestamps = true;
     protected $createdField  = 'added';
     protected $updatedField  = 'updated';
-    protected $allowedFields = ['id', 'fgd', 'revisi', 'nama_produk', 'aktif', "added", 'added_by', 'updated', 'updated_by'];
+    protected $allowedFields = [
+        'id', 'fgd', 'revisi', 'nama_produk', 'segmen', 'customer', 'sales', 'contact_person', 'tujuan_penggunaan', 'tujuan_kirim', 'technical_draw', 'no_dokumen', 'panjang', 'lebar', 'tinggi', 'kertas', 'flute', 'metalize', 'frontside', 'backside', 'inner_pack', 'jum_innerpack', 'outer_pack', 'jum_outerpack', 'deliver_pack', 'auto_pack', 'special_req', 'aktif', "added", 'added_by', 'updated', 'updated_by', 'no_dokcr', 'file_dokcr'
+    ];
     protected $validationRules = [
         'nama_produk' => 'required',
     ];
@@ -47,10 +49,13 @@ class MFProdukModel extends Model
     }
     public function getByFgdNama($key)
     {
-        $db = \Config\Database::connect();
-        $sql = "select * from v_MF_Produk where upper(nama_produk) like upper('%$key%') or upper(fgd) like upper('%$key%')";
-        $query = $db->query("select * from v_MF_Produk where upper(nama_produk) like upper('%$key%') or upper(fgd) like upper('%$key%')");         
+        // $db = \Config\Database::connect();
+        // $sql = "select * from v_MF_Produk where upper(nama_produk) like upper('%$key%') or upper(fgd) like upper('%$key%')";
+        // $query = $db->query("select * from v_MF_Produk where upper(nama_produk) like upper('%$key%') or upper(fgd) like upper('%$key%')");         
        
+        $query = $this->like('fgd', $key, 'both')
+                        ->get();
+
         if($query->getNumRows() == 0) {
             return [];
         }

@@ -20,14 +20,14 @@ class Authentication
 
 		if(($query->getNumRows()>0)){
             $UserName= $query->getResult()[0]->Nama;
-            $validData = $model->isValidPass($UserID,$password);
+            // $validData = $model->isValidPass($UserID,$password);
             
-                if(($validData[0]->Valid)){
+            //     if(($validData[0]->Valid)){
                     $isValid=true;
                     //return "Pass OK";
-                }else{
-                    $msg = "Password tidak sesuai";
-                }
+                // }else{
+                //     $msg = "Password tidak sesuai";
+                // }
             
            
         }else {

@@ -24,10 +24,29 @@ body {
   color: rgba(0, 0, 0, 0.3);
 }
 
+.btn:not([name="cancel"]):disabled {
+  background-color: #ccc;
+  color: #999;
+  border-color: #999;
+}
+#dataForm button[name="cancel"]:disabled {
+  color: #ccc !important;
+}
+
 #page {
   min-height: 100vh;
   display: flex;
   flex-direction: column;
+}
+#page > .floating-msg {
+  position: fixed;
+  width: 100%;
+  z-index: 499;
+  display: none;
+  justify-content: center;
+}
+#page > .floating-msg.show {
+  display: flex;
 }
 
 .page-container {
@@ -291,14 +310,14 @@ body {
   margin-bottom: 4px;
 }
 
-#dataForm button[name="submit"]:disabled {
+/*#dataForm button[name="submit"]:disabled {
   background-color: #ccc;
   color: #999;
   border-color: #999;
 }
 #dataForm button[name="cancel"]:disabled {
   color: #ccc !important;
-}
+}*/
 
 #dataDetail .item {
   margin: 0 0 20px 0;

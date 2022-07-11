@@ -21,7 +21,6 @@ class MFProduk extends BaseController
 
 	public function index()
 	{
-		
 
 		$segmen_model = new \App\Models\SegmenModel();
 		$customer_model = new \App\Models\CustomerModel();
@@ -237,10 +236,10 @@ class MFProduk extends BaseController
 		if(array_key_exists('frontside_colors', $data) || array_key_exists('backside_colors', $data)) {
 			$data_colors = [];
 			if(array_key_exists('frontside_colors', $data)) {
-				$data_colors = array_merge($data_colors, $this->productColors($data['frontside_colors'], $id, 'F'));
+				$data_colors = array_merge($data_colors, $this->productColors($data['frontside_colors'], $data['id'], 'F'));
 			}
 			if(array_key_exists('backside_colors', $data)) {
-				$data_colors = array_merge($data_colors, $this->productColors($data['backside_colors'], $id, 'B'));
+				$data_colors = array_merge($data_colors, $this->productColors($data['backside_colors'], $data['id'], 'B'));
 			}
 			if(count($data_colors) > 0) {
 				$color_model = new \App\Models\MFProdukWarnaModel();
@@ -249,7 +248,7 @@ class MFProduk extends BaseController
 		}
 
 		if(array_key_exists('finishing', $data)) {
-			$data_finishing = $this->productProcess($data['finishing'], $id);
+			$data_finishing = $this->productProcess($data['finishing'], $data['id']);
 			if(count($data_finishing) > 0) {
 				$finishing_model = new \App\Models\MFProdukFinishingModel();
 				$update_finishing = $finishing_model->reInsert($data_finishing);
@@ -257,7 +256,7 @@ class MFProduk extends BaseController
 		}
 
 		if(array_key_exists('manual', $data)) {
-			$data_manual = $this->productProcess($data['manual'], $id);
+			$data_manual = $this->productProcess($data['manual'], $data['id']);
 			if(count($data_manual) > 0) {
 				$manual_model = new \App\Models\MFProdukManualModel();
 				$update_manual = $manual_model->reInsert($data_manual);
@@ -265,7 +264,7 @@ class MFProduk extends BaseController
 		}
 
 		if(array_key_exists('khusus', $data)) {
-			$data_khusus = $this->productProcess($data['khusus'], $id);
+			$data_khusus = $this->productProcess($data['khusus'], $data['id']);
 			if(count($data_khusus) > 0) {
 				$khusus_model = new \App\Models\MFProdukKhususModel();
 				$update_khusus = $khusus_model->reInsert($data_khusus);
@@ -310,15 +309,16 @@ class MFProduk extends BaseController
 	}
 
 	public function apiAddRevision() {
+
 		if ($this->request->getMethod() !== 'post') {
 			return redirect()->to('mfproduk');
 		}
 
 		$data = $this->request->getPost();
-		// $id = $this->model->idGenerator();
-		// $data['id'] = $id;
+		$id = $this->model->idGenerator();
+		$data['id'] = $id;
 		// $data['fgd'] = $this->model->fgdGenerator();
-		// $data['revisi'] = 0;
+		$data['revisi'] = 1 + $this->model->getLastRev('220600000007')->revisi;
 		$data['added_by'] = current_user()->UserID;
 
 		return $this->response->setJSON(['data' => $data]);

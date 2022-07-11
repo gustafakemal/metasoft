@@ -117,4 +117,12 @@ class MFProdukModel extends Model
         return $this->where('id', $id)
             ->delete();
     }
+
+    public function getLastRev($id)
+    {
+        return $this->select('revisi')
+                ->where('id', $id)
+                ->get()
+                ->getLastRow();
+    }
 }

@@ -3,6 +3,8 @@ $(function () {
 	bsCustomFileInput.init()
 
 	let customerData;
+	let fsval = [];
+	let bsval = [];
 
 	$("#dataList").DataTable({
 		data: customerData,
@@ -21,6 +23,7 @@ $(function () {
 		e.preventDefault();
 		$('.csc-form')[0].reset();
 		$('.csc-form').removeClass('show')
+		$('.csc-form .form-group.row-change-request').removeAttr('style')
 		const keyword = $('input[name="cariproduk"]').val();
 		//alert(keyword);
 		$.ajax({
@@ -63,6 +66,104 @@ $(function () {
 					const fs_colors = response.data.frontside_colors;
 					const bs_colors = response.data.backside_colors;
 					$('.csc-form').addClass('show edit-revision-form');
+					$('.tbl-data-product').removeClass('show');
+					for(const property in response.data) {
+						$(`form[name="csc-form"] input[name="${property}"]`).val(response.data[property])
+						$(`form[name="csc-form"] select[name="${property}"] option[value="${response.data[property]}"]`).prop('selected', true)						
+						$(`form[name="csc-form"] textarea[name="${property}"]`).html(response.data[property])
+					}
+					if(fs_colors.length > 0) {
+						let fs_elements = [];
+						for(let i = 0; i < fs_colors.length; i++) {
+							fsval.push(fs_colors[i].tinta)
+							fs_elements.push(`<div class="row mt-1" id="fs-row-${fs_colors[i].tinta}">
+												<div class="col-sm-9">${fs_colors[i].nama}</div>
+												<input type="hidden" value="${fs_colors[i].tinta}" name="frontside_colors[]" />
+												<div class="col-sm-3">
+													<button class="btn btn-danger btn-sm" data-id="${fs_colors[i].tinta}" id="del-frontside-btn"><i class="fas fa-minus"></i></button>
+												</div>
+											</div>`);
+						}
+						$('.frontside-selected').html(fs_elements.join(''))
+					}
+					if(bs_colors.length > 0) {
+						let bs_elements = [];
+						for(let i = 0; i < bs_colors.length; i++) {
+							bsval.push(fs_colors[i].tinta)
+							bs_elements.push(`<div class="row mt-1" id="fs-row-${bs_colors[i].tinta}">
+												<div class="col-sm-9">${bs_colors[i].nama}</div>
+												<input type="hidden" value="${bs_colors[i].tinta}" name="backside_colors[]" />
+												<div class="col-sm-3">
+													<button class="btn btn-danger btn-sm" data-id="${bs_colors[i].tinta}" id="del-backside-btn"><i class="fas fa-minus"></i></button>
+												</div>
+											</div>`);
+						}
+						$('.backside-selected').html(bs_elements.join(''))
+					}
+					if(response.data.finishing.length > 0) {
+						let finishing_elements = [];
+						for(let i = 0; i < response.data.finishing.length; i++) {
+							finishing_elements.push(`<div class="row mt-1" id="fs-row-${response.data.finishing[i].id}">
+												<div class="col-sm-9">${response.data.finishing[i].proses}</div>
+												<input type="hidden" value="${response.data.finishing[i].id}" name="finishing[]" />
+												<div class="col-sm-3">
+													<button class="btn btn-danger btn-sm" data-id="${response.data.finishing[i].id}"><i class="fas fa-minus"></i></button>
+												</div>
+											</div>`);
+						}
+						$('.finishing-selected').html(finishing_elements.join(''))
+					}
+					if(response.data.manual.length > 0) {
+						let manual_elements = [];
+						for(let i = 0; i < response.data.manual.length; i++) {
+							manual_elements.push(`<div class="row mt-1" id="fs-row-${response.data.manual[i].id}">
+												<div class="col-sm-9">${response.data.manual[i].proses}</div>
+												<input type="hidden" value="${response.data.manual[i].id}" name="manual[]" />
+												<div class="col-sm-3">
+													<button class="btn btn-danger btn-sm" data-id="${response.data.manual[i].id}"><i class="fas fa-minus"></i></button>
+												</div>
+											</div>`);
+						}
+						$('.manual-selected').html(manual_elements.join(''))
+					}
+					if(response.data.khusus.length > 0) {
+						let khusus_elements = [];
+						for(let i = 0; i < response.data.khusus.length; i++) {
+							khusus_elements.push(`<div class="row mt-1" id="fs-row-${response.data.khusus[i].id}">
+												<div class="col-sm-9">${response.data.khusus[i].proses}</div>
+												<input type="hidden" value="${response.data.khusus[i].id}" name="khusus[]" />
+												<div class="col-sm-3">
+													<button class="btn btn-danger btn-sm" data-id="${response.data.khusus[i].id}"><i class="fas fa-minus"></i></button>
+												</div>
+											</div>`);
+						}
+						$('.khusus-selected').html(khusus_elements.join(''))
+					}
+					$(`form[name="csc-form"]`).prepend(`<input type="hidden" name="id" value="${response.data.id}" />`);
+					$('.csc-form input[name="tfgd"]').val(response.data.fgd);
+					$('.csc-form input[name="trevisi"]').val(response.data.revisi);
+				}
+			},
+			error: function () {},
+			complete: function() {}
+		})
+	});
+
+	$('#dataList tbody').on('click', '.rev-item', function(e) {
+		const id = $(this).attr('data-id')
+		$.ajax({
+			type: 'POST',
+			url: `${HOST}/mfproduk/apiGetById`,
+			dataType: 'JSON',
+			data: { id },
+			beforeSend: function () {},
+			success: function (response) {
+				console.log(response.data.id)
+				if(response.success) {
+					const fs_colors = response.data.frontside_colors;
+					const bs_colors = response.data.backside_colors;
+					$('.csc-form').addClass('show add-revision-form');
+					$('.csc-form input[name="fgd"]').attr('readonly', 'readonly')
 					$('.tbl-data-product').removeClass('show');
 					for(const property in response.data) {
 						$(`form[name="csc-form"] input[name="${property}"]`).val(response.data[property])
@@ -134,35 +235,6 @@ $(function () {
 						}
 						$('.khusus-selected').html(khusus_elements.join(''))
 					}
-					$(`form[name="csc-form"]`).prepend(`<input type="hidden" name="id" value="${response.data.id}" />`);
-					$('.csc-form input[name="tfgd"]').val(response.data.fgd);
-					$('.csc-form input[name="trevisi"]').val(response.data.revisi);
-				}
-			},
-			error: function () {},
-			complete: function() {}
-		})
-	});
-
-	$('#dataList tbody').on('click', '.rev-item', function(e) {
-		const id = $(this).attr('data-id')
-		$.ajax({
-			type: 'POST',
-			url: `${HOST}/mfproduk/apiGetById`,
-			dataType: 'JSON',
-			data: { id },
-			beforeSend: function () {},
-			success: function (response) {
-				console.log(response.data.id)
-				if(response.success) {
-					$('.csc-form').addClass('show add-revision-form');
-					$('.csc-form input[name="fgd"]').attr('readonly', 'readonly')
-					$('.tbl-data-product').removeClass('show');
-					for(const property in response.data) {
-						$(`form[name="csc-form"] input[name="${property}"]`).val(response.data[property])
-						$(`form[name="csc-form"] select[name="${property}"] option[value="${response.data[property]}"]`).prop('selected', true)						
-						$(`form[name="csc-form"] textarea[name="${property}"]`).html(response.data[property])
-					}
 					$(`form[name="csc-form"] input[name="fgd"]`).val(response.data.fgd)
 					$('.csc-form input[name="tfgd"]').val(response.data.fgd);
 					$('.csc-form input[name="trevisi"]').val('(Auto)');
@@ -173,8 +245,8 @@ $(function () {
 		})
 	});
 
-	let fsval = [];
 	$('#frontside-btn').on('click', function() {
+		console.log(fsval)
 		const fs = $('#warnafrontside').find(':selected').text();
 		const fs_id = $('#warnafrontside').find(':selected').val();
 		// const length = $('.frontside-selected').children().length
@@ -195,7 +267,6 @@ $(function () {
 		$('input[name="frontside"]').val(fsval.length)
 	})
 
-	let bsval = [];
 	$('#backside-btn').on('click', function() {
 		const fs = $('#warnabackside').find(':selected').text();
 		const fs_id = $('#warnabackside').find(':selected').val();
@@ -344,7 +415,7 @@ $(function () {
 			contentType: false,
 			processData: false,
 			beforeSend: function () {
-				$('.add-new-fgd input, .add-new-fgd select, .add-new-fgd textarea, .add-new-fgd button').attr('disabled', true)
+				$('.edit-revision-form input, .edit-revision-form select, .edit-revision-form textarea, .edit-revision-form button').attr('disabled', true)
 			},
 			success: function (response) {
 				if(response.success) {
@@ -352,19 +423,22 @@ $(function () {
 					$('.csc-form').removeClass('show edit-revision-form')
 					$('input[name="cariproduk"]').val('')
 					$('.csc-form input[name="id"]').remove()
-					$('.floating-msg .wrapper').html(`
+					$('.floating-msg').html(`
 						<div class="alert alert-success">${response.msg}</div>
 						`)
 				} else {
 					$('.floating-msg').addClass('show')
-					$('.floating-msg .wrapper').html(`
+					$('.floating-msg').html(`
 						<div class="alert alert-danger">${response.msg}</div>
 						`)
 				}
 			},
 			error: function () {},
 			complete: function() {
-				$('.csc-form input, .csc-form select, .csc-form textarea, .csc-form button').attr('disabled', false)
+				$('.edit-revision-form input, .edit-revision-form select, .edit-revision-form textarea, .edit-revision-form button').attr('disabled', false)
+				setTimeout(() => {
+					$('.floating-msg').removeClass('show');
+				}, 3000);
 			}
 		})
 	})
@@ -388,19 +462,30 @@ $(function () {
 			data: formData,
 			contentType: false,
 			processData: false,
-			beforeSend: function () {},
+			beforeSend: function () {
+				$('.add-revision-form input, .add-revision-form select, .add-revision-form textarea, .add-revision-form button').attr('disabled', true)
+			},
 			success: function (response) {
 				if(response.success) {
 					$('.csc-form')[0].reset();
 					$('.csc-form').removeClass('show add-revision-form')
 					$('input[name="cariproduk"]').val('')
-					$('.msg_success').html(`
+					$('.floating-msg').addClass('show').html(`
 						<div class="alert alert-success">${response.msg}</div>
+						`)
+				} else {
+					$('.floating-msg').addClass('show').html(`
+						<div class="alert alert-danger">${response.msg}</div>
 						`)
 				}
 			},
 			error: function () {},
-			complete: function() {}
+			complete: function() {
+				$('.add-revision-form input, .add-revision-form select, .add-revision-form textarea, .add-revision-form button').attr('disabled', false)
+				setTimeout(() => {
+					$('.floating-msg').removeClass('show');
+				}, 3000);
+			}
 		})
 	})
 

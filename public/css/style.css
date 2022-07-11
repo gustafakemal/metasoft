@@ -48,6 +48,12 @@ body {
 #page > .floating-msg.show {
   display: flex;
 }
+#page > .floating-msg p {
+  margin: 0 0 10px 0;
+}
+#page > .floating-msg p:last-child {
+  margin: 0;
+}
 
 .page-container {
   height: 100%;

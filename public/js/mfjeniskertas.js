@@ -11,7 +11,7 @@ $(function () {
 		columnDefs: [{
 			"searchable": false,
 			"orderable": false,
-			"targets": [0, 10]
+			"targets": [0, 11]
 		},
 		// {
 		// 	"width": 60,
@@ -32,24 +32,25 @@ $(function () {
 		},
 		{
 			"width": 100,
-			"targets": 5
+			"targets": 6
 		},
 		{
 			className: 'dt-body-nowrap',
-			"targets": 10
+			"targets": 11
 		},
 		{
 			 "visible": false,
-			 "targets": [1,6,7,8,9]
+			 "targets": [1,7,8,9,10]
 		}],
 		order: [[ 1, 'desc' ]],
 		createdRow: function (row, data, dataIndex) {
 			$(row).find("td:eq(0)").attr("data-label", "No");
 			$(row).find("td:eq(1)").attr("data-label", "Tanggal dibuat");
 			$(row).find("td:eq(2)").attr("data-label", "Jenis Kertas");
-			$(row).find("td:eq(3)").attr("data-label", "Harga");
-			$(row).find("td:eq(4)").attr("data-label", "Status Aktif");
-			$(row).find("td:eq(5)").attr("data-label", "&nbsp;");
+			$(row).find("td:eq(3)").attr("data-label", "Berat");
+			$(row).find("td:eq(4)").attr("data-label", "Harga");
+			$(row).find("td:eq(5)").attr("data-label", "Status Aktif");
+			$(row).find("td:eq(6)").attr("data-label", "&nbsp;");
 		},
 		initComplete: function () {
 			const dropdown = `<div class="dropdown d-inline mr-2">` +
@@ -122,7 +123,7 @@ $(function () {
 			},
 			success: function (response) {
 				if(response.success) {
-					location.reload();
+					// location.reload();
 				} else {
 					$('#dataForm .msg').html(`<div class="alert alert-danger">${response.msg}</div>`)
 					$('#dataForm, html, body').animate({

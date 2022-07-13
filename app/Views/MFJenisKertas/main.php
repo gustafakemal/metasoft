@@ -19,6 +19,7 @@
 			<th>ID</th>
 			<th>Tanggal dibuat</th>
 			<th>Jenis Kertas</th>
+			<th>Berat</th>
 			<th>Harga</th>
 			<th>Status Aktif</th>
 			<th>Dibuat</th>
@@ -53,6 +54,10 @@
 							<div class="form-group">
 								<label for="harga">Harga <span class="text-danger">*</span></label>
 								<input name="harga" type="number" class="form-control" id="harga" value="0">
+							</div>
+							<div class="form-group">
+								<label for="berat">Berat</label>
+								<input name="berat" type="number" class="form-control" id="berat" value="0">
 							</div>
 							<div class="form-group">
 								<label for="aktif">Status</label>

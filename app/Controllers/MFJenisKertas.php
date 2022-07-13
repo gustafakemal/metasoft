@@ -46,6 +46,7 @@ class MFJenisKertas extends BaseController
 				$value->id,
 				$CreateDate,
 				$value->nama,
+				$value->berat,
 				number_format($value->harga,2,",","."),
 				$value->aktif,
 				$value->added,

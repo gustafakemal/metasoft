@@ -10,7 +10,7 @@ class MFJenisKertasModel extends Model
     protected $useTimestamps = true;
     protected $createdField  = 'added';
     protected $updatedField  = 'updated';
-    protected $allowedFields = ['id', 'nama', 'harga', 'aktif', "added", 'added_by', 'updated', 'updated_by'];
+    protected $allowedFields = ['id', 'nama', 'harga', 'aktif', "added", 'added_by', 'updated', 'updated_by', 'berat'];
     protected $validationRules = [
         'nama' => 'required',
         'harga' => 'required',

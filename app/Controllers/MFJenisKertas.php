@@ -34,19 +34,28 @@ class MFJenisKertas extends BaseController
 			//$detail = '<a href="#" data-id="' . $value->id . '" class=" btn item-detail" title="Detail"><i class="far fa-file-alt"></i></a> ';
 			//$edit = '<a href="#" data-id="' . $value->id . '" class="item-edit" title="Edit"><i class="far fa-edit"></i></a> ';
 			//$hapus = '<a href="' . site_url('mfjeniskertas/delete/' . $value->id) . '" onclick="return confirm(\'Apa Anda yakin menghapus user ini?\')" title="Delete"><i class="fas fa-trash-alt"></i></a>';
+
+			$CreateDate = (Time::parse($value->added))->toDateTimeString();
+
+			$obj = [
+				'CreateDate' => $CreateDate,
+				'nama' => $value->nama,
+				'harga' => $value->harga
+			];
+
+			$objstring = json_encode($obj);
 			 
 			$detail = '<a class="btn btn-primary btn-sm item-detail mr-1" href="#" data-id="' . $value->id . '" title="Detail"><i class="far fa-file-alt"></i></a>';
-			$edit = '<a class="btn btn-success btn-sm item-edit mr-1" href="#" data-id="' . $value->id . '" title="Edit"><i class="far fa-edit"></i></a>';
+			$edit = '<a class="btn btn-success btn-sm item-edit mr-1" href="#" data-id="' . $value->id . '" data-nama="'.$value->nama.'" data-harga="'.$value->harga.'" data-berat="'.$value->berat.'" data-added="'.$CreateDate.'" data-aktif="'.$value->aktif.'|Y,T" title="Edit"><i class="far fa-edit"></i></a>';
 			$hapus = '<a class="btn btn-danger btn-sm" href="' . site_url('mfjeniskertas/delete/' . $value->id) . '" data-id="' . $value->id . '" onclick="return confirm(\'Apa Anda yakin menghapus data ini?\')" title="Hapus"><i class="fas fa-trash-alt"></i></a>';
 	
 		
-			$CreateDate = (Time::parse($value->added))->toDateTimeString();
 			$data[] = [
 				$key + 1,
 				$value->id,
 				$CreateDate,
 				$value->nama,
-				$value->berat,
+				(int)$value->berat,
 				number_format($value->harga,2,",","."),
 				$value->aktif,
 				$value->added,
@@ -141,13 +150,15 @@ class MFJenisKertas extends BaseController
 		}
 
 		$data = $this->request->getPost();
+		// return $this->response->setJSON($data);
 
 		$data['updated_by'] = current_user()->UserID;
-		$id=$data["id"];
+		$id = $data["id"];
 		unset($data["id"]);
+		// return $this->response->setJSON(['id' => $id, 'data' => $data]);
 		if ($this->model->updateById($id, $data)) {
 			$msg = 'Data berhasil diupdate';
-			session()->setFlashData('success', $msg);
+			//session()->setFlashData('success', $msg);
 			$response = [
 				'success' => true,
 				'msg' => $msg,

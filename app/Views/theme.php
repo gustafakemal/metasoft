@@ -19,6 +19,7 @@
 <body>
 
     <div id="page">
+      <div class="overlay"></div>
       <div class="floating-msg">
       </div>
 

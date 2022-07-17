@@ -53,6 +53,74 @@ class MFProduk extends BaseController
 		]);
 	}
 
+	public function create()
+	{
+		$segmen_model = new \App\Models\SegmenModel();
+		$sales_model = new \App\Models\SalesModel();
+		$customer_model = new \App\Models\CustomerModel();
+		$tujuankirim_model = new \App\Models\MFTujuanKirimModel();
+		$jeniskertas_model = new \App\Models\MFJenisKertasModel();
+		$jenistinta_model = new \App\Models\MFJenisTintaModel();
+		$jenisflute_model = new \App\Models\MFJenisFluteModel();
+		$packing_model = new \App\Models\MFPackingModel();
+		$finishing_model = new \App\Models\MFProsesFinishingModel();
+		$manual_model = new \App\Models\MFProsesManualModel();
+		$khusus_model = new \App\Models\MFProsesKhususModel();
+
+		return view('MFProduk/create',[
+			'page_title' => 'Tambah Produk MF',
+			'opsi_segmen' => $segmen_model->getAll(),
+			'opsi_sales' => $sales_model->getOpsi(),
+			'opsi_customer' => $customer_model->getOpsi(),
+			'opsi_tujuankirim' => $tujuankirim_model->getOpsi(),
+			'opsi_jeniskertas' => $jeniskertas_model->getOpsi(),
+			'opsi_jenistinta' => $jenistinta_model->getOpsi(),
+			'opsi_jenisflute' => $jenisflute_model->getOpsi(),
+			'opsi_innerpack' => $packing_model->getOpsi('Inner'),
+			'opsi_outerpack' => $packing_model->getOpsi('Outer'),
+			'opsi_deliverypack' => $packing_model->getOpsi('Delivery'),
+			'opsi_finishing' => $finishing_model->getOpsi(),
+			'opsi_manual' => $manual_model->getOpsi(),
+			'opsi_khusus' => $khusus_model->getOpsi(),
+		]);
+	}
+
+	public function edit($id)
+	{
+		$data = $this->model->getById($id);
+		// dd($data);
+
+		$segmen_model = new \App\Models\SegmenModel();
+		$sales_model = new \App\Models\SalesModel();
+		$customer_model = new \App\Models\CustomerModel();
+		$tujuankirim_model = new \App\Models\MFTujuanKirimModel();
+		$jeniskertas_model = new \App\Models\MFJenisKertasModel();
+		$jenistinta_model = new \App\Models\MFJenisTintaModel();
+		$jenisflute_model = new \App\Models\MFJenisFluteModel();
+		$packing_model = new \App\Models\MFPackingModel();
+		$finishing_model = new \App\Models\MFProsesFinishingModel();
+		$manual_model = new \App\Models\MFProsesManualModel();
+		$khusus_model = new \App\Models\MFProsesKhususModel();
+
+		return view('MFProduk/edit',[
+			'page_title' => 'Tambah Produk MF',
+			'opsi_segmen' => $segmen_model->getAll(),
+			'opsi_sales' => $sales_model->getOpsi(),
+			'opsi_customer' => $customer_model->getOpsi(),
+			'opsi_tujuankirim' => $tujuankirim_model->getOpsi(),
+			'opsi_jeniskertas' => $jeniskertas_model->getOpsi(),
+			'opsi_jenistinta' => $jenistinta_model->getOpsi(),
+			'opsi_jenisflute' => $jenisflute_model->getOpsi(),
+			'opsi_innerpack' => $packing_model->getOpsi('Inner'),
+			'opsi_outerpack' => $packing_model->getOpsi('Outer'),
+			'opsi_deliverypack' => $packing_model->getOpsi('Delivery'),
+			'opsi_finishing' => $finishing_model->getOpsi(),
+			'opsi_manual' => $manual_model->getOpsi(),
+			'opsi_khusus' => $khusus_model->getOpsi(),
+			'data' => $data
+		]);
+	}
+
 	public function productSearch()
 	{
 		$keyword = $this->request->getPost('keyword');
@@ -136,45 +204,45 @@ class MFProduk extends BaseController
 		$data['revisi'] = 0;
 		$data['added_by'] = current_user()->UserID;
 
-		if(array_key_exists('frontside_colors', $data) || array_key_exists('backside_colors', $data)) {
-			$data_colors = [];
-			if(array_key_exists('frontside_colors', $data)) {
-				$data_colors = array_merge($data_colors, $this->productColors($data['frontside_colors'], $id, 'F'));
-			}
-			if(array_key_exists('backside_colors', $data)) {
-				$data_colors = array_merge($data_colors, $this->productColors($data['backside_colors'], $id, 'B'));
-			}
-			if(count($data_colors) > 0) {
-				$color_model = new \App\Models\MFProdukWarnaModel();
-				$insert_colors = $color_model->insertBatch($data_colors);
-			}
-		}
+		// if(array_key_exists('frontside_colors', $data) || array_key_exists('backside_colors', $data)) {
+		// 	$data_colors = [];
+		// 	if(array_key_exists('frontside_colors', $data)) {
+		// 		$data_colors = array_merge($data_colors, $this->productColors($data['frontside_colors'], $id, 'F'));
+		// 	}
+		// 	if(array_key_exists('backside_colors', $data)) {
+		// 		$data_colors = array_merge($data_colors, $this->productColors($data['backside_colors'], $id, 'B'));
+		// 	}
+		// 	if(count($data_colors) > 0) {
+		// 		$color_model = new \App\Models\MFProdukWarnaModel();
+		// 		$insert_colors = $color_model->insertBatch($data_colors);
+		// 	}
+		// }
 
-		if(array_key_exists('finishing', $data)) {
-			$data_finishing = $this->productProcess($data['finishing'], $id);
-			if(count($data_finishing) > 0) {
-				$finishing_model = new \App\Models\MFProdukFinishingModel();
-				$insert_finishing = $finishing_model->insertBatch($data_finishing);
-			}
-		}
+		// if(array_key_exists('finishing', $data)) {
+		// 	$data_finishing = $this->productProcess($data['finishing'], $id);
+		// 	if(count($data_finishing) > 0) {
+		// 		$finishing_model = new \App\Models\MFProdukFinishingModel();
+		// 		$insert_finishing = $finishing_model->insertBatch($data_finishing);
+		// 	}
+		// }
 
-		if(array_key_exists('manual', $data)) {
-			$data_manual = $this->productProcess($data['manual'], $id);
-			if(count($data_manual) > 0) {
-				$manual_model = new \App\Models\MFProdukManualModel();
-				$insert_manual = $manual_model->insertBatch($data_manual);
-			}
-		}
+		// if(array_key_exists('manual', $data)) {
+		// 	$data_manual = $this->productProcess($data['manual'], $id);
+		// 	if(count($data_manual) > 0) {
+		// 		$manual_model = new \App\Models\MFProdukManualModel();
+		// 		$insert_manual = $manual_model->insertBatch($data_manual);
+		// 	}
+		// }
 
-		if(array_key_exists('khusus', $data)) {
-			$data_khusus = $this->productProcess($data['khusus'], $id);
-			if(count($data_khusus) > 0) {
-				$khusus_model = new \App\Models\MFProdukKhususModel();
-				$insert_khusus = $khusus_model->insertBatch($data_khusus);
-			}
-		}
+		// if(array_key_exists('khusus', $data)) {
+		// 	$data_khusus = $this->productProcess($data['khusus'], $id);
+		// 	if(count($data_khusus) > 0) {
+		// 		$khusus_model = new \App\Models\MFProdukKhususModel();
+		// 		$insert_khusus = $khusus_model->insertBatch($data_khusus);
+		// 	}
+		// }
 
-		// return $this->response->setJSON(['data' => $data]);
+		return $this->response->setJSON(['data' => $data]);
 
 		$main_data = $this->model->insert($data);
 

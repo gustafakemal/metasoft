@@ -54,6 +54,18 @@ body {
 #page > .floating-msg p:last-child {
   margin: 0;
 }
+#page > .overlay {
+  display: none;
+  height: 100%;
+  width: 100%;
+  position: fixed;
+  top: 0;
+  left: 0;
+  z-index: 990;
+}
+#page > .overlay.show {
+  display: block;
+}
 
 .page-container {
   height: 100%;

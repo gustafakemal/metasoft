@@ -227,13 +227,14 @@ $(function () {
 			processData: false,
 			beforeSend: function () {},
 			success: function (response) {
+				let msgClass;
 				if(response.success) {
 					reload_tr();
+					msgClass = 'success'
 				} else {
-					$('.floating-msg').addClass('show').html(`
-						<div class="alert alert-danger">${response.msg}</div>
-						`)
+					msgClass = 'danger'
 				}
+				$('.floating-msg').addClass('show').html(`<div class="alert alert-${msgClass}">${response.msg}</div>`)
 			},
 			error: function () {},
 			complete: function() {
@@ -264,7 +265,6 @@ $(function () {
 				$('form[name="editData"] input, form[name="editData"] textarea, form[name="editData"] button').attr('disabled', true)
 			},
 			success: function (response) {
-				console.log(response)
 				if(response.success) {
 					location.reload();
 				} else {

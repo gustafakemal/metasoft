@@ -35,12 +35,13 @@ class MFJenisFlute extends BaseController
 			//$edit = '<a href="#" data-id="' . $value->id . '" class="item-edit" title="Edit"><i class="far fa-edit"></i></a> ';
 			//$hapus = '<a href="' . site_url('mfjenisflute/delete/' . $value->id) . '" onclick="return confirm(\'Apa Anda yakin menghapus user ini?\')" title="Delete"><i class="fas fa-trash-alt"></i></a>';
 			 
+			$CreateDate = (Time::parse($value->added))->toDateTimeString();
+			
 			$detail = '<a class="btn btn-primary btn-sm item-detail mr-1" href="#" data-id="' . $value->id . '" title="Detail"><i class="far fa-file-alt"></i></a>';
-			$edit = '<a class="btn btn-success btn-sm item-edit mr-1" href="#" data-id="' . $value->id . '" title="Edit"><i class="far fa-edit"></i></a>';
+			$edit = '<a class="btn btn-success btn-sm item-edit mr-1" href="#" data-id="' . $value->id . '" data-nama="'.$value->nama.'" data-harga="'.$value->harga.'" data-added="'.$CreateDate.'" data-aktif="'.$value->aktif.'|Y,T" title="Edit"><i class="far fa-edit"></i></a>';
 			$hapus = '<a class="btn btn-danger btn-sm" href="' . site_url('mfjenisflute/delete/' . $value->id) . '" data-id="' . $value->id . '" onclick="return confirm(\'Apa Anda yakin menghapus data ini?\')" title="Hapus"><i class="fas fa-trash-alt"></i></a>';
 	
 		
-			$CreateDate = (Time::parse($value->added))->toDateTimeString();
 			$data[] = [
 				$key + 1,
 				$value->id,
@@ -149,7 +150,7 @@ class MFJenisFlute extends BaseController
 
 		if ($this->model->updateById($id, $data)) {
 			$msg = 'Data berhasil diupdate';
-			session()->setFlashData('success', $msg);
+			// session()->setFlashData('success', $msg);
 			$response = [
 				'success' => true,
 				'msg' => $msg,

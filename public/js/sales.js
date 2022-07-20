@@ -183,43 +183,82 @@ $(function () {
 		}
 	})
 
+	let dataListRow = null;
 	$('#dataList').on('click', '.item-edit', function(e) {
 		e.preventDefault();
-		$('#dataForm').modal({
-			show: true,
-			backdrop: 'static'
-		})
-		$('#dataForm .modal-title').html('Edit Data')
-		$('#dataForm form').attr('name', 'editData')
+		const tr = $(this).closest('tr');
+		const row = $("#dataList tr").index(tr);
+		dataListRow = $(`#dataList tr:nth-child(${row+1})`)
+		const id = $(this).attr('data-id');
+		const nama = $(this).attr('data-nama');
+		const nik = $(this).attr('data-nik');
+		const aktif_arr = $(this).attr('data-aktif').split('|')
+		const aktif_opt_arr = aktif_arr[1].split(',');
+		const aktif_opt = []
+		for(let i = 0;i < aktif_opt_arr.length; i++) {
+			aktif_opt.push(`<option${aktif_opt_arr[i] == aktif_arr[0] ? ' selected' : ''} value="${aktif_opt_arr[i]}">${aktif_opt_arr[i]}</option>`)
+		}
+		const aktif = `<select name="aktif" class="form-control">${aktif_opt.join('')}</select>`
+		const btn = `<button type="button" class="btn btn-sm btn-success save-tr-record"><i class="fas fa-check"></i></button> <button type="button" class="btn btn-sm btn-secondary cancel-tr-submit"><i class="fas fa-times"></i></button>`
+		$(`#dataList tr:nth-child(${row})`).css('background-color', '#faecdc')
+		$(`#dataList tr:nth-child(${row}) td:nth-child(2)`).html(`<input type="text" class="form-control" placeholder="Nama Sales" value="${nama}" name="nama" />`)
+		$(`#dataList tr:nth-child(${row}) td:nth-child(3)`).html(`<input type="text" class="form-control" placeholder="NIK" value="${nik}" name="nik" /><input type="hidden" value="${id}" name="id" />`)
+		$(`#dataList tr:nth-child(${row}) td:nth-child(4)`).html(`${aktif}`)
+		$(`#dataList tr:nth-child(${row}) td:nth-child(5)`).html(`${btn}`)
 
-		const id = $(this).attr('data-id')
-		$('#dataForm form input[name="id"]').val(id)
-		//alert("cek")
+		$(`#dataList tr:nth-child(${row}`).attr('id', 'selected')
+
+		$('#page').addClass('click-to-close')
+	});
+
+	const reload_tr = function() {
+		const obj = {
+			success: function (response) {
+				$('#dataList').DataTable().clear();
+				$('#dataList').DataTable().rows.add(response);
+				$('#dataList').DataTable().draw();
+			},
+		}
+		getAllData(obj);
+	}
+
+	$('body').on('click', '.click-to-close', reload_tr)
+	$('#dataList').on('click', '.cancel-tr-submit', reload_tr)
+	$('#dataList').on('click', 'tr#selected', function(e) {
+		e.stopPropagation()
+	})
+	$('#dataList').on('click', '.save-tr-record', function() {
+		const formData = new FormData();
+		formData.append('SalesID', $('input[name="id"]').val())
+		formData.append('SalesName', $('input[name="nama"]').val())
+		formData.append('NIK', $('input[name="nik"]').val())
+		formData.append('FlagAktif', $('select[name="aktif"] option:selected').val())
 		$.ajax({
 			type: "POST",
-			url: `${HOST}/sales/apiGetById`,
+			url: `${HOST}/sales/apiEditProcess`,
 			dataType: 'JSON',
-			data: { id },
+			data: formData,
+			contentType: false,
+			processData: false,
 			beforeSend: function () {},
 			success: function (response) {
-				console.log(response)
 				if(response.success) {
-					for(const property in response.data) {
-						$(`#dataForm input[name="${property}"], #dataForm textarea[name="${property}"]`).val(response.data[property])
-					}
-					$(`#dataForm select[name="FlagAktif"] option`).removeAttr('selected')
-					if(response.data['FlagAktif'] == "A") {
-						$(`#dataForm select[name="FlagAktif"] option[value="A"]`).attr('selected', 'selected')
-					} else {
-						$(`#dataForm select[name="FlagAktif"] option[value="N"]`).attr('selected', 'selected')
-					}
-					
+					reload_tr();
+				} else {
+					$('.floating-msg').addClass('show').html(`
+						<div class="alert alert-danger">${response.msg}</div>
+						`)
 				}
 			},
 			error: function () {},
-			complete: function () {}
+			complete: function() {
+				setTimeout(() => {
+					$('.floating-msg').removeClass('show').html('');
+				}, 3000);
+			}
 		})
-	});
+	})
+
 	$('#dataForm').on('submit', 'form[name="editData"]', function(e) {
 		e.preventDefault();
 		const formData = new FormData(this);

@@ -37,7 +37,7 @@ class Sales extends BaseController
 			//$hapus = '<a href="' . site_url('sales/delete/' . $value->id) . '" onclick="return confirm(\'Apa Anda yakin menghapus user ini?\')" title="Delete"><i class="fas fa-trash-alt"></i></a>';
 			 
 			$detail = '<a class="btn btn-primary btn-sm item-detail mr-1" href="#" data-id="' . $value->SalesID . '" title="Detail"><i class="far fa-file-alt"></i></a>';
-			$edit = '<a class="btn btn-success btn-sm item-edit mr-1" href="#" data-id="' . $value->SalesID . '" title="Edit"><i class="far fa-edit"></i></a>';
+			$edit = '<a class="btn btn-success btn-sm item-edit mr-1" href="#" data-id="' . $value->SalesID . '" data-nama="'.$value->SalesName.'" data-nik="'.$value->NIK.'" data-aktif="'.$value->FlagAktif.'|A,N" title="Edit"><i class="far fa-edit"></i></a>';
 			$hapus = '<a class="btn btn-danger btn-sm" href="' . site_url('sales/delete/' . $value->SalesID) . '" data-id="' . $value->SalesID . '" onclick="return confirm(\'Apa Anda yakin menghapus data ini?\')" title="Hapus"><i class="fas fa-trash-alt"></i></a>';
 	
 		
@@ -142,7 +142,7 @@ class Sales extends BaseController
 
 		if ($this->model->updateById($id, $data)) {
 			$msg = 'Data berhasil diupdate';
-			session()->setFlashData('success', $msg);
+			// session()->setFlashData('success', $msg);
 			$response = [
 				'success' => true,
 				'msg' => $msg,

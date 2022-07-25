@@ -16,8 +16,12 @@ class Customer extends BaseController
 
     public function index()
     {
+        $this->breadcrumbs->add('Dashbor', '/');
+        $this->breadcrumbs->add('Data Pelanggan', '/customer');
+
         return view('Customer/main', [
         	'page_title' => 'Data Pelanggan',
+            'breadcrumbs' => $this->breadcrumbs->render(),
         ]);
     }
 

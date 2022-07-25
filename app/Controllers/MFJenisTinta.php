@@ -16,8 +16,12 @@ class MFJenisTinta extends BaseController
 
 	public function index()
 	{
+		$this->breadcrumbs->add('Dashbor', '/');
+        $this->breadcrumbs->add('Data Jenis Tinta MF', '/mfjenistinta');
+
 		return view('MFJenisTinta/main', [
 			'page_title' => 'Data Jenis Tinta MF',
+            'breadcrumbs' => $this->breadcrumbs->render(),
 		]);
 	}
 

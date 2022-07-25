@@ -16,8 +16,12 @@ class MFProsesFinishing extends BaseController
 
 	public function index()
 	{
+		$this->breadcrumbs->add('Dashbor', '/');
+        $this->breadcrumbs->add('Data Proses Finishing MF', '/mfprosesfinishing');
+
 		return view('MFProsesFinishing/main', [
 			'page_title' => 'Data Proses Finishing MF',
+			'breadcrumbs' => $this->breadcrumbs->render(),
 		]);
 	}
 

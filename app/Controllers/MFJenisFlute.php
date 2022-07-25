@@ -16,8 +16,12 @@ class MFJenisFlute extends BaseController
 
 	public function index()
 	{
+		$this->breadcrumbs->add('Dashbor', '/');
+        $this->breadcrumbs->add('Data Jenis Flute MF', '/mfjenisflute');
+
 		return view('MFJenisFlute/main', [
 			'page_title' => 'Data Jenis Flute MF',
+            'breadcrumbs' => $this->breadcrumbs->render(),
 		]);
 	}
 

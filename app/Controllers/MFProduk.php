@@ -21,6 +21,8 @@ class MFProduk extends BaseController
 
 	public function index()
 	{
+		$this->breadcrumbs->add('Dashbor', '/');
+        $this->breadcrumbs->add('Input Produk MF', '/mfproduk');
 
 		$segmen_model = new \App\Models\SegmenModel();
 		$customer_model = new \App\Models\CustomerModel();
@@ -35,6 +37,7 @@ class MFProduk extends BaseController
 		$khusus_model = new \App\Models\MFProsesKhususModel();
 		return view('MFProduk/input', [
 			'page_title' => 'Input Produk MF',
+			'breadcrumbs' => $this->breadcrumbs->render(),
 			'opsi_segmen' => $segmen_model->getAll(),
 			'opsi_customer' => $customer_model->getOpsi(),
 			'opsi_sales' => $sales_model->getOpsi(),

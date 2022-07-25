@@ -417,6 +417,24 @@ body {
   display: block;
 }
 
+.notfound-wrapper {
+  width: 500px;
+  background-color: #fff;
+  border: 1px solid #ddd;
+  border-radius: 5px;
+  padding: 30px;
+  text-align: center;
+}
+.notfound-wrapper .notfound-icon {
+  font-size: 3em;
+  color: rgba(0,0,0,.5);
+}
+.notfound-wrapper .title {
+  font-size: 1.5em;
+  font-weight: 700;
+  margin: 0 0 15px 0;
+}
+
 @media only screen and (max-width: 1120px) {
 }
 @media only screen and (max-width: 992px) {

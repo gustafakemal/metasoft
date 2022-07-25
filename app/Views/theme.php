@@ -146,6 +146,7 @@
                 <div class="container">
                     <div class="row">
                         <div class="col-12">
+                            <?= $breadcrumbs ?? '';?>
                             <?= $this->renderSection('content') ?>
                         </div>
                     </div>

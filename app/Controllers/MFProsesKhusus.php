@@ -16,8 +16,12 @@ class MFProsesKhusus extends BaseController
 
 	public function index()
 	{
+		$this->breadcrumbs->add('Dashbor', '/');
+        $this->breadcrumbs->add('Data Proses Khusus MF', '/mfproseskhusus');
+
 		return view('MFProsesKhusus/main', [
 			'page_title' => 'Data Proses Khusus MF',
+			'breadcrumbs' => $this->breadcrumbs->render(),
 		]);
 	}
 

@@ -16,9 +16,12 @@ class Sales extends BaseController
 
 	public function index()
 	{
-		
+		$this->breadcrumbs->add('Dashbor', '/');
+        $this->breadcrumbs->add('Data Sales', '/sales');
+
 		return view('Sales/main', [
 			'page_title' => 'Data Sales',
+			'breadcrumbs' => $this->breadcrumbs->render(),
 		]);
 	}
 

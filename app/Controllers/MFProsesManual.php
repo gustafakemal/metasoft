@@ -16,8 +16,12 @@ class MFProsesManual extends BaseController
 
 	public function index()
 	{
+		$this->breadcrumbs->add('Dashbor', '/');
+        $this->breadcrumbs->add('Data Proses Manual MF', '/mfprosesmanual');
+
 		return view('MFProsesManual/main', [
 			'page_title' => 'Data Proses Manual MF',
+			'breadcrumbs' => $this->breadcrumbs->render(),
 		]);
 	}
 

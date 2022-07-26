@@ -31,12 +31,12 @@
                 <img src="<?= site_url('images/logo.png'); ?>" alt="" />
             </div>
             <div class="top-nav">
-
                 <div class="account-nav dropdown">
                     <button type="button" class="dropdown-toggle" data-toggle="dropdown">
-                        <div class="name">
-                            <?php echo (current_user()) ? current_user()->Nama : 'UNAUTHENTICATED' ?>
+                        <div class="icon">
+                            <i class="far fa-user-circle"></i>
                         </div>
+                        <div class="name"><?php echo (current_user()) ? current_user()->Nama : 'UNAUTHENTICATED' ?></div>
                         <div class="dropdown-menu dropdown-menu-right">
                             <a href="#" class="dropdown-item">Profil</a>
                             <a href="<?= site_url('logout'); ?>" class="dropdown-item">Logout</a>
@@ -51,28 +51,54 @@
         <ul class="main-menu accordion" id="mainmenu">
   <li class="<?= (url_is(base_url()) || url_is('home') || url_is('')) ? 'active' : '' ?>">
       <a href="<?= site_url() ?>">
-          <i class="fas fa-home text-dark"></i> Dashbor
+          <div class="icon">
+            <i class="fas fa-home"></i>
+          </div>
+          <div class="caption">Dashbor
+          </div>
       </a>
   </li>
   <li class="<?= url_is('customer') ? 'active' : '' ?>">
     <a href="<?= site_url('customer');?>">
-    <i class="fas fa-user-circle text-dark"></i> Data Pelanggan
+          <div class="icon">
+            <i class="fas fa-user-circle"></i>
+          </div>
+          <div class="caption">
+            Data Pelanggan
+          </div>
     </a>
   </li>
   <li class="<?= url_is('sales') ? 'active' : '' ?>">
     <a href="<?= site_url('sales');?>">
-    <i class="fas fa-handshake text-dark"></i> Data Sales
+      <div class="icon">
+            <i class="fas fa-handshake"></i>
+          </div>
+          <div class="caption">
+            Data Sales
+          </div>
     </a>
   </li>
   <li class="<?= url_is('mftujuankirim') ? 'active' : '' ?>">
     <a href="<?= site_url('mftujuankirim');?>">
-        <i class="fas fa-car-alt text-dark"></i> Tujuan Kirim
+        
+        <div class="icon">
+            <i class="fas fa-car-alt"></i>
+          </div>
+          <div class="caption">
+            Tujuan Kirim
+          </div>
     </a>
     </li>
     <li>
       <a class="<?= url_is('mfproduk') ? '' : 'collapsed';?>" href="#" data-toggle="collapse" data-target="#dropdown-mf"
           aria-expanded="<?= url_is('mfproduk') ? 'true' : 'false'; ?>">
-          <i class="fas fa-flushed text-dark"></i> Meta Fold
+          
+          <div class="icon">
+            <i class="fas fa-flushed"></i>
+          </div>
+          <div class="caption">
+            Meta Fold
+          </div>
       </a>
       <div id="dropdown-mf" class="collapse<?= url_is('mfproduk') ? ' show' : '';?>"
           data-parent="#mainmenu">
@@ -91,7 +117,12 @@
   <li>
       <a class="<?= (url_is('mfjeniskertas') || url_is('mfjenistinta') || url_is('mfjenisflute') || url_is('mfprosesfinishing') || url_is('mfprosesmanual') || url_is('mfproseskhusus')) ? '' : 'collapsed';?>" href="#" data-toggle="collapse" data-target="#dropdown-mfmaster"
           aria-expanded="<?= (url_is('mfjeniskertas') || url_is('mfjenistinta') || url_is('mfjenisflute') || url_is('mfprosesfinishing') || url_is('mfprosesmanual') || url_is('mfproseskhusus')) ? 'true' : 'false'; ?>">
-          <i class="fas fa-envelope text-dark"></i> Data Meta Fold
+          <div class="icon">
+            <i class="fas fa-envelope"></i>
+          </div>
+          <div class="caption">
+            Data Meta Fold
+          </div>
       </a>
       <div id="dropdown-mfmaster" class="collapse<?= (url_is('mfjeniskertas') || url_is('mfjenistinta') || url_is('mfjenisflute') || url_is('mfprosesfinishing') || url_is('mfprosesmanual') || url_is('mfproseskhusus')) ? ' show' : '';?>"
           data-parent="#mainmenu">
@@ -99,32 +130,32 @@
               
               <li class="<?= (url_is('mfjeniskertas')) ? 'active' : '';?>">
               <a href="<?= site_url('mfjeniskertas');?>">
-                    <i class="fas fa-arrow-circle-right text-dark"></i> Jenis Kertas
+                    <i class="fas fa-arrow-circle-right"></i> Jenis Kertas
                 </a>
               </li>
               <li class="<?= (url_is('mfjenistinta')) ? 'active' : '';?>">
               <a href="<?= site_url('mfjenistinta');?>">
-                    <i class="fas fa-arrow-circle-right text-dark"></i> Jenis Tinta
+                    <i class="fas fa-arrow-circle-right"></i> Jenis Tinta
                 </a>
               </li>
               <li class="<?= (url_is('mfjenisflute')) ? 'active' : '';?>">
               <a href="<?= site_url('mfjenisflute');?>">
-                    <i class="fas fa-arrow-circle-right text-dark"></i> Jenis Flute
+                    <i class="fas fa-arrow-circle-right"></i> Jenis Flute
                 </a>
               </li>
               <li class="<?= (url_is('mfprosesfinishing')) ? 'active' : '';?>">
               <a href="<?= site_url('mfprosesfinishing');?>">
-                    <i class="fas fa-arrow-circle-right text-dark"></i> Proses Finishing
+                    <i class="fas fa-arrow-circle-right"></i> Proses Finishing
                 </a>
               </li>
               <li class="<?= (url_is('mfprosesmanual')) ? 'active' : '';?>">
               <a href="<?= site_url('mfprosesmanual');?>">
-                    <i class="fas fa-arrow-circle-right text-dark"></i> Proses Manual
+                    <i class="fas fa-arrow-circle-right"></i> Proses Manual
                 </a>
               </li>
               <li class="<?= (url_is('mfproseskhusus')) ? 'active' : '';?>">
               <a href="<?= site_url('mfproseskhusus');?>">
-                    <i class="fas fa-arrow-circle-right text-dark"></i> Proses Khusus
+                    <i class="fas fa-arrow-circle-right"></i> Proses Khusus
                 </a>
               </li>
               
@@ -133,7 +164,12 @@
   </li>
   <li>
       <a href="<?= site_url('logout');?>" onclick="return confirm('Anda yakin untuk Logout?')">
-          <i class="fas fa-users text-dark"></i> Logout
+          <div class="icon">
+            <i class="fas fa-users"></i>
+          </div>
+          <div class="caption">
+            Logout
+          </div>
       </a>
   </li>
 </ul>

@@ -1,51 +1,51 @@
-<?= $this->extend('theme')?>
+<?= $this->extend('theme') ?>
 
-<?= $this->section('title')?>
-<?= $page_title;?>
-<?= $this->endSection();?>
+<?= $this->section('title') ?>
+<?= $page_title; ?>
+<?= $this->endSection(); ?>
 
-<?= $this->section('content')?>
+<?= $this->section('content') ?>
 
-<h3 class="page-title"><?= $page_title;?></h3>
+<h3 class="page-title"><?= $page_title; ?></h3>
 
-<?php if(session()->has('success')) : ?>
-	<div class="alert alert-success"><?= session()->get('success');?></div>
-<?php endif;?>
+<?php if (session()->has('success')) : ?>
+	<div class="alert alert-success"><?= session()->get('success'); ?></div>
+<?php endif; ?>
 
-		<table id="customerList" class="table table-bordered table-striped" style="width: 100%">
-			<thead>
-				<tr>
-					<th style="width: 25px;">No</th>
-					<th>No Pemesan</th>
-					<th>Tanggal dibuat</th>
-					<th>Nama Pemesan</th>
-					<th>Alamat</th>
-					<th>No Fax</th>
-					<th>No Telp</th>
-					<th>Contact person</th>
-					<th>Contact person 2</th>
-					<th>Wajib pajak</th>
-					<th>NPWP</th>
-					<th>Alamat pengiriman 1</th>
-					<th>Alamat pengiriman 2</th>
-					<th>Alamat penagihan</th>
-					<th>Flag aktif</th>
-					<th>Create By</th>
-					<th>Update By</th>
-					<th>Last update</th>
-					<th>&nbsp;</th>
-				</tr>
-			</thead>
-		</table>
+<table id="dataList" class="table table-bordered table-striped" style="width: 100%">
+	<thead>
+		<tr>
+			<th style="width: 25px;">No</th>
+			<th>No Pemesan</th>
+			<th>Tanggal dibuat</th>
+			<th>Nama Pemesan</th>
+			<th>Alamat</th>
+			<th>No Fax</th>
+			<th>No Telp</th>
+			<th>Contact person</th>
+			<th>Contact person 2</th>
+			<th>Wajib pajak</th>
+			<th>NPWP</th>
+			<th>Alamat pengiriman 1</th>
+			<th>Alamat pengiriman 2</th>
+			<th>Alamat penagihan</th>
+			<th>Status aktif</th>
+			<th>Dibuat oleh</th>
+			<th>Diupdate oleh</th>
+			<th>Update terakhir</th>
+			<th>&nbsp;</th>
+		</tr>
+	</thead>
+</table>
 
 <!-- Modal -->
-<div class="modal fade" id="customerForm" tabindex="-1" aria-labelledby="customerFormLabel" aria-hidden="true">
+<div class="modal fade" id="dataForm" tabindex="-1" aria-labelledby="dataFormLabel" aria-hidden="true">
 	<div class="modal-dialog modal-lg">
 		<form>
 			<input type="hidden" name="NoPemesan" value="" />
 			<div class="modal-content">
 				<div class="modal-header">
-					<h5 class="modal-title" id="customerFormLabel"></h5>
+					<h5 class="modal-title" id="dataFormLabel"></h5>
 					<button type="button" class="close" data-dismiss="modal" aria-label="Close">
 						<span aria-hidden="true">&times;</span>
 					</button>
@@ -59,15 +59,13 @@
 								<input name="NamaPemesan" type="text" class="form-control" id="namaPemesan">
 							</div>
 							<div class="form-group">
-								<label>Tipe</label>
-								<div class="form-check">
-									<input class="form-check-input" checked="checked" type="radio" name="InternEkstern" id="InternExtern2" value="E">
-									<label class="form-check-label" for="InternExtern2">Eksternal</label>
-								</div>
-								<div class="form-check">
-									<input class="form-check-input" type="radio" name="InternEkstern" id="InternExtern1" value="I">
-									<label class="form-check-label" for="InternExtern1">Internal</label>
-								</div>
+								<label for="InternEkstern">Tipe</label>
+								<select class="form-control" id="internEkstern" name="InternEkstern" value="E">
+									<option value="E">Eksternal</option>
+									<option value="I">Internal</option>
+								</select>
+							
+								
 							</div>
 							<div class="form-group">
 								<label for="alamat">Alamat</label>
@@ -94,14 +92,11 @@
 						<div class="col-6">
 							<div class="form-group">
 								<label class="d-block">Wajib pajak</label>
-								<div class="form-check">
-									<input class="form-check-input" checked="checked" type="radio" name="wajibPajak" id="wajibPajak1" value="Y">
-									<label class="form-check-label" for="wajibPajak1">Ya</label>
-								</div>
-								<div class="form-check">
-									<input class="form-check-input" type="radio" name="wajibPajak" id="wajibPajak2" value="T">
-									<label class="form-check-label" for="wajibPajak2">Tidak</label>
-								</div>
+								<select class="form-control" name="WajibPajak" id="wajibPajak" value="Y">
+									<option value="Y">Ya</option>
+									<option value="T">Tidak</option>
+								</select>	
+								
 							</div>
 							<div class="form-group">
 								<label for="npwp">NPWP</label>
@@ -110,22 +105,19 @@
 							<div class="form-group">
 								<label for="alamatPengiriman1">Alamat pengiriman</label>
 								<textarea name="AlamatPengiriman1" rows="3" class="form-control mb-1" id="alamatPengiriman1" maxlength="255"></textarea>
-								<textarea name="AlamatPengiriman2" rows="3" class="form-control" id="alamatPengiriman2" maxlength="255" disabled="disabled"></textarea>
+								<textarea name="AlamatPengiriman2" rows="3" class="form-control" id="alamatPengiriman2" maxlength="255"></textarea>
 							</div>
 							<div class="form-group">
 								<label for="alamatPenagihan">Alamat penagihan</label>
 								<textarea name="AlamatPenagihan" rows="3" class="form-control" id="alamatPenagihan"></textarea>
 							</div>
 							<div class="form-group">
-								<label>Status</label>
-								<div class="form-check">
-									<input class="form-check-input" checked="checked" type="radio" name="FlagAktif" id="CustomerAktif" value="A">
-									<label class="form-check-label" for="CustomerAktif">Aktif</label>
-								</div>
-								<div class="form-check">
-									<input class="form-check-input" type="radio" name="FlagAktif" id="CustomerNonaktif" value="N">
-									<label class="form-check-label" for="CustomerNonaktif">Nonaktif</label>
-								</div>
+								<label>Status aktif</label>
+								<select class="form-control" name="FlagAktif" id="flagAktif" value="A">
+									<option value="A">Ya</option>
+									<option value="N">Tidak</option>
+								</select>	
+								
 							</div>
 
 						</div>
@@ -144,11 +136,11 @@
 </div>
 
 <!-- Modal -->
-<div class="modal fade" id="customerDetail" tabindex="-1" aria-labelledby="customerDetailLabel" aria-hidden="true">
+<div class="modal fade" id="dataDetail" tabindex="-1" aria-labelledby="dataDetailLabel" aria-hidden="true">
 	<div class="modal-dialog modal-lg">
 		<div class="modal-content">
 			<div class="modal-header">
-				<h5 class="modal-title" id="customerDetailLabel">Customer detail</h5>
+				<h5 class="modal-title" id="dataDetailLabel">Data detail</h5>
 				<button type="button" class="close" data-dismiss="modal" aria-label="Close">
 					<span aria-hidden="true">&times;</span>
 				</button>
@@ -159,6 +151,10 @@
 						<div class="item">
 							<label>Nama pemesan</label>
 							<div class="custDet NamaPemesan"></div>
+						</div>
+						<div class="item">
+							<label>Tipe</label>
+							<div class="custDet InternEkstern"></div>
 						</div>
 						<div class="item">
 							<label>Alamat</label>
@@ -180,6 +176,22 @@
 							<label>Contact person 2</label>
 							<div class="custDet ContactPerson2"></div>
 						</div>
+						
+						<div class="item">
+							<label>Alamat Pengiriman 1</label>
+							<div class="custDet AlamatPengiriman1"></div>
+						</div>
+						<div class="item">
+							<label>Alamat Pengiriman 2</label>
+							<div class="custDet AlamatPengiriman2"></div>
+						</div>
+						
+					</div>
+					<div class="col-6">
+						<div class="item">
+							<label>Alamat penagihan</label>
+							<div class="custDet AlamatPenagihan"></div>
+						</div>
 						<div class="item">
 							<label>Wajib pajak</label>
 							<div class="custDet WajibPajak"></div>
@@ -189,21 +201,7 @@
 							<div class="custDet NPWP"></div>
 						</div>
 						<div class="item">
-							<label>Alamat Pengiriman 1</label>
-							<div class="custDet AlamatPengiriman1"></div>
-						</div>
-						<div class="item">
-							<label>Alamat Pengiriman 2</label>
-							<div class="custDet AlamatPengiriman2"></div>
-						</div>
-						<div class="item">
-							<label>Alamat penagihan</label>
-							<div class="custDet AlamatPenagihan"></div>
-						</div>
-					</div>
-					<div class="col-6">
-						<div class="item">
-							<label>Status</label>
+							<label>Status aktif</label>
 							<div class="custDet FlagAktif"></div>
 						</div>
 						<div class="item">
@@ -224,13 +222,13 @@
 						</div>
 					</div>
 				</div>
-				
+
 			</div>
 			<div class="modal-footer">
-						<button name="cancel" type="button" class="btn btn-outline-secondary" data-dismiss="modal">Close</button>
-				</div>
+				<button name="cancel" type="button" class="btn btn-outline-secondary" data-dismiss="modal">Close</button>
+			</div>
 		</div>
 	</div>
 </div>
 
-<?= $this->endSection()?>
+<?= $this->endSection() ?>

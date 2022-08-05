@@ -76,6 +76,15 @@ class Filters extends BaseConfig
             'before' => [
                 '/',
                 'customer',
+                'sales',
+                'mftujuankirim',
+                'mfproduk',
+                'mfjeniskertas',
+                'mfjenistinta',
+                'mfjenisflute',
+                'mfprosesfinishing',
+                'mfprosesmanual',
+                'mfproseskhusus',
             ]
         ],
     ];

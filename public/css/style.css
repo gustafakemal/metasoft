@@ -24,10 +24,47 @@ body {
   color: rgba(0, 0, 0, 0.3);
 }
 
+.btn:not([name="cancel"]):disabled {
+  background-color: #ccc;
+  color: #999;
+  border-color: #999;
+}
+#dataForm button[name="cancel"]:disabled {
+  color: #ccc !important;
+}
+
 #page {
   min-height: 100vh;
   display: flex;
   flex-direction: column;
+}
+#page > .floating-msg {
+  position: fixed;
+  width: 100%;
+  z-index: 499;
+  display: none;
+  justify-content: center;
+}
+#page > .floating-msg.show {
+  display: flex;
+}
+#page > .floating-msg p {
+  margin: 0 0 10px 0;
+}
+#page > .floating-msg p:last-child {
+  margin: 0;
+}
+#page > .overlay {
+  display: none;
+  height: 100%;
+  width: 100%;
+  position: fixed;
+  top: 0;
+  left: 0;
+  z-index: 990;
+}
+#page > .overlay.show {
+  display: block;
 }
 
 .page-container {
@@ -102,6 +139,7 @@ body {
 }
 .top-nav .account-nav.show .dropdown-toggle {
   border: 1px solid transparent;
+  background-color: rgba(255,255,255,.9);
   color: #222;
 }
 .top-nav .account-nav.show .dropdown-toggle:hover {
@@ -121,11 +159,12 @@ body {
 }
 .top-nav .account-nav .dropdown-toggle {
   border: 1px solid transparent;
-  background-color: transparent;
+  background-color: rgba(255,255,255,.2);
   display: flex;
-  padding: 4px 10px;
+  padding: 4px 20px;
   border-radius: 3px;
   color: #fff;
+  font-weight: 500;
 }
 .top-nav .account-nav .dropdown-toggle:after {
   margin-top: 10px;
@@ -171,7 +210,7 @@ body {
   left: 0;
   height: calc(100% - 90px);
   width: 240px;
-  overflow: hidden;
+  overflow-y: auto;
   z-index: 89;
   border-right: 2px solid #e8d4be;
   background-color: #eee;
@@ -200,6 +239,14 @@ body {
   flex: 1;
 }
 
+.breadcrumb {
+  padding: 7px 15px;
+  margin: 0 0 30px 0;
+  font-size: 90%;
+  background-color: #f9f9f9;
+  color: rgba(0, 0, 0, 0.5);
+}
+
 .page-title {
   margin: 0 0 40px 0;
   padding: 0 0 15px 0;
@@ -221,13 +268,6 @@ body {
 }
 .main-menu > li a:hover {
   text-decoration: none;
-}
-.main-menu > li a .fa,
-.main-menu > li a .fas,
-.main-menu > li a .far,
-.main-menu > li a .fab {
-  margin-right: 10px;
-  color: rgba(0, 0, 0, 0.35);
 }
 .main-menu > li a[data-toggle="collapse"] {
   position: relative;
@@ -262,46 +302,52 @@ body {
   left: 35px;
   color: #999;
   top: 4px;
-  content: "•";
 }
 .main-menu > li > a {
   font-weight: 500;
   padding: 10px 30px;
+  display: flex;
 }
-.main-menu > li > a:hover {
+.main-menu > li > a .icon {
+  width: 30px;
+  color: rgba(0,0,0,.5);
+}
+.main-menu > li > a:hover,
+.main-menu > .active a {
   background-color: transparent;
   color: rgba(0,0,0,.5);
 }
-.main-menu > .active a {
-  background-color: transparent;
+.main-menu > li .show .active a {
+  color: rgba(0,0,0,.5);
 }
 
-#customerForm .modal-footer {
+
+#dataForm .modal-footer {
   justify-content: space-between;
 }
-#customerForm .modal-body,
-#customerDetail .modal-body {
+#dataForm .modal-body,
+#dataDetail .modal-body {
   background-color: #f9f9f9;
   padding: 20px 30px;
 }
-#customerForm .modal-body label {
+#dataForm .modal-body label {
   font-weight: 500;
   margin-bottom: 4px;
 }
 
-#customerForm button[name="submit"]:disabled {
+/*#dataForm button[name="submit"]:disabled {
   background-color: #ccc;
   color: #999;
   border-color: #999;
 }
-#customerForm button[name="cancel"]:disabled {
+#dataForm button[name="cancel"]:disabled {
   color: #ccc !important;
-}
+}*/
 
-#customerDetail .item {
+#dataDetail .item {
   margin: 0 0 20px 0;
 }
-#customerDetail .item label {
+#dataDetail .item label {
   text-transform: uppercase;
   color: rgba(0,0,0,.4);
   font-weight: 600;
@@ -355,6 +401,37 @@ body {
   padding: 30px 0;
   font-size: 85%;
   color: rgba(0,0,0,.5);
+}
+.labelDet{
+  font-weight: 600;
+  margin-top: 10pt;
+}
+
+.tbl-data-product,
+.csc-form {
+  display: none;
+}
+.tbl-data-product.show,
+.csc-form.show {
+  display: block;
+}
+
+.notfound-wrapper {
+  width: 500px;
+  background-color: #fff;
+  border: 1px solid #ddd;
+  border-radius: 5px;
+  padding: 30px;
+  text-align: center;
+}
+.notfound-wrapper .notfound-icon {
+  font-size: 3em;
+  color: rgba(0,0,0,.5);
+}
+.notfound-wrapper .title {
+  font-size: 1.5em;
+  font-weight: 700;
+  margin: 0 0 15px 0;
 }
 
 @media only screen and (max-width: 1120px) {

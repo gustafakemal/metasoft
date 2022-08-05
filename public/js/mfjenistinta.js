@@ -1,9 +1,9 @@
 $(function () {
 
-	let customerData;
+	let mfJenisTintaData;
 
 	$("#dataList").DataTable({
-		data: customerData,
+		data: mfJenisTintaData,
         buttons: [{
                 extend: 'excelHtml5',
                 exportOptions: { orthogonal: 'export' }
@@ -11,49 +11,55 @@ $(function () {
 		columnDefs: [{
 			"searchable": false,
 			"orderable": false,
-			"targets": [0, 18]
-		},{
-			"width": 60,
-			"targets": 18
-		},{
-			"targets": 14,
-			render: function ( data, type, row, meta ) {
-				if(type === 'export') {
-					return data;
-				} else {
-					return (data == 'A') ? 'Ya' : 'Tidak';
-				}
-			}
-		},{
+			"targets": [0, 10]
+		},
+		// {
+		// 	"width": 60,
+		// 	"targets": 18
+		// },{
+		// 	"targets": 14,
+		// 	render: function ( data, type, row, meta ) {
+		// 		if(type === 'export') {
+		// 			return data;
+		// 		} else {
+		// 			return (data == 'Y') ? 'Ya' : 'Tidak';
+		// 		}
+		// 	}
+		// },
+		{
 			"width": 150,
 			"targets": 2
 		},
 		{
-			className: 'dt-body-nowrap',
-			"targets": 18
+			"width": 100,
+			"targets": 5
 		},
 		{
-			"visible": false,
-			"targets": [1,4, 5, 6, 8, 9, 10, 11, 12, 13, 15, 16, 17]
+			className: 'dt-body-nowrap',
+			"targets": 10
+		},
+		{
+			 "visible": false,
+			 "targets": [1,6,7,8,9]
 		}],
 		order: [[ 1, 'desc' ]],
 		createdRow: function (row, data, dataIndex) {
 			$(row).find("td:eq(0)").attr("data-label", "No");
 			$(row).find("td:eq(1)").attr("data-label", "Tanggal dibuat");
-			$(row).find("td:eq(2)").attr("data-label", "Nama Pemesan");
-			$(row).find("td:eq(3)").attr("data-label", "Contact person");
-			$(row).find("td:eq(4)").attr("data-label", "Wajib pajak");
+			$(row).find("td:eq(2)").attr("data-label", "Jenis Tinta");
+			$(row).find("td:eq(3)").attr("data-label", "Harga");
+			$(row).find("td:eq(4)").attr("data-label", "Status Aktif");
 			$(row).find("td:eq(5)").attr("data-label", "&nbsp;");
 		},
 		initComplete: function () {
 			const dropdown = `<div class="dropdown d-inline mr-2">` +
-								`<button class="btn btn-primary dropdown-toggle" type="button" id="dataTableDropdown" data-toggle="dropdown" aria-expanded="false"><i class="fas fa-cog"></i></button>` +
-								`<div class="dropdown-menu" aria-labelledby="dataTableDropdown">` +
-								`<a class="dropdown-item customers-reload" href="#">Reload data</a>` +
-								`<a class="dropdown-item customers-to-csv" href="#">Export to excel</a>` +
+								`<button class="btn btn-primary dropdown-toggle" type="button" id="customersDropdown" data-toggle="dropdown" aria-expanded="false"><i class="fas fa-cog"></i></button>` +
+								`<div class="dropdown-menu" aria-labelledby="customersDropdown">` +
+								`<a class="dropdown-item data-reload" href="#">Reload data</a>` +
+								`<a class="dropdown-item data-to-csv" href="#">Export to excel</a>` +
 							`</div>` +
 						`</div>`
-			const add_btn = `<a href="#" class="btn btn-primary btn-add mr-2 add-customer-btn">Tambah data</a>`;
+			const add_btn = `<a href="#" class="btn btn-primary btn-add mr-2 add-data_btn">Tambah data</a>`;
 			$("#dataList_wrapper .dataTables_length").prepend(dropdown + add_btn);
 		},
 	});
@@ -61,6 +67,7 @@ $(function () {
 	setTimeout(() => {
 		const obj = {
 			beforeSend: function () {
+				
 				$('#dataList .dataTables_empty').html('<div class="spinner-icon"><span class="spinner-grow text-info"></span><span class="caption">Fetching data...</span></div>')
 			},
 			success: function (response) {
@@ -73,8 +80,8 @@ $(function () {
 			},
 			complete: function() {}
 		}
-
-		getAllCustomers(obj);
+		
+		getAllData(obj);
 	}, 50)
 
 	$('#dataList').DataTable().on( 'order.dt search.dt', function () {
@@ -84,7 +91,7 @@ $(function () {
 		});
 	}).draw();
 
-	$('.add-customer-btn').on('click', function(e) {
+	$('.add-data_btn').on('click', function(e) {
 		e.preventDefault();
 		$('#dataForm').modal({
 			show: true,
@@ -97,10 +104,11 @@ $(function () {
 	$('#dataForm').on('submit', 'form[name="addData"]', function(e) {
 		e.preventDefault();
 		const formData = new FormData(this);
+		formData.delete('id')
 
 		$.ajax({
 			type: "POST",
-			url: `${HOST}/customer/apiAddProcess`,
+			url: `${HOST}/mfjenistinta/apiAddProcess`,
 			dataType: 'JSON',
 			data: formData,
 			contentType: false,
@@ -139,12 +147,12 @@ $(function () {
 	$('#dataList').on('click', '.item-detail', function(e) {
 		e.preventDefault();
 		$('#dataDetail').modal('show')
-		const noPemesan = $(this).attr('data-id')
+		const id = $(this).attr('data-id')
 		$.ajax({
 			type: "POST",
-			url: `${HOST}/customer/apiGetById`,
+			url: `${HOST}/mfjenistinta/apiGetById`,
 			dataType: 'JSON',
-			data: { noPemesan, modified: true },
+			data: { id, modified: true },
 			beforeSend: function () {},
 			success: function (response) {
 				if(response.success) {
@@ -158,57 +166,84 @@ $(function () {
 		})
 	})
 
+	let dataListRow = null;
 	$('#dataList').on('click', '.item-edit', function(e) {
 		e.preventDefault();
-		$('#dataForm').modal({
-			show: true,
-			backdrop: 'static'
-		})
-		$('#dataForm .modal-title').html('Edit Data')
-		$('#dataForm form').attr('name', 'editData')
+		const tr = $(this).closest('tr');
+		const row = $("#dataList tr").index(tr);
+		dataListRow = $(`#dataList tr:nth-child(${row+1})`)
+		const id = $(this).attr('data-id');
+		const nama = $(this).attr('data-nama');
+		const harga = $(this).attr('data-harga');
+		const create_date = $(this).attr('data-added');
+		const aktif_arr = $(this).attr('data-aktif').split('|')
+		const aktif_opt_arr = aktif_arr[1].split(',');
+		const aktif_opt = []
+		for(let i = 0;i < aktif_opt_arr.length; i++) {
+			aktif_opt.push(`<option${aktif_opt_arr[i] == aktif_arr[0] ? ' selected' : ''} value="${aktif_opt_arr[i]}">${aktif_opt_arr[i]}</option>`)
+		}
+		const aktif = `<select name="aktif" class="form-control">${aktif_opt.join('')}</select>`
+		const btn = `<button type="button" class="btn btn-sm btn-success save-tr-record"><i class="fas fa-check"></i></button> <button type="button" class="btn btn-sm btn-secondary cancel-tr-submit"><i class="fas fa-times"></i></button>`
+		$(`#dataList tr:nth-child(${row})`).css('background-color', '#faecdc')
+		$(`#dataList tr:nth-child(${row}) td:nth-child(2)`).html(`<input type="text" class="form-control" value="${create_date}" readonly />`)
+		$(`#dataList tr:nth-child(${row}) td:nth-child(3)`).html(`<input type="text" class="form-control" placeholder="Jenis tinta" value="${nama}" name="nama" />`)
+		$(`#dataList tr:nth-child(${row}) td:nth-child(4)`).html(`<input type="number" class="form-control" placeholder="Harga" value="${parseInt(harga)}" name="harga" /><input type="hidden" value="${id}" name="id" />`)
+		$(`#dataList tr:nth-child(${row}) td:nth-child(5)`).html(`${aktif}`)
+		$(`#dataList tr:nth-child(${row}) td:nth-child(6)`).html(`${btn}`)
 
-		const noPemesan = $(this).attr('data-id')
-		$('#dataForm form input[name="NoPemesan"]').val(noPemesan)
+		$(`#dataList tr:nth-child(${row}`).attr('id', 'selected')
 
+		$('#page').addClass('click-to-close')
+	});
+
+	const reload_tr = function() {
+		const obj = {
+			success: function (response) {
+				$('#dataList').DataTable().clear();
+				$('#dataList').DataTable().rows.add(response);
+				$('#dataList').DataTable().draw();
+			},
+		}
+		getAllData(obj);
+	}
+
+	$('body').on('click', '.click-to-close', reload_tr)
+	$('#dataList').on('click', '.cancel-tr-submit', reload_tr)
+	$('#dataList').on('click', 'tr#selected', function(e) {
+		e.stopPropagation()
+	})
+	$('#dataList').on('click', '.save-tr-record', function() {
+		const formData = new FormData();
+		formData.append('id', $('input[name="id"]').val())
+		formData.append('nama', $('input[name="nama"]').val())
+		formData.append('harga', $('input[name="harga"]').val())
+		formData.append('aktif', $('select[name="aktif"] option:selected').val())
 		$.ajax({
 			type: "POST",
-			url: `${HOST}/customer/apiGetById`,
+			url: `${HOST}/mfjenistinta/apiEditProcess`,
 			dataType: 'JSON',
-			data: { noPemesan },
+			data: formData,
+			contentType: false,
+			processData: false,
 			beforeSend: function () {},
 			success: function (response) {
-				console.log(response)
+				let msgClass;
 				if(response.success) {
-					for(const property in response.data) {
-						$(`#dataForm input[name="${property}"], #dataForm textarea[name="${property}"]`).val(response.data[property])
-					}
-					
-
-					$(`#dataForm select[name="FlagAktif"] option`).removeAttr('selected')
-					if(response.data['FlagAktif'] == "A") {
-						$(`#dataForm select[name="FlagAktif"] option[value="A"]`).attr('selected', 'selected')
-					} else {
-						$(`#dataForm select[name="FlagAktif"] option[value="N"]`).attr('selected', 'selected')
-					}
-					$(`#dataForm select[name="WajibPajak"] option`).removeAttr('selected')
-					if(response.data['WajibPajak'] == "Y") {
-						$(`#dataForm select[name="WajibPajak"] option[value="Y"`).attr('selected', 'selected')
-					} else {
-						$(`#dataForm select[name="WajibPajak"] option[value="T"`).attr('selected', 'selected')
-					}
-					$(`#dataForm select[name="InternEkstern"] option`).removeAttr('selected')
-					if(response.data['InternEkstern'] == "E") {
-						$(`#dataForm select[name="InternEkstern"] option[value="E"`).attr('selected', 'selected')
-					} else {
-						$(`#dataForm select[name="InternEkstern"] option[value="I"`).attr('selected', 'selected')
-					}
+					reload_tr();
+					msgClass = 'success'
+				} else {
+					msgClass = 'danger'
 				}
-				//console.log(response.data['InternEkstern'])
+				$('.floating-msg').addClass('show').html(`<div class="alert alert-${msgClass}">${response.msg}</div>`)
 			},
 			error: function () {},
-			complete: function () {}
+			complete: function() {
+				setTimeout(() => {
+					$('.floating-msg').removeClass('show').html('');
+				}, 3000);
+			}
 		})
-	});
+	})
 
 	$('#dataForm').on('submit', 'form[name="editData"]', function(e) {
 		e.preventDefault();
@@ -216,7 +251,7 @@ $(function () {
 
 		$.ajax({
 			type: "POST",
-			url: `${HOST}/customer/apiEditProcess`,
+			url: `${HOST}/mfjenistinta/apiEditProcess`,
 			dataType: 'JSON',
 			data: formData,
 			contentType: false,
@@ -230,7 +265,6 @@ $(function () {
 				$('form[name="editData"] input, form[name="editData"] textarea, form[name="editData"] button').attr('disabled', true)
 			},
 			success: function (response) {
-				console.log(response)
 				if(response.success) {
 					location.reload();
 				} else {
@@ -248,12 +282,12 @@ $(function () {
 		})
 	})
 
-	$('.customers-to-csv').on('click', function(e) {
+	$('.data-to-csv').on('click', function(e) {
 		e.preventDefault();
 		$("#dataList").DataTable().button( '.buttons-excel' ).trigger();
 	})
 
-	$('.customers-reload').on('click', function(e) {
+	$('.data-reload').on('click', function(e) {
 		e.preventDefault();
 		const obj = {
 			beforeSend: function () {
@@ -271,26 +305,18 @@ $(function () {
 			},
 			complete: function() {}
 		}
-		getAllCustomers(obj);
+		getAllData(obj);
 	})
 
-	// $('textarea[name=AlamatPengiriman1]').on('keyup', function() {
-	// 	const maxlength = $(this).attr('maxlength');
-	// 	const characterCount = $(this).val().length;
-	// 	const current = $('#current');
-	// 	const maximum = parseInt(maxlength) - parseInt(characterCount);
-	// 	current.text(maximum);
-	// 	if(maximum == 0) {
-	// 		$('textarea[name=AlamatPengiriman2]').attr('disabled', false).focus();
-	// 	}
-	// });
+	
 });
 
-function getAllCustomers(obj)
+function getAllData(obj)
 {
+	
 	$.ajax({
 		type: "POST",
-		url: `${HOST}/customer/apiGetAll`,
+		url: `${HOST}/mfjenistinta/apiGetAll`,
 		beforeSend: obj.beforeSend,
 		success: obj.success,
 		error: obj.error,

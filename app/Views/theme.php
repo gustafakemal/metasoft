@@ -113,6 +113,19 @@
               
           </ul>
       </div>
+      <div id="dropdown-mf" class="collapse<?= url_is('mfproduk') ? ' show' : '';?>"
+          data-parent="#mainmenu">
+          <ul class="">
+              
+              <li class="<?= (url_is('mfpartproduk')) ? 'active' : '';?>">
+              <a href="<?= site_url('mfpartproduk');?>">
+                    <i class="fas fa-arrow-circle-right text-dark"></i> Input Part Produk
+                </a>
+              </li>
+              
+              
+          </ul>
+      </div>
   </li>
   <li>
       <a class="<?= (url_is('mfjeniskertas') || url_is('mfjenistinta') || url_is('mfjenisflute') || url_is('mfprosesfinishing') || url_is('mfprosesmanual') || url_is('mfproseskhusus')) ? '' : 'collapsed';?>" href="#" data-toggle="collapse" data-target="#dropdown-mfmaster"
@@ -220,6 +233,10 @@
     <script type="text/javascript">
         const HOST = "<?= base_url(); ?>"
     </script>
+    <?php if (url_is('mfpartproduk')) : ?>
+        <script src="<?= site_url('js/bs-custom-file-input.min.js'); ?>"></script>
+        <script src="<?= site_url('js/mfpartproduk.js'); ?>"></script>
+    <?php endif; ?>
     <?php if (url_is('mfproduk')) : ?>
         <script src="<?= site_url('js/bs-custom-file-input.min.js'); ?>"></script>
         <script src="<?= site_url('js/mfproduk.js'); ?>"></script>

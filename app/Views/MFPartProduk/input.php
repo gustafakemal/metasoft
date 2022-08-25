@@ -18,7 +18,7 @@
 <div class="dynamic-content">
 
 
-<form name="partproduct-form" class="csc-form">
+<form name="partproduct-form" class="csc-form show">
 	<div class="msg"></div>
 	<div class="form-group row">
 		<label for="fgd" class="col-sm-2 col-form-label">No FGD</span></label>
@@ -56,7 +56,7 @@
 		</div>
 	</div>
 	<div class="form-group row">
-		<label for="kertas" class="col-sm-2 col-form-label">Kertas <span class="text-danger">*</span></label>
+		<label for="kertas" class="col-sm-2 col-form-label">Kertas </label>
 		<div class="col-sm-4">
 			<select name="kertas" class="form-control" id="kertas">
 			<option value="0" selected>Pilih Jenis Kertas</option>
@@ -65,7 +65,7 @@
 				<?php endforeach;?>
 			</select>
 		</div>
-		<label for="flute" class="col-sm-2 col-form-label">Flute <span class="text-danger">*</span></label>
+		<label for="flute" class="col-sm-2 col-form-label">Flute </label>
 		<div class="col-sm-4">
 		<select name="flute" class="form-control" id="flute">
 			<option value="0" selected>Pilih Jenis Flute</option>
@@ -76,7 +76,21 @@
 		</div>
 	</div>
 	<div class="form-group row">
-		<label for="inner_pack" class="col-sm-2 col-form-label">Inner Pack <span class="text-danger">*</span></label>
+		
+		<label for="technical_draw" class="col-sm-2 col-form-label">Technical Draw </label>
+		<div class="col-sm-2">
+		<select name="technical_draw" id="technical_draw" class="form-control">
+					<option value="Y">Ya</option>
+					<option value="T" selected>Tidak</option>
+				</select>
+		</div>
+		<label for="no_dokumen" class="col-sm-2 col-form-label">No Dokumen </label>
+		<div class="col-sm-4">
+			<input type="text" class="form-control" id="no_dokumen" name="no_dokumen">
+		</div>
+	</div>
+	<div class="form-group row">
+		<label for="inner_pack" class="col-sm-2 col-form-label">Inner Pack </label>
 		<div class="col-sm-4">
 			<select name="inner_pack" class="form-control" id="inner_pack">
 			<option value="0" selected>Pilih Jenis Inner Pack</option>
@@ -85,14 +99,14 @@
 				<?php endforeach;?>
 			</select>
 		</div>
-		<label for="jum_innerpack" class="col-sm-2 col-form-label">Jumlah <span class="text-danger">*</span></label>
+		<label for="jum_innerpack" class="col-sm-2 col-form-label">Jumlah </label>
 		<div class="col-sm-2">
 		<input type="number" class="form-control" id="jum_innerpack" name="jum_innerpack"  value="0">
 		
 		</div>
 	</div>
 	<div class="form-group row">
-		<label for="outer_pack" class="col-sm-2 col-form-label">Outer Pack <span class="text-danger">*</span></label>
+		<label for="outer_pack" class="col-sm-2 col-form-label">Outer Pack </label>
 		<div class="col-sm-4">
 			<select name="outer_pack" class="form-control" id="outer_pack">
 			<option value="0" selected>Pilih Jenis Outer Pack</option>
@@ -101,14 +115,14 @@
 				<?php endforeach;?>
 			</select>
 		</div>
-		<label for="jum_outerpack" class="col-sm-2 col-form-label">Jumlah <span class="text-danger">*</span></label>
+		<label for="jum_outerpack" class="col-sm-2 col-form-label">Jumlah </label>
 		<div class="col-sm-2">
 		<input type="number" class="form-control" id="jum_outerpack" name="jum_outerpack"  value="0">
 		
 		</div>
 	</div>
 	<div class="form-group row">
-		<label for="deliver_pack" class="col-sm-2 col-form-label">Delivery Pack <span class="text-danger">*</span></label>
+		<label for="deliver_pack" class="col-sm-2 col-form-label">Delivery Pack </label>
 		<div class="col-sm-4">
 			<select name="deliver_pack" class="form-control" id="deliver_pack">
 			<option value="0" selected>Pilih Jenis Delivery Pack</option>
@@ -117,7 +131,7 @@
 				<?php endforeach;?>
 			</select>
 		</div>
-		<label for="auto_pack" class="col-sm-4 col-form-label">Auto Packing Machine di Customer <span class="text-danger">*</span></label>
+		<label for="auto_pack" class="col-sm-4 col-form-label">Auto Packing Machine di Customer </label>
 		<div class="col-sm-2">
 		<select name="auto_pack" id="auto_pack" class="form-control">
 					<option value="Y">Ya</option>
@@ -127,10 +141,21 @@
 		</div>
 	</div>
 	<div class="form-group row">
-		<label for="special_req" class="col-sm-2 col-form-label">Delivery Pack <span class="text-danger">*</span></label>
+		<label for="special_req" class="col-sm-2 col-form-label">Special Request </label>
 		<div class="col-sm-10">
 			<textarea name="special_req" class="form-control" id="special_req"></textarea>
 
+		</div>
+	</div>
+	<div class="form-group row">
+		
+		<label for="no_dokcr" class="col-sm-3 col-form-label">Dokumen Change Request </label>
+		<div class="col-sm-3">
+		<input type="text" class="form-control" id="no_dokcr" name="no_dokcr">
+		</div>
+		<label for="file_dokcr" class="col-sm-2 col-form-label">Upload Dokumen </label>
+		<div class="col-sm-4">
+			<input type="file" class="form-control" id="file_dokcr" name="file_dokcr">
 		</div>
 	</div>
 	

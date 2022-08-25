@@ -233,7 +233,7 @@
     <script type="text/javascript">
         const HOST = "<?= base_url(); ?>"
     </script>
-    <?php if (url_is('mfpartproduk')) : ?>
+    <?php if (url_is('mfpartproduk') || url_is('mfpartproduk/*')) : ?>
         <script src="<?= site_url('js/bs-custom-file-input.min.js'); ?>"></script>
         <script src="<?= site_url('js/mfpartproduk.js'); ?>"></script>
     <?php endif; ?>

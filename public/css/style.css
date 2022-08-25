@@ -410,7 +410,7 @@ body {
 
 .tbl-data-product,
 .csc-form {
-  display: none;
+  /*display: none;*/
 }
 .tbl-data-product.show,
 .csc-form.show {

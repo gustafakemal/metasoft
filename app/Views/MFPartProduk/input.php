@@ -34,7 +34,7 @@
 	<div class="form-group row">
 		<label for="nama_produk" class="col-sm-2 col-form-label">Nama Part Produk <span class="text-danger">*</span></label>
 		<div class="col-sm-10">
-			<input type="text" class="form-control" id="nama_produk" name="nama_produk">
+			<input type="text" class="form-control" id="nama_produk" name="nama">
 		</div>
 	</div>
 	<div class="form-group row">
@@ -127,7 +127,7 @@
 		</div>
 	</div>
 	<div class="form-group row">
-		<label for="special_req" class="col-sm-2 col-form-label">Delivery Pack <span class="text-danger">*</span></label>
+		<label for="special_req" class="col-sm-2 col-form-label">Special Req <span class="text-danger">*</span></label>
 		<div class="col-sm-10">
 			<textarea name="special_req" class="form-control" id="special_req"></textarea>
 

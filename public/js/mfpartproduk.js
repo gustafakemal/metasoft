@@ -542,6 +542,46 @@ $(function () {
 		$('.khusus-selected').html('')
 		$('input[name="no_dokumen"]').attr('disabled', true)
 	})
+
+	// $('form[name="partproduct-form"]').on('click', 'select[name="kertas"]', function (e) {
+	// 	$.ajax({
+	// 		type: 'GET',
+	// 		url: `${HOST}/mfpartproduk/masters`,
+	// 		beforeSend: function () {
+	// 			$('select[name="kertas"]').append('<option value="loading">Loading...</option>')
+	// 		},
+	// 		success: function (response) {
+	// 			console.log($('select[name="kertas"]').length)
+	// 			if(response.success) {
+	// 				for(let i = 0;i < response.data.length;i++) {
+	// 					$('select[name="kertas"]').append(`<option value="${response.data[i].id}">${response.data[i].nama}</option>`)
+	// 				}
+	// 			}
+	// 		},
+	// 		complete: function () {
+	// 			$('select[name="kertas"] option[value="loading"]').remove();
+	// 		}
+	// 	});
+	// });
+
+	$('form[name="partproduct-form"]').on('submit', function (e) {
+		e.preventDefault();
+		const formData = new FormData(this);
+
+		$.ajax({
+			type: 'POST',
+			url: `${HOST}/mfpartproduk/apiAddProcess`,
+			dataType: 'JSON',
+			data: formData,
+			contentType: false,
+			processData: false,
+			beforeSend: function () {},
+			success: function (response) {
+				console.log(response)
+			},
+			complete: function () {}
+		});
+	})
 });
 
 function selectionAddedBox(id, name) {

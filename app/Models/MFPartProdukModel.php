@@ -32,6 +32,13 @@ class MFPartProdukModel extends Model
         $this->validationMessages = $validationMessages;
     }
 
+    public function updatePart($id, $data)
+    {
+        return $this->where('id', $id)
+                    ->set($data)
+                    ->update();
+    }
+
     public function getMFProduk()
     {
         return $this->orderBy('nama_produk', 'asc')

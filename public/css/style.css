@@ -29,6 +29,10 @@ body {
   color: #999;
   border-color: #999;
 }
+
+.modalForm button[name="cancel"]:disabled {
+  color: #ccc !important;
+}
 #dataForm button[name="cancel"]:disabled {
   color: #ccc !important;
 }
@@ -314,6 +318,18 @@ body {
   color: rgba(0,0,0,.5);
 }
 
+.modalForm .modal-footer {
+  justify-content: space-between;
+}
+.modalForm .modal-body,
+#dataDetail .modal-body {
+  background-color: #f9f9f9;
+  padding: 20px 30px;
+}
+.modalForm .modal-body label {
+  font-weight: 500;
+  margin-bottom: 4px;
+}
 
 #dataForm .modal-footer {
   justify-content: space-between;

@@ -39,6 +39,12 @@ class MFPartProdukModel extends Model
                     ->update();
     }
 
+    public function getAll()
+    {
+        return $this->orderBy('id', 'desc')
+                    ->get();
+    }
+
     public function getMFProduk()
     {
         return $this->orderBy('nama_produk', 'asc')
@@ -141,5 +147,20 @@ class MFPartProdukModel extends Model
                 ->where('id', $id)
                 ->get()
                 ->getLastRow();
+    }
+
+    public function getDistinctiveFGD()
+    {
+        return $this->select('fgd')
+                    ->distinct()
+                    ->get();
+    }
+
+    public function getRevisiByFGD($fgd)
+    {
+        return $this->select('revisi')
+                    ->where('fgd', $fgd)
+                    ->distinct()
+                    ->get();
     }
 }

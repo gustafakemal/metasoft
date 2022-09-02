@@ -806,7 +806,7 @@ $(function () {
 			type: 'GET',
 			url: `${HOST}/mfpartproduk/getSisiById/${id}`,
 			beforeSend: function () {
-				$('.sisi-form-modal input:not(#frontside):not(#backside):(#trevisi), .sisi-form-modal textarea, .sisi-form-modal button').prop('disabled', true);
+				$('.sisi-form-modal input:not(#frontside):not(#backside):not(#trevisi), .sisi-form-modal textarea, .sisi-form-modal button').prop('disabled', true);
 			},
 			success: function (response) {
 				const colors_el = ['fs_colors', 'bs_colors', 'manual_colors', 'finishing_colors', 'khusus_colors'];
@@ -888,7 +888,7 @@ function loadDataSisi(id_part)
 {
 	$.ajax({
 		type: "GET",
-		url: `${HOST}/mfpartproduk/apiAllSisi/${id_part}`,
+		url: `${HOST}/mfpartproduk/apiAllSisiByPart/${id_part}`,
 		success: function (response) {
 			if(response.success) {
 				$('#dataList').DataTable().clear();

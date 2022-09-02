@@ -370,7 +370,34 @@ class MFPartProduk extends BaseController
         return $this->response->setJSON($response);
     }
 
-    public function apiAllSisi($id)
+    public function apiAllSisi()
+    {
+        $query = (new \App\Models\MFSisiProdukModel())->getAllSisi();
+
+        $data = [];
+        foreach ($query->getResult() as $key => $item) {
+            $data[] = [
+                $item->sisi,
+                $item->frontside,
+                $item->backside,
+                $item->special_req,
+                $item->added,
+                $item->added_by,
+                $item->updated,
+                $item->updated_by,
+                ''
+            ];
+        }
+
+        $response = [
+            'success' => true,
+            'data' => $data
+        ];
+
+        return $this->response->setJSON($response);
+    }
+
+    public function apiAllSisiByPart($id)
     {
         $query = (new \App\Models\MFSisiProdukModel())->getAllSisiByPart($id);
 
@@ -492,12 +519,85 @@ class MFPartProduk extends BaseController
 		return $this->response->setJSON($response);
 	}
 
+    public function getDistinctiveFGD()
+    {
+        $query = $this->model->getDistinctiveFGD();
+
+        if($query->getNumRows() > 0) {
+            $data = [];
+            foreach ($query->getResult() as $row) {
+                $data[] = $row->fgd;
+            }
+            $response = [
+                'success' => true,
+                'data' => $data
+            ];
+        } else {
+            $response = [
+                'success' => false,
+                'data' => null
+            ];
+        }
+
+        return $this->response->setJSON($response);
+    }
+
+    public function getRevisiByFGD($fgd)
+    {
+        $query = $this->model->getRevisiByFGD($fgd);
+
+        if($query->getNumRows() > 0) {
+            $data = [];
+            foreach ($query->getResult() as $row) {
+                $data[] = $row->revisi;
+            }
+            $response = [
+                'success' => true,
+                'data' => $data
+            ];
+        } else {
+            $response = [
+                'success' => false,
+                'data' => null
+            ];
+        }
+
+        return $this->response->setJSON($response);
+    }
+
 	public function apiGetAll()
 	{
-		if ($this->request->getMethod() !== 'post') {
-			return redirect()->to('mfproduk');
-		}
+//		if ($this->request->getMethod() !== 'post') {
+//			return redirect()->to('mfpartproduk');
+//		}
 
+        $query = $this->model->getAll();
+
+        $data = [];
+        foreach ($query->getResult() as $key => $item) {
+            $data[] = [
+                $key + 1,
+                $item->fgd,
+                $item->revisi,
+                $item->nama,
+                $item->kertas,
+                $item->flute,
+                $item->metalize,
+                $item->panjang . 'x' . $item->lebar . 'x' . $item->tinggi,
+                $item->added,
+                $item->added_by,
+                $item->updated,
+                $item->updated_by,
+                ''
+            ];
+        }
+
+        $response = [
+            'success' => true,
+            'data' => $data
+        ];
+
+        return $this->response->setJSON($response);
 	}
 
 	public function apiGetById()

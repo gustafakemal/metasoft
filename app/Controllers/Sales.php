@@ -27,17 +27,10 @@ class Sales extends BaseController
 
 	public function apiGetAll()
 	{
-		if ($this->request->getMethod() !== 'post') {
-			return redirect()->to('sales');
-		}
-
-		$query = $this->model->getSales();
+        $query = $this->model->getSales();
 
 		$data = [];
 		foreach ($query as $key => $value) {
-			//$detail = '<a href="#" data-id="' . $value->id . '" class=" btn item-detail" title="Detail"><i class="far fa-file-alt"></i></a> ';
-			//$edit = '<a href="#" data-id="' . $value->id . '" class="item-edit" title="Edit"><i class="far fa-edit"></i></a> ';
-			//$hapus = '<a href="' . site_url('sales/delete/' . $value->id) . '" onclick="return confirm(\'Apa Anda yakin menghapus user ini?\')" title="Delete"><i class="fas fa-trash-alt"></i></a>';
 			 
 			$detail = '<a class="btn btn-primary btn-sm item-detail mr-1" href="#" data-id="' . $value->SalesID . '" title="Detail"><i class="far fa-file-alt"></i></a>';
 			$edit = '<a class="btn btn-success btn-sm item-edit mr-1" href="#" data-id="' . $value->SalesID . '" data-nama="'.$value->SalesName.'" data-nik="'.$value->NIK.'" data-aktif="'.$value->FlagAktif.'|A,N" title="Edit"><i class="far fa-edit"></i></a>';

@@ -24,6 +24,12 @@ class MFSisiProdukModel extends Model
     ];
     protected $validationMessages = [];
 
+    public function getAllSisi()
+    {
+        return $this->orderBy('id', 'desc')
+                    ->get();
+    }
+
     public function getAllSisiByPart($id_part)
     {
         return $this->where('id_part', $id_part)

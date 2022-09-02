@@ -326,7 +326,7 @@ $(function () {
 function getAllData(obj)
 {
 	$.ajax({
-		type: "POST",
+		type: "GET",
 		url: `${HOST}/sales/apiGetAll`,
 		beforeSend: obj.beforeSend,
 		success: obj.success,

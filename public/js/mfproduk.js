@@ -633,6 +633,8 @@ $(function () {
 			show: true,
 			backdrop: 'static'
 		})
+		$('.sisi-form-modal').attr('name', 'add-sisi');
+
 		$.ajax({
 			type: 'GET',
 			url: `${HOST}/mfpartproduk/getdistinctivefgd`,
@@ -667,6 +669,10 @@ $(function () {
 			$('select[name="revisi"]').prop('disabled', true);
 		}
 	})
+
+	$('#dataFormSisi').on('hidden.bs.modal', function (event) {
+		resetSisiModal();
+	});
 
 	let color_tracker = {
 		frontside: [],
@@ -735,6 +741,182 @@ $(function () {
 
 	$('.add-khusus').on('click', khusus_params, colorAddItem);
 	$('.khusus-child').on('click', '.delkhusus', khusus_params, colorDelItem)
+
+	$('#dataFormSisi').on('submit', 'form[name="add-sisi"]', function (e) {
+		e.preventDefault();
+		const formData = new FormData(this);
+
+		$.ajax({
+			type: 'POST',
+			url: `${HOST}/mfpartproduk/apiaddsisi/1`,
+			dataType: 'JSON',
+			data: formData,
+			contentType: false,
+			processData: false,
+			beforeSend: function () {},
+			success: function (response) {
+				if(response.success) {
+					$('#dataFormSisi').modal('hide');
+					$('.floating-msg').html(`<div class="alert alert-success">${response.msg}</div>`).addClass('show');
+					loadData(`${HOST}/mfpartproduk/apiallsisi`, '#dataSisi');
+				} else {
+					$('#dataFormSisi .msg').html(`<div class="alert alert-danger">${response.msg}</div>`);
+					$('#dataFormSisi, html, body').animate({
+						scrollTop: 0
+					}, 500);
+				}
+			},
+			complete: function () {
+				$('.sisi-form-modal input:not(#trevisi):not(#fgd), .sisi-form-modal textarea, .sisi-form-modal select, .sisi-form-modal button').prop('disabled', false);
+				setTimeout(() => {
+					$('.floating-msg').html('');
+					$('.floating-msg').removeClass('show');
+				}, 3000);
+			}
+		})
+	})
+
+	$('#dataFormSisi').on('submit', 'form[name="edit-sisi"]', function (e) {
+		e.preventDefault();
+		const formData = new FormData(this);
+
+		$.ajax({
+			type: 'POST',
+			url: `${HOST}/mfpartproduk/apieditsisi`,
+			dataType: 'JSON',
+			data: formData,
+			contentType: false,
+			processData: false,
+			beforeSend: function () {
+				$('.sisi-form-modal input:not(#frontside):not(#backside), .sisi-form-modal textarea, .sisi-form-modal select, .sisi-form-modal button').prop('disabled', true);
+			},
+			success: function (response) {
+				// if(response.success) {
+				// 	$('#dataForm').modal('hide');
+				// 	$('.floating-msg').html(`<div class="alert alert-success">${response.msg}</div>`).addClass('show');
+				// 	loadDataSisi(id_part)
+				// } else {
+				// 	$('#dataForm .msg').html(`<div class="alert alert-danger">${response.msg}</div>`);
+				// 	$('#dataForm, html, body').animate({
+				// 		scrollTop: 0
+				// 	}, 500);
+				// }
+			},
+			complete: function () {
+				$('.sisi-form-modal input:not(#trevisi):not(#fgd), .sisi-form-modal textarea, .sisi-form-modal select, .sisi-form-modal button').prop('disabled', false);
+				setTimeout(() => {
+					$('.floating-msg').html('');
+					$('.floating-msg').removeClass('show');
+				}, 3000);
+			}
+		})
+	});
+
+	$('#dataSisi').on('click', '.edit-sisi', function(e) {
+		e.preventDefault();
+		$('.sisi-form-modal').attr('name', 'edit-sisi')
+		const id = $(this).attr('data-id');
+		const fgd = $(this).attr('data-fgd');
+		const revisi = $(this).attr('data-revisi');
+		$('.sisi-form-modal input[name="id"]').val(id)
+		$('input[name="fgd"]').val($('input[name="src_fgd"]').val())
+		$('input[name="trevisi"]').val($('input[name="src_revisi"]').val())
+		$('#dataFormSisi').modal({
+			show: true,
+			backdrop: 'static'
+		});
+
+		$.get(`${HOST}/mfpartproduk/getdistinctivefgd`, function (response) {
+			for(let i = 0;i < response.data.length;i++) {
+				const selected = (fgd == response.data[i]) ? ' selected' : '';
+				$('select[name="no_fgd"]').append(`<option${selected} value="${response.data[i]}">${response.data[i]}</option>`);
+			}
+		})
+
+		$.get(`${HOST}/mfpartproduk/getrevisibyfgd/${fgd}`, function (response) {
+			$('select[name="revisi"]').prop('disabled', false);
+			for(let i = 0;i < response.data.length;i++) {
+				const selected = (revisi == response.data[i]) ? ' selected' : '';
+				$('select[name="revisi"]').append(`<option${selected} value="${response.data[i]}">${response.data[i]}</option>`);
+			}
+		})
+
+		$.ajax({
+			type: 'GET',
+			url: `${HOST}/mfpartproduk/getSisiById/${id}`,
+			beforeSend: function () {
+				$('.sisi-form-modal input:not(#frontside):not(#backside):not(#trevisi), .sisi-form-modal textarea, .sisi-form-modal button').prop('disabled', true);
+			},
+			success: function (response) {
+				const colors_el = ['fs_colors', 'bs_colors', 'manual_colors', 'finishing_colors', 'khusus_colors'];
+
+				for(const prop in response.data) {
+					if(colors_el.includes(prop)) {
+						const spliter = prop.split('_')
+						const prefix = spliter[0];
+						let child_el = [];
+						for(let i = 0;i < response.data[prop].length;i++) {
+							const item_class = `${prefix}color`;
+							const value = response.data[prop][i].id;
+							const text = response.data[prop][i].nama
+							const add_el = (prefix == 'fs' || prefix == 'bs') ? `<label for="tinta" class="col-sm-2">&nbsp</label>` : '';
+							child_el.push(`<div class="row mb-1 ${item_class}-${value}">
+													${add_el}
+													<div class="col-sm">${text}</div>
+													<div class="col-sm">
+														<input type="hidden" name="${item_class}[]" value="${value}" />
+														<button type="button" class="btn-sm btn-danger del${prefix}" id="del${prefix}-${value}">
+															<i class="fas fa-trash-alt text-light"></i>
+														</button>
+													</div>
+											</div>`)
+						}
+						$(`.${prefix}-child`).html(child_el.join(''));
+					}
+
+					$(`.sisi-form-modal input[name="${prop}"]`).val(response.data[prop]);
+					$(`.sisi-form-modal textarea[name="${prop}"]`).val(response.data[prop]);
+				}
+			},
+			complete: function () {
+				$('.sisi-form-modal input:not(#frontside):not(#backside):not(#fgd), .sisi-form-modal textarea, .sisi-form-modal button').prop('disabled', false);
+			}
+		})
+	})
+		.on('click', '.view-sisi', function (e) {
+			e.preventDefault();
+			$('#dataDetail').modal({
+				show: true,
+				backdrop: 'static'
+			})
+			const id = $(this).attr('data-id');
+
+			$.ajax({
+				type: 'GET',
+				url: `${HOST}/mfpartproduk/getSisiById/${id}`,
+				beforeSend: function () {},
+				success: function (response) {
+					console.log(response)
+					for(const prop in response.data) {
+
+						const colors_el = ['fs_colors', 'bs_colors', 'manual_colors', 'finishing_colors', 'khusus_colors'];
+
+						if(colors_el.includes(prop)) {
+							const spliter = prop.split('_')
+							const prefix = spliter[0];
+							let child_el = [];
+							for(let i = 0;i < response.data[prop].length;i++) {
+								const text = response.data[prop][i].nama
+								child_el.push(`<li>${text}</li>`)
+							}
+							$(`.${prefix}-child`).html(`<ul>${child_el.join('')}</ul>`);
+						}
+
+						$(`#dataDetail .${prop}`).html(response.data[prop])
+					}
+				},
+			})
+		})
 });
 
 function selectionAddedBox(id, name) {
@@ -873,7 +1055,7 @@ function colorAddItem(e)
 							</div>
 					</div>`)
 		tracker.push(value)
-		$(`#dataForm input[name="${group}"]`).val(tracker.length);
+		$(`#dataFormSisi input[name="${group}"]`).val(tracker.length);
 	}
 	$(`${select_box} option[value="0"]`).prop('selected', true);
 }
@@ -887,5 +1069,19 @@ function colorDelItem(event)
 		tracker.splice(idx, 1);
 	}
 	$(`.${item_container} .${item_class}-${id[1]}`).remove();
-	$(`#dataForm input[name="${group}"]`).val(tracker.length);
+	$(`#dataFormSisi input[name="${group}"]`).val(tracker.length);
+}
+
+function resetSisiModal()
+{
+	$('.sisi-form-modal').removeAttr('name');
+	$('.sisi-form-modal input[type="number"]').val('0');
+	$('.sisi-form-modal input[type="text"]').val('');
+	$('.sisi-form-modal textarea').val('');
+	$('.sisi-form-modal input[name="id"]').val('')
+	$('.sisi-form-modal select[name="no_fgd"] option:not([value=""])').remove()
+	$('.sisi-form-modal select[name="revisi"] option:not([value=""])').remove()
+	$('.sisi-form-modal select[name="revisi"]').prop('disabled', true)
+	$('.sisi-view').html('')
+	$('.fs-child, .bs-child, .manual-child, .finishing-child, .khusus-child').html('');
 }

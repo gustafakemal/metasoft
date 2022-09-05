@@ -26,8 +26,10 @@ class MFSisiProdukModel extends Model
 
     public function getAllSisi()
     {
-        return $this->orderBy('id', 'desc')
-                    ->get();
+        return $this->select('MF_SisiProduk.id, MF_SisiProduk.id_part, MF_SisiProduk.sisi, MF_SisiProduk.frontside, MF_SisiProduk.backside, MF_SisiProduk.special_req, MF_SisiProduk.aktif, MF_SisiProduk.added, MF_SisiProduk.added_by, MF_SisiProduk.updated, MF_SisiProduk.updated_by, MF_PartProduk.fgd, MF_PartProduk.revisi')
+            ->join('MF_PartProduk', 'MF_SisiProduk.id_part = MF_PartProduk.id', 'left')
+            ->orderBy('MF_SisiProduk.id', 'desc')
+            ->get();
     }
 
     public function getAllSisiByPart($id_part)

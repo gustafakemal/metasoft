@@ -163,4 +163,12 @@ class MFPartProdukModel extends Model
                     ->distinct()
                     ->get();
     }
+
+    public function getIDByFgdAndRevisi($fgd, $revisi)
+    {
+        return $this->select('id')
+                    ->where('fgd', $fgd)
+                    ->where('revisi', $revisi)
+                    ->first();
+    }
 }

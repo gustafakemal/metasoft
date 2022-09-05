@@ -158,7 +158,7 @@ class MFPartProduk extends BaseController
         }
     }
 
-    public function apiAddSisi()
+    public function apiAddSisi($id_part = 0)
     {
         $model = new \App\Models\MFSisiProdukModel();
         $model_warna = new \App\Models\MFProdukWarnaModel();
@@ -175,6 +175,15 @@ class MFPartProduk extends BaseController
 
         $data['id'] = random_string('basic');
         $data['added_by'] = session()->get('UserID');
+
+        if($id_part == 1) {
+            $no_fgd = $data['no_fgd'];
+            $revisi = $data['revisi'];
+            $id_part = $this->model->getIDByFgdAndRevisi($no_fgd, $revisi);
+            $data['id_part'] = $id_part['id'];
+            unset($data['no_fgd']);
+            unset($data['revisi']);
+        }
 
         if($model->insert($data, false)) {
             $data_fs = [];
@@ -376,6 +385,12 @@ class MFPartProduk extends BaseController
 
         $data = [];
         foreach ($query->getResult() as $key => $item) {
+
+            $del_confirm = "'Hapus item ini?'";
+            $view = '<a href="#" title="View" class="view-sisi" data-id="' . $item->id . '"><i class="far fa-file-alt"></i></a>';
+            $edit = ' <a href="#" title="Edit" class="edit-sisi" data-revisi="' . $item->revisi . '" data-fgd="' . $item->fgd . '" data-id="' . $item->id . '"><i class="far fa-edit"></i></a>';
+            $del = ' <a href="' . site_url('mfpartproduk/delSisi/' . $item->id) . '" title="Hapus" onclick="return confirm('.$del_confirm.')"><i class="far fa-trash-alt"></i></a>';
+
             $data[] = [
                 $item->sisi,
                 $item->frontside,
@@ -385,7 +400,7 @@ class MFPartProduk extends BaseController
                 $item->added_by,
                 $item->updated,
                 $item->updated_by,
-                ''
+                $view . $edit . $del
             ];
         }
 

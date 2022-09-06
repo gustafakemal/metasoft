@@ -65,4 +65,16 @@ class MFJenisFluteModel extends Model
         return $this->where('id', $id)
             ->delete();
     }
+
+    public function getNama($id)
+    {
+        $query = $this->select('nama')
+            ->where('id', $id)
+            ->get();
+        if($query->getNumRows() == 0) {
+            return null;
+        }
+
+        return $query->getResult()[0]->nama;
+    }
 }

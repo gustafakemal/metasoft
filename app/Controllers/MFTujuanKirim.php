@@ -27,10 +27,6 @@ class MFTujuanKirim extends BaseController
 
 	public function apiGetAll()
 	{
-		if ($this->request->getMethod() !== 'post') {
-			return redirect()->to('mftujuankirim');
-		}
-
 		$query = $this->model->getMFTujuanKirim();
 
 		$data = [];

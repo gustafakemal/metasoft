@@ -46,6 +46,8 @@ $(function () {
 		$('form[name="csc-form"] input[name="id"]').val(id);
 		$('.tbl-data-product').removeClass('show');
 		$('.csc-form').addClass('show edit-produk-form');
+		$('form[name="form-cariproduk"] input, form[name="form-cariproduk"] button[type="submit"]').prop('disabled', true)
+		$('form[name="form-cariproduk"] button[type="button"]').text('Batal')
 
 		$.ajax({
 			type: 'POST',
@@ -632,19 +634,14 @@ $(function () {
 		loadSalesOption();
 		loadCustomerOption();
 		loadTujuanKirimOption();
-		$('.csc-form')[0].reset();
-		$('.csc-form').addClass('show add-new-fgd')
-		$('.tbl-data-product').removeClass('show')
-		$('input[name="cariproduk"]').val('')
-		$('.csc-form input[name="fgd"]').val('(Auto)');
-		$('.csc-form .form-group.row-change-request').css('display', 'none')
-		$('.csc-form input[name="trevisi"]').val('0');
-		$('.frontside-selected').html('')
-		$('.backside-selected').html('')
-		$('.finishing-selected').html('')
-		$('.manual-selected').html('')
-		$('.khusus-selected').html('')
-		$('input[name="no_dokumen"]').attr('disabled', true)
+		const teks = ($(this).text() === 'Buat Baru') ? 'Batal' : 'Buat Baru';
+		$(this).text(teks)
+		$('.csc-form').toggleClass('show add-new-fgd')[0].reset()
+		$('.tbl-data-product').toggleClass('show')
+		$('form[name="form-cariproduk"]')[0].reset();
+		const btn = $('form[name="form-cariproduk"] button[type="submit"]');
+		$('input[name="cariproduk"]').val('').prop('disabled', (!btn.prop('disabled')))
+		btn.prop('disabled', (!btn.prop('disabled')))
 	})
 
 	$('.add-sisi').on('click', function (e) {

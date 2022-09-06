@@ -27,6 +27,7 @@ class BaseController extends Controller
      * @var CLIRequest|IncomingRequest
      */
     protected $request;
+    protected $common;
 
     /**
      * An array of helpers to be loaded automatically upon
@@ -46,6 +47,7 @@ class BaseController extends Controller
         parent::initController($request, $response, $logger);
 
         $this->breadcrumbs = new \App\Libraries\Breadcrumbs;
+        $this->common = new \App\Libraries\Common();
 
         // Preload any models, libraries, etc, here.
 

@@ -55,9 +55,8 @@ class MFProduk extends BaseController
 	{
 		$keyword = $this->request->getPost('keyword');
 		$query = $this->model->getByFgdNama("$keyword");
-		//dd($query);
-		//exit;
 
+        return $this->response->setJSON($query);
 
 		$data = [];
 		foreach($query as $key => $val) {
@@ -65,11 +64,8 @@ class MFProduk extends BaseController
 			$revisi_btn = '<button type="button" class="btn btn-sm btn-danger rev-item" data-id="'.$val->id.'">Revisi</button>';
 			$data[] = [
 				$key + 1,
-				$val->fgd,
-				$val->revisi,
 				$val->nama_produk,
 				$val->segmen,
-				// $val->pemesan,
 				$val->customer,
 				$val->sales,
 				$val->added,
@@ -81,7 +77,7 @@ class MFProduk extends BaseController
 		}
 
 		$response = [
-			'success' => true,
+			'success' => (count($data) > 0) ? true : false,
 			'data' => $data
 		];
 
@@ -103,9 +99,9 @@ class MFProduk extends BaseController
                 $item->OpsiTeks,
                 $item->NamaPemesan,
                 $item->SalesName,
-                $item->added,
+                $this->common->dateFormat($item->added),
                 $item->added_by,
-                $item->updated,
+                $this->common->dateFormat($item->updated),
                 $item->updated_by,
                 $edit . $del
             ];

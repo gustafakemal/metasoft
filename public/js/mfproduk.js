@@ -70,23 +70,42 @@ $(function () {
 
 	$('form[name="form-cariproduk"]').on('submit', function(e) {
 		e.preventDefault();
-		$('.csc-form')[0].reset();
-		$('.csc-form').removeClass('show')
-		$('.csc-form .form-group.row-change-request').removeAttr('style')
 		const keyword = $('input[name="cariproduk"]').val();
-		//alert(keyword);
+
 		$.ajax({
 			type: 'POST',
 			url: `${HOST}/mfproduk/productSearch`,
+			dataType: 'JSON',
+			data: {keyword},
+			beforeSend: function () {},
+			success: function (response) {
+				if(response.success) {
+					$('#dataList').DataTable().clear().rows.add(response.data).draw();
+				} else {
+					$('#dataList').DataTable().clear().draw();
+				}
+			},
+		})
+	});
+
+	$('form[name="form-caripartproduk"]').on('submit', function(e) {
+		e.preventDefault();
+		// $('.csc-form')[0].reset();
+		// $('.csc-form').removeClass('show')
+		// $('.csc-form .form-group.row-change-request').removeAttr('style')
+		const keyword = $('input[name="caripartproduk"]').val();
+		console.log(keyword);
+		$.ajax({
+			type: 'POST',
+			url: `${HOST}/mfpartproduk/partProductSearch`,
 			dataType: 'JSON',
 			data: { keyword },
 			beforeSend: function () {},
 			success: function (response) {
 				if(response.success) {
-					$('#dataList').DataTable().clear();
-					$('#dataList').DataTable().rows.add(response.data);
-					$('#dataList').DataTable().draw();
-					$('.tbl-data-product').addClass('show');
+					$('#dataPartHasilCari').DataTable().clear().rows.add(response.data).draw();
+				} else {
+					$('#dataPartHasilCari').DataTable().clear().draw();
 				}
 			},
 			error: function () {},

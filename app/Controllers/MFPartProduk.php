@@ -396,9 +396,9 @@ class MFPartProduk extends BaseController
                 $item->frontside,
                 $item->backside,
                 $item->special_req,
-                $item->added,
+                $this->common->dateFormat($item->added),
                 $item->added_by,
-                $item->updated,
+                $this->common->dateFormat($item->updated),
                 $item->updated_by,
                 $view . $edit . $del
             ];
@@ -497,13 +497,10 @@ class MFPartProduk extends BaseController
         return $this->response->setJSON($response);
     }
 
-	public function productSearch()
+	public function partProductSearch()
 	{
 		$keyword = $this->request->getPost('keyword');
 		$query = $this->model->getByFgdNama("$keyword");
-		//dd($query);
-		//exit;
-
 
 		$data = [];
 		foreach($query as $key => $val) {
@@ -513,15 +510,10 @@ class MFPartProduk extends BaseController
 				$key + 1,
 				$val->fgd,
 				$val->revisi,
-				$val->nama_produk,
-				$val->segmen,
-				// $val->pemesan,
-				$val->customer,
-				$val->sales,
-				$val->added,
-				$val->added_by,
-				$val->updated,
-				$val->updated_by,
+				$val->nama,
+				$val->kertas,
+				$val->flute,
+				$val->panjang,
 				$edit_btn . $revisi_btn
 			];
 		}
@@ -590,6 +582,12 @@ class MFPartProduk extends BaseController
 
         $data = [];
         foreach ($query->getResult() as $key => $item) {
+
+            $del_confirm = "'Hapus item ini?'";
+            $view = '<a href="' . site_url('MFPartProduk/detailPartProduct/' . $item->id) . '" title="View"><i class="far fa-file-alt"></i></a>';
+            $edit = ' <a href="' . site_url('MFPartProduk/editPartProduct/' . $item->id) . '" title="Edit"><i class="far fa-edit"></i></a>';
+            $del = ' <a href="' . site_url('mfpartproduk/delPart/' . $item->id) . '" title="Hapus" onclick="return confirm('.$del_confirm.')"><i class="far fa-trash-alt"></i></a>';
+
             $data[] = [
                 $key + 1,
                 $item->fgd,
@@ -598,12 +596,12 @@ class MFPartProduk extends BaseController
                 $item->kertas,
                 $item->flute,
                 $item->metalize,
-                $item->panjang . 'x' . $item->lebar . 'x' . $item->tinggi,
-                $item->added,
+                (int)$item->panjang . ' x ' . (int)$item->lebar . ' x ' . (int)$item->tinggi,
+                $this->common->dateFormat($item->added),
                 $item->added_by,
-                $item->updated,
+                $this->common->dateFormat($item->updated),
                 $item->updated_by,
-                ''
+                $view . $edit . $del
             ];
         }
 

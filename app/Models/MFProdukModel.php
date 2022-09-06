@@ -59,11 +59,7 @@ class MFProdukModel extends Model
     }
     public function getByFgdNama($key)
     {
-        // $db = \Config\Database::connect();
-        // $sql = "select * from v_MF_Produk where upper(nama_produk) like upper('%$key%') or upper(fgd) like upper('%$key%')";
-        // $query = $db->query("select * from v_MF_Produk where upper(nama_produk) like upper('%$key%') or upper(fgd) like upper('%$key%')");         
-       
-        $query = $this->like('fgd', $key, 'both')
+        $query = $this->like('nama_produk', $key, 'both')
                         ->get();
 
         if($query->getNumRows() == 0) {

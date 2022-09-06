@@ -17,7 +17,7 @@
 
     <div class="dynamic-content">
 
-        <div class="csc-form detail">
+        <div class="csc-form detail show">
             <div class="msg"></div>
             <div class="row">
                 <div class="col-sm-2">No FGD</div>

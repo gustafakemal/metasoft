@@ -100,7 +100,7 @@
             Meta Fold
           </div>
       </a>
-      <div id="dropdown-mf" class="collapse<?= url_is('mfproduk') ? ' show' : '';?>"
+      <div id="dropdown-mf" class="collapse<?= (url_is('mfproduk') || url_is('mfpartproduk')) ? ' show' : '';?>"
           data-parent="#mainmenu">
           <ul class="">
               
@@ -109,18 +109,11 @@
                     <i class="fas fa-arrow-circle-right text-dark"></i> Input Produk
                 </a>
               </li>
-              
-              
-          </ul>
-      </div>
-      <div id="dropdown-mf" class="collapse<?= url_is('mfproduk') ? ' show' : '';?>"
-          data-parent="#mainmenu">
-          <ul class="">
-              
+
               <li class="<?= (url_is('mfpartproduk')) ? 'active' : '';?>">
-              <a href="<?= site_url('mfpartproduk');?>">
-                    <i class="fas fa-arrow-circle-right text-dark"></i> Input Part Produk
-                </a>
+                  <a href="<?= site_url('mfpartproduk');?>">
+                      <i class="fas fa-arrow-circle-right text-dark"></i> Input Part Produk
+                  </a>
               </li>
               
               

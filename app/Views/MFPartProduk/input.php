@@ -9,7 +9,7 @@
     <h3 class="page-title"><?= $page_title; ?></h3>
 
 <?php if (session()->has('success')) : ?>
-    <div class="alert alert-success"><?= session()->get('success'); ?></div>
+    <div class="hidden-success-el d-none"><?= session()->get('success'); ?></div>
 <?php endif; ?>
 
     <div class="msg_success"></div>
@@ -34,7 +34,7 @@
             <div class="form-group row">
                 <label for="nama_produk" class="col-sm-2 col-form-label">Nama Part Produk <span class="text-danger">*</span></label>
                 <div class="col-sm-10">
-                    <input type="text" class="form-control" id="nama_produk" name="nama">
+                    <input type="text" class="form-control" id="nama_produk" name="nama" style="text-transform: uppercase">
                 </div>
             </div>
             <div class="form-group row">
@@ -44,7 +44,7 @@
                 </div>
             </div>
             <div class="form-group row">
-                <label for="panjang" class="col-sm-2 col-form-label">Ukuran Jadi<span class="text-danger">*</span></label>
+                <label for="panjang" class="col-sm-2 col-form-label">Ukuran Jadi (mm)<span class="text-danger">*</span></label>
                 <div class="col-sm-4">
                     <input type="number" class="form-control" id="panjang" name="panjang"  placeholder="Panjang">
                 </div>
@@ -77,6 +77,13 @@
             </div>
             <div class="form-group row">
 
+                <label for="metalize" class="col-sm-2 col-form-label">Metalize </label>
+                <div class="col-sm-2">
+                    <select name="metalize" id="metalize" class="form-control">
+                        <option value="Y">Ya</option>
+                        <option value="T" selected>Tidak</option>
+                    </select>
+                </div>
                 <label for="technical_draw" class="col-sm-2 col-form-label">Technical Draw </label>
                 <div class="col-sm-2">
                     <select name="technical_draw" id="technical_draw" class="form-control">
@@ -85,8 +92,8 @@
                     </select>
                 </div>
                 <label for="no_dokumen" class="col-sm-2 col-form-label">No Dokumen </label>
-                <div class="col-sm-4">
-                    <input type="text" class="form-control" id="no_dokumen" name="no_dokumen">
+                <div class="col-sm-2">
+                    <input type="text" class="form-control" id="no_dokumen" name="no_dokumen" disabled>
                 </div>
             </div>
             <div class="form-group row">

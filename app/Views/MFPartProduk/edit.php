@@ -9,7 +9,7 @@
     <h3 class="page-title"><?= $page_title; ?></h3>
 
 <?php if (session()->has('success')) : ?>
-    <div class="alert alert-success"><?= session()->get('success'); ?></div>
+    <div class="hidden-success-el d-none"><?= session()->get('success'); ?></div>
 <?php endif; ?>
 
     <div class="msg_success"></div>
@@ -18,7 +18,7 @@
     <div class="dynamic-content">
 
 
-        <form name="partproduct-form_edit" class="csc-form show">
+        <form name="<?= ($is_revision == 0) ? 'partproduct-form_edit' : 'partproduct-form_rev';?>" class="csc-form show">
             <input type="hidden" name="id" value="<?= $data->id;?>" />
             <div class="msg"></div>
             <div class="form-group row">
@@ -29,7 +29,7 @@
                 </div>
                 <label for="trevisi" class="col-sm-2 col-form-label">Revisi</span></label>
                 <div class="col-sm-4">
-                    <input value="<?= $data->revisi;?>" type="text" class="form-control" id="trevisi" name="trevisi" disabled><input type="hidden" class="form-control" id="revisi" name="revisi">
+                    <input value="<?= ($is_revision == 1) ? ($data->revisi + 1) : $data->revisi;?>" type="text" class="form-control" id="trevisi" name="trevisi" disabled><input type="hidden" class="form-control" id="revisi" name="revisi">
                 </div>
             </div>
             <div class="form-group row">
@@ -88,6 +88,27 @@
                 <label for="no_dokumen" class="col-sm-2 col-form-label">No Dokumen </label>
                 <div class="col-sm-4">
                     <input value="<?= $data->no_dokumen;?>" type="text" class="form-control" id="no_dokumen" name="no_dokumen">
+                </div>
+            </div>
+            <div class="form-group row">
+
+                <label for="metalize" class="col-sm-2 col-form-label">Metalize </label>
+                <div class="col-sm-2">
+                    <select name="metalize" id="metalize" class="form-control">
+                        <option value="Y">Ya</option>
+                        <option value="T" selected>Tidak</option>
+                    </select>
+                </div>
+                <label for="technical_draw" class="col-sm-2 col-form-label">Technical Draw </label>
+                <div class="col-sm-2">
+                    <select name="technical_draw" id="technical_draw" class="form-control">
+                        <option value="Y">Ya</option>
+                        <option value="T" selected>Tidak</option>
+                    </select>
+                </div>
+                <label for="no_dokumen" class="col-sm-2 col-form-label">No Dokumen </label>
+                <div class="col-sm-2">
+                    <input type="text" class="form-control" id="no_dokumen" name="no_dokumen">
                 </div>
             </div>
             <div class="form-group row">
@@ -188,7 +209,7 @@
                     <h5>Sisi Part Produk</h5>
                 </div>
                 <div class="col text-right">
-                    <button type="button" class="btn btn-primary" data-toggle="modal" data-target="#dataForm">
+                    <button type="button" class="btn btn-primary open-sisi-form">
                         Tambah Sisi
                     </button>
                 </div>
@@ -229,7 +250,7 @@
                 <input type="hidden" name="id" value="" />
                 <div class="modal-content sisi-produk">
                     <div class="modal-header">
-                        <h5 class="modal-title" id="dataFormLabel"><span class="heading-sisi-produk">Sisi Part Produk</span><span class="part-produk-title"></span></h5>
+                        <h5 class="modal-title" id="dataFormLabel"><span class="heading-sisi-produk">Sisi Part Produk</span><span class="part-produk-title"><?= $data->nama;?></span></h5>
                         <button type="button" class="close" data-dismiss="modal" aria-label="Close">
                             <span aria-hidden="true">&times;</span>
                         </button>
@@ -240,11 +261,11 @@
                             <label for="fgd" class="col-sm-2 col-form-label">No FGD</span></label>
                             <div class="col-sm-4">
                                 <!-- <input type="text" class="form-control" id="tfgd" name="tfgd" disabled><input type="hidden" class="form-control" id="fgd" name="fgd"> -->
-                                <input type="text" class="form-control" id="fgd" name="fgd" disabled>
+                                <input value="<?= $data->fgd;?>" type="text" class="form-control" id="fgd" name="fgd" disabled>
                             </div>
                             <label for="trevisi" class="col-sm-2 col-form-label">Revisi</span></label>
                             <div class="col-sm-4">
-                                <input type="text" class="form-control" id="trevisi" name="trevisi" disabled>
+                                <input value="<?= ($is_revision == 1) ? ($data->revisi + 1) : $data->revisi;?>" type="text" class="form-control" id="trevisi" name="trevisi" disabled>
                             </div>
                         </div>
                         <div class="row">
@@ -254,11 +275,11 @@
                             </div>
                             <label for="frontside" class="col-sm col-form-label">Frontside</span></label>
                             <div class="col-sm">
-                                <input readonly value="0" type="number" class="form-control" id="frontside" name="frontside">
+                                <input value="0" type="number" class="form-control" id="frontside" name="frontside">
                             </div>
                             <label for="backside" class="col-sm col-form-label">Backside</span></label>
                             <div class="col-sm">
-                                <input readonly value="0" type="number" class="form-control" id="backside" name="backside">
+                                <input value="0" type="number" class="form-control" id="backside" name="backside">
                             </div>
                         </div>
                         <div class="row">
@@ -425,108 +446,188 @@
                         </button>
                     </div>
                     <div class="modal-body">
-                        <div class="msg"></div>
                         <div class="row">
-                            <label for="fgd" class="col-sm-2 col-form-label">No FGD</span></label>
-                            <div class="col-sm-4">
+                            <div class="col-5">No FGD</div>
+                            <div class="col-7">
                                 <div class="sisi-view fgd"></div>
                             </div>
-                            <label for="trevisi" class="col-sm-2 col-form-label">Revisi</span></label>
-                            <div class="col-sm-4">
+                        </div>
+                        <div class="row">
+                            <div class="col-5">Revisi</div>
+                            <div class="col-7">
                                 <div class="sisi-view revisi"></div>
                             </div>
                         </div>
                         <div class="row">
-                            <label for="sisi" class="col-sm-2 col-form-label">Sisi</span></label>
-                            <div class="col-sm">
+                            <div class="col-5">Sisi</div>
+                            <div class="col-7">
                                 <div class="sisi-view sisi"></div>
                             </div>
-                            <label for="frontside" class="col-sm col-form-label">Frontside</span></label>
-                            <div class="col-sm">
+                        </div>
+                        <div class="row">
+                            <div class="col-5">Frontside</div>
+                            <div class="col-7">
                                 <div class="sisi-view frontside"></div>
                             </div>
-                            <label for="backside" class="col-sm col-form-label">Backside</span></label>
-                            <div class="col-sm">
+                        </div>
+                        <div class="row">
+                            <div class="col-5">Backside</div>
+                            <div class="col-7">
                                 <div class="sisi-view backside"></div>
                             </div>
                         </div>
                         <div class="row">
-                            <label for="special_req" class="col-sm-2 col-form-label">Special Requirement</span></label>
-                            <div class="col-sm">
+                            <div class="col-5">Special Requirement</div>
+                            <div class="col-7">
                                 <div class="sisi-view special_req"></div>
                             </div>
-
                         </div>
                         <div class="row">
-                            <label for="special_req" class="col-sm-2 col-form-label">Aktif</label>
-                            <div class="col-sm">
+                            <div class="col-5">Aktif</div>
+                            <div class="col-7">
                                 <div class="sisi-view aktif"></div>
                             </div>
                         </div>
                         <div class="row">
-                            <label for="fgd" class="col-sm-2 col-form-label">Ditambahkan pada</span></label>
-                            <div class="col-sm-4">
+                            <div class="col-5">Ditambahkan pada</div>
+                            <div class="col-7">
                                 <div class="sisi-view added"></div>
                             </div>
-                            <label class="col-sm-2 col-form-label">Oleh</span></label>
-                            <div class="col-sm-4">
+                        </div>
+                        <div class="row">
+                            <div class="col-5">Ditambahkan oleh</div>
+                            <div class="col-7">
                                 <div class="sisi-view added_by"></div>
                             </div>
                         </div>
-
-                        <div class="mt-2">
-                            <nav>
-                                <div class="nav nav-tabs" id="det_nav-tab" role="tablist">
-                                    <button class="nav-link active" id="det_nav-warna-tab" data-toggle="tab" data-target="#det_nav-warna" type="button" role="tab" aria-controls="nav-home" aria-selected="true">Warna</button>
-                                    <button class="nav-link" id="det_nav-proses-tab" data-toggle="tab" data-target="#det_nav-proses" type="button" role="tab" aria-controls="nav-profile" aria-selected="false">Proses</button>
-                                </div>
-                            </nav>
-
-                            <div class="tab-content" id="det_nav-tabContent">
-                                <div class="tab-pane fade show active" id="det_nav-warna" role="tabpanel" aria-labelledby="det_nav-warna-tab">
-
-                                    <div class="row mt-2">
-                                        <div class="col-sm-6">
-                                            <div class="form-group row">
-                                                <label for="tinta" class="col-sm-2  col-form-label">Frontside</label>
-                                            </div>
-                                            <div class="fs-child"></div>
-
-                                        </div>
-                                        <div class="col-sm-6">
-                                            <div class="form-group row">
-                                                <label for="tinta" class="col-sm-2  col-form-label">Backside</label>
-                                            </div>
-                                            <div class="bs-child"></div>
-
-                                        </div>
-                                    </div>
-
-                                </div>
-                                <div class="tab-pane fade" id="det_nav-proses" role="tabpanel" aria-labelledby="det_nav-proses-tab">
-                                    <div class="row mt-2">
-                                        <div class="col-sm-4">
-                                            <label for="tinta" class="form-label">Proses Manual</label>
-                                            <div class="manual-child"></div>
-
-                                        </div>
-                                        <div class="col-sm-4">
-                                            <label for="tinta" class="form-label">Proses Finishing</label>
-                                            <div class="finishing-child"></div>
-                                        </div>
-
-                                        <div class="col-sm-4">
-                                            <label for="tinta" class="form-label">Proses Khusus</label>
-                                            <div class="khusus-child"></div>
-
-                                        </div>
-                                    </div>
-
-
-
-                                </div>
+                        <div class="row">
+                            <div class="col-5">Warna</div>
+                            <div class="col-7"></div>
+                        </div>
+                        <div class="row">
+                            <div class="col-5"><div class="pl-4">Frontside</div></div>
+                            <div class="col-7">
+                                <div class="fs-child"></div>
                             </div>
                         </div>
+                        <div class="row">
+                            <div class="col-5"><div class="pl-4">Backside</div></div>
+                            <div class="col-7">
+                                <div class="bs-child"></div>
+                            </div>
+                        </div>
+                        <div class="row">
+                            <div class="col-5">Proses</div>
+                            <div class="col-7"></div>
+                        </div>
+                        <div class="row">
+                            <div class="col-5"><div class="pl-4">Manual</div></div>
+                            <div class="col-7">
+                                <div class="fs-child"></div>
+                            </div>
+                        </div>
+<!--                        <div class="msg"></div>-->
+<!--                        <div class="row">-->
+<!--                            <label for="fgd" class="col-sm-2 col-form-label">No FGD</span></label>-->
+<!--                            <div class="col-sm-4">-->
+<!--                                <div class="sisi-view fgd"></div>-->
+<!--                            </div>-->
+<!--                            <label for="trevisi" class="col-sm-2 col-form-label">Revisi</span></label>-->
+<!--                            <div class="col-sm-4">-->
+<!--                                <div class="sisi-view revisi"></div>-->
+<!--                            </div>-->
+<!--                        </div>-->
+<!--                        <div class="row">-->
+<!--                            <label for="sisi" class="col-sm-2 col-form-label">Sisi</span></label>-->
+<!--                            <div class="col-sm">-->
+<!--                                <div class="sisi-view sisi"></div>-->
+<!--                            </div>-->
+<!--                            <label for="frontside" class="col-sm col-form-label">Frontside</span></label>-->
+<!--                            <div class="col-sm">-->
+<!--                                <div class="sisi-view frontside"></div>-->
+<!--                            </div>-->
+<!--                            <label for="backside" class="col-sm col-form-label">Backside</span></label>-->
+<!--                            <div class="col-sm">-->
+<!--                                <div class="sisi-view backside"></div>-->
+<!--                            </div>-->
+<!--                        </div>-->
+<!--                        <div class="row">-->
+<!--                            <label for="special_req" class="col-sm-2 col-form-label">Special Requirement</span></label>-->
+<!--                            <div class="col-sm">-->
+<!--                                <div class="sisi-view special_req"></div>-->
+<!--                            </div>-->
+<!---->
+<!--                        </div>-->
+<!--                        <div class="row">-->
+<!--                            <label for="special_req" class="col-sm-2 col-form-label">Aktif</label>-->
+<!--                            <div class="col-sm">-->
+<!--                                <div class="sisi-view aktif"></div>-->
+<!--                            </div>-->
+<!--                        </div>-->
+<!--                        <div class="row">-->
+<!--                            <label for="fgd" class="col-sm-2 col-form-label">Ditambahkan pada</span></label>-->
+<!--                            <div class="col-sm-4">-->
+<!--                                <div class="sisi-view added"></div>-->
+<!--                            </div>-->
+<!--                            <label class="col-sm-2 col-form-label">Oleh</span></label>-->
+<!--                            <div class="col-sm-4">-->
+<!--                                <div class="sisi-view added_by"></div>-->
+<!--                            </div>-->
+<!--                        </div>-->
+<!---->
+<!--                        <div class="mt-2">-->
+<!--                            <nav>-->
+<!--                                <div class="nav nav-tabs" id="det_nav-tab" role="tablist">-->
+<!--                                    <button class="nav-link active" id="det_nav-warna-tab" data-toggle="tab" data-target="#det_nav-warna" type="button" role="tab" aria-controls="nav-home" aria-selected="true">Warna</button>-->
+<!--                                    <button class="nav-link" id="det_nav-proses-tab" data-toggle="tab" data-target="#det_nav-proses" type="button" role="tab" aria-controls="nav-profile" aria-selected="false">Proses</button>-->
+<!--                                </div>-->
+<!--                            </nav>-->
+<!---->
+<!--                            <div class="tab-content" id="det_nav-tabContent">-->
+<!--                                <div class="tab-pane fade show active" id="det_nav-warna" role="tabpanel" aria-labelledby="det_nav-warna-tab">-->
+<!---->
+<!--                                    <div class="row mt-2">-->
+<!--                                        <div class="col-sm-6">-->
+<!--                                            <div class="form-group row">-->
+<!--                                                <label for="tinta" class="col-sm-2  col-form-label">Frontside</label>-->
+<!--                                            </div>-->
+<!--                                            <div class="fs-child"></div>-->
+<!---->
+<!--                                        </div>-->
+<!--                                        <div class="col-sm-6">-->
+<!--                                            <div class="form-group row">-->
+<!--                                                <label for="tinta" class="col-sm-2  col-form-label">Backside</label>-->
+<!--                                            </div>-->
+<!--                                            <div class="bs-child"></div>-->
+<!---->
+<!--                                        </div>-->
+<!--                                    </div>-->
+<!---->
+<!--                                </div>-->
+<!--                                <div class="tab-pane fade" id="det_nav-proses" role="tabpanel" aria-labelledby="det_nav-proses-tab">-->
+<!--                                    <div class="row mt-2">-->
+<!--                                        <div class="col-sm-4">-->
+<!--                                            <label for="tinta" class="form-label">Proses Manual</label>-->
+<!--                                            <div class="manual-child"></div>-->
+<!---->
+<!--                                        </div>-->
+<!--                                        <div class="col-sm-4">-->
+<!--                                            <label for="tinta" class="form-label">Proses Finishing</label>-->
+<!--                                            <div class="finishing-child"></div>-->
+<!--                                        </div>-->
+<!---->
+<!--                                        <div class="col-sm-4">-->
+<!--                                            <label for="tinta" class="form-label">Proses Khusus</label>-->
+<!--                                            <div class="khusus-child"></div>-->
+<!---->
+<!--                                        </div>-->
+<!--                                    </div>-->
+<!---->
+<!---->
+<!---->
+<!--                                </div>-->
+<!--                            </div>-->
+<!--                        </div>-->
                     </div>
                     <div class="modal-footer">
                         <div class="loading-indicator"></div>

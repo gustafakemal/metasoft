@@ -17,14 +17,14 @@
 <form name="form-caripartproduk">
   <div class="form-row align-items-center">
     <div class="col-6">
-      <label class="sr-only" for="cariproduk">Cari Part Produk</label>
-      <input type="text" style="text-transform:uppercase" class="form-control mb-2" name="cariproduk" id="cariproduk" placeholder="Cari Produk Berdasarkan Nomor FGD atau Nama Part Produk">
+      <label class="sr-only" for="caripartproduk">Cari Part Produk</label>
+      <input type="text" style="text-transform:uppercase" class="form-control mb-2" name="caripartproduk" id="caripartproduk" placeholder="Cari Produk Berdasarkan Nomor FGD atau Nama Part Produk">
     </div>
 	<div class="col-auto">
       <button type="submit" class="btn btn-primary mb-2">Cari</button>
     </div>
     <div class="col-auto">
-      <a type="button" class="btn btn-primary add-new mb-2" href="mfpartproduk/addPartProduct">Buat Baru</a>
+      <a type="button" class="btn btn-primary add-new mb-2" href="<?= site_url('partproduk/add');?>">Buat Baru</a>
     </div>
   </div>
 </form>
@@ -44,7 +44,7 @@
 			<th>Kertas</th>
 			<th>Flute</th>
 			<th>Metalizes</th>
-			<th>Ukuran</th>
+			<th>Ukuran (mm)</th>
 			<th>Dibuat</th>
 			<th>Dibuat<br>oleh</th>
 			<th>Update</th>

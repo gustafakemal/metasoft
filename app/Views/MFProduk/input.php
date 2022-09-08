@@ -150,7 +150,7 @@
   <div class="row align-items-start mb-2">
     <div class="col text-left">
 	<h5>Sisi Part Produk : Nomor FGD - Revisi</h5>
-	<h6>Nama Part</h5>
+	<h5>Nama Part</h5>
     </div>
     <div class="col text-right">
 	<button type="button" class="btn btn-success add-sisi">

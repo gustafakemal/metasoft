@@ -92,7 +92,7 @@ class MFPartProduk extends BaseController
 		]);
 	}
 
-    public function editPartProduct($id)
+    public function editPartProduct($id, $is_revision = 0)
     {
         $data = $this->model->getById($id);
 
@@ -104,6 +104,7 @@ class MFPartProduk extends BaseController
         return view('MFPartProduk/edit', [
             'page_title' => 'Input Part Produk MF',
             'data' => $data,
+            'is_revision' => $is_revision,
             'opsi_tujuankirim' => $tujuankirim_model->getOpsi(),
             'opsi_kertas' => $tujuankirim_model->getOpsi(),
             'opsi_jeniskertas' => $jeniskertas_model->getOpsi(),
@@ -173,7 +174,7 @@ class MFPartProduk extends BaseController
         unset($data['finishingcolors']);
         unset($data['khususcolors']);
 
-        $data['id'] = random_string('basic');
+//        $data['id'] = random_string('basic');
         $data['added_by'] = session()->get('UserID');
 
         if($id_part == 1) {
@@ -185,13 +186,16 @@ class MFPartProduk extends BaseController
             unset($data['revisi']);
         }
 
-        if($model->insert($data, false)) {
+        if($model->insert($data)) {
+
+            $id_sisi = $model->insertID();
+
             $data_fs = [];
             $data_bs = [];
             if(array_key_exists('fscolor', $data)) {
                 for($i = 0;$i < count($data['fscolor']);$i++) {
                     $data_fs[] = [
-                        'id_sisi' => $data['id'],
+                        'id_sisi' => $id_sisi,
                         'posisi' => 'F',
                         'tinta' => $data['fscolor'][$i],
                         'added_by' => session()->get('UserID')
@@ -202,7 +206,7 @@ class MFPartProduk extends BaseController
             if(array_key_exists('bscolor', $data)) {
                 for($i = 0;$i < count($data['bscolor']);$i++) {
                     $data_bs[] = [
-                        'id_sisi' => $data['id'],
+                        'id_sisi' => $id_sisi,
                         'posisi' => 'B',
                         'tinta' => $data['bscolor'][$i],
                         'added_by' => session()->get('UserID')
@@ -226,7 +230,7 @@ class MFPartProduk extends BaseController
                 $data_manual = [];
                 for($i = 0;$i < count($data['manualcolor']);$i++) {
                     $data_manual[] = [
-                        'id_sisi' => $data['id'],
+                        'id_sisi' => $id_sisi,
                         'proses' => $data['manualcolor'][$i]
                     ];
                 }
@@ -237,7 +241,7 @@ class MFPartProduk extends BaseController
                 $data_finishing = [];
                 for($i = 0;$i < count($data['finishingcolor']);$i++) {
                     $data_finishing[] = [
-                        'id_sisi' => $data['id'],
+                        'id_sisi' => $id_sisi,
                         'proses' => $data['finishingcolor'][$i]
                     ];
                 }
@@ -248,7 +252,7 @@ class MFPartProduk extends BaseController
                 $data_khusus = [];
                 for($i = 0;$i < count($data['khususcolor']);$i++) {
                     $data_khusus[] = [
-                        'id_sisi' => $data['id'],
+                        'id_sisi' => $id_sisi,
                         'proses' => $data['khususcolor'][$i]
                     ];
                 }
@@ -287,7 +291,7 @@ class MFPartProduk extends BaseController
         unset($data['khususcolors']);
         unset($data['trevisi']);
 
-//        return $this->response->setJSON($data);
+        $data['updated_by'] = current_user()->UserID;
 
         if($model->save($data)) {
             $data_fs = [];
@@ -429,9 +433,9 @@ class MFPartProduk extends BaseController
                     $row->frontside,
                     $row->backside,
                     $row->special_req,
-                    $row->added,
+                    $this->common->dateFormat($row->added),
                     $row->added_by,
-                    $row->updated,
+                    $this->common->dateFormat($row->updated),
                     $row->updated_by,
                     $view . $edit . $del
                 ];
@@ -500,22 +504,42 @@ class MFPartProduk extends BaseController
 	public function partProductSearch()
 	{
 		$keyword = $this->request->getPost('keyword');
+        $full = (! $this->request->getPost('full') );
+
 		$query = $this->model->getByFgdNama("$keyword");
 
 		$data = [];
 		foreach($query as $key => $val) {
-			$edit_btn = '<button type="button" class="btn btn-sm btn-success edit-rev-item mr-2" data-id="'.$val->id.'">Edit</button>';
-			$revisi_btn = '<button type="button" class="btn btn-sm btn-danger rev-item" data-id="'.$val->id.'">Revisi</button>';
-			$data[] = [
-				$key + 1,
-				$val->fgd,
-				$val->revisi,
-				$val->nama,
-				$val->kertas,
-				$val->flute,
-				$val->panjang,
-				$edit_btn . $revisi_btn
-			];
+			$edit_btn = '<a class="btn btn-sm btn-success edit-rev-item mr-2" href="' . site_url('partproduk/edit/' . $val->id) . '">Edit</a>';
+			$revisi_btn = '<a class="btn btn-sm btn-danger rev-item" href="' . site_url('partproduk/rev/' . $val->id . '/1').'">Revisi</a>';
+            if($full) {
+                $data[] = [
+                    $key + 1,
+                    $val->fgd,
+                    $val->revisi,
+                    $val->nama,
+                    $val->kertas,
+                    $val->flute,
+                    $val->metalize,
+                    (int)$val->panjang . 'x' . (int)$val->lebar . 'x' . (int)$val->tinggi,
+                    $this->common->dateFormat($val->added),
+                    $val->added_by,
+                    $this->common->dateFormat($val->updated),
+                    $val->updated_by,
+                    $edit_btn . $revisi_btn
+                ];
+            } else {
+                $data[] = [
+                    $key + 1,
+                    $val->fgd,
+                    $val->revisi,
+                    $val->nama,
+                    $val->kertas,
+                    $val->flute,
+                    (int)$val->panjang . 'x' . (int)$val->lebar . 'x' . (int)$val->tinggi,
+                    $edit_btn . $revisi_btn
+                ];
+            }
 		}
 
 		$response = [
@@ -638,18 +662,6 @@ class MFPartProduk extends BaseController
 		return $this->response->setJSON($response);
 	}
 
-    public function tes() {
-        $fields_req = ['nama', 'tujuan_penggunaan', 'panjang', 'lebar', 'tinggi', 'kertas', 'flute', 'inner_pack', 'jum_innerpack', 'outer_pack', 'jam_outerpack'];
-        $validationRules = [];
-        $validationMessages = [];
-        foreach ($fields_req as $field) {
-            $validationRules[$field] = 'required';
-            $validationMessages[$field]['required'] = 'Field ' . $field . ' harus diisi';
-        }
-
-        dd($validationMessages);
-    }
-
 	public function apiAddProcess()
 	{
 		if ($this->request->getMethod() !== 'post') {
@@ -663,8 +675,6 @@ class MFPartProduk extends BaseController
 		$data['fgd'] = $this->model->fgdGenerator();
 		$data['revisi'] = 0;
 		$data['added_by'] = current_user()->UserID;
-
-        $data['metalize'] = 'T';
 
         $file = $this->request->getFile('file_dokcr');
         $data['file_dokcr'] = $file->getName();
@@ -708,11 +718,23 @@ class MFPartProduk extends BaseController
 //            ],
 //        ]);
 
+        $data_sisi = [
+            'id_part' => $id,
+            'sisi' => 1,
+            'frontside' => 0,
+            'backside' => 0,
+            'aktif' => 'Y',
+            'added_by' => current_user()->UserID
+        ];
+
         if($this->model->insert($data, false) && count($filedokcr_errors) == 0) {
+
+            $sisi_model = (new \App\Models\MFSisiProdukModel())->insert($data_sisi);
+
             return $this->response->setJSON([
                 'success' => true,
                 'msg' => 'Part produk berhasil ditambahkan.',
-                'redirect_url' => site_url('mfpartproduk/detailPartProduct/' . $data['id'])
+                'redirect_url' => site_url('partproduk/edit/' . $data['id'])
             ]);
         } else {
             $errors = array_merge($this->model->errors(), $filedokcr_errors);
@@ -919,8 +941,6 @@ class MFPartProduk extends BaseController
         $data['revisi'] = 0;
         $data['updated_by'] = current_user()->UserID;
 
-        $data['metalize'] = 'T';
-
         $file = $this->request->getFile('file_dokcr');
         $data['file_dokcr'] = $file->getName();
 
@@ -951,17 +971,18 @@ class MFPartProduk extends BaseController
                 }
             }
         } else {
-            if(array_key_exists('ex_file_dokcr')) {
+            if(array_key_exists('ex_file_dokcr', $data)) {
                 $data['file_dokcr'] = $data['ex_file_dokcr'];
                 unset($data['ex_file_dokcr']);
             }
         }
 
         if($this->model->updatePart($id, $data) && count($filedokcr_errors) == 0) {
+            session()->setFlashdata('success', 'Part produk berhasil diubah.');
             return $this->response->setJSON([
                 'success' => true,
                 'msg' => 'Part produk berhasil diubah.',
-                'redirect_url' => site_url('mfpartproduk/detailPartProduct/' . $data['id'])
+                'redirect_url' => site_url('partproduk/edit/' . $id)
             ]);
         } else {
             $errors = array_merge($this->model->errors(), $filedokcr_errors);

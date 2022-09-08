@@ -13,10 +13,9 @@ class MFSisiProdukModel extends Model
     protected $createdField  = 'added';
     protected $updatedField  = 'updated';
     protected $allowedFields = [
-        'id', 'id_part', 'sisi', 'frontside', 'backside', 'special_req', 'aktif', 'added', 'added_by', 'updated', 'updated_by'
+        'id_part', 'sisi', 'frontside', 'backside', 'special_req', 'aktif', 'added', 'added_by', 'updated', 'updated_by'
     ];
     protected $validationRules = [
-        'id' => 'required',
         'id_part' => 'required',
         'sisi' => 'required',
         'frontside' => 'required',

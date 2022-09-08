@@ -36,6 +36,10 @@ $routes->setAutoRoute(true);
 $routes->get('/', 'Home::index');
 $routes->add('login', 'Auth::login');
 $routes->add('logout', 'Auth::logout');
+$routes->add('partproduk/add', 'MFPartProduk::addPartProduct');
+$routes->add('partproduk/edit/(:any)', 'MFPartProduk::editPartProduct/$1');
+$routes->add('partproduk/rev/(:any)/(:any)', 'MFPartProduk::editPartProduct/$1/$2');
+$routes->add('partproduk/detail/(:any)', 'MFPartProduk::detailPartProduct/$1');
 
 /*
  * --------------------------------------------------------------------

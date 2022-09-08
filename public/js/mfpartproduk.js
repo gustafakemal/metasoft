@@ -19,30 +19,29 @@ $(function () {
 		initComplete: function () {},
 	});
 
-	// $('form[name="form-cariproduk"]').on('submit', function(e) {
-	// 	e.preventDefault();
-	// 	$('.csc-form')[0].reset();
-	// 	$('.csc-form').removeClass('show')
-	// 	$('.csc-form .form-group.row-change-request').removeAttr('style')
-	// 	const keyword = $('input[name="cariproduk"]').val();
-	// 	$.ajax({
-	// 		type: 'POST',
-	// 		url: `${HOST}/mfproduk/productSearch`,
-	// 		dataType: 'JSON',
-	// 		data: { keyword },
-	// 		beforeSend: function () {},
-	// 		success: function (response) {
-	// 			if(response.success) {
-	// 				$('#dataList').DataTable().clear();
-	// 				$('#dataList').DataTable().rows.add(response.data);
-	// 				$('#dataList').DataTable().draw();
-	// 				$('.tbl-data-partproduct').addClass('show');
-	// 			}
-	// 		},
-	// 		error: function () {},
-	// 		complete: function() {}
-	// 	})
-	// })
+	$('form[name="form-caripartproduk"]').on('submit', function(e) {
+		e.preventDefault();
+		// $('.csc-form')[0].reset();
+		// $('.csc-form').removeClass('show')
+		// $('.csc-form .form-group.row-change-request').removeAttr('style')
+		const keyword = $('input[name="caripartproduk"]').val();
+		$.ajax({
+			type: 'POST',
+			url: `${HOST}/mfpartproduk/partProductSearch`,
+			dataType: 'JSON',
+			data: { keyword },
+			beforeSend: function () {},
+			success: function (response) {
+				if(response.success) {
+					$('#dataList').DataTable().clear().rows.add(response.data).draw();
+				} else {
+					$('#dataList').DataTable().clear().draw();
+				}
+			},
+			error: function () {},
+			complete: function() {}
+		})
+	})
 
 	// $('#dataList').DataTable().on( 'order.dt search.dt', function () {
 	// 	let i = 1;
@@ -526,21 +525,21 @@ $(function () {
 		})
 	})
 
-	$('.add-new').on('click', function() {
-		$('.csc-form')[0].reset();
-		$('.csc-form').addClass('show add-new-fgd')
-		$('.tbl-data-partproduct').removeClass('show')
-		$('input[name="cariproduk"]').val('')
-		$('.csc-form input[name="fgd"]').val('(Auto)');
-		$('.csc-form .form-group.row-change-request').css('display', 'none')
-		$('.csc-form input[name="trevisi"]').val('0');
-		$('.frontside-selected').html('')
-		$('.backside-selected').html('')
-		$('.finishing-selected').html('')
-		$('.manual-selected').html('')
-		$('.khusus-selected').html('')
-		$('input[name="no_dokumen"]').attr('disabled', true)
-	})
+	// $('.add-new').on('click', function() {
+	// 	$('.csc-form')[0].reset();
+	// 	$('.csc-form').addClass('show add-new-fgd')
+	// 	$('.tbl-data-partproduct').removeClass('show')
+	// 	$('input[name="cariproduk"]').val('')
+	// 	$('.csc-form input[name="fgd"]').val('(Auto)');
+	// 	$('.csc-form .form-group.row-change-request').css('display', 'none')
+	// 	$('.csc-form input[name="trevisi"]').val('0');
+	// 	$('.frontside-selected').html('')
+	// 	$('.backside-selected').html('')
+	// 	$('.finishing-selected').html('')
+	// 	$('.manual-selected').html('')
+	// 	$('.khusus-selected').html('')
+	// 	$('input[name="no_dokumen"]').attr('disabled', true)
+	// })
 
 	// $('form[name="partproduct-form"]').on('click', 'select[name="kertas"]', function (e) {
 	// 	$.ajax({
@@ -566,7 +565,7 @@ $(function () {
 	const id_part_arr = location.pathname.split('/');
 	const id_part = id_part_arr[id_part_arr.length - 1];
 
-	if(id_part_arr.includes('detailPartProduct') || id_part_arr.includes('editPartProduct')) {
+	if(id_part_arr.includes('detail') || id_part_arr.includes('edit') || id_part_arr.includes('detailPartProduct') || id_part_arr.includes('editPartProduct')) {
 		setTimeout(() => {
 			loadDataSisi(id_part);
 
@@ -617,6 +616,29 @@ $(function () {
 			contentType: false,
 			processData: false,
 			beforeSend: function () {},
+			success: function (response) {
+				if(response.success) {
+					location.reload();
+				} else {
+					$('.msg').html(`<div class="alert alert-danger">${response.msg}</div>`)
+				}
+			},
+			complete: function () {}
+		})
+	});
+
+	$('form[name="partproduct-form_rev"]').on('submit', function (e) {
+		e.preventDefault();
+		const formData = new FormData(this);
+
+		$.ajax({
+			type: 'POST',
+			url: `${HOST}/mfpartproduk/apieditprocess`,
+			dataType: 'JSON',
+			data: formData,
+			contentType: false,
+			processData: false,
+			beforeSend: function () {},
 			success: function (success) {
 				console.log(success);
 			},
@@ -641,22 +663,13 @@ $(function () {
 		});
 		const part_name = $(this).attr('data-nama');
 		$('.part-produk-title').html(part_name)
-		$('input[name="fgd"]').val($('input[name="src_fgd"]').val())
-		$('input[name="trevisi"]').val($('input[name="src_revisi"]').val())
-		$('.sisi-form-modal').attr('name', 'add-sisi')
+		$('#dataForm .sisi-form-modal').attr('name', 'add-sisi')
 	})
 
 	$('#dataForm, #dataDetail').on('hidden.bs.modal', function (event) {
 		resetSisiModal();
 	});
 
-	let color_tracker = {
-		frontside: [],
-		backside: [],
-		manual: [],
-		finishing: [],
-		khusus: []
-	};
 	const fs_params = {
 		selectbox: 'fscolors',
 		item_container: 'fs-child',
@@ -664,7 +677,6 @@ $(function () {
 		input_name: 'fscolor[]',
 		del_class: 'delfs',
 		group: 'frontside',
-		tracker: color_tracker.frontside
 	};
 	const bs_params = {
 		selectbox: 'bscolors',
@@ -673,7 +685,6 @@ $(function () {
 		input_name: 'bscolor[]',
 		del_class: 'delbs',
 		group: 'backside',
-		tracker: color_tracker.backside
 	};
 	const manual_params = {
 		selectbox: 'manualcolors',
@@ -682,7 +693,6 @@ $(function () {
 		input_name: 'manualcolor[]',
 		del_class: 'delmanual',
 		group: 'manual',
-		tracker: color_tracker.manual
 	};
 	const finishing_params = {
 		selectbox: 'finishingcolors',
@@ -691,7 +701,6 @@ $(function () {
 		input_name: 'finishingcolor[]',
 		del_class: 'delfinishing',
 		group: 'finishing',
-		tracker: color_tracker.finishing
 	};
 	const khusus_params = {
 		selectbox: 'khususcolors',
@@ -700,7 +709,6 @@ $(function () {
 		input_name: 'khususcolor[]',
 		del_class: 'delkhusus',
 		group: 'khusus',
-		tracker: color_tracker.khusus
 	};
 
 	$('.add-fs').on('click', fs_params, colorAddItem);
@@ -738,10 +746,7 @@ $(function () {
 					$('.floating-msg').html(`<div class="alert alert-success">${response.msg}</div>`).addClass('show');
 					loadDataSisi(id_part)
 				} else {
-					$('#dataForm .msg').html(`<div class="alert alert-danger">${response.msg}</div>`);
-					$('#dataForm, html, body').animate({
-						scrollTop: 0
-					}, 500);
+					$('.sisi-form-modal .msg').html(`<div class="alert alert-danger">${response.msg}</div>`);
 				}
 			},
 			complete: function () {
@@ -795,8 +800,6 @@ $(function () {
 		$('.sisi-form-modal').attr('name', 'edit-sisi')
 		const id = $(this).attr('data-id');
 		$('.sisi-form-modal input[name="id"]').val(id)
-		$('input[name="fgd"]').val($('input[name="src_fgd"]').val())
-		$('input[name="trevisi"]').val($('input[name="src_revisi"]').val())
 		$('#dataForm').modal({
 			show: true,
 			backdrop: 'static'
@@ -833,6 +836,7 @@ $(function () {
 											</div>`)
 						}
 						$(`.${prefix}-child`).html(child_el.join(''));
+						console.log(response.data[prop])
 					}
 
 					$(`.sisi-form-modal input[name="${prop}"]`).val(response.data[prop]);
@@ -840,7 +844,7 @@ $(function () {
 				}
 			},
 			complete: function () {
-				$('.sisi-form-modal input:not(#frontside):not(#backside):not(#fgd), .sisi-form-modal textarea, .sisi-form-modal button').prop('disabled', false);
+				$('.sisi-form-modal input:not(#fgd):not(#trevisi), .sisi-form-modal textarea, .sisi-form-modal button').prop('disabled', false);
 			}
 		})
 	})
@@ -905,8 +909,8 @@ function loadDataSisi(id_part)
 function resetSisiModal()
 {
 	$('.sisi-form-modal').removeAttr('name');
-	$('.sisi-form-modal input[type="number"]').val('0');
-	$('.sisi-form-modal input[type="text"]').val('');
+	$('.sisi-form-modal input[type="number"]:not(disabled)').val('0');
+	$('.sisi-form-modal input[type="text"]:not([disabled])').val('');
 	$('.sisi-form-modal textarea').val('');
 	$('.sisi-form-modal input[name="id"]').val('')
 	$('.sisi-view').html('')
@@ -915,12 +919,12 @@ function resetSisiModal()
 
 function colorAddItem(e)
 {
-	const {selectbox, item_container, item_class, input_name, del_class, group, tracker} = e.data;
+	const {selectbox, item_container, item_class, input_name, del_class, group} = e.data;
 	const select_box = `select[name="${selectbox}"]`;
 	const text = $(`${select_box} option`).filter(':selected').text();
 	const value = $(`${select_box} option`).filter(':selected').val();
 	const add_el = (group == 'frontside' || group == 'backside') ? `<label for="tinta" class="col-sm-2">&nbsp</label>` : '';
-	if(value != '0' && !tracker.includes(value)) {
+	if(value != '0') {
 		$(`.${item_container}`).prepend(`<div class="row mb-1 ${item_class}-${value}">
 							${add_el}
 							<div class="col-sm">${text}</div>
@@ -931,8 +935,6 @@ function colorAddItem(e)
 								</button>
 							</div>
 					</div>`)
-		tracker.push(value)
-		$(`#dataForm input[name="${group}"]`).val(tracker.length);
 	}
 	$(`${select_box} option[value="0"]`).prop('selected', true);
 }
@@ -941,10 +943,5 @@ function colorDelItem(event)
 {
 	const {item_container, item_class, group, tracker} = event.data;
 	const id = $(this).attr('id').split('-');
-	const idx = tracker.indexOf(id[1]);
-	if(idx > -1) {
-		tracker.splice(idx, 1);
-	}
-	$(`.${item_container} .${item_class}-${id[1]}`).remove();
-	$(`#dataForm input[name="${group}"]`).val(tracker.length);
+	$(`.${item_container} .${item_class}-${id[1]}`).remove();;
 }

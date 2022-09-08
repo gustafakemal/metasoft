@@ -101,7 +101,7 @@ $(function () {
 			type: 'POST',
 			url: `${HOST}/mfpartproduk/partProductSearch`,
 			dataType: 'JSON',
-			data: { keyword },
+			data: { keyword, full: false },
 			beforeSend: function () {},
 			success: function (response) {
 				if(response.success) {

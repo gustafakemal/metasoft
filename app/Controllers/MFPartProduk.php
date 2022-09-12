@@ -102,9 +102,10 @@ class MFPartProduk extends BaseController
         $jenisflute_model = new \App\Models\MFJenisFluteModel();
         $packing_model = new \App\Models\MFPackingModel();
         return view('MFPartProduk/edit', [
-            'page_title' => 'Input Part Produk MF',
+            'page_title' => ($is_revision == 0) ? 'Edit Part Produk MF' : 'Revisi Part Produk MF',
             'data' => $data,
             'is_revision' => $is_revision,
+            'rev_no' => ($is_revision == 1) ? $this->model->revGenerator($data->fgd) : 0,
             'opsi_tujuankirim' => $tujuankirim_model->getOpsi(),
             'opsi_kertas' => $tujuankirim_model->getOpsi(),
             'opsi_jeniskertas' => $jeniskertas_model->getOpsi(),
@@ -487,6 +488,8 @@ class MFPartProduk extends BaseController
             $data->manual_colors = $query_manual->getResult();
             $data->finishing_colors = $query_finishing->getResult();
             $data->khusus_colors = $query_khusus->getResult();
+            $data->added = $this->common->dateFormat($data->added);
+            $data->updated = $this->common->dateFormat($data->updated);
             $response = [
                 'success' => true,
                 'data' => $data,
@@ -518,8 +521,8 @@ class MFPartProduk extends BaseController
                     $val->fgd,
                     $val->revisi,
                     $val->nama,
-                    $val->kertas,
-                    $val->flute,
+                    (new \App\Models\MFJenisKertasModel())->getNama($val->kertas),
+                    (new \App\Models\MFJenisFluteModel())->getNama($val->flute),
                     $val->metalize,
                     (int)$val->panjang . 'x' . (int)$val->lebar . 'x' . (int)$val->tinggi,
                     $this->common->dateFormat($val->added),
@@ -534,8 +537,8 @@ class MFPartProduk extends BaseController
                     $val->fgd,
                     $val->revisi,
                     $val->nama,
-                    $val->kertas,
-                    $val->flute,
+                    (new \App\Models\MFJenisKertasModel())->getNama($val->kertas),
+                    (new \App\Models\MFJenisFluteModel())->getNama($val->flute),
                     (int)$val->panjang . 'x' . (int)$val->lebar . 'x' . (int)$val->tinggi,
                     $edit_btn . $revisi_btn
                 ];
@@ -676,6 +679,8 @@ class MFPartProduk extends BaseController
 		$data['revisi'] = 0;
 		$data['added_by'] = current_user()->UserID;
 
+        $data['nama'] = strtoupper($data['nama']);
+
         $file = $this->request->getFile('file_dokcr');
         $data['file_dokcr'] = $file->getName();
 
@@ -707,17 +712,6 @@ class MFPartProduk extends BaseController
             }
         }
 
-//        return $this->response->setJSON([
-//            'data' => $data,
-//            'file_meta' => [
-//                'isValid' => $file->isValid(),
-//                'getName' => $file->getName(),
-//                'getSize' => $file->getSize(),
-//                'getExtension' => $file->getExtension(),
-//                'getMimeType' => $file->getMimeType()
-//            ],
-//        ]);
-
         $data_sisi = [
             'id_part' => $id,
             'sisi' => 1,
@@ -730,6 +724,8 @@ class MFPartProduk extends BaseController
         if($this->model->insert($data, false) && count($filedokcr_errors) == 0) {
 
             $sisi_model = (new \App\Models\MFSisiProdukModel())->insert($data_sisi);
+
+            session()->setFlashdata('success', 'Part produk berhasil ditambahkan');
 
             return $this->response->setJSON([
                 'success' => true,
@@ -936,10 +932,27 @@ class MFPartProduk extends BaseController
         }
 
         $data = $this->request->getPost();
-        $id = $data['id'];
-        unset($data['id']);
-        $data['revisi'] = 0;
-        $data['updated_by'] = current_user()->UserID;
+
+        if(array_key_exists('is_revision', $data)) {
+            $existing_id = $data['id'];
+
+            $id = $this->model->idGenerator();
+            $data['id'] = $id;
+            $data['added_by'] = current_user()->UserID;
+            $data['revisi'] = $this->model->revGenerator($data['fgd']);
+
+//            $data_sisi = $this->cloneSelectSisi($existing_id);
+
+        } else {
+            $id = $data['id'];
+            unset($data['id']);
+            $data['revisi'] = 0;
+            $data['updated_by'] = current_user()->UserID;
+        }
+
+        $data['nama'] = strtoupper($data['nama']);
+
+//        return $this->response->setJSON(['data' => $data]);
 
         $file = $this->request->getFile('file_dokcr');
         $data['file_dokcr'] = $file->getName();
@@ -977,22 +990,202 @@ class MFPartProduk extends BaseController
             }
         }
 
-        if($this->model->updatePart($id, $data) && count($filedokcr_errors) == 0) {
-            session()->setFlashdata('success', 'Part produk berhasil diubah.');
-            return $this->response->setJSON([
-                'success' => true,
-                'msg' => 'Part produk berhasil diubah.',
-                'redirect_url' => site_url('partproduk/edit/' . $id)
-            ]);
+        if(array_key_exists('is_revision', $data)) {
+            if($this->model->insert($data, false) && count($filedokcr_errors) == 0) {
+
+                $data_sisi = $this->cloneSelectSisi($existing_id, $id);
+                $insert_sisi = $this->cloneInsertSisi($data_sisi);
+
+                session()->setFlashdata('success', 'Revisi baru berhasil ditambahkan.');
+                return $this->response->setJSON([
+                    'success' => true,
+                    'msg' => 'Revisi baru berhasil ditambahkan.',
+                    'redirect_url' => site_url('partproduk/edit/' . $id)
+                ]);
+            } else {
+                $errors = array_merge($this->model->errors(), $filedokcr_errors);
+                return $this->response->setJSON([
+                    'success' => false,
+                    'msg' => '<p>' . implode('</p><p>', $errors) . '</p>',
+                    'data' => $data
+                ]);
+            }
         } else {
-            $errors = array_merge($this->model->errors(), $filedokcr_errors);
-            return $this->response->setJSON([
-                'success' => false,
-                'msg' => '<p>' . implode('</p><p>', $errors) . '</p>',
-                'data' => $data
-            ]);
+            if($this->model->updatePart($id, $data) && count($filedokcr_errors) == 0) {
+
+                session()->setFlashdata('success', 'Part produk berhasil diubah.');
+                return $this->response->setJSON([
+                    'success' => true,
+                    'msg' => 'Part produk berhasil diubah.',
+                    'redirect_url' => site_url('partproduk/edit/' . $id)
+                ]);
+            } else {
+                $errors = array_merge($this->model->errors(), $filedokcr_errors);
+                return $this->response->setJSON([
+                    'success' => false,
+                    'msg' => '<p>' . implode('</p><p>', $errors) . '</p>',
+                    'data' => $data
+                ]);
+            }
         }
 	}
+
+    private function cloneSelectSisi($existing_id_part, $new_id_part)
+    {
+        $query_sisi = (new \App\Models\MFSisiProdukModel())->getAllSisiByPart($existing_id_part);
+
+        if($query_sisi->getNumRows() > 0) {
+            $data_sisi = [];
+            foreach($query_sisi->getResult() as $row) {
+                $query_colors = (new \App\Models\MFProdukWarnaModel())->where('id_sisi', $row->id)->findAll();
+                $query_manual = (new \App\Models\MFProdukManualModel())->where('id_sisi', $row->id)->findAll();
+                $query_finishing = (new \App\Models\MFProdukFinishingModel())->where('id_sisi', $row->id)->findAll();
+                $query_khusus = (new \App\Models\MFProdukKhususModel())->where('id_sisi', $row->id)->findAll();
+                $data_sisi[] = [
+                    'id_part' => $new_id_part,
+                    'sisi' => $row->sisi,
+                    'frontside' => $row->frontside,
+                    'backside' => $row->backside,
+                    'special_req' => $row->special_req,
+                    'aktif' => $row->aktif,
+                    'added_by' => current_user()->UserID,
+                    'colors' => $query_colors,
+                    'manual' => $query_manual,
+                    'finishing' => $query_finishing,
+                    'khusus' => $query_khusus,
+                ];
+            }
+        } else {
+            $data_sisi = [
+                [
+                    'id_part' => $new_id_part,
+                    'sisi' => 1,
+                    'frontside' => 0,
+                    'backside' => 0,
+                    'aktif' => 'Y',
+                    'added_by' => current_user()->UserID,
+                    'colors' => [],
+                    'manual' => [],
+                    'finishing' => [],
+                    'khusus' => [],
+                ]
+            ];
+        }
+
+        return $data_sisi;
+    }
+
+    private function cloneInsertSisi(array $data)
+    {
+        $model = new \App\Models\MFSisiProdukModel();
+        $model_colors = new \App\Models\MFProdukWarnaModel();
+        $model_manual = new \App\Models\MFProdukManualModel();
+        $model_finishing = new \App\Models\MFProdukFinishingModel();
+        $model_khusus = new \App\Models\MFProdukKhususModel();
+
+        $results = [];
+
+        foreach ($data as $row) {
+            $colors = $row['colors'];
+            $manual = $row['manual'];
+            $finishing = $row['finishing'];
+            $khusus = $row['khusus'];
+            unset($row['colors']);
+            unset($row['manual']);
+            unset($row['finishing']);
+            unset($row['khusus']);
+
+            if($model->insert($row)) {
+                $id = $model->getInsertID();
+                if(count($colors) > 0) {
+                    $data_colors = [];
+                    foreach ($colors as $item) {
+                        $data_colors[] = [
+                            'id_sisi' => $id,
+                            'posisi' => $item['posisi'],
+                            'tinta' => $item['tinta'],
+                            'aktif' => $item['aktif'],
+                            'added_by' => current_user()->UserID,
+                        ];
+                    }
+                    $insert_colors = $model_colors->insertBatch($data_colors);
+                } else {
+                    $insert_colors = true;
+                }
+
+                if(count($manual) > 0) {
+                    $data_manual = [];
+                    foreach ($manual as $item) {
+                        $data_manual[] = [
+                            'id_sisi' => $id,
+                            'proses' => $item['proses'],
+                        ];
+                    }
+                    $insert_manual = $model_manual->insertBatch($data_manual);
+                } else {
+                    $insert_manual = true;
+                }
+
+                if(count($finishing) > 0) {
+                    $data_finishing = [];
+                    foreach ($finishing as $item) {
+                        $data_finishing[] = [
+                            'id_sisi' => $id,
+                            'proses' => $item['proses'],
+                        ];
+                    }
+                    $insert_finishing = $model_finishing->insertBatch($data_finishing);
+                } else {
+                    $insert_finishing = true;
+                }
+
+                if(count($khusus) > 0) {
+                    $data_khusus = [];
+                    foreach ($khusus as $item) {
+                        $data_khusus[] = [
+                            'id_sisi' => $id,
+                            'proses' => $item['proses'],
+                        ];
+                    }
+                    $insert_khusus = $model_khusus->insertBatch($data_khusus);
+                } else {
+                    $insert_khusus = true;
+                }
+
+                $results[] = [
+                    'success' => true,
+                    'id' => $id,
+                    'colors' => [
+                        'success' => $insert_colors,
+                        'rows' => count($colors)
+                    ],
+                    'manual' => [
+                        'success' => $insert_manual,
+                        'rows' => count($manual)
+                    ],
+                    'finishing' => [
+                        'success' => $insert_finishing,
+                        'rows' => count($finishing)
+                    ],
+                    'khusus' => [
+                        'success' => $insert_khusus,
+                        'rows' => count($khusus)
+                    ],
+                ];
+            } else {
+                $results[] = [
+                    'success' => false,
+                    'id' => null,
+                    'colors' => null,
+                    'manual' => null,
+                    'finishing' => null,
+                    'khusus' => null,
+                ];
+            }
+        }
+
+        return $results;
+    }
 
 	public function delete($id)
 	{

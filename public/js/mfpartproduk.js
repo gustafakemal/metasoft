@@ -16,6 +16,7 @@ $(function () {
             }],
 		columnDefs: [],
 		order: [[ 2, 'desc' ]],
+		scrollX: true,
 		initComplete: function () {},
 	});
 
@@ -563,9 +564,9 @@ $(function () {
 	// });
 
 	const id_part_arr = location.pathname.split('/');
-	const id_part = id_part_arr[id_part_arr.length - 1];
+	const id_part = (id_part_arr.includes('rev')) ? id_part_arr[id_part_arr.length - 2] : id_part_arr[id_part_arr.length - 1];
 
-	if(id_part_arr.includes('detail') || id_part_arr.includes('edit') || id_part_arr.includes('detailPartProduct') || id_part_arr.includes('editPartProduct')) {
+	if(id_part_arr.includes('detail') || id_part_arr.includes('edit') || id_part_arr.includes('rev') || id_part_arr.includes('detailPartProduct') || id_part_arr.includes('editPartProduct')) {
 		setTimeout(() => {
 			loadDataSisi(id_part);
 
@@ -588,18 +589,19 @@ $(function () {
 				$('form[name="partproduct-form"] input, form[name="partproduct-form"] select, form[name="partproduct-form"] textarea, form[name="partproduct-form"] button').prop('disabled', true);
 			},
 			success: function (response) {
-				console.log(response)
 				if(response.success) {
 					window.location.href = response.redirect_url
 				} else {
 					$('.msg').html(`<div class="alert alert-danger mb-4">${response.msg}</div>`);
 				}
 			},
-			complete: function () {
+			complete: function (res) {
 				$('form[name="partproduct-form"] input:not(#trevisi), form[name="partproduct-form"] select, form[name="partproduct-form"] textarea, form[name="partproduct-form"] button').prop('disabled', false);
-				$('form[name="partproduct-form"], html, body').animate({
-					scrollTop: $(".alert").offset().top + -90
-				}, 500);
+				if( ! res.responseJSON.success ) {
+					$('form[name="partproduct-form"], html, body').animate({
+						scrollTop: $(".alert").offset().top + -90
+					}, 500);
+				}
 			}
 		});
 	})
@@ -631,6 +633,8 @@ $(function () {
 		e.preventDefault();
 		const formData = new FormData(this);
 
+		formData.append('is_revision', '1');
+
 		$.ajax({
 			type: 'POST',
 			url: `${HOST}/mfpartproduk/apieditprocess`,
@@ -638,11 +642,19 @@ $(function () {
 			data: formData,
 			contentType: false,
 			processData: false,
-			beforeSend: function () {},
-			success: function (success) {
-				console.log(success);
+			beforeSend: function () {
+				$('form[name="partproduct-form_rev"] input, form[name="partproduct-form_rev"] select, form[name="partproduct-form_rev"] textarea, form[name="partproduct-form_rev"] button').attr('disabled', true)
 			},
-			complete: function () {}
+			success: function (success) {
+				if(response.success) {
+					window.location.href = `${response.redirect_url}`
+				} else {
+					$('.msg').html(`<div class="alert alert-danger">${response.msg}</div>`)
+				}
+			},
+			complete: function () {
+				$('form[name="partproduct-form_rev"] input, form[name="partproduct-form_rev"] select, form[name="partproduct-form_rev"] textarea, form[name="partproduct-form_rev"] button').attr('disabled', false)
+			}
 		})
 	});
 
@@ -670,6 +682,13 @@ $(function () {
 		resetSisiModal();
 	});
 
+	let color_tracker = {
+		frontside: [],
+		backside: [],
+		manual: [],
+		finishing: [],
+		khusus: []
+	};
 	const fs_params = {
 		selectbox: 'fscolors',
 		item_container: 'fs-child',
@@ -677,6 +696,7 @@ $(function () {
 		input_name: 'fscolor[]',
 		del_class: 'delfs',
 		group: 'frontside',
+		tracker: color_tracker.frontside
 	};
 	const bs_params = {
 		selectbox: 'bscolors',
@@ -685,6 +705,7 @@ $(function () {
 		input_name: 'bscolor[]',
 		del_class: 'delbs',
 		group: 'backside',
+		tracker: color_tracker.backside
 	};
 	const manual_params = {
 		selectbox: 'manualcolors',
@@ -693,6 +714,7 @@ $(function () {
 		input_name: 'manualcolor[]',
 		del_class: 'delmanual',
 		group: 'manual',
+		tracker: color_tracker.manual
 	};
 	const finishing_params = {
 		selectbox: 'finishingcolors',
@@ -701,6 +723,7 @@ $(function () {
 		input_name: 'finishingcolor[]',
 		del_class: 'delfinishing',
 		group: 'finishing',
+		tracker: color_tracker.finishing
 	};
 	const khusus_params = {
 		selectbox: 'khususcolors',
@@ -709,6 +732,7 @@ $(function () {
 		input_name: 'khususcolor[]',
 		del_class: 'delkhusus',
 		group: 'khusus',
+		tracker: color_tracker.khusus
 	};
 
 	$('.add-fs').on('click', fs_params, colorAddItem);
@@ -818,6 +842,14 @@ $(function () {
 					if(colors_el.includes(prop)) {
 						const spliter = prop.split('_')
 						const prefix = spliter[0];
+						let edited_array;
+						if(prefix === 'fs') {
+							edited_array = 'frontside';
+						} else if(prefix === 'bs') {
+							edited_array = 'backside';
+						} else {
+							edited_array = prefix;
+						}
 						let child_el = [];
 						for(let i = 0;i < response.data[prop].length;i++) {
 							const item_class = `${prefix}color`;
@@ -834,14 +866,15 @@ $(function () {
 														</button>
 													</div>
 											</div>`)
+							color_tracker[edited_array].push(value.toString());
 						}
 						$(`.${prefix}-child`).html(child_el.join(''));
-						console.log(response.data[prop])
 					}
 
 					$(`.sisi-form-modal input[name="${prop}"]`).val(response.data[prop]);
 					$(`.sisi-form-modal textarea[name="${prop}"]`).val(response.data[prop]);
 				}
+				console.log(color_tracker.frontside)
 			},
 			complete: function () {
 				$('.sisi-form-modal input:not(#fgd):not(#trevisi), .sisi-form-modal textarea, .sisi-form-modal button').prop('disabled', false);
@@ -872,9 +905,9 @@ $(function () {
 							let child_el = [];
 							for(let i = 0;i < response.data[prop].length;i++) {
 								const text = response.data[prop][i].nama
-								child_el.push(`<li>${text}</li>`)
+								child_el.push(text)
 							}
-							$(`.${prefix}-child`).html(`<ul>${child_el.join('')}</ul>`);
+							$(`.${prefix}-child`).html(child_el.join(', '));
 						}
 
 						$(`#dataDetail .${prop}`).html(response.data[prop])
@@ -919,12 +952,13 @@ function resetSisiModal()
 
 function colorAddItem(e)
 {
-	const {selectbox, item_container, item_class, input_name, del_class, group} = e.data;
+	const {selectbox, item_container, item_class, input_name, del_class, group, tracker} = e.data;
 	const select_box = `select[name="${selectbox}"]`;
-	const text = $(`${select_box} option`).filter(':selected').text();
-	const value = $(`${select_box} option`).filter(':selected').val();
-	const add_el = (group == 'frontside' || group == 'backside') ? `<label for="tinta" class="col-sm-2">&nbsp</label>` : '';
-	if(value != '0') {
+	const option = $(`${select_box} option`).filter(':selected');
+	const text = option.text();
+	const value = option.val();
+	const add_el = (group === 'frontside' || group === 'backside') ? `<label for="tinta" class="col-sm-2">&nbsp</label>` : '';
+	if(value !== '0' && !tracker.includes(value)) {
 		$(`.${item_container}`).prepend(`<div class="row mb-1 ${item_class}-${value}">
 							${add_el}
 							<div class="col-sm">${text}</div>
@@ -935,6 +969,7 @@ function colorAddItem(e)
 								</button>
 							</div>
 					</div>`)
+		tracker.push(value)
 	}
 	$(`${select_box} option[value="0"]`).prop('selected', true);
 }

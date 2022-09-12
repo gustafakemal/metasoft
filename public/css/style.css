@@ -442,12 +442,14 @@ body {
 .csc-form.detail .row {
   margin-bottom: 10px;
 }
-.csc-form.detail .row .val {
+.csc-form.detail .row .val,
+#dataDetail .sisi-view {
   padding-left: 10px;
   position: relative;
   font-weight: 500;
 }
-.csc-form.detail .row .val:before {
+.csc-form.detail .row .val:before,
+#dataDetail .sisi-view:before {
   position: absolute;
   left: 0;
   top: 0;

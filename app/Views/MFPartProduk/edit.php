@@ -29,7 +29,7 @@
                 </div>
                 <label for="trevisi" class="col-sm-2 col-form-label">Revisi</span></label>
                 <div class="col-sm-4">
-                    <input value="<?= ($is_revision == 1) ? ($data->revisi + 1) : $data->revisi;?>" type="text" class="form-control" id="trevisi" name="trevisi" disabled><input type="hidden" class="form-control" id="revisi" name="revisi">
+                    <input value="<?= $rev_no;?>" type="text" class="form-control" id="trevisi" name="trevisi" disabled><input type="hidden" class="form-control" id="revisi" name="revisi" value="<?= $rev_no;?>">
                 </div>
             </div>
             <div class="form-group row">
@@ -209,7 +209,7 @@
                     <h5>Sisi Part Produk</h5>
                 </div>
                 <div class="col text-right">
-                    <button type="button" class="btn btn-primary open-sisi-form">
+                    <button type="button" class="btn btn-primary open-sisi-form"<?= ($is_revision == 0) ? '' : ' disabled';?>>
                         Tambah Sisi
                     </button>
                 </div>
@@ -265,7 +265,7 @@
                             </div>
                             <label for="trevisi" class="col-sm-2 col-form-label">Revisi</span></label>
                             <div class="col-sm-4">
-                                <input value="<?= ($is_revision == 1) ? ($data->revisi + 1) : $data->revisi;?>" type="text" class="form-control" id="trevisi" name="trevisi" disabled>
+                                <input value="<?= $rev_no;?>" type="text" class="form-control" id="trevisi" name="trevisi" disabled>
                             </div>
                         </div>
                         <div class="row">
@@ -507,13 +507,13 @@
                         <div class="row">
                             <div class="col-5"><div class="pl-4">Frontside</div></div>
                             <div class="col-7">
-                                <div class="fs-child"></div>
+                                <div class="sisi-view fs-child"></div>
                             </div>
                         </div>
                         <div class="row">
                             <div class="col-5"><div class="pl-4">Backside</div></div>
                             <div class="col-7">
-                                <div class="bs-child"></div>
+                                <div class="sisi-view bs-child"></div>
                             </div>
                         </div>
                         <div class="row">
@@ -523,111 +523,21 @@
                         <div class="row">
                             <div class="col-5"><div class="pl-4">Manual</div></div>
                             <div class="col-7">
-                                <div class="fs-child"></div>
+                                <div class="sisi-view manual-child"></div>
                             </div>
                         </div>
-<!--                        <div class="msg"></div>-->
-<!--                        <div class="row">-->
-<!--                            <label for="fgd" class="col-sm-2 col-form-label">No FGD</span></label>-->
-<!--                            <div class="col-sm-4">-->
-<!--                                <div class="sisi-view fgd"></div>-->
-<!--                            </div>-->
-<!--                            <label for="trevisi" class="col-sm-2 col-form-label">Revisi</span></label>-->
-<!--                            <div class="col-sm-4">-->
-<!--                                <div class="sisi-view revisi"></div>-->
-<!--                            </div>-->
-<!--                        </div>-->
-<!--                        <div class="row">-->
-<!--                            <label for="sisi" class="col-sm-2 col-form-label">Sisi</span></label>-->
-<!--                            <div class="col-sm">-->
-<!--                                <div class="sisi-view sisi"></div>-->
-<!--                            </div>-->
-<!--                            <label for="frontside" class="col-sm col-form-label">Frontside</span></label>-->
-<!--                            <div class="col-sm">-->
-<!--                                <div class="sisi-view frontside"></div>-->
-<!--                            </div>-->
-<!--                            <label for="backside" class="col-sm col-form-label">Backside</span></label>-->
-<!--                            <div class="col-sm">-->
-<!--                                <div class="sisi-view backside"></div>-->
-<!--                            </div>-->
-<!--                        </div>-->
-<!--                        <div class="row">-->
-<!--                            <label for="special_req" class="col-sm-2 col-form-label">Special Requirement</span></label>-->
-<!--                            <div class="col-sm">-->
-<!--                                <div class="sisi-view special_req"></div>-->
-<!--                            </div>-->
-<!---->
-<!--                        </div>-->
-<!--                        <div class="row">-->
-<!--                            <label for="special_req" class="col-sm-2 col-form-label">Aktif</label>-->
-<!--                            <div class="col-sm">-->
-<!--                                <div class="sisi-view aktif"></div>-->
-<!--                            </div>-->
-<!--                        </div>-->
-<!--                        <div class="row">-->
-<!--                            <label for="fgd" class="col-sm-2 col-form-label">Ditambahkan pada</span></label>-->
-<!--                            <div class="col-sm-4">-->
-<!--                                <div class="sisi-view added"></div>-->
-<!--                            </div>-->
-<!--                            <label class="col-sm-2 col-form-label">Oleh</span></label>-->
-<!--                            <div class="col-sm-4">-->
-<!--                                <div class="sisi-view added_by"></div>-->
-<!--                            </div>-->
-<!--                        </div>-->
-<!---->
-<!--                        <div class="mt-2">-->
-<!--                            <nav>-->
-<!--                                <div class="nav nav-tabs" id="det_nav-tab" role="tablist">-->
-<!--                                    <button class="nav-link active" id="det_nav-warna-tab" data-toggle="tab" data-target="#det_nav-warna" type="button" role="tab" aria-controls="nav-home" aria-selected="true">Warna</button>-->
-<!--                                    <button class="nav-link" id="det_nav-proses-tab" data-toggle="tab" data-target="#det_nav-proses" type="button" role="tab" aria-controls="nav-profile" aria-selected="false">Proses</button>-->
-<!--                                </div>-->
-<!--                            </nav>-->
-<!---->
-<!--                            <div class="tab-content" id="det_nav-tabContent">-->
-<!--                                <div class="tab-pane fade show active" id="det_nav-warna" role="tabpanel" aria-labelledby="det_nav-warna-tab">-->
-<!---->
-<!--                                    <div class="row mt-2">-->
-<!--                                        <div class="col-sm-6">-->
-<!--                                            <div class="form-group row">-->
-<!--                                                <label for="tinta" class="col-sm-2  col-form-label">Frontside</label>-->
-<!--                                            </div>-->
-<!--                                            <div class="fs-child"></div>-->
-<!---->
-<!--                                        </div>-->
-<!--                                        <div class="col-sm-6">-->
-<!--                                            <div class="form-group row">-->
-<!--                                                <label for="tinta" class="col-sm-2  col-form-label">Backside</label>-->
-<!--                                            </div>-->
-<!--                                            <div class="bs-child"></div>-->
-<!---->
-<!--                                        </div>-->
-<!--                                    </div>-->
-<!---->
-<!--                                </div>-->
-<!--                                <div class="tab-pane fade" id="det_nav-proses" role="tabpanel" aria-labelledby="det_nav-proses-tab">-->
-<!--                                    <div class="row mt-2">-->
-<!--                                        <div class="col-sm-4">-->
-<!--                                            <label for="tinta" class="form-label">Proses Manual</label>-->
-<!--                                            <div class="manual-child"></div>-->
-<!---->
-<!--                                        </div>-->
-<!--                                        <div class="col-sm-4">-->
-<!--                                            <label for="tinta" class="form-label">Proses Finishing</label>-->
-<!--                                            <div class="finishing-child"></div>-->
-<!--                                        </div>-->
-<!---->
-<!--                                        <div class="col-sm-4">-->
-<!--                                            <label for="tinta" class="form-label">Proses Khusus</label>-->
-<!--                                            <div class="khusus-child"></div>-->
-<!---->
-<!--                                        </div>-->
-<!--                                    </div>-->
-<!---->
-<!---->
-<!---->
-<!--                                </div>-->
-<!--                            </div>-->
-<!--                        </div>-->
+                        <div class="row">
+                            <div class="col-5"><div class="pl-4">Finishing</div></div>
+                            <div class="col-7">
+                                <div class="sisi-view finishing-child"></div>
+                            </div>
+                        </div>
+                        <div class="row">
+                            <div class="col-5"><div class="pl-4">Khusus</div></div>
+                            <div class="col-7">
+                                <div class="sisi-view khusus-child"></div>
+                            </div>
+                        </div>
                     </div>
                     <div class="modal-footer">
                         <div class="loading-indicator"></div>

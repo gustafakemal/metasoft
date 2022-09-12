@@ -37,6 +37,15 @@ class MFSisiProdukModel extends Model
                     ->get();
     }
 
+    public function getColorsAndProcess($id_part)
+    {
+        return $this->select('MF_SisiProduk.id, MF_SisiProduk.id_part, MF_ProdukWarna.posisi, MF_ProdukWarna.tinta, MF_ProdukFinishing.proses as proses_finishing')
+                    ->join('MF_ProdukWarna', 'MF_SisiProduk.id = MF_ProdukWarna.id_sisi', 'left')
+                    ->join('MF_ProdukFinishing', 'MF_SisiProduk.id = MF_ProdukFinishing.id_sisi', 'left')
+                    ->where('MF_SisiProduk.id_part', $id_part)
+                    ->get();
+    }
+
     public function getSisiById($id)
     {
         return $this->where('id', $id)

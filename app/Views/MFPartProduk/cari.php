@@ -21,7 +21,7 @@
       <input type="text" style="text-transform:uppercase" class="form-control mb-2" name="caripartproduk" id="caripartproduk" placeholder="Cari Produk Berdasarkan Nomor FGD atau Nama Part Produk">
     </div>
 	<div class="col-auto">
-      <button type="submit" class="btn btn-primary mb-2">Cari</button>
+      <button title="Cari" type="submit" class="btn btn-primary mb-2">Cari</button>
     </div>
     <div class="col-auto">
       <a type="button" class="btn btn-primary add-new mb-2" href="<?= site_url('partproduk/add');?>">Buat Baru</a>
@@ -38,6 +38,7 @@
 	<thead>
 		<tr>
 			<th>No</th>
+            <th>Action</th>
 			<th>FGD</th>
 			<th>Revisi</th>
 			<th>Nama Part</th>
@@ -49,7 +50,6 @@
 			<th>Dibuat<br>oleh</th>
 			<th>Update</th>
 			<th>Diupdate<br>oleh</th>
-			<th>&nbsp;</th>
 		</tr>
 	</thead>
 </table>

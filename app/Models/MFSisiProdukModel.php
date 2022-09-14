@@ -34,6 +34,7 @@ class MFSisiProdukModel extends Model
     public function getAllSisiByPart($id_part)
     {
         return $this->where('id_part', $id_part)
+                    ->where('aktif', 'Y')
                     ->get();
     }
 
@@ -50,5 +51,18 @@ class MFSisiProdukModel extends Model
     {
         return $this->where('id', $id)
             ->get();
+    }
+
+    public function lastNomorSisi($id_part)
+    {
+        $query = $this->selectMax('sisi')
+                        ->where('id_part', $id_part)
+                        ->get();
+
+        if($query->getNumRows() > 0) {
+            return (int)$query->getResult()[0]->sisi;
+        } else {
+            return 0;
+        }
     }
 }

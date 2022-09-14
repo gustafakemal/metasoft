@@ -101,6 +101,9 @@ class MFPartProduk extends BaseController
         $jenistinta_model = new \App\Models\MFJenisTintaModel();
         $jenisflute_model = new \App\Models\MFJenisFluteModel();
         $packing_model = new \App\Models\MFPackingModel();
+		$finishing_model = new \App\Models\MFProsesFinishingModel();
+		$manual_model = new \App\Models\MFProsesManualModel();
+		$khusus_model = new \App\Models\MFProsesKhususModel();
         return view('MFPartProduk/edit', [
             'page_title' => ($is_revision == 0) ? 'Edit Part Produk MF' : 'Revisi Part Produk MF',
             'data' => $data,
@@ -114,6 +117,9 @@ class MFPartProduk extends BaseController
             'opsi_innerpack' => $packing_model->getOpsi('Inner'),
             'opsi_outerpack' => $packing_model->getOpsi('Outer'),
             'opsi_deliverypack' => $packing_model->getOpsi('Delivery'),
+			'opsi_finishing' => $finishing_model->getOpsi(),
+			'opsi_manual' => $manual_model->getOpsi(),
+			'opsi_khusus' => $khusus_model->getOpsi(),
         ]);
     }
 
@@ -384,6 +390,13 @@ class MFPartProduk extends BaseController
         return $this->response->setJSON($response);
     }
 
+    public function actualNomorSisi($id_part)
+    {
+        $no = (new \App\Models\MFSisiProdukModel())->lastNomorSisi($id_part) + 1;
+
+        return $this->response->setJSON(['success' => true, 'no_sisi' => $no]);
+    }
+
     public function apiAllSisi()
     {
         $query = (new \App\Models\MFSisiProdukModel())->getAllSisi();
@@ -417,13 +430,20 @@ class MFPartProduk extends BaseController
         return $this->response->setJSON($response);
     }
 
-    public function apiAllSisiByPart($id)
+    public function apiAllSisiByPart()
     {
+		if ($this->request->getMethod() !== 'post') {
+			return redirect()->to('mfpartproduk');
+		}
+
+        $id = $this->request->getPost('id');
+        $is_revision = $this->request->getPost('is_revision');
+
         $query = (new \App\Models\MFSisiProdukModel())->getAllSisiByPart($id);
 
         if($query->getNumRows() > 0) {
             $data = [];
-            foreach ($query->getResult() as $row) {
+            foreach ($query->getResult() as $key => $row) {
                 $del_confirm = "'Hapus item ini?'";
                 $view = '<a href="#" title="View" class="view-sisi" data-id="' . $row->id . '"><i class="far fa-file-alt"></i></a>';
                 $edit = ' <a href="#" title="Edit" class="edit-sisi" data-id="' . $row->id . '"><i class="far fa-edit"></i></a>';
@@ -438,8 +458,10 @@ class MFPartProduk extends BaseController
                     $row->added_by,
                     $this->common->dateFormat($row->updated),
                     $row->updated_by,
-                    $view . $edit . $del
                 ];
+                if($is_revision === null) {
+                    array_push($data[$key], $view . $edit . $del);
+                }
             }
 
             $response = [
@@ -460,7 +482,7 @@ class MFPartProduk extends BaseController
     {
         $model = new \App\Models\MFSisiProdukModel();
 
-        if($model->where('id', $id)->delete()) {
+        if($model->where('id', $id)->set(['aktif' => 'T'])->update()) {
             return redirect()->back()
                             ->with('success', 'Item sisi berhasil dihapus');
         } else {
@@ -513,11 +535,12 @@ class MFPartProduk extends BaseController
 
 		$data = [];
 		foreach($query as $key => $val) {
-			$edit_btn = '<a class="btn btn-sm btn-success edit-rev-item mr-2" href="' . site_url('partproduk/edit/' . $val->id) . '">Edit</a>';
-			$revisi_btn = '<a class="btn btn-sm btn-danger rev-item" href="' . site_url('partproduk/rev/' . $val->id . '/1').'">Revisi</a>';
+			$edit_btn = '<a title="Edit" data-toggle="tooltip" data-placement="left" class="btn btn-sm btn-success edit-rev-item mr-2" href="' . site_url('partproduk/edit/' . $val->id) . '"><i class="far fa-edit"></i></a>';
+			$revisi_btn = '<a title="Revisi" data-toggle="tooltip" data-placement="left" class="btn btn-sm btn-danger rev-item" href="' . site_url('partproduk/rev/' . $val->id . '/1').'"><i class="far fa-clone"></i></a>';
             if($full) {
                 $data[] = [
                     $key + 1,
+                    $edit_btn . $revisi_btn,
                     $val->fgd,
                     $val->revisi,
                     $val->nama,
@@ -528,8 +551,7 @@ class MFPartProduk extends BaseController
                     $this->common->dateFormat($val->added),
                     $val->added_by,
                     $this->common->dateFormat($val->updated),
-                    $val->updated_by,
-                    $edit_btn . $revisi_btn
+                    $val->updated_by
                 ];
             } else {
                 $data[] = [
@@ -667,9 +689,9 @@ class MFPartProduk extends BaseController
 
 	public function apiAddProcess()
 	{
-		if ($this->request->getMethod() !== 'post') {
-			return redirect()->to('mfpartproduk');
-		}
+//		if ($this->request->getMethod() !== 'post') {
+//			return redirect()->to('mfpartproduk');
+//		}
 
 		$data = $this->request->getPost();
 //        $files = $this->request->getFiles();
@@ -684,6 +706,8 @@ class MFPartProduk extends BaseController
         $file = $this->request->getFile('file_dokcr');
         $data['file_dokcr'] = $file->getName();
 
+//        return $this->response->setJSON($data);
+
         $filedokcr_errors = [];
 
         if( $file->getName() != '' ) {
@@ -693,7 +717,8 @@ class MFPartProduk extends BaseController
                 in_array($file->getExtension(), $this->filedokcr_extension) &&
                 in_array($file->getMimeType(), $this->filedokcr_mime_type)
             ) {
-                $dokcr_filename = $file->getRandomName();
+                $rev_format = str_pad($data['revisi'], 3, '0', STR_PAD_LEFT);
+                $dokcr_filename = 'DOKCR_' . $data['fgd'] . '_' . $rev_format . '.' . $file->getExtension();
                 $file->move( WRITEPATH . 'uploads/file_dokcr',  $dokcr_filename);
                 $data['file_dokcr'] = $dokcr_filename;
             } else {
@@ -721,7 +746,12 @@ class MFPartProduk extends BaseController
             'added_by' => current_user()->UserID
         ];
 
-        if($this->model->insert($data, false) && count($filedokcr_errors) == 0) {
+        $technical_draw = true;
+        if($data['technical_draw'] == 'Y' && array_key_exists('no_dokumen', $data) && $data['no_dokumen'] == '') {
+            $technical_draw = false;
+        }
+
+        if($technical_draw && $this->model->insert($data, false) && count($filedokcr_errors) == 0) {
 
             $sisi_model = (new \App\Models\MFSisiProdukModel())->insert($data_sisi);
 
@@ -733,11 +763,22 @@ class MFPartProduk extends BaseController
                 'redirect_url' => site_url('partproduk/edit/' . $data['id'])
             ]);
         } else {
-            $errors = array_merge($this->model->errors(), $filedokcr_errors);
+//            $errors = [];
+//            foreach ($this->model->errors() as $k => $err) {
+//                $errors[$k] = $err;
+//            }
+//            $errors = array_merge($this->model->errors(), $filedokcr_errors);
+            if( ! $technical_draw ) {
+//                array_push($errors, 'No dokumen wajib diisi');
+                $this->model->errors()['no_dokumen'] = 'No dokumen wajib diisi';
+//                $errors = ['no_d' => 'No dok'];
+            }
+            dd($this->model->errors());
             return $this->response->setJSON([
                 'success' => false,
+                'errors' => $errors,
                 'msg' => '<p>' . implode('</p><p>', $errors) . '</p>',
-                'data' => $data
+                'data' => $data,
             ]);
         }
 	}
@@ -925,6 +966,32 @@ class MFPartProduk extends BaseController
     			]);
 	}
 
+    public function apiExceptAll()
+    {
+        if( $this->request->getMethod() == 'post' ) {
+            return redirect()->to('/');
+        }
+
+        $id = $this->request->getPost('id');
+
+        $results = [];
+        $query = (new \App\Models\MFSisiProdukModel())->getSisiById($id);
+        if($query->getNumRows() > 0) {
+            foreach ($query->getResult() as $key => $row) {
+                $results[] = [
+                    $row->id,
+                    $row->nama,
+                    $row->added,
+                    $row->added_by,
+                    $row->frontside,
+                    $row->backside,
+                ];
+            }
+        }
+
+        return $this->response->setJSON($results);
+    }
+
 	public function apiEditProcess()
 	{
         if ($this->request->getMethod() !== 'post') {
@@ -966,7 +1033,8 @@ class MFPartProduk extends BaseController
                 in_array($file->getExtension(), $this->filedokcr_extension) &&
                 in_array($file->getMimeType(), $this->filedokcr_mime_type)
             ) {
-                $dokcr_filename = $file->getRandomName();
+                $rev_format = str_pad($data['revisi'], 3, '0', STR_PAD_LEFT);
+                $dokcr_filename = 'DOKCR_' . $data['fgd'] . '_' . $rev_format . '.' . $file->getExtension();
                 $file->move( WRITEPATH . 'uploads/file_dokcr',  $dokcr_filename);
                 $data['file_dokcr'] = $dokcr_filename;
             } else {

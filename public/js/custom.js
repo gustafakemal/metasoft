@@ -22,4 +22,8 @@ $(function () {
 		$('.sidebar').toggleClass('hide');
 		$('.content-wrapper').toggleClass('wide')
 	})
+
+    $('body').tooltip({
+       selector: '[data-toggle="tooltip"]'
+    });
 });

@@ -443,13 +443,15 @@ body {
   margin-bottom: 10px;
 }
 .csc-form.detail .row .val,
-#dataDetail .sisi-view {
+#dataDetail .sisi-view,
+#dataDetail .sisi-view-static {
   padding-left: 10px;
   position: relative;
   font-weight: 500;
 }
 .csc-form.detail .row .val:before,
-#dataDetail .sisi-view:before {
+#dataDetail .sisi-view:before,
+#dataDetail .sisi-view-static:before {
   position: absolute;
   left: 0;
   top: 0;

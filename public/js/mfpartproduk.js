@@ -445,8 +445,10 @@ $(function () {
 	$('select[name="technical_draw"]').on('change', function() {
 		if( $('option:selected', this).val() === 'Y' ) {
 			$('input[name="no_dokumen"]').attr('disabled', false)
+			$('.no-dok-mark').removeClass('d-none');
 		} else {
 			$('input[name="no_dokumen"]').attr('disabled', true)
+			$('.no-dok-mark').addClass('d-none');
 		}
 	})
 
@@ -597,6 +599,10 @@ $(function () {
 			},
 			complete: function (res) {
 				$('form[name="partproduct-form"] input:not(#trevisi), form[name="partproduct-form"] select, form[name="partproduct-form"] textarea, form[name="partproduct-form"] button').prop('disabled', false);
+				const td = $('form[name="partproduct-form"] select[name="technical_draw"] option').filter(':selected').val();
+				if(td === 'T') {
+					$('form[name="partproduct-form"] input[name="no_dokumen"]').prop('disabled', true);
+				}
 				if( ! res.responseJSON.success ) {
 					$('form[name="partproduct-form"], html, body').animate({
 						scrollTop: $(".alert").offset().top + -90
@@ -645,7 +651,7 @@ $(function () {
 			beforeSend: function () {
 				$('form[name="partproduct-form_rev"] input, form[name="partproduct-form_rev"] select, form[name="partproduct-form_rev"] textarea, form[name="partproduct-form_rev"] button').attr('disabled', true)
 			},
-			success: function (success) {
+			success: function (response) {
 				if(response.success) {
 					window.location.href = `${response.redirect_url}`
 				} else {
@@ -673,6 +679,10 @@ $(function () {
 			show: true,
 			backdrop: 'static'
 		});
+		const id_part = $(this).attr('data-part');
+		$.get(`${HOST}/MFPartProduk/actualNomorSisi/${id_part}`, function (response) {
+			$('#dataForm input[name="sisi"]').val(response.no_sisi)
+		})
 		const part_name = $(this).attr('data-nama');
 		$('.part-produk-title').html(part_name)
 		$('#dataForm .sisi-form-modal').attr('name', 'add-sisi')
@@ -924,13 +934,14 @@ function selectionAddedBox(id, name) {
 function loadDataSisi(id_part)
 {
 	$.ajax({
-		type: "GET",
-		url: `${HOST}/mfpartproduk/apiAllSisiByPart/${id_part}`,
+		type: "POST",
+		url: `${HOST}/mfpartproduk/apiAllSisiByPart`,
+		dataType: 'JSON',
+		data: {id: id_part},
+		beforeSend: function () {},
 		success: function (response) {
 			if(response.success) {
-				$('#dataList').DataTable().clear();
-				$('#dataList').DataTable().rows.add(response.data);
-				$('#dataList').DataTable().draw();
+				$('#dataList').DataTable().clear().rows.add(response.data).draw();
 			}
 		},
 		error: function () {

@@ -18,6 +18,7 @@
     <div class="dynamic-content">
 
 
+        <?php //echo form_open_multipart('MFPartProduk/apiAddProcess');?>
         <form name="partproduct-form" class="csc-form show">
             <div class="msg"></div>
             <div class="form-group row">
@@ -91,7 +92,7 @@
                         <option value="T" selected>Tidak</option>
                     </select>
                 </div>
-                <label for="no_dokumen" class="col-sm-2 col-form-label">No Dokumen </label>
+                <label for="no_dokumen" class="col-sm-2 col-form-label">No Dokumen <span class="no-dok-mark d-none text-danger">*</span></label>
                 <div class="col-sm-2">
                     <input type="text" class="form-control" id="no_dokumen" name="no_dokumen" disabled>
                 </div>
@@ -160,7 +161,7 @@
                 <div class="col-sm-3">
                     <input type="text" class="form-control" id="no_dokcr" name="no_dokcr">
                 </div>
-                <label for="file_dokcr" class="col-sm-2 col-form-label">Upload Dokumen </label>
+                <label for="file_dokcr" class="col-sm-2 col-form-label">Upload Dokumen <span class="tooltip-icon" data-toggle="tooltip" title="Ukuran max 500Kb, harus berformat .pdf atau .jpg."><i class="fas fa-question-circle"></i></span></label>
                 <div class="col-sm-4">
                     <input type="file" class="form-control" id="file_dokcr" name="file_dokcr">
                 </div>

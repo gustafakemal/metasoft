@@ -13,7 +13,7 @@ class MFProdukFinishingModel extends Model
     public function getTintaBySisi($id_sisi)
     {
         $query = $this->select('*')
-            ->join('MF_JenisTinta', 'MF_ProdukFinishing.proses = MF_JenisTinta.id')
+            ->join('MF_ProsesFinishing', 'MF_ProdukFinishing.proses = MF_ProsesFinishing.id')
             ->where('MF_ProdukFinishing.id_sisi', $id_sisi)
             ->get();
 

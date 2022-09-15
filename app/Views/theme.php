@@ -106,13 +106,13 @@
               
               <li class="<?= (url_is('mfproduk')) ? 'active' : '';?>">
               <a href="<?= site_url('mfproduk');?>">
-                    <i class="fas fa-arrow-circle-right text-dark"></i> Input Produk
+                    <i class="fas fa-arrow-circle-right text-dark"></i> Data Produk
                 </a>
               </li>
 
               <li class="<?= (url_is('mfpartproduk') || url_is('partproduk/*')) ? 'active' : '';?>">
                   <a href="<?= site_url('mfpartproduk');?>">
-                      <i class="fas fa-arrow-circle-right text-dark"></i> Input Part Produk
+                      <i class="fas fa-arrow-circle-right text-dark"></i> Data Part Produk
                   </a>
               </li>
               

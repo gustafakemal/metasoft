@@ -92,9 +92,9 @@
                         <option value="T"<?= ($data->technical_draw == 'T') ? ' selected' : '';?>>Tidak</option>
                     </select>
                 </div>
-                <label for="no_dokumen" class="col-sm-2 col-form-label">No Dokumen </label>
+                <label for="no_dokumen" class="col-sm-2 col-form-label">No Dokumen <span class="no-dok-mark<?= ($data->technical_draw == 'Y') ? ' d-one' : '';?> text-danger">*</span></label>
                 <div class="col-sm-2">
-                    <input type="text" class="form-control" id="no_dokumen" name="no_dokumen"<?= ($data->technical_draw == 'T') ? ' disabled' : '';?>>
+                    <input type="text" value="<?= $data->no_dokumen;?>" class="form-control" id="no_dokumen" name="no_dokumen"<?= ($data->technical_draw == 'T') ? ' disabled' : '';?>>
                 </div>
             </div>
             <div class="form-group row">
@@ -161,7 +161,7 @@
                 <div class="col-sm-3">
                     <input value="<?= $data->no_dokcr;?>" type="text" class="form-control" id="no_dokcr" name="no_dokcr">
                 </div>
-                <label for="file_dokcr" class="col-sm-2 col-form-label">Upload Dokumen</label>
+                <label for="file_dokcr" class="col-sm-2 col-form-label">Upload Dokumen <span class="tooltip-icon" data-toggle="tooltip" title="Ukuran max 500Kb, harus berformat .pdf atau .jpg."><i class="fas fa-question-circle"></i></span></label>
                 <div class="col-sm-4">
                     <?php if($data->file_dokcr != null) : ?>
                         <div class="dokcr-edit-wrap">
@@ -453,13 +453,17 @@
                             </div>
                         </div>
                         <div class="row">
-                            <div class="col-5">Frontside</div>
+                            <div class="col-5">Jumlah Warna</div>
+                            <div class="col-7"></div>
+                        </div>
+                        <div class="row">
+                            <div class="col-5"><div class="pl-4">Frontside</div></div>
                             <div class="col-7">
                                 <div class="sisi-view frontside"></div>
                             </div>
                         </div>
                         <div class="row">
-                            <div class="col-5">Backside</div>
+                            <div class="col-5"><div class="pl-4">Backside</div></div>
                             <div class="col-7">
                                 <div class="sisi-view backside"></div>
                             </div>
@@ -468,12 +472,6 @@
                             <div class="col-5">Special Requirement</div>
                             <div class="col-7">
                                 <div class="sisi-view special_req"></div>
-                            </div>
-                        </div>
-                        <div class="row">
-                            <div class="col-5">Aktif</div>
-                            <div class="col-7">
-                                <div class="sisi-view aktif"></div>
                             </div>
                         </div>
                         <div class="row">

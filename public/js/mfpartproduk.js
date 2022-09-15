@@ -623,7 +623,9 @@ $(function () {
 			data: formData,
 			contentType: false,
 			processData: false,
-			beforeSend: function () {},
+			beforeSend: function () {
+				$('form[name="partproduct-form_edit"] input, form[name="partproduct-form_edit"] select, form[name="partproduct-form_edit"] textarea, form[name="partproduct-form_edit"] button').prop('disabled', true);
+			},
 			success: function (response) {
 				if(response.success) {
 					location.reload();
@@ -631,7 +633,18 @@ $(function () {
 					$('.msg').html(`<div class="alert alert-danger">${response.msg}</div>`)
 				}
 			},
-			complete: function () {}
+			complete: function (res) {
+				$('form[name="partproduct-form_edit"] input:not(#trevisi), form[name="partproduct-form_edit"] select, form[name="partproduct-form_edit"] textarea, form[name="partproduct-form_edit"] button').prop('disabled', false);
+				const td = $('form[name="partproduct-form_edit"] select[name="technical_draw"] option').filter(':selected').val();
+				if(td === 'T') {
+					$('form[name="partproduct-form_edit"] input[name="no_dokumen"]').prop('disabled', true);
+				}
+				if( ! res.responseJSON.success ) {
+					$('form[name="partproduct-form_edit"], html, body').animate({
+						scrollTop: $(".alert").offset().top + -90
+					}, 500);
+				}
+			}
 		})
 	});
 
@@ -658,8 +671,17 @@ $(function () {
 					$('.msg').html(`<div class="alert alert-danger">${response.msg}</div>`)
 				}
 			},
-			complete: function () {
+			complete: function (res) {
 				$('form[name="partproduct-form_rev"] input, form[name="partproduct-form_rev"] select, form[name="partproduct-form_rev"] textarea, form[name="partproduct-form_rev"] button').attr('disabled', false)
+				const td = $('form[name="partproduct-form_rev"] select[name="technical_draw"] option').filter(':selected').val();
+				if(td === 'T') {
+					$('form[name="partproduct-form_rev"] input[name="no_dokumen"]').prop('disabled', true);
+				}
+				if( ! res.responseJSON.success ) {
+					$('form[name="partproduct-form_rev"], html, body').animate({
+						scrollTop: $(".alert").offset().top + -90
+					}, 500);
+				}
 			}
 		})
 	});
@@ -862,9 +884,14 @@ $(function () {
 						}
 						let child_el = [];
 						for(let i = 0;i < response.data[prop].length;i++) {
+							let text;
 							const item_class = `${prefix}color`;
 							const value = response.data[prop][i].id;
-							const text = response.data[prop][i].nama
+							if(prefix == 'fs' || prefix == 'bs') {
+								text = response.data[prop][i].nama
+							} else {
+								text = response.data[prop][i].proses
+							}
 							const add_el = (prefix == 'fs' || prefix == 'bs') ? `<label for="tinta" class="col-sm-2">&nbsp</label>` : '';
 							child_el.push(`<div class="row mb-1 ${item_class}-${value}">
 													${add_el}
@@ -914,7 +941,12 @@ $(function () {
 							const prefix = spliter[0];
 							let child_el = [];
 							for(let i = 0;i < response.data[prop].length;i++) {
-								const text = response.data[prop][i].nama
+								let text;
+								if(prefix == 'fs' || prefix == 'bs') {
+									text = response.data[prop][i].nama
+								} else {
+									text = response.data[prop][i].proses
+								}
 								child_el.push(text)
 							}
 							$(`.${prefix}-child`).html(child_el.join(', '));

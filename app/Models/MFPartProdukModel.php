@@ -42,6 +42,7 @@ class MFPartProdukModel extends Model
     public function getAll()
     {
         return $this->orderBy('id', 'desc')
+//                    ->where('aktif', 'Y')
                     ->get();
     }
 
@@ -71,7 +72,8 @@ class MFPartProdukModel extends Model
     }
     public function getByFgdNama($key)
     {
-        $query = $this->like('fgd', $key, 'both')
+        $query = $this->where('aktif', 'Y')
+                        ->like('fgd', $key, 'both')
                         ->orLike('nama', $key, 'both')
                         ->get();
 

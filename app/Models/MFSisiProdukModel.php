@@ -57,6 +57,7 @@ class MFSisiProdukModel extends Model
     {
         $query = $this->selectMax('sisi')
                         ->where('id_part', $id_part)
+                        ->where('aktif', 'Y')
                         ->get();
 
         if($query->getNumRows() > 0) {

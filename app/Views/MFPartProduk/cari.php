@@ -18,7 +18,7 @@
   <div class="form-row align-items-center">
     <div class="col-6">
       <label class="sr-only" for="caripartproduk">Cari Part Produk</label>
-      <input type="text" style="text-transform:uppercase" class="form-control mb-2" name="caripartproduk" id="caripartproduk" placeholder="Cari Produk Berdasarkan Nomor FGD atau Nama Part Produk">
+      <input type="text" style="text-transform:uppercase" class="form-control mb-2" name="caripartproduk" id="caripartproduk" placeholder="Cari Part Produk Berdasarkan Nomor FGD atau Nama Part Produk">
     </div>
 	<div class="col-auto">
       <button title="Cari" type="submit" class="btn btn-primary mb-2">Cari</button>

@@ -60,7 +60,6 @@ class MFPartProduk extends BaseController
 
 	public function addPartProduct()
 	{
-
 //		$segmen_model = new \App\Models\SegmenModel();
 //		$customer_model = new \App\Models\CustomerModel();
 //		$sales_model = new \App\Models\SalesModel();
@@ -74,6 +73,8 @@ class MFPartProduk extends BaseController
 //		$khusus_model = new \App\Models\MFProsesKhususModel();
 		return view('MFPartProduk/input', [
 			'page_title' => 'Input Part Produk MF',
+            'ref' => $this->request->getGet('ref'),
+            'id_produk' => $this->request->getGet('id_produk'),
 //			'opsi_segmen' => $segmen_model->getAll(),
 //			'opsi_customer' => $customer_model->getOpsi(),
 //			'opsi_sales' => $sales_model->getOpsi(),
@@ -535,6 +536,7 @@ class MFPartProduk extends BaseController
 	{
 		$keyword = $this->request->getPost('keyword');
         $full = (! $this->request->getPost('full') );
+        $id_produk = $this->request->getPost('id_produk');
 
 		$query = $this->model->getByFgdNama("$keyword");
 
@@ -544,6 +546,7 @@ class MFPartProduk extends BaseController
 			$edit_btn = '<a title="Edit" data-toggle="tooltip" data-placement="left" class="btn btn-sm btn-success edit-rev-item mr-2" href="' . site_url('partproduk/edit/' . $val->id) . '"><i class="far fa-edit"></i></a>';
 			$revisi_btn = '<a title="Revisi" data-toggle="tooltip" data-placement="left" class="btn btn-sm btn-info rev-item" href="' . site_url('partproduk/rev/' . $val->id . '/1').'"><i class="far fa-clone"></i></a>';
             $del_btn = '<a title="Hapus" data-toggle="tooltip" data-placement="left" class="btn btn-sm btn-danger" href="' . site_url('partproduk/del/' . $val->id).'" onclick="return confirm('.$confirm.')"><i class="far fa-trash-alt"></i></a>';
+
             if($full) {
                 $data[] = [
                     $key + 1,
@@ -561,6 +564,9 @@ class MFPartProduk extends BaseController
                     $val->updated_by
                 ];
             } else {
+                $disabled_btn = ((new \App\Models\MFKelompokProdukModel())->checkLinkedProduct($val->id, $id_produk)) ? ' disabled' : '';
+                $add_btn = '<button' . $disabled_btn . ' type="button" class="btn btn-primary add-to-product" data-idpart="'.$val->id.'" data-idproduk="'.$id_produk.'">Tambahkan</button';
+
                 $data[] = [
                     $key + 1,
                     $val->fgd,
@@ -569,7 +575,7 @@ class MFPartProduk extends BaseController
                     (new \App\Models\MFJenisKertasModel())->getNama($val->kertas),
                     (new \App\Models\MFJenisFluteModel())->getNama($val->flute),
                     (int)$val->panjang . 'x' . (int)$val->lebar . 'x' . (int)$val->tinggi,
-                    $edit_btn . $revisi_btn . $del_btn
+                    $add_btn
                 ];
             }
 		}
@@ -678,6 +684,34 @@ class MFPartProduk extends BaseController
         return $this->response->setJSON($response);
 	}
 
+    public function apiGetByProduct($id_produk)
+    {
+        $ids_part = (new \App\Models\MFKelompokProdukModel())->getIdsPart($id_produk);
+
+        $query = $this->model->getByIds($ids_part);
+
+        $results = [];
+        foreach($query->getResult() as $key => $row) {
+            $results[] = [
+                $key + 1,
+                $row->fgd,
+                $row->revisi,
+                $row->nama,
+                $row->kertas,
+                $row->flute,
+                $row->metalize,
+                $row->panjang,
+                $row->added,
+                $row->added_by,
+                $row->updated,
+                $row->updated_by,
+                ''
+            ];
+        }
+
+        return $this->response->setJSON(['success' => true, 'data' => $results]);
+    }
+
 	public function apiGetById()
 	{
 		if ($this->request->getMethod() !== 'post') {
@@ -705,24 +739,27 @@ class MFPartProduk extends BaseController
 
 	public function apiAddProcess()
 	{
-//		if ($this->request->getMethod() !== 'post') {
-//			return redirect()->to('mfpartproduk');
-//		}
+		if ($this->request->getMethod() !== 'post') {
+			return redirect()->to('mfpartproduk');
+		}
 
 		$data = $this->request->getPost();
-//        $files = $this->request->getFiles();
 		$id = $this->model->idGenerator();
 		$data['id'] = $id;
 		$data['fgd'] = $this->model->fgdGenerator();
 		$data['revisi'] = 0;
 		$data['added_by'] = current_user()->UserID;
+        $data['aktif'] = 'Y';
 
         $data['nama'] = strtoupper($data['nama']);
 
         $file = $this->request->getFile('file_dokcr');
         $data['file_dokcr'] = $file->getName();
 
-//        return $this->response->setJSON($data);
+        $reference_link = $data['ref'];
+        $id_produk = $data['id_produk'];
+        unset($data['ref']);
+        unset($data['id_produk']);
 
         $filedokcr_errors = [];
 
@@ -771,132 +808,73 @@ class MFPartProduk extends BaseController
 
             $sisi_model = (new \App\Models\MFSisiProdukModel())->insert($data_sisi);
 
+            // Masukkan ke kelompok produk
+            if($reference_link != '' && $id_produk != '') {
+                $this->insertToProduct($id_produk, $id);
+                $redirect_url = site_url('mfproduk/edit/' . $id_produk);
+            } else {
+                $redirect_url = site_url('partproduk/edit/' . $id);
+            }
+
             session()->setFlashdata('success', 'Part produk berhasil ditambahkan');
 
             return $this->response->setJSON([
                 'success' => true,
                 'msg' => 'Part produk berhasil ditambahkan.',
-                'redirect_url' => site_url('partproduk/edit/' . $data['id'])
+                'redirect_url' => $redirect_url
             ]);
         } else {
             $errors = $this->model->errors();
             if( ! $technical_draw ) {
                 $errors['no_dokumen'] = 'No dokumen wajib diisi';
-                $errors['typeof'] = implode(',', $this->model->errors());
-//                $rules = [
-//                    'nama' => 'required',
-//                    'tujuan_penggunaan' => 'required',
-//                    'panjang' => 'required',
-//                    'lebar' => 'required',
-//                    'tinggi' => 'required',
-//                    'kertas' => 'required',
-//                    'flute' => 'required',
-//                    'innner_pack' => 'required',
-//                    'jum_innerpack' => 'required',
-//                    'outer_pack' => 'required',
-//                    'jum_outerpack' => 'required',
-//                    'no_dokumen' => 'required',
-//                ];
-//                $fieldValidationMessages = [
-//                    'nama' => [
-//                        'required' => 'Nama wajib diisi',
-//                    ],
-//                    'tujuan_penggunaan' => [
-//                        'required' => 'Tujuan penggunaan wajib diisi',
-//                    ],
-//                    'panjang' => [
-//                        'required' => 'Panjang wajib diisi',
-//                    ],
-//                    'lebar' => [
-//                        'required' => 'Lebar wajib diisi',
-//                    ],
-//                    'tinggi' => [
-//                        'required' => 'Tinggi wajib diisi',
-//                    ],
-//                    'kertas' => [
-//                        'required' => 'Kertas wajib diisi',
-//                    ],
-//                    'flute' => [
-//                        'required' => 'Flute wajib diisi',
-//                    ],
-//                    'inner_pack' => [
-//                        'required' => 'Inner pack wajib diisi',
-//                    ],
-//                    'jum_innerpack' => [
-//                        'required' => 'Jum outerpack wajib diisi',
-//                    ],
-//                    'outerpack' => [
-//                        'required' => 'Outerpack wajib diisi',
-//                    ],
-//                    'jum_outerpack' => [
-//                        'required' => 'Jum outerpack wajib diisi',
-//                    ],
-//                    'no_dokumen' => [
-//                        'required' => 'No dokumen wajib diisi',
-//                    ],
-//                ];
-//            } else {
-//                $rules = [
-//                    'nama' => 'required',
-//                    'tujuan_penggunaan' => 'required',
-//                    'panjang' => 'required',
-//                    'lebar' => 'required',
-//                    'tinggi' => 'required',
-//                    'kertas' => 'required',
-//                    'flute' => 'required',
-//                    'innner_pack' => 'required',
-//                    'jum_innerpack' => 'required',
-//                    'outer_pack' => 'required',
-//                    'jum_outerpack' => 'required',
-//                ];
-//                $fieldValidationMessages = [
-//                    'nama' => [
-//                        'required' => 'Nama wajib diisi',
-//                    ],
-//                    'tujuan_penggunaan' => [
-//                        'required' => 'Nama wajib diisi',
-//                    ],
-//                    'panjang' => [
-//                        'required' => 'Nama wajib diisi',
-//                    ],
-//                    'lebar' => [
-//                        'required' => 'Nama wajib diisi',
-//                    ],
-//                    'tinggi' => [
-//                        'required' => 'Nama wajib diisi',
-//                    ],
-//                    'kertas' => [
-//                        'required' => 'Nama wajib diisi',
-//                    ],
-//                    'flute' => [
-//                        'required' => 'Nama wajib diisi',
-//                    ],
-//                    'inner_pack' => [
-//                        'required' => 'Nama wajib diisi',
-//                    ],
-//                    'jum_innerpack' => [
-//                        'required' => 'Nama wajib diisi',
-//                    ],
-//                    'outerpack' => [
-//                        'required' => 'Nama wajib diisi',
-//                    ],
-//                    'jum_outerpack' => [
-//                        'required' => 'Nama wajib diisi',
-//                    ],
-//                ];
+//                $errors['typeof'] = implode(',', $this->model->errors());
             }
-//            $this->model->setValidationRules($rules);
-//            $this->model->setValidationMessages($fieldValidationMessages);
-//            dd($this->model->errors());
 
             return $this->response->setJSON([
                 'success' => false,
-//                'errors' => $errors,
                 'msg' => '<p>' . implode('</p><p>', $errors) . '</p>',
                 'data' => $data,
             ]);
         }
 	}
+
+    private function insertToProduct($id_produk, $id_part)
+    {
+        $data = [
+            'id_produk' => $id_produk,
+            'id_part' => $id_part,
+            'utama' => 'Y',
+            'aktif' => 'Y',
+            'added_by' => current_user()->UserID
+        ];
+
+        return (new \App\Models\MFKelompokProdukModel())->insert($data);
+    }
+
+    public function apiAddToProduct()
+    {
+        sleep(3);
+        if ($this->request->getMethod() !== 'post') {
+            return redirect()->to('mfpartproduk');
+        }
+
+        $id_produk = $this->request->getPost('id_produk');
+        $id_part = $this->request->getPost('id_part');
+
+        if($this->insertToProduct($id_produk, $id_part)) {
+            $response = [
+                'success' => true,
+                'msg' => 'Part produk berhasil ditambahkan.'
+            ];
+        } else {
+            $response = [
+                'success' => false,
+                'msg' => 'Part produk gagal ditambahkan.'
+            ];
+        }
+
+        return $this->response->setJSON($response);
+    }
 
 	public function apiEditRevision()
 	{

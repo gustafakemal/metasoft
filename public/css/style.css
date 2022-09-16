@@ -45,7 +45,7 @@ body {
 #page > .floating-msg {
   position: fixed;
   width: 100%;
-  z-index: 499;
+  z-index: 1060;
   display: none;
   justify-content: center;
 }

@@ -29,14 +29,23 @@ $(function () {
 			exportOptions: { orthogonal: 'export' }
 		}],
 		columnDefs: [],
-		order: [[ 2, 'desc' ]],
+		order: [[ 1, 'desc' ]],
+		scrollX: true,
 		initComplete: function () {},
 	});
 
+	const id_part_arr = location.pathname.split('/');
+	let id_part;
+	if(id_part_arr[id_part_arr.length - 1] === '') {
+		id_part = id_part_arr[id_part_arr.length - 2];
+	} else {
+		id_part = id_part_arr[id_part_arr.length - 1];
+	}
+
 	setTimeout(() => {
-		loadData(`${HOST}/mfproduk/apigetall`, '#dataList');
-		loadData(`${HOST}/mfpartproduk/apigetall`, '#dataPartProduk');
-		loadData(`${HOST}/mfpartproduk/apiallsisi`, '#dataSisi');
+		// loadData(`${HOST}/mfproduk/apigetall`, '#dataList');
+		loadData(`${HOST}/mfpartproduk/apiGetByProduct/${id_part}`, '#dataPartProduk');
+		// loadData(`${HOST}/mfpartproduk/apiallsisi`, '#dataSisi');
 	}, 50);
 
 	$('#dataList').on('click', '.edit-produk', function (e) {
@@ -90,28 +99,69 @@ $(function () {
 		})
 	});
 
-	$('form[name="form-caripartproduk"]').on('submit', function(e) {
+	$('.open-search').on('click', function (e) {
 		e.preventDefault();
-		// $('.csc-form')[0].reset();
-		// $('.csc-form').removeClass('show')
-		// $('.csc-form .form-group.row-change-request').removeAttr('style')
-		const keyword = $('input[name="caripartproduk"]').val();
-		console.log(keyword);
+		const id_produk = $(this).attr('data-id');
+		$('#cariPart').modal({
+			show: true,
+			backdrop: 'static'
+		})
+
+		$('form[name="form-caripartproduk"]').on('submit', function(e) {
+			e.preventDefault();
+			const keyword = $('input[name="caripartproduk"]').val();
+			$.ajax({
+				type: 'POST',
+				url: `${HOST}/mfpartproduk/partProductSearch`,
+				dataType: 'JSON',
+				data: { keyword, full: false, id_produk },
+				beforeSend: function () {},
+				success: function (response) {
+					if(response.success) {
+						$('#dataPartHasilCari').DataTable({searching: false}).clear().rows.add(response.data).draw();
+					} else {
+						$('#dataPartHasilCari').DataTable().clear().draw();
+					}
+				},
+				error: function () {},
+				complete: function() {}
+			})
+		})
+	})
+
+	$('#cariPart').on('click', '.add-to-product', function(e) {
+		e.preventDefault();
+		const id_part = $(this).attr('data-idpart');
+		const id_produk = $(this).attr('data-idproduk');
+
 		$.ajax({
 			type: 'POST',
-			url: `${HOST}/mfpartproduk/partProductSearch`,
+			url: `${HOST}/MFPartProduk/apiAddToProduct`,
 			dataType: 'JSON',
-			data: { keyword, full: false },
-			beforeSend: function () {},
+			data: {id_produk, id_part},
+			beforeSend: function() {
+				$(`#dataPartHasilCari button[data-idpart="${id_part}"]`).html('Loading...').prop('disabled', true);
+			},
 			success: function (response) {
 				if(response.success) {
-					$('#dataPartHasilCari').DataTable().clear().rows.add(response.data).draw();
+					// $("#dataPartHasilCari").DataTable().ajax.reload(null, false)
+					$("#dataPartProduct").DataTable().ajax.reload(null, false)
+					$('.floating-msg').addClass('show').html(`
+						<div class="alert alert-success">${response.msg}</div>
+						`)
 				} else {
-					$('#dataPartHasilCari').DataTable().clear().draw();
+					$('.floating-msg').addClass('show').html(`
+						<div class="alert alert-success">${response.msg}</div>
+						`)
 				}
 			},
-			error: function () {},
-			complete: function() {}
+			complete: function () {
+				// $('#cariPart .add-to-product').prop('disabled', false);
+				setTimeout(() => {
+					$('.floating-msg').removeClass('show').html('');
+				}, 3000)
+				$(`#dataPartHasilCari button[data-idpart="${id_part}"]`).html('Tambahkan')
+			}
 		})
 	})
 
@@ -122,198 +172,7 @@ $(function () {
 		});
 	}).draw();
 
-	// $('#dataList tbody').on('click', '.edit-rev-item', function(e) {
-	// 	const id = $(this).attr('data-id')
-	// 	$.ajax({
-	// 		type: 'POST',
-	// 		url: `${HOST}/mfproduk/apiGetById`,
-	// 		dataType: 'JSON',
-	// 		data: { id },
-	// 		beforeSend: function () {},
-	// 		success: function (response) {
-	// 			console.log(response)
-	// 			if(response.success) {
-	// 				const fs_colors = response.data.frontside_colors;
-	// 				const bs_colors = response.data.backside_colors;
-	// 				$('.csc-form').addClass('show edit-revision-form');
-	// 				$('.tbl-data-product').removeClass('show');
-	// 				for(const property in response.data) {
-	// 					$(`form[name="csc-form"] input[name="${property}"]`).val(response.data[property])
-	// 					$(`form[name="csc-form"] select[name="${property}"] option[value="${response.data[property]}"]`).prop('selected', true)
-	// 					$(`form[name="csc-form"] textarea[name="${property}"]`).html(response.data[property])
-	// 				}
-	// 				if(fs_colors.length > 0) {
-	// 					let fs_elements = [];
-	// 					for(let i = 0; i < fs_colors.length; i++) {
-	// 						fsval.push(fs_colors[i].tinta)
-	// 						fs_elements.push(`<div class="row mt-1" id="fs-row-${fs_colors[i].tinta}">
-	// 											<div class="col-sm-9">${fs_colors[i].nama}</div>
-	// 											<input type="hidden" value="${fs_colors[i].tinta}" name="frontside_colors[]" />
-	// 											<div class="col-sm-3">
-	// 												<button class="btn btn-danger btn-sm" data-id="${fs_colors[i].tinta}" id="del-frontside-btn"><i class="fas fa-minus"></i></button>
-	// 											</div>
-	// 										</div>`);
-	// 					}
-	// 					$('.frontside-selected').html(fs_elements.join(''))
-	// 				}
-	// 				if(bs_colors.length > 0) {
-	// 					let bs_elements = [];
-	// 					for(let i = 0; i < bs_colors.length; i++) {
-	// 						bsval.push(fs_colors[i].tinta)
-	// 						bs_elements.push(`<div class="row mt-1" id="fs-row-${bs_colors[i].tinta}">
-	// 											<div class="col-sm-9">${bs_colors[i].nama}</div>
-	// 											<input type="hidden" value="${bs_colors[i].tinta}" name="backside_colors[]" />
-	// 											<div class="col-sm-3">
-	// 												<button class="btn btn-danger btn-sm" data-id="${bs_colors[i].tinta}" id="del-backside-btn"><i class="fas fa-minus"></i></button>
-	// 											</div>
-	// 										</div>`);
-	// 					}
-	// 					$('.backside-selected').html(bs_elements.join(''))
-	// 				}
-	// 				if(response.data.finishing.length > 0) {
-	// 					let finishing_elements = [];
-	// 					for(let i = 0; i < response.data.finishing.length; i++) {
-	// 						finishing_elements.push(`<div class="row mt-1" id="fs-row-${response.data.finishing[i].id}">
-	// 											<div class="col-sm-9">${response.data.finishing[i].proses}</div>
-	// 											<input type="hidden" value="${response.data.finishing[i].id}" name="finishing[]" />
-	// 											<div class="col-sm-3">
-	// 												<button class="btn btn-danger btn-sm" data-id="${response.data.finishing[i].id}"><i class="fas fa-minus"></i></button>
-	// 											</div>
-	// 										</div>`);
-	// 					}
-	// 					$('.finishing-selected').html(finishing_elements.join(''))
-	// 				}
-	// 				if(response.data.manual.length > 0) {
-	// 					let manual_elements = [];
-	// 					for(let i = 0; i < response.data.manual.length; i++) {
-	// 						manual_elements.push(`<div class="row mt-1" id="fs-row-${response.data.manual[i].id}">
-	// 											<div class="col-sm-9">${response.data.manual[i].proses}</div>
-	// 											<input type="hidden" value="${response.data.manual[i].id}" name="manual[]" />
-	// 											<div class="col-sm-3">
-	// 												<button class="btn btn-danger btn-sm" data-id="${response.data.manual[i].id}"><i class="fas fa-minus"></i></button>
-	// 											</div>
-	// 										</div>`);
-	// 					}
-	// 					$('.manual-selected').html(manual_elements.join(''))
-	// 				}
-	// 				if(response.data.khusus.length > 0) {
-	// 					let khusus_elements = [];
-	// 					for(let i = 0; i < response.data.khusus.length; i++) {
-	// 						khusus_elements.push(`<div class="row mt-1" id="fs-row-${response.data.khusus[i].id}">
-	// 											<div class="col-sm-9">${response.data.khusus[i].proses}</div>
-	// 											<input type="hidden" value="${response.data.khusus[i].id}" name="khusus[]" />
-	// 											<div class="col-sm-3">
-	// 												<button class="btn btn-danger btn-sm" data-id="${response.data.khusus[i].id}"><i class="fas fa-minus"></i></button>
-	// 											</div>
-	// 										</div>`);
-	// 					}
-	// 					$('.khusus-selected').html(khusus_elements.join(''))
-	// 				}
-	// 				$(`form[name="csc-form"]`).prepend(`<input type="hidden" name="id" value="${response.data.id}" />`);
-	// 				$('.csc-form input[name="tfgd"]').val(response.data.fgd);
-	// 				$('.csc-form input[name="trevisi"]').val(response.data.revisi);
-	// 			}
-	// 		},
-	// 		error: function () {},
-	// 		complete: function() {}
-	// 	})
-	// });
 
-	// $('#dataList tbody').on('click', '.rev-item', function(e) {
-	// 	const id = $(this).attr('data-id')
-	// 	$.ajax({
-	// 		type: 'POST',
-	// 		url: `${HOST}/mfproduk/apiGetById`,
-	// 		dataType: 'JSON',
-	// 		data: { id },
-	// 		beforeSend: function () {},
-	// 		success: function (response) {
-	// 			console.log(response.data.id)
-	// 			if(response.success) {
-	// 				const fs_colors = response.data.frontside_colors;
-	// 				const bs_colors = response.data.backside_colors;
-	// 				$('.csc-form').addClass('show add-revision-form');
-	// 				$('.csc-form input[name="fgd"]').attr('readonly', 'readonly')
-	// 				$('.tbl-data-product').removeClass('show');
-	// 				for(const property in response.data) {
-	// 					$(`form[name="csc-form"] input[name="${property}"]`).val(response.data[property])
-	// 					$(`form[name="csc-form"] select[name="${property}"] option[value="${response.data[property]}"]`).prop('selected', true)
-	// 					$(`form[name="csc-form"] textarea[name="${property}"]`).html(response.data[property])
-	// 				}
-	// 				if(fs_colors.length > 0) {
-	// 					let fs_elements = [];
-	// 					for(let i = 0; i < fs_colors.length; i++) {
-	// 						fs_elements.push(`<div class="row mt-1" id="fs-row-${fs_colors[i].tinta}">
-	// 											<div class="col-sm-9">${fs_colors[i].nama}</div>
-	// 											<input type="hidden" value="${fs_colors[i].tinta}" name="frontside_colors[]" />
-	// 											<div class="col-sm-3">
-	// 												<button class="btn btn-danger btn-sm" data-id="${fs_colors[i].tinta}" id="del-frontside-btn"><i class="fas fa-minus"></i></button>
-	// 											</div>
-	// 										</div>`);
-	// 					}
-	// 					$('.frontside-selected').html(fs_elements.join(''))
-	// 				}
-	// 				if(bs_colors.length > 0) {
-	// 					let bs_elements = [];
-	// 					for(let i = 0; i < bs_colors.length; i++) {
-	// 						bs_elements.push(`<div class="row mt-1" id="fs-row-${bs_colors[i].tinta}">
-	// 											<div class="col-sm-9">${bs_colors[i].nama}</div>
-	// 											<input type="hidden" value="${bs_colors[i].tinta}" name="backside_colors[]" />
-	// 											<div class="col-sm-3">
-	// 												<button class="btn btn-danger btn-sm" data-id="${bs_colors[i].tinta}" id="del-backside-btn"><i class="fas fa-minus"></i></button>
-	// 											</div>
-	// 										</div>`);
-	// 					}
-	// 					$('.backside-selected').html(bs_elements.join(''))
-	// 				}
-	// 				if(response.data.finishing.length > 0) {
-	// 					let finishing_elements = [];
-	// 					for(let i = 0; i < response.data.finishing.length; i++) {
-	// 						finishing_elements.push(`<div class="row mt-1" id="fs-row-${response.data.finishing[i].id}">
-	// 											<div class="col-sm-9">${response.data.finishing[i].proses}</div>
-	// 											<input type="hidden" value="${response.data.finishing[i].id}" name="finishing[]" />
-	// 											<div class="col-sm-3">
-	// 												<button class="btn btn-danger btn-sm" data-id="${response.data.finishing[i].id}"><i class="fas fa-minus"></i></button>
-	// 											</div>
-	// 										</div>`);
-	// 					}
-	// 					$('.finishing-selected').html(finishing_elements.join(''))
-	// 				}
-	// 				if(response.data.manual.length > 0) {
-	// 					let manual_elements = [];
-	// 					for(let i = 0; i < response.data.manual.length; i++) {
-	// 						manual_elements.push(`<div class="row mt-1" id="fs-row-${response.data.manual[i].id}">
-	// 											<div class="col-sm-9">${response.data.manual[i].proses}</div>
-	// 											<input type="hidden" value="${response.data.manual[i].id}" name="manual[]" />
-	// 											<div class="col-sm-3">
-	// 												<button class="btn btn-danger btn-sm" data-id="${response.data.manual[i].id}"><i class="fas fa-minus"></i></button>
-	// 											</div>
-	// 										</div>`);
-	// 					}
-	// 					$('.manual-selected').html(manual_elements.join(''))
-	// 				}
-	// 				if(response.data.khusus.length > 0) {
-	// 					let khusus_elements = [];
-	// 					for(let i = 0; i < response.data.khusus.length; i++) {
-	// 						khusus_elements.push(`<div class="row mt-1" id="fs-row-${response.data.khusus[i].id}">
-	// 											<div class="col-sm-9">${response.data.khusus[i].proses}</div>
-	// 											<input type="hidden" value="${response.data.khusus[i].id}" name="khusus[]" />
-	// 											<div class="col-sm-3">
-	// 												<button class="btn btn-danger btn-sm" data-id="${response.data.khusus[i].id}"><i class="fas fa-minus"></i></button>
-	// 											</div>
-	// 										</div>`);
-	// 					}
-	// 					$('.khusus-selected').html(khusus_elements.join(''))
-	// 				}
-	// 				$(`form[name="csc-form"] input[name="fgd"]`).val(response.data.fgd)
-	// 				$('.csc-form input[name="tfgd"]').val(response.data.fgd);
-	// 				$('.csc-form input[name="trevisi"]').val('(Auto)');
-	// 			}
-	// 		},
-	// 		error: function () {},
-	// 		complete: function() {}
-	// 	})
-	// });
 
 	$('#frontside-btn').on('click', function() {
 		console.log(fsval)

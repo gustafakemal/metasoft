@@ -21,6 +21,8 @@
         <?php //echo form_open_multipart('MFPartProduk/apiAddProcess');?>
         <form name="partproduct-form" class="csc-form show">
             <div class="msg"></div>
+            <input type="hidden" name="ref" value="<?= ($ref != null) ? $ref : '';?>" />
+            <input type="hidden" name="id_produk" value="<?= ($id_produk != null) ? $id_produk : '';?>" />
             <div class="form-group row">
                 <label for="fgd" class="col-sm-2 col-form-label">No FGD</span></label>
                 <div class="col-sm-4">

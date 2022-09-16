@@ -15,10 +15,6 @@ class MFProduk extends BaseController
 		$this->model = new MFProdukModel();
 	}
 
-	// public function index2() {
-	// 	dd($this->model->getByFgdNama2('c'));
-	// }
-
 	public function index()
 	{
 		$this->breadcrumbs->add('Dashbor', '/');
@@ -34,7 +30,7 @@ class MFProduk extends BaseController
 		$manual_model = new \App\Models\MFProsesManualModel();
 		$khusus_model = new \App\Models\MFProsesKhususModel();
 		return view('MFProduk/input', [
-			'page_title' => 'Input Produk MF',
+			'page_title' => 'Data Produk MF',
 			'breadcrumbs' => $this->breadcrumbs->render(),
 			'opsi_customer' => $customer_model->getOpsi(),
 			'opsi_tujuankirim' => $tujuankirim_model->getOpsi(),
@@ -50,6 +46,24 @@ class MFProduk extends BaseController
 			'opsi_khusus' => $khusus_model->getOpsi(),
 		]);
 	}
+
+    public function edit($id)
+    {
+        $this->breadcrumbs->add('Dashbor', '/');
+        $this->breadcrumbs->add('Data Produk MF', '/mfproduk');
+
+        $data = $this->model->getById($id);
+
+        return view('MFProduk/edit', [
+            'page_title' => 'Edit Produk MF',
+            'breadcrumbs' => $this->breadcrumbs->render(),
+            'data' => $data->getFirstRow(),
+            'segments' => (new \App\Models\SegmenModel())->getAll(),
+            'sales' => (new \App\Models\SalesModel())->asObject()->findAll(),
+            'customer' => (new \App\Models\CustomerModel())->asObject()->findAll(),
+            'tujuan_kirim' => (new \App\Models\MFTujuanKirimModel())->asObject()->findAll()
+        ]);
+    }
 
 	public function productSearch()
 	{

@@ -31,35 +31,14 @@
 
 <div class="dynamic-content">
 
-<div class="tbl-data-product show">
 
-<table id="dataList" class="table table-bordered table-striped" style="width: 100%;">
-	
-	<thead>
-		<tr>
-			<th>No</th>
-			<th>Nama Produk</th>
-			<th>Segmen</th>
-			<th>Pemesan</th>
-			<th>Sales</th>
-			<th>Dibuat</th>
-			<th>Dibuat<br>oleh</th>
-			<th>Update</th>
-			<th>Diupdate<br>oleh</th>
-			<th>&nbsp;</th>
-		</tr>
-	</thead>
-</table>
-
-</div>
-
-<form name="csc-form" class="csc-form">
+<form name="csc-form" class="csc-form show add-new-fgd">
 	<div class="msg"></div>
     <input type="hidden" name="id" value="" />
 	<div class="form-group row">
 		<label for="nama_produk" class="col-sm-2 col-form-label">Nama Produk <span class="text-danger">*</span></label>
 		<div class="col-sm-10">
-			<input type="text" class="form-control" id="nama_produk" name="nama_produk">
+			<input type="text" class="form-control" id="nama_produk" name="nama_produk" value="<?= $data->nama_produk;?>">
 		</div>
 	</div>
 	<div class="form-group row">
@@ -67,12 +46,18 @@
 		<div class="col-sm-4">
 			<select name="segmen" class="form-control" id="segmen">
                 <option value="">-Pilih segmen-</option>
+                <?php foreach ($segments as $segment) : ?>
+                    <option<?= ($segment->OpsiVal == $data->segmen) ? ' selected' : '';?> value="<?= $segment->OpsiVal;?>"><?= $segment->OpsiTeks;?></option>
+                <?php endforeach;?>
 			</select>
 		</div>
 		<label for="sales" class="col-sm-2 col-form-label">Sales <span class="text-danger">*</span></label>
 		<div class="col-sm-4">
 			<select name="sales" class="form-control" id="sales">
                 <option value="">-Pilih sales-</option>
+                <?php foreach($sales as $row) : ?>
+                    <option<?= ($row->SalesID == $data->sales) ? ' selected' : '';?> value="<?= $row->SalesID;?>"><?= $row->SalesName;?></option>
+                <?php endforeach;?>
 			</select>
 		</div>
 	</div>
@@ -81,6 +66,9 @@
 		<div class="col-sm-4">
 			<select name="customer" class="form-control" id="customer">
                 <option value="">-Pilih pelanggan-</option>
+                <?php foreach ($customer as $row) : ?>
+                    <option<?= ($row->NoPemesan == $data->customer) ? ' selected' : '';?> value="<?= $row->NoPemesan;?>"><?= $row->NamaPemesan;?></option>
+                <?php endforeach;?>
 			</select>
 		</div>
 		<label for="contact_person" class="col-sm-2 col-form-label">Contact Person <span class="text-danger">*</span></label>
@@ -93,6 +81,9 @@
 		<div class="col-sm-4">
 			<select name="tujuan_kirim" class="form-control" id="tujuan_kirim">
                 <option value="">-Pilih tujuan-</option>
+                <?php foreach ($tujuan_kirim as $row) : ?>
+                    <option<?= ($row->id == $data->tujuan_kirim) ? ' selected' : '';?> value="<?= $row->id;?>"><?= $row->tujuan;?></option>
+                <?php endforeach;?>
 			</select>
 		</div>
 	</div>
@@ -109,10 +100,106 @@
 
 
 </form>
+<div class="container mt-4">
+  <div class="row align-items-start mb-2">
+    <div class="col text-left">
+	<h5>Part Produk</h5>
+    </div>
+    <div class="col text-right">
+	<button type="button" class="btn btn-success open-search" data-id="<?= $data->id;?>">
+	<i class="fas fa-solid fa-search text-light"></i>&nbsp;Cari
+</button>
+	<a href="<?= site_url('partproduk/add?ref=y&id_produk=' . $data->id);?>" type="button" class="btn btn-success"><i class="fa fa-plus-circle text-light"></i>&nbsp;Tambah</a>
+    </div>
+  </div>
+ 
+</div>
+<div class="tbl-data-partproduct">
+<table id="dataPartProduk" class="table table-bordered table-striped" style="width: 100%;">
+	
+	<thead>
+		<tr>
+			<th>No</th>
+			<th>FGD</th>
+			<th>Revisi</th>
+			<th>Nama Part Produk</th>
+			<th>Kertas</th>
+			<th>Flute</th>
+			<th>Metalize</th>
+			<th>Ukuran</th>
+			<th>Dibuat</th>
+			<th>Dibuat<br>oleh</th>
+			<th>Update</th>
+			<th>Diupdate<br>oleh</th>
+			<th>&nbsp;</th>
+		</tr>
+	</thead>
+</table>
+
+</div>
 
 
 </div>
 
+
+<!-- Modal -->
+<div class="modal fade modalForm" id="cariPart" tabindex="-1" aria-labelledby="cariPartLabel" aria-hidden="true">
+	<div class="modal-dialog modal-xl">
+		<div class="modal-content">
+			<div class="modal-header">
+				<h5 class="modal-title" id="cariPartLabel">Cari Part Produk</h5>
+				<button type="button" class="close" data-dismiss="modal" aria-label="Close">
+					<span aria-hidden="true">&times;</span>
+				</button>
+			</div>
+			<div class="modal-body">
+			<form name="form-caripartproduk">
+  <div class="form-row align-items-center">
+    <div class="col-6">
+      <label class="sr-only" for="caripartproduk">Cari Part Produk</label>
+      <input type="text" style="text-transform:uppercase" class="form-control mb-2" name="caripartproduk" id="caripartproduk" placeholder="Cari Produk Berdasarkan Nomor FGD atau Nama Part Produk">
+    </div>
+	<div class="col-auto">
+      <button type="submit" class="btn btn-primary mb-2">Cari</button>
+    </div>
+  </div>
+</form>
+
+<div class="dynamic-content">
+
+<div class="tbl-data-partproduct">
+
+<table id="dataPartHasilCari" class="table table-bordered table-striped" style="width: 100%;">
+	
+	<thead>
+		<tr>
+			<th>No</th>
+			<th>FGD</th>
+			<th>Revisi</th>
+			<th>Nama Part</th>
+			<th>Kertas</th>
+			<th>Flute</th>
+			<th>Ukuran</th>
+			<th>&nbsp;</th>
+		</tr>
+	</thead>
+</table>
+
+</div>
+
+
+
+
+
+
+</div>
+			</div>
+			<div class="modal-footer">
+				<button name="cancel" type="button" class="btn btn-outline-secondary" data-dismiss="modal">Close</button>
+			</div>
+		</div>
+	</div>
+</div>
 
     <!-- Modal -->
     <div class="modal fade" id="dataDetail" tabindex="-1" aria-labelledby=dataDetailLabel" aria-hidden="true">

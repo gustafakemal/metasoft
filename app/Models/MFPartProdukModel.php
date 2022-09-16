@@ -120,6 +120,13 @@ class MFPartProdukModel extends Model
         return $this->asObject()->find($id);
     }
 
+    public function getByIds($ids)
+    {
+        return $this->whereIn('id', $ids)
+            ->orderBy('id', 'desc')
+            ->get();
+    }
+
     public function getMaxId()
     {
         $query = $this->selectMax('id')->get();

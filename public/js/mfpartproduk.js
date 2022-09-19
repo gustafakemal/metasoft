@@ -1001,6 +1001,7 @@ function colorAddItem(e)
 	const text = option.text();
 	const value = option.val();
 	const add_el = (group === 'frontside' || group === 'backside') ? `<label for="tinta" class="col-sm-2">&nbsp</label>` : '';
+	console.log(value)
 	if(value !== '0' && !tracker.includes(value)) {
 		$(`.${item_container}`).prepend(`<div class="row mb-1 ${item_class}-${value}">
 							${add_el}

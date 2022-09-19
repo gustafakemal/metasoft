@@ -43,18 +43,14 @@
 		<div class="col-sm-4">
 			<select name="segmen" class="form-control" id="segmen">
                 <option value="">-Pilih segmen-</option>
-                <?php foreach ($segments as $segment) : ?>
-                    <option<?= ($segment->OpsiVal == $data->segmen) ? ' selected' : '';?> value="<?= $segment->OpsiVal;?>"><?= $segment->OpsiTeks;?></option>
-                <?php endforeach;?>
+                <option selected value="<?= $data->OpsiVal;?>"><?= $data->OpsiTeks;?></option>
 			</select>
 		</div>
 		<label for="sales" class="col-sm-2 col-form-label">Sales <span class="text-danger">*</span></label>
 		<div class="col-sm-4">
 			<select name="sales" class="form-control" id="sales">
                 <option value="">-Pilih sales-</option>
-                <?php foreach($sales as $row) : ?>
-                    <option<?= ($row->SalesID == $data->sales) ? ' selected' : '';?> value="<?= $row->SalesID;?>"><?= $row->SalesName;?></option>
-                <?php endforeach;?>
+                <option selected value="<?= $data->SalesID;?>"><?= $data->SalesName;?></option>
 			</select>
 		</div>
 	</div>
@@ -63,14 +59,12 @@
 		<div class="col-sm-4">
 			<select name="customer" class="form-control" id="customer">
                 <option value="">-Pilih pelanggan-</option>
-                <?php foreach ($customer as $row) : ?>
-                    <option<?= ($row->NoPemesan == $data->customer) ? ' selected' : '';?> value="<?= $row->NoPemesan;?>"><?= $row->NamaPemesan;?></option>
-                <?php endforeach;?>
+                <option selected value="<?= $data->NoPemesan;?>"><?= $data->NamaPemesan;?></option>
 			</select>
 		</div>
 		<label for="contact_person" class="col-sm-2 col-form-label">Contact Person <span class="text-danger">*</span></label>
 		<div class="col-sm-4">
-			<input type="text" class="form-control" id="contact_person" name="contact_person">
+			<input type="text" class="form-control" id="contact_person" name="contact_person" value="<?= $data->contact_person;?>">
 		</div>
 	</div>
 	<div class="form-group row">
@@ -78,9 +72,7 @@
 		<div class="col-sm-4">
 			<select name="tujuan_kirim" class="form-control" id="tujuan_kirim">
                 <option value="">-Pilih tujuan-</option>
-                <?php foreach ($tujuan_kirim as $row) : ?>
-                    <option<?= ($row->id == $data->tujuan_kirim) ? ' selected' : '';?> value="<?= $row->id;?>"><?= $row->tujuan;?></option>
-                <?php endforeach;?>
+                <option selected value="<?= $data->tujuan_id;?>"><?= $data->tujuan;?></option>
 			</select>
 		</div>
 	</div>

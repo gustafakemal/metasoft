@@ -17,9 +17,9 @@ class MFProdukModel extends Model
     protected $validationRules = [];
     protected $validationMessages = [];
 
-    public function joinTest($id)
+    public function getEditingData($id)
     {
-        $query = $this->select('MF_Produk.id, MF_Produk.nama_produk, SalesID.SalesID, SalesID.SalesName, MF_TujuanKirim.id as tujuan_id, MF_TujuanKirim.tujuan, CustomerFile.NoPemesan, CustomerFile.NamaPemesan, MasterOpsi.OpsiVal, MasterOpsi.OpsiTeks')
+        $query = $this->select('MF_Produk.id, MF_Produk.nama_produk, MF_Produk.contact_person, SalesID.SalesID, SalesID.SalesName, MF_TujuanKirim.id as tujuan_id, MF_TujuanKirim.tujuan, CustomerFile.NoPemesan, CustomerFile.NamaPemesan, MasterOpsi.OpsiVal, MasterOpsi.OpsiTeks')
                         ->join('SalesID', 'MF_Produk.sales = SalesID.SalesID', 'left')
                         ->join('MF_TujuanKirim', 'MF_Produk.tujuan_kirim = MF_TujuanKirim.id', 'left')
                         ->join('CustomerFile', 'MF_Produk.customer = CustomerFile.NoPemesan', 'left')

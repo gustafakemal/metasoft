@@ -519,6 +519,23 @@ $(function () {
 		})
 	});
 
+	$('.edit-produk-form').on('click', 'select[name="segmen"]', function (e) {
+		const val = $('.edit-produk-form select[name="segmen"] option').filter(':selected').val();
+		loadSegmenOption(parseInt(val), false);
+	})
+		.on('click', 'select[name="sales"]', function (e) {
+			const val = $('.edit-produk-form select[name="sales"] option').filter(':selected').val();
+			loadSalesOption(parseInt(val), false);
+		})
+		.on('click', 'select[name="customer"]', function (e) {
+			const val = $('.edit-produk-form select[name="customer"] option').filter(':selected').val();
+			loadCustomerOption(parseInt(val), false);
+		})
+		.on('click', 'select[name="tujuan_kirim"]', function (e) {
+			const val = $('.edit-produk-form select[name="tujuan_kirim"] option').filter(':selected').val();
+			loadTujuanKirimOption(parseInt(val), false);
+		})
+
 	$('.add-new').on('click', function() {
 		loadSegmenOption();
 		loadSalesOption();
@@ -888,13 +905,19 @@ function loadData(url, element) {
 	})
 }
 
-function loadSegmenOption(defaultSelected = 0) {
+function loadSegmenOption(defaultSelected = 0, add_form = true) {
 	const select = $(`select[name="segmen"] option`).length
-	if(select <= 1) {
+	const existing_count = (add_form) ? 1 : 2;
+
+	if(select <= existing_count) {
+		const last_item = $(`select[name="segmen"] option`).last();
 		$.ajax({
 			type: 'GET',
 			url: `${HOST}/segmen/apiGetAll`,
 			beforeSend: function () {
+				if(!add_form) {
+					last_item.remove()
+				}
 				$('select[name="segmen"]').append('<option value="-1">Loading...</option>')
 			},
 			success: function (response) {
@@ -908,6 +931,7 @@ function loadSegmenOption(defaultSelected = 0) {
 					if (defaultSelected > 0) {
 						$('select[name="segmen"] option[value="0"]').prop('selected', false)
 					}
+
 					$('select[name="segmen"]').append(options.join(''));
 				}
 			},
@@ -918,13 +942,18 @@ function loadSegmenOption(defaultSelected = 0) {
 	}
 }
 
-function loadSalesOption(defaultSelected = 0) {
+function loadSalesOption(defaultSelected = 0, add_form = true) {
 	const select = $(`select[name="sales"] option`).length
-	if(select <= 1) {
+	const existing_count = (add_form) ? 1 : 2;
+	if(select <= existing_count) {
+		const last_item = $(`select[name="sales"] option`).last();
 		$.ajax({
 			type: 'GET',
 			url: `${HOST}/sales/apiGetAll`,
 			beforeSend: function () {
+				if(!add_form) {
+					last_item.remove()
+				}
 				$('select[name="sales"]').append('<option value="-1">Loading...</option>')
 			},
 			success: function (response) {
@@ -946,13 +975,18 @@ function loadSalesOption(defaultSelected = 0) {
 	}
 }
 
-function loadCustomerOption(defaultSelected = 0) {
+function loadCustomerOption(defaultSelected = 0, add_form = true) {
 	const select = $(`select[name="customer"] option`).length
-	if(select <= 1) {
+	const existing_count = (add_form) ? 1 : 2;
+	if(select <= existing_count) {
+		const last_item = $(`select[name="customer"] option`).last();
 		$.ajax({
 			type: 'GET',
 			url: `${HOST}/customer/apiGetAll`,
 			beforeSend: function () {
+				if(!add_form) {
+					last_item.remove()
+				}
 				$('select[name="customer"]').append('<option value="-1">Loading...</option>')
 			},
 			success: function (response) {
@@ -971,13 +1005,18 @@ function loadCustomerOption(defaultSelected = 0) {
 	}
 }
 
-function loadTujuanKirimOption(defaultSelected = 0) {
+function loadTujuanKirimOption(defaultSelected = 0, add_form = true) {
 	const select = $(`select[name="tujuan_kirim"] option`).length
-	if(select <= 1) {
+	const existing_count = (add_form) ? 1 : 2;
+	if(select <= existing_count) {
+		const last_item = $(`select[name="tujuan_kirim"] option`).last();
 		$.ajax({
 			type: 'GET',
 			url: `${HOST}/mftujuankirim/apiGetAll`,
 			beforeSend: function () {
+				if(!add_form) {
+					last_item.remove()
+				}
 				$('select[name="tujuan_kirim"]').append('<option value="-1">Loading...</option>')
 			},
 			success: function (response) {

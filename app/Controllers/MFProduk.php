@@ -31,18 +31,12 @@ class MFProduk extends BaseController
         $this->breadcrumbs->add('Dashbor', '/');
         $this->breadcrumbs->add('Data Produk MF', '/mfproduk');
 
-        dd($this->model->joinTest($id));
-
-        $data = $this->model->getById($id);
+        $data = $this->model->getEditingData($id);
 
         return view('MFProduk/edit', [
             'page_title' => 'Edit Produk MF',
             'breadcrumbs' => $this->breadcrumbs->render(),
-            'data' => $data->getFirstRow(),
-            'segments' => (new \App\Models\SegmenModel())->getAll(),
-            'sales' => (new \App\Models\SalesModel())->asObject()->findAll(),
-            'customer' => (new \App\Models\CustomerModel())->asObject()->findAll(),
-            'tujuan_kirim' => (new \App\Models\MFTujuanKirimModel())->asObject()->findAll()
+            'data' => $data[0],
         ]);
     }
 

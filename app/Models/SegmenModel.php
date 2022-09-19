@@ -30,4 +30,16 @@ class SegmenModel extends Model
             return [];
         }
     }
+
+    public function getName($id)
+    {
+        $query = $this->where('Kategori', 'Segmen')
+            ->where('OpsiVal', $id)
+            ->get();
+        if($query->getNumRows() > 0) {
+            return $query->getResult()[0]->OpsiTeks;
+        } else {
+            return null;
+        }
+    }
 }

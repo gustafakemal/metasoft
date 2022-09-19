@@ -692,20 +692,21 @@ class MFPartProduk extends BaseController
 
         $results = [];
         foreach($query->getResult() as $key => $row) {
+            $confirm = "'Hapus item ini?'";
             $results[] = [
                 $key + 1,
                 $row->fgd,
                 $row->revisi,
                 $row->nama,
-                $row->kertas,
-                $row->flute,
+                (new \App\Models\MFJenisKertasModel())->getNama($row->kertas),
+                (new \App\Models\MFJenisFluteModel())->getNama($row->flute),
                 $row->metalize,
-                $row->panjang,
-                $row->added,
+                (int)$row->panjang . 'x' . (int)$row->lebar . 'x' . (int)$row->tinggi,
+                $this->common->dateFormat($row->added),
                 $row->added_by,
-                $row->updated,
+                $this->common->dateFormat($row->updated),
                 $row->updated_by,
-                ''
+                '<a title="Hapus" href="'.site_url('MFProduk/delItemKelProduk/' . $id_produk . '/' . $row->id).'" onclick="return confirm('.$confirm.')" href="#"><i class="far fa-trash-alt"></i></a>'
             ];
         }
 

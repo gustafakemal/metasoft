@@ -20,30 +20,9 @@ class MFProduk extends BaseController
 		$this->breadcrumbs->add('Dashbor', '/');
         $this->breadcrumbs->add('Input Produk MF', '/mfproduk');
 
-		$customer_model = new \App\Models\CustomerModel();
-		$tujuankirim_model = new \App\Models\MFTujuanKirimModel();
-		$jeniskertas_model = new \App\Models\MFJenisKertasModel();
-		$jenistinta_model = new \App\Models\MFJenisTintaModel();
-		$jenisflute_model = new \App\Models\MFJenisFluteModel();
-		$packing_model = new \App\Models\MFPackingModel();
-		$finishing_model = new \App\Models\MFProsesFinishingModel();
-		$manual_model = new \App\Models\MFProsesManualModel();
-		$khusus_model = new \App\Models\MFProsesKhususModel();
 		return view('MFProduk/input', [
 			'page_title' => 'Data Produk MF',
 			'breadcrumbs' => $this->breadcrumbs->render(),
-			'opsi_customer' => $customer_model->getOpsi(),
-			'opsi_tujuankirim' => $tujuankirim_model->getOpsi(),
-			'opsi_kertas' => $tujuankirim_model->getOpsi(),
-			'opsi_jeniskertas' => $jeniskertas_model->getOpsi(),
-			'opsi_jenistinta' => $jenistinta_model->getOpsi(),
-			'opsi_jenisflute' => $jenisflute_model->getOpsi(),
-			'opsi_innerpack' => $packing_model->getOpsi('Inner'),
-			'opsi_outerpack' => $packing_model->getOpsi('Outer'),
-			'opsi_deliverypack' => $packing_model->getOpsi('Delivery'),
-			'opsi_finishing' => $finishing_model->getOpsi(),
-			'opsi_manual' => $manual_model->getOpsi(),
-			'opsi_khusus' => $khusus_model->getOpsi(),
 		]);
 	}
 
@@ -52,16 +31,12 @@ class MFProduk extends BaseController
         $this->breadcrumbs->add('Dashbor', '/');
         $this->breadcrumbs->add('Data Produk MF', '/mfproduk');
 
-        $data = $this->model->getById($id);
+        $data = $this->model->getEditingData($id);
 
         return view('MFProduk/edit', [
             'page_title' => 'Edit Produk MF',
             'breadcrumbs' => $this->breadcrumbs->render(),
-            'data' => $data->getFirstRow(),
-            'segments' => (new \App\Models\SegmenModel())->getAll(),
-            'sales' => (new \App\Models\SalesModel())->asObject()->findAll(),
-            'customer' => (new \App\Models\CustomerModel())->asObject()->findAll(),
-            'tujuan_kirim' => (new \App\Models\MFTujuanKirimModel())->asObject()->findAll()
+            'data' => $data[0],
         ]);
     }
 
@@ -70,23 +45,21 @@ class MFProduk extends BaseController
 		$keyword = $this->request->getPost('keyword');
 		$query = $this->model->getByFgdNama("$keyword");
 
-        return $this->response->setJSON($query);
-
 		$data = [];
 		foreach($query as $key => $val) {
-			$edit_btn = '<button type="button" class="btn btn-sm btn-success edit-rev-item mr-2" data-id="'.$val->id.'">Edit</button>';
-			$revisi_btn = '<button type="button" class="btn btn-sm btn-danger rev-item" data-id="'.$val->id.'">Revisi</button>';
+			$edit_btn = '<a data-toggle="tooltip" data-placement="left" title="Edit" href="'. site_url('MFProduk/edit/' . $val->id) .'" class="btn btn-sm btn-success mr-2"><i class="far fa-edit"></i></a>';
+			$del_btn = '<a data-toggle="tooltip" data-placement="left" title="Hapus" href="#" class="btn btn-sm btn-danger del-item-product" data-keyword="'. $keyword .'" data-id="'. $val->id .'"><i class="far fa-trash-alt"></i></a>';
 			$data[] = [
 				$key + 1,
+                $edit_btn . $del_btn,
 				$val->nama_produk,
-				$val->segmen,
-				$val->customer,
-				$val->sales,
-				$val->added,
+                (new \App\Models\SegmenModel())->getName($val->segmen),
+                (new \App\Models\CustomerModel())->getName($val->customer),
+                (new \App\Models\SalesModel())->getName($val->sales),
+                $this->common->dateFormat($val->added),
 				$val->added_by,
-				$val->updated,
+                $this->common->dateFormat($val->updated),
 				$val->updated_by,
-				$edit_btn . $revisi_btn
 			];
 		}
 
@@ -97,6 +70,33 @@ class MFProduk extends BaseController
 
 		return $this->response->setJSON($response);
 	}
+
+    public function delItemProduct()
+    {
+        if ($this->request->getMethod() !== 'post') {
+            return redirect()->to('mfproduk');
+        }
+
+        $id = $this->request->getPost('id');
+
+        $query = $this->model->where('id', $id)
+                            ->set(['aktif' => 'T'])
+                            ->update();
+
+        if($query) {
+            $response = [
+                'success' => true,
+                'msg' => 'Data produk berhasil dihapus.'
+            ];
+        } else {
+            $response = [
+                'success' => false,
+                'msg' => 'Data produk gagal dihapus.'
+            ];
+        }
+
+        return $this->response->setJSON($response);
+    }
 
 	public function apiGetAll()
 	{
@@ -129,6 +129,21 @@ class MFProduk extends BaseController
         return $this->response->setJSON($response);
 
 	}
+
+    public function delItemKelProduk($id_produk, $id_part)
+    {
+        $query = (new \App\Models\MFKelompokProdukModel())->where('id_produk', $id_produk)
+                                                        ->where('id_part', $id_part)
+                                                        ->delete();
+
+        if($query) {
+            return redirect()->back()
+                ->with('success', 'Item berhasil dihapus.');
+        } else {
+            return redirect()->back()
+                ->with('error', 'Item gagal dihapus.');
+        }
+    }
 
 	public function apiGetById()
 	{
@@ -165,6 +180,7 @@ class MFProduk extends BaseController
 		$id = $this->model->idGenerator();
 		$data['id'] = $id;
 		$data['added_by'] = current_user()->UserID;
+        $data['nama_produk'] = strtoupper($data['nama_produk']);
 
 		if($this->model->insert($data, false)) {
             session()->setFlashdata('success', 'Data berhasil ditambahkan.');
@@ -377,6 +393,7 @@ class MFProduk extends BaseController
 
         $data = $this->request->getPost();
         $data['updated_by'] = current_user()->UserID;
+        $data['nama_produk'] = strtoupper($data['nama_produk']);
 
         if($this->model->save($data, false)) {
             session()->setFlashdata('success', 'Data berhasil diupdate.');

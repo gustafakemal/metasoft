@@ -17,6 +17,22 @@ class MFProdukModel extends Model
     protected $validationRules = [];
     protected $validationMessages = [];
 
+    public function getEditingData($id)
+    {
+        $query = $this->select('MF_Produk.id, MF_Produk.nama_produk, MF_Produk.contact_person, SalesID.SalesID, SalesID.SalesName, MF_TujuanKirim.id as tujuan_id, MF_TujuanKirim.tujuan, CustomerFile.NoPemesan, CustomerFile.NamaPemesan, MasterOpsi.OpsiVal, MasterOpsi.OpsiTeks')
+                        ->join('SalesID', 'MF_Produk.sales = SalesID.SalesID', 'left')
+                        ->join('MF_TujuanKirim', 'MF_Produk.tujuan_kirim = MF_TujuanKirim.id', 'left')
+                        ->join('CustomerFile', 'MF_Produk.customer = CustomerFile.NoPemesan', 'left')
+                        ->join('MasterOpsi', 'MF_Produk.segmen = MasterOpsi.OpsiVal', 'left')
+                        ->where('MF_Produk.id', $id)
+                        ->where('MF_Produk.aktif', 'Y')
+                        ->where('MasterOpsi.Kategori', 'Segmen')
+                        ->where('MasterOpsi.FlagAktif', 'A')
+                        ->get();
+
+        return $query->getResult();
+    }
+
     protected function initialize()
     {
         $fields_req = ['id', 'nama_produk', 'segmen', 'customer', 'sales'];
@@ -60,6 +76,7 @@ class MFProdukModel extends Model
     public function getByFgdNama($key)
     {
         $query = $this->like('nama_produk', $key, 'both')
+                        ->where('aktif', 'Y')
                         ->get();
 
         if($query->getNumRows() == 0) {
@@ -68,16 +85,7 @@ class MFProdukModel extends Model
 
         return $query->getResult();
     }
-    
-//    public function idGenerator()
-//    {
-//        return $this->datePrefix() . $this->lastIdCounter(8);
-//    }
-//
-//    public function fgdGenerator()
-//    {
-//        return $this->datePrefix() . $this->lastIdCounter(4);
-//    }
+
     public function revGenerator($fgd)
     {
         $last_revisi = $this->selectMax('revisi')->where('fgd', $fgd)

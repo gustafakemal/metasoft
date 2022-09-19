@@ -109,6 +109,7 @@ class MFPartProduk extends BaseController
         return view('MFPartProduk/edit', [
             'page_title' => ($is_revision == 0) ? 'Edit Part Produk MF' : 'Revisi Part Produk MF',
             'data' => $data,
+            'id_produk' => $this->request->getGet('id_produk'),
             'is_revision' => $is_revision,
             'rev_no' => ($is_revision == 1) ? $this->model->revGenerator($data->fgd) : $data->revisi,
             'opsi_tujuankirim' => $tujuankirim_model->getOpsi(),
@@ -565,7 +566,8 @@ class MFPartProduk extends BaseController
                 ];
             } else {
                 $disabled_btn = ((new \App\Models\MFKelompokProdukModel())->checkLinkedProduct($val->id, $id_produk)) ? ' disabled' : '';
-                $add_btn = '<button' . $disabled_btn . ' type="button" class="btn btn-primary add-to-product" data-idpart="'.$val->id.'" data-idproduk="'.$id_produk.'">Tambahkan</button';
+                $add_btn = ((new \App\Models\MFKelompokProdukModel())->checkLinkedProduct($val->id, $id_produk)) ? '<button type="button" class="btn btn-danger del-from-product" data-idpart="'.$val->id.'" data-idproduk="'.$id_produk.'">Batalkan</button>' : '<button type="button" class="btn btn-primary add-to-product" data-idpart="'.$val->id.'" data-idproduk="'.$id_produk.'">Tambahkan</button>';
+//                $add_btn = '<button' . $disabled_btn . ' type="button" class="btn btn-primary add-to-product" data-idpart="'.$val->id.'" data-idproduk="'.$id_produk.'">Tambahkan</button';
 
                 $data[] = [
                     $key + 1,
@@ -812,7 +814,8 @@ class MFPartProduk extends BaseController
             // Masukkan ke kelompok produk
             if($reference_link != '' && $id_produk != '') {
                 $this->insertToProduct($id_produk, $id);
-                $redirect_url = site_url('mfproduk/edit/' . $id_produk);
+//                $redirect_url = site_url('mfproduk/edit/' . $id_produk);
+                $redirect_url = site_url('partproduk/edit/' . $id . '?id_produk=' . $id_produk);
             } else {
                 $redirect_url = site_url('partproduk/edit/' . $id);
             }
@@ -854,7 +857,6 @@ class MFPartProduk extends BaseController
 
     public function apiAddToProduct()
     {
-        sleep(3);
         if ($this->request->getMethod() !== 'post') {
             return redirect()->to('mfpartproduk');
         }
@@ -871,6 +873,34 @@ class MFPartProduk extends BaseController
             $response = [
                 'success' => false,
                 'msg' => 'Part produk gagal ditambahkan.'
+            ];
+        }
+
+        return $this->response->setJSON($response);
+    }
+
+    public function apiDelFromProduct()
+    {
+        if ($this->request->getMethod() !== 'post') {
+            return redirect()->to('mfpartproduk');
+        }
+
+        $id_produk = $this->request->getPost('id_produk');
+        $id_part = $this->request->getPost('id_part');
+
+        $query = (new \App\Models\MFKelompokProdukModel())->where('id_produk', $id_produk)
+            ->where('id_part', $id_part)
+            ->delete();
+
+        if($query) {
+            $response = [
+                'success' => true,
+                'msg' => 'Part produk berhasil dihapus.'
+            ];
+        } else {
+            $response = [
+                'success' => false,
+                'msg' => 'Part produk gagal dihapus.'
             ];
         }
 

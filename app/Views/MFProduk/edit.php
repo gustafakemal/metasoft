@@ -14,11 +14,11 @@
 
 <div class="msg_success"></div>
 
-<form name="form-cariproduk">
+<form method="get" action="<?= site_url('mfproduk');?>">
   <div class="form-row align-items-center">
     <div class="col-6">
       <label class="sr-only" for="cariproduk">Cari Produk</label>
-      <input type="text" style="text-transform:uppercase" class="form-control mb-2" name="cariproduk" id="cariproduk" placeholder="Cari Produk Berdasarkan Nama Produk">
+      <input type="text" style="text-transform:uppercase" class="form-control mb-2" name="keyword" id="cariproduk" placeholder="Cari Produk Berdasarkan Nama Produk">
     </div>
 	<div class="col-auto">
       <button type="submit" class="btn btn-primary mb-2">Cari</button>
@@ -31,7 +31,7 @@
 
 <form name="csc-form" class="csc-form show edit-produk-form">
 	<div class="msg"></div>
-    <input type="hidden" name="id" value="" />
+    <input type="hidden" name="id" value="<?= $data->id;?>" />
 	<div class="form-group row">
 		<label for="nama_produk" class="col-sm-2 col-form-label">Nama Produk <span class="text-danger">*</span></label>
 		<div class="col-sm-10">

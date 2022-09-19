@@ -228,6 +228,10 @@
 
     </div>
 
+<?php if($id_produk !== null) : ?>
+<a href="<?= site_url('MFProduk/edit/' . $id_produk);?>" class="btn btn-info mt-4">Kembali</a>
+<?php endif;?>
+
 
 
     <!-- Modal -->

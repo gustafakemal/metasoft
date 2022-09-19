@@ -20,9 +20,22 @@ class MFProduk extends BaseController
 		$this->breadcrumbs->add('Dashbor', '/');
         $this->breadcrumbs->add('Input Produk MF', '/mfproduk');
 
+        if($this->request->getGet('keyword') !== null) {
+            $query_string = [
+                'query' => true,
+                'keyword' => $this->request->getGet('keyword')
+            ];
+        } else {
+            $query_string = [
+                'query' => false,
+                'keyword' => null
+            ];
+        }
+
 		return view('MFProduk/input', [
 			'page_title' => 'Data Produk MF',
 			'breadcrumbs' => $this->breadcrumbs->render(),
+            'query_string' => $query_string
 		]);
 	}
 
@@ -187,6 +200,7 @@ class MFProduk extends BaseController
             $response = [
                 'success' => true,
                 'msg' => 'Data berhasil ditambahkan.',
+                'redirect_url' => site_url('MFProduk/edit/' . $id),
                 'data' => $data,
             ];
         } else {

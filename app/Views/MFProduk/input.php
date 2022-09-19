@@ -31,13 +31,14 @@
 
 <div class="dynamic-content">
 
-<div class="tbl-data-product show">
+<div class="tbl-data-product">
 
 <table id="dataList" class="table table-bordered table-striped" style="width: 100%;">
 	
 	<thead>
 		<tr>
 			<th>No</th>
+            <th>Action</th>
 			<th>Nama Produk</th>
 			<th>Segmen</th>
 			<th>Pemesan</th>
@@ -46,7 +47,6 @@
 			<th>Dibuat<br>oleh</th>
 			<th>Update</th>
 			<th>Diupdate<br>oleh</th>
-			<th>&nbsp;</th>
 		</tr>
 	</thead>
 </table>
@@ -59,7 +59,7 @@
 	<div class="form-group row">
 		<label for="nama_produk" class="col-sm-2 col-form-label">Nama Produk <span class="text-danger">*</span></label>
 		<div class="col-sm-10">
-			<input type="text" class="form-control" id="nama_produk" name="nama_produk">
+			<input type="text" class="form-control" id="nama_produk" name="nama_produk" style="text-transform: uppercase">
 		</div>
 	</div>
 	<div class="form-group row">

@@ -34,19 +34,28 @@ $(function () {
 		initComplete: function () {},
 	});
 
-	const id_part_arr = location.pathname.split('/');
-	let id_part;
-	if(id_part_arr[id_part_arr.length - 1] === '') {
-		id_part = id_part_arr[id_part_arr.length - 2];
+	$("#dataPartHasilCari").DataTable({
+		data: customerData,
+		paging: false,
+		searching: false,
+		columnDefs: [],
+		order: [[ 2, 'desc' ]],
+		initComplete: function () {},
+	});
+
+	const id_produk_arr = location.pathname.split('/');
+	let id_produk;
+	if(id_produk_arr[id_produk_arr.length - 1] === '') {
+		id_produk = id_produk_arr[id_produk_arr.length - 2];
 	} else {
-		id_part = id_part_arr[id_part_arr.length - 1];
+		id_produk = id_produk_arr[id_produk_arr.length - 1];
 	}
 
-	setTimeout(() => {
-		// loadData(`${HOST}/mfproduk/apigetall`, '#dataList');
-		loadData(`${HOST}/mfpartproduk/apiGetByProduct/${id_part}`, '#dataPartProduk');
-		// loadData(`${HOST}/mfpartproduk/apiallsisi`, '#dataSisi');
-	}, 50);
+	if(checkURLWithParam('edit')) {
+		setTimeout(() => {
+			loadData(`${HOST}/mfpartproduk/apiGetByProduct/${id_produk}`, '#dataPartProduk');
+		}, 50);
+	}
 
 	$('#dataList').on('click', '.edit-produk', function (e) {
 		e.preventDefault();
@@ -83,21 +92,44 @@ $(function () {
 		e.preventDefault();
 		const keyword = $('input[name="cariproduk"]').val();
 
-		$.ajax({
-			type: 'POST',
-			url: `${HOST}/mfproduk/productSearch`,
-			dataType: 'JSON',
-			data: {keyword},
-			beforeSend: function () {},
-			success: function (response) {
-				if(response.success) {
-					$('#dataList').DataTable().clear().rows.add(response.data).draw();
-				} else {
-					$('#dataList').DataTable().clear().draw();
-				}
-			},
-		})
+		$('.tbl-data-product').addClass('show')
+
+		searchProduct(keyword);
 	});
+
+	$('#dataList').on('click', '.del-item-product', function (e) {
+		e.preventDefault();
+		if(confirm('Yakin menghapus?')) {
+			const id = $(this).attr('data-id');
+			const keyword = $(this).attr('data-keyword');
+
+			$.ajax({
+				type: 'POST',
+				url: `${HOST}/MFProduk/delItemProduct`,
+				dataType: 'JSON',
+				data: {id},
+				beforeSend: function () {},
+				success: function (response) {
+					console.log(response);
+					if (response.success) {
+						searchProduct(keyword);
+						$('.floating-msg').addClass('show').html(`
+							<div class="alert alert-success">${response.msg}</div>
+							`)
+					} else {
+						$('.floating-msg').addClass('show').html(`
+							<div class="alert alert-danger">${response.msg}</div>
+							`)
+					}
+				},
+				complete: function () {
+					setTimeout(() => {
+						$('.floating-msg').removeClass('show').html('');
+					}, 3000)
+				}
+			})
+		}
+	})
 
 	$('.open-search').on('click', function (e) {
 		e.preventDefault();
@@ -118,7 +150,7 @@ $(function () {
 				beforeSend: function () {},
 				success: function (response) {
 					if(response.success) {
-						$('#dataPartHasilCari').DataTable({searching: false}).clear().rows.add(response.data).draw();
+						$('#dataPartHasilCari').DataTable().clear().rows.add(response.data).draw();
 					} else {
 						$('#dataPartHasilCari').DataTable().clear().draw();
 					}
@@ -144,8 +176,7 @@ $(function () {
 			},
 			success: function (response) {
 				if(response.success) {
-					// $("#dataPartHasilCari").DataTable().ajax.reload(null, false)
-					$("#dataPartProduct").DataTable().ajax.reload(null, false)
+					loadData(`${HOST}/mfpartproduk/apiGetByProduct/${id_produk}`, '#dataPartProduk');
 					$('.floating-msg').addClass('show').html(`
 						<div class="alert alert-success">${response.msg}</div>
 						`)
@@ -493,13 +524,19 @@ $(function () {
 		loadSalesOption();
 		loadCustomerOption();
 		loadTujuanKirimOption();
+
+		const cariproduk = $('input[name="cariproduk"]');
 		const teks = ($(this).text() === 'Buat Baru') ? 'Batal' : 'Buat Baru';
 		$(this).text(teks)
 		$('.csc-form').toggleClass('show add-new-fgd')[0].reset()
-		$('.tbl-data-product').toggleClass('show')
-		$('form[name="form-cariproduk"]')[0].reset();
+
+		if(cariproduk.val() !== '') {
+			cariproduk.val('')
+			$('#dataList').DataTable().clear().draw();
+			$('.tbl-data-product').removeClass('show')
+		}
 		const btn = $('form[name="form-cariproduk"] button[type="submit"]');
-		$('input[name="cariproduk"]').val('').prop('disabled', (!btn.prop('disabled')))
+		cariproduk.prop('disabled', (!btn.prop('disabled')))
 		btn.prop('disabled', (!btn.prop('disabled')))
 	})
 
@@ -547,6 +584,11 @@ $(function () {
 
 	$('#dataFormSisi').on('hidden.bs.modal', function (event) {
 		resetSisiModal();
+	});
+
+	$('#cariPart').on('hidden.bs.modal', function (event) {
+		$('#cariPart input[name="caripartproduk"]').val('');
+		$('#dataPartHasilCari').DataTable().clear().draw();
 	});
 
 	let color_tracker = {
@@ -798,6 +840,37 @@ function selectionAddedBox(id, name) {
 
 }
 
+function searchProduct(keyword)
+{
+	$.ajax({
+		type: 'POST',
+		url: `${HOST}/mfproduk/productSearch`,
+		dataType: 'JSON',
+		data: { keyword },
+		beforeSend: function () {},
+		success: function (response) {
+			if(response.success) {
+				$('#dataList').DataTable().clear().rows.add(response.data).draw();
+			} else {
+				$('#dataList').DataTable().clear().draw();
+			}
+		},
+	})
+}
+
+function checkURLWithParam(itemPath)
+{
+	const pathname = window.location.pathname;
+	const path_arr = pathname.split('/');
+	let last_arr = path_arr[path_arr.length - 1];
+
+	if(last_arr === '') {
+		last_arr = path_arr[path_arr.length - 2];
+	}
+
+	return (pathname.includes(itemPath) && parseInt(last_arr) > 0);
+}
+
 function loadData(url, element) {
 	$.ajax({
 		type: "GET",
@@ -816,99 +889,111 @@ function loadData(url, element) {
 }
 
 function loadSegmenOption(defaultSelected = 0) {
-	$.ajax({
-		type: 'GET',
-		url: `${HOST}/segmen/apiGetAll`,
-		beforeSend: function () {
-			$('select[name="segmen"]').append('<option value="-1">Loading...</option>')
-		},
-		success: function (response) {
-			if(response.success) {
-				const options = response.data.map((item) => {
-					if(defaultSelected > 0 && parseInt(item.OpsiVal) === defaultSelected) {
-						return `<option value="${item.OpsiVal}" selected>${item.OpsiTeks}</option>`
+	const select = $(`select[name="segmen"] option`).length
+	if(select <= 1) {
+		$.ajax({
+			type: 'GET',
+			url: `${HOST}/segmen/apiGetAll`,
+			beforeSend: function () {
+				$('select[name="segmen"]').append('<option value="-1">Loading...</option>')
+			},
+			success: function (response) {
+				if (response.success) {
+					const options = response.data.map((item) => {
+						if (defaultSelected > 0 && parseInt(item.OpsiVal) === defaultSelected) {
+							return `<option value="${item.OpsiVal}" selected>${item.OpsiTeks}</option>`
+						}
+						return `<option value="${item.OpsiVal}">${item.OpsiTeks}</option>`
+					})
+					if (defaultSelected > 0) {
+						$('select[name="segmen"] option[value="0"]').prop('selected', false)
 					}
-					return `<option value="${item.OpsiVal}">${item.OpsiTeks}</option>`
-				})
-				if(defaultSelected > 0) {
-					$('select[name="segmen"] option[value="0"]').prop('selected', false)
+					$('select[name="segmen"]').append(options.join(''));
 				}
-				$('select[name="segmen"]').append(options.join(''));
+			},
+			complete: function () {
+				$('select[name="segmen"] option[value="-1"]').remove();
 			}
-		},
-		complete: function () {
-			$('select[name="segmen"] option[value="-1"]').remove();
-		}
-	})
+		})
+	}
 }
 
 function loadSalesOption(defaultSelected = 0) {
-	$.ajax({
-		type: 'GET',
-		url: `${HOST}/sales/apiGetAll`,
-		beforeSend: function () {
-			$('select[name="sales"]').append('<option value="-1">Loading...</option>')
-		},
-		success: function (response) {
-			const options = response.map((item) => {
-				if(defaultSelected > 0 && item[1] === defaultSelected) {
-					return `<option value="${item[1]}" selected>${item[2]}</option>`
+	const select = $(`select[name="sales"] option`).length
+	if(select <= 1) {
+		$.ajax({
+			type: 'GET',
+			url: `${HOST}/sales/apiGetAll`,
+			beforeSend: function () {
+				$('select[name="sales"]').append('<option value="-1">Loading...</option>')
+			},
+			success: function (response) {
+				const options = response.map((item) => {
+					if (defaultSelected > 0 && item[1] === defaultSelected) {
+						return `<option value="${item[1]}" selected>${item[2]}</option>`
+					}
+					return `<option value="${item[1]}">${item[2]}</option>`
+				})
+				if (defaultSelected > 0) {
+					$('select[name="sales"] option[value=""]').prop('selected', false)
 				}
-				return `<option value="${item[1]}">${item[2]}</option>`
-			})
-			if(defaultSelected > 0) {
-				$('select[name="sales"] option[value=""]').prop('selected', false)
+				$('select[name="sales"]').append(options.join(''));
+			},
+			complete: function () {
+				$('select[name="sales"] option[value="-1"]').remove();
 			}
-			$('select[name="sales"]').append(options.join(''));
-		},
-		complete: function () {
-			$('select[name="sales"] option[value="-1"]').remove();
-		}
-	})
+		})
+	}
 }
 
 function loadCustomerOption(defaultSelected = 0) {
-	$.ajax({
-		type: 'GET',
-		url: `${HOST}/customer/apiGetAll`,
-		beforeSend: function () {
-			$('select[name="customer"]').append('<option value="-1">Loading...</option>')
-		},
-		success: function (response) {
-			const options = response.map((item) => {
-				if(defaultSelected > 0 && item[1] === defaultSelected) {
-					return `<option value="${item[1]}" selected>${item[3]}</option>`
-				}
-				return `<option value="${item[1]}">${item[3]}</option>`
-			})
-			$('select[name="customer"]').append(options.join(''));
-		},
-		complete: function () {
-			$('select[name="customer"] option[value="-1"]').remove();
-		}
-	})
+	const select = $(`select[name="customer"] option`).length
+	if(select <= 1) {
+		$.ajax({
+			type: 'GET',
+			url: `${HOST}/customer/apiGetAll`,
+			beforeSend: function () {
+				$('select[name="customer"]').append('<option value="-1">Loading...</option>')
+			},
+			success: function (response) {
+				const options = response.map((item) => {
+					if (defaultSelected > 0 && item[1] === defaultSelected) {
+						return `<option value="${item[1]}" selected>${item[3]}</option>`
+					}
+					return `<option value="${item[1]}">${item[3]}</option>`
+				})
+				$('select[name="customer"]').append(options.join(''));
+			},
+			complete: function () {
+				$('select[name="customer"] option[value="-1"]').remove();
+			}
+		})
+	}
 }
 
 function loadTujuanKirimOption(defaultSelected = 0) {
-	$.ajax({
-		type: 'GET',
-		url: `${HOST}/mftujuankirim/apiGetAll`,
-		beforeSend: function () {
-			$('select[name="tujuan_kirim"]').append('<option value="-1">Loading...</option>')
-		},
-		success: function (response) {
-			const options = response.map((item) => {
-				if(defaultSelected > 0 && item[1] === defaultSelected) {
-					return `<option value="${item[1]}" selected>${item[3]}</option>`
-				}
-				return `<option value="${item[1]}">${item[3]}</option>`
-			})
-			$('select[name="tujuan_kirim"]').append(options.join(''));
-		},
-		complete: function () {
-			$('select[name="tujuan_kirim"] option[value="-1"]').remove();
-		}
-	})
+	const select = $(`select[name="tujuan_kirim"] option`).length
+	if(select <= 1) {
+		$.ajax({
+			type: 'GET',
+			url: `${HOST}/mftujuankirim/apiGetAll`,
+			beforeSend: function () {
+				$('select[name="tujuan_kirim"]').append('<option value="-1">Loading...</option>')
+			},
+			success: function (response) {
+				const options = response.map((item) => {
+					if (defaultSelected > 0 && item[1] === defaultSelected) {
+						return `<option value="${item[1]}" selected>${item[3]}</option>`
+					}
+					return `<option value="${item[1]}">${item[3]}</option>`
+				})
+				$('select[name="tujuan_kirim"]').append(options.join(''));
+			},
+			complete: function () {
+				$('select[name="tujuan_kirim"] option[value="-1"]').remove();
+			}
+		})
+	}
 }
 
 function colorAddItem(e)

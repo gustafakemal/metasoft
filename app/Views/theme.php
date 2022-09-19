@@ -230,7 +230,7 @@
         <script src="<?= site_url('js/bs-custom-file-input.min.js'); ?>"></script>
         <script src="<?= site_url('js/mfpartproduk.js'); ?>"></script>
     <?php endif; ?>
-    <?php if (url_is('mfproduk') || url_is('mfproduk/*')) : ?>
+    <?php if (url_is('mfproduk') || url_is('MFProduk') || url_is('mfproduk/*') || url_is('MFProduk/*')) : ?>
         <script src="<?= site_url('js/bs-custom-file-input.min.js'); ?>"></script>
         <script src="<?= site_url('js/mfproduk.js'); ?>"></script>
     <?php endif; ?>

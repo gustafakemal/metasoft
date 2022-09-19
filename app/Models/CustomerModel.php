@@ -61,4 +61,16 @@ class CustomerModel extends Model
         return $this->where('NoPemesan', $NoPemesan)
                     ->delete();
     }
+
+    public function getName($no_pemesan)
+    {
+        $query = $this->select('NamaPemesan')
+                    ->where('NoPemesan', $no_pemesan)
+                    ->get();
+        if($query->getNumRows() > 0) {
+            return $query->getResult()[0]->NamaPemesan;
+        } else {
+            return null;
+        }
+    }
 }

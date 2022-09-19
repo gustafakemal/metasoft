@@ -23,22 +23,19 @@
 	<div class="col-auto">
       <button type="submit" class="btn btn-primary mb-2">Cari</button>
     </div>
-    <div class="col-auto">
-      <button type="button" class="btn btn-primary add-new mb-2">Buat Baru</button>
-    </div>
   </div>
 </form>
 
 <div class="dynamic-content">
 
 
-<form name="csc-form" class="csc-form show add-new-fgd">
+<form name="csc-form" class="csc-form show edit-produk-form">
 	<div class="msg"></div>
     <input type="hidden" name="id" value="" />
 	<div class="form-group row">
 		<label for="nama_produk" class="col-sm-2 col-form-label">Nama Produk <span class="text-danger">*</span></label>
 		<div class="col-sm-10">
-			<input type="text" class="form-control" id="nama_produk" name="nama_produk" value="<?= $data->nama_produk;?>">
+			<input type="text" class="form-control" id="nama_produk" name="nama_produk" value="<?= $data->nama_produk;?>" style="text-transform: uppercase">
 		</div>
 	</div>
 	<div class="form-group row">

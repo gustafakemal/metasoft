@@ -3,8 +3,6 @@ $(function () {
 	bsCustomFileInput.init()
 
 	let customerData;
-	let fsval = [];
-	let bsval = [];
 
 	$("#dataList").DataTable({
 		data: customerData,
@@ -22,9 +20,6 @@ $(function () {
 
 	$('form[name="form-caripartproduk"]').on('submit', function(e) {
 		e.preventDefault();
-		// $('.csc-form')[0].reset();
-		// $('.csc-form').removeClass('show')
-		// $('.csc-form .form-group.row-change-request').removeAttr('style')
 		const keyword = $('input[name="caripartproduk"]').val();
 		$.ajax({
 			type: 'POST',
@@ -44,367 +39,9 @@ $(function () {
 		})
 	})
 
-	// $('#dataList').DataTable().on( 'order.dt search.dt', function () {
-	// 	let i = 1;
-	// 	$('#dataList').DataTable().cells(null, 0, {search:'applied', order:'applied'}).every( function (cell) {
-	// 		this.data(i++);
-	// 	});
-	// }).draw();
-
-	// $('#dataList tbody').on('click', '.edit-rev-item', function(e) {
-	// 	const id = $(this).attr('data-id')
-	// 	$.ajax({
-	// 		type: 'POST',
-	// 		url: `${HOST}/mfproduk/apiGetById`,
-	// 		dataType: 'JSON',
-	// 		data: { id },
-	// 		beforeSend: function () {},
-	// 		success: function (response) {
-	// 			console.log(response)
-	// 			if(response.success) {
-	// 				const fs_colors = response.data.frontside_colors;
-	// 				const bs_colors = response.data.backside_colors;
-	// 				$('.csc-form').addClass('show edit-revision-form');
-	// 				$('.tbl-data-partproduct').removeClass('show');
-	// 				for(const property in response.data) {
-	// 					$(`form[name="csc-form"] input[name="${property}"]`).val(response.data[property])
-	// 					$(`form[name="csc-form"] select[name="${property}"] option[value="${response.data[property]}"]`).prop('selected', true)
-	// 					$(`form[name="csc-form"] textarea[name="${property}"]`).html(response.data[property])
-	// 				}
-	// 				if(fs_colors.length > 0) {
-	// 					let fs_elements = [];
-	// 					for(let i = 0; i < fs_colors.length; i++) {
-	// 						fsval.push(fs_colors[i].tinta)
-	// 						fs_elements.push(`<div class="row mt-1" id="fs-row-${fs_colors[i].tinta}">
-	// 											<div class="col-sm-9">${fs_colors[i].nama}</div>
-	// 											<input type="hidden" value="${fs_colors[i].tinta}" name="frontside_colors[]" />
-	// 											<div class="col-sm-3">
-	// 												<button class="btn btn-danger btn-sm" data-id="${fs_colors[i].tinta}" id="del-frontside-btn"><i class="fas fa-minus"></i></button>
-	// 											</div>
-	// 										</div>`);
-	// 					}
-	// 					$('.frontside-selected').html(fs_elements.join(''))
-	// 				}
-	// 				if(bs_colors.length > 0) {
-	// 					let bs_elements = [];
-	// 					for(let i = 0; i < bs_colors.length; i++) {
-	// 						bsval.push(fs_colors[i].tinta)
-	// 						bs_elements.push(`<div class="row mt-1" id="fs-row-${bs_colors[i].tinta}">
-	// 											<div class="col-sm-9">${bs_colors[i].nama}</div>
-	// 											<input type="hidden" value="${bs_colors[i].tinta}" name="backside_colors[]" />
-	// 											<div class="col-sm-3">
-	// 												<button class="btn btn-danger btn-sm" data-id="${bs_colors[i].tinta}" id="del-backside-btn"><i class="fas fa-minus"></i></button>
-	// 											</div>
-	// 										</div>`);
-	// 					}
-	// 					$('.backside-selected').html(bs_elements.join(''))
-	// 				}
-	// 				if(response.data.finishing.length > 0) {
-	// 					let finishing_elements = [];
-	// 					for(let i = 0; i < response.data.finishing.length; i++) {
-	// 						finishing_elements.push(`<div class="row mt-1" id="fs-row-${response.data.finishing[i].id}">
-	// 											<div class="col-sm-9">${response.data.finishing[i].proses}</div>
-	// 											<input type="hidden" value="${response.data.finishing[i].id}" name="finishing[]" />
-	// 											<div class="col-sm-3">
-	// 												<button class="btn btn-danger btn-sm" data-id="${response.data.finishing[i].id}"><i class="fas fa-minus"></i></button>
-	// 											</div>
-	// 										</div>`);
-	// 					}
-	// 					$('.finishing-selected').html(finishing_elements.join(''))
-	// 				}
-	// 				if(response.data.manual.length > 0) {
-	// 					let manual_elements = [];
-	// 					for(let i = 0; i < response.data.manual.length; i++) {
-	// 						manual_elements.push(`<div class="row mt-1" id="fs-row-${response.data.manual[i].id}">
-	// 											<div class="col-sm-9">${response.data.manual[i].proses}</div>
-	// 											<input type="hidden" value="${response.data.manual[i].id}" name="manual[]" />
-	// 											<div class="col-sm-3">
-	// 												<button class="btn btn-danger btn-sm" data-id="${response.data.manual[i].id}"><i class="fas fa-minus"></i></button>
-	// 											</div>
-	// 										</div>`);
-	// 					}
-	// 					$('.manual-selected').html(manual_elements.join(''))
-	// 				}
-	// 				if(response.data.khusus.length > 0) {
-	// 					let khusus_elements = [];
-	// 					for(let i = 0; i < response.data.khusus.length; i++) {
-	// 						khusus_elements.push(`<div class="row mt-1" id="fs-row-${response.data.khusus[i].id}">
-	// 											<div class="col-sm-9">${response.data.khusus[i].proses}</div>
-	// 											<input type="hidden" value="${response.data.khusus[i].id}" name="khusus[]" />
-	// 											<div class="col-sm-3">
-	// 												<button class="btn btn-danger btn-sm" data-id="${response.data.khusus[i].id}"><i class="fas fa-minus"></i></button>
-	// 											</div>
-	// 										</div>`);
-	// 					}
-	// 					$('.khusus-selected').html(khusus_elements.join(''))
-	// 				}
-	// 				$(`form[name="csc-form"]`).prepend(`<input type="hidden" name="id" value="${response.data.id}" />`);
-	// 				$('.csc-form input[name="tfgd"]').val(response.data.fgd);
-	// 				$('.csc-form input[name="trevisi"]').val(response.data.revisi);
-	// 			}
-	// 		},
-	// 		error: function () {},
-	// 		complete: function() {}
-	// 	})
-	// });
-
-	// $('#dataList tbody').on('click', '.rev-item', function(e) {
-	// 	const id = $(this).attr('data-id')
-	// 	$.ajax({
-	// 		type: 'POST',
-	// 		url: `${HOST}/mfproduk/apiGetById`,
-	// 		dataType: 'JSON',
-	// 		data: { id },
-	// 		beforeSend: function () {},
-	// 		success: function (response) {
-	// 			console.log(response.data.id)
-	// 			if(response.success) {
-	// 				const fs_colors = response.data.frontside_colors;
-	// 				const bs_colors = response.data.backside_colors;
-	// 				$('.csc-form').addClass('show add-revision-form');
-	// 				$('.csc-form input[name="fgd"]').attr('readonly', 'readonly')
-	// 				$('.tbl-data-partproduct').removeClass('show');
-	// 				for(const property in response.data) {
-	// 					$(`form[name="csc-form"] input[name="${property}"]`).val(response.data[property])
-	// 					$(`form[name="csc-form"] select[name="${property}"] option[value="${response.data[property]}"]`).prop('selected', true)
-	// 					$(`form[name="csc-form"] textarea[name="${property}"]`).html(response.data[property])
-	// 				}
-	// 				if(fs_colors.length > 0) {
-	// 					let fs_elements = [];
-	// 					for(let i = 0; i < fs_colors.length; i++) {
-	// 						fs_elements.push(`<div class="row mt-1" id="fs-row-${fs_colors[i].tinta}">
-	// 											<div class="col-sm-9">${fs_colors[i].nama}</div>
-	// 											<input type="hidden" value="${fs_colors[i].tinta}" name="frontside_colors[]" />
-	// 											<div class="col-sm-3">
-	// 												<button class="btn btn-danger btn-sm" data-id="${fs_colors[i].tinta}" id="del-frontside-btn"><i class="fas fa-minus"></i></button>
-	// 											</div>
-	// 										</div>`);
-	// 					}
-	// 					$('.frontside-selected').html(fs_elements.join(''))
-	// 				}
-	// 				if(bs_colors.length > 0) {
-	// 					let bs_elements = [];
-	// 					for(let i = 0; i < bs_colors.length; i++) {
-	// 						bs_elements.push(`<div class="row mt-1" id="fs-row-${bs_colors[i].tinta}">
-	// 											<div class="col-sm-9">${bs_colors[i].nama}</div>
-	// 											<input type="hidden" value="${bs_colors[i].tinta}" name="backside_colors[]" />
-	// 											<div class="col-sm-3">
-	// 												<button class="btn btn-danger btn-sm" data-id="${bs_colors[i].tinta}" id="del-backside-btn"><i class="fas fa-minus"></i></button>
-	// 											</div>
-	// 										</div>`);
-	// 					}
-	// 					$('.backside-selected').html(bs_elements.join(''))
-	// 				}
-	// 				if(response.data.finishing.length > 0) {
-	// 					let finishing_elements = [];
-	// 					for(let i = 0; i < response.data.finishing.length; i++) {
-	// 						finishing_elements.push(`<div class="row mt-1" id="fs-row-${response.data.finishing[i].id}">
-	// 											<div class="col-sm-9">${response.data.finishing[i].proses}</div>
-	// 											<input type="hidden" value="${response.data.finishing[i].id}" name="finishing[]" />
-	// 											<div class="col-sm-3">
-	// 												<button class="btn btn-danger btn-sm" data-id="${response.data.finishing[i].id}"><i class="fas fa-minus"></i></button>
-	// 											</div>
-	// 										</div>`);
-	// 					}
-	// 					$('.finishing-selected').html(finishing_elements.join(''))
-	// 				}
-	// 				if(response.data.manual.length > 0) {
-	// 					let manual_elements = [];
-	// 					for(let i = 0; i < response.data.manual.length; i++) {
-	// 						manual_elements.push(`<div class="row mt-1" id="fs-row-${response.data.manual[i].id}">
-	// 											<div class="col-sm-9">${response.data.manual[i].proses}</div>
-	// 											<input type="hidden" value="${response.data.manual[i].id}" name="manual[]" />
-	// 											<div class="col-sm-3">
-	// 												<button class="btn btn-danger btn-sm" data-id="${response.data.manual[i].id}"><i class="fas fa-minus"></i></button>
-	// 											</div>
-	// 										</div>`);
-	// 					}
-	// 					$('.manual-selected').html(manual_elements.join(''))
-	// 				}
-	// 				if(response.data.khusus.length > 0) {
-	// 					let khusus_elements = [];
-	// 					for(let i = 0; i < response.data.khusus.length; i++) {
-	// 						khusus_elements.push(`<div class="row mt-1" id="fs-row-${response.data.khusus[i].id}">
-	// 											<div class="col-sm-9">${response.data.khusus[i].proses}</div>
-	// 											<input type="hidden" value="${response.data.khusus[i].id}" name="khusus[]" />
-	// 											<div class="col-sm-3">
-	// 												<button class="btn btn-danger btn-sm" data-id="${response.data.khusus[i].id}"><i class="fas fa-minus"></i></button>
-	// 											</div>
-	// 										</div>`);
-	// 					}
-	// 					$('.khusus-selected').html(khusus_elements.join(''))
-	// 				}
-	// 				$(`form[name="csc-form"] input[name="fgd"]`).val(response.data.fgd)
-	// 				$('.csc-form input[name="tfgd"]').val(response.data.fgd);
-	// 				$('.csc-form input[name="trevisi"]').val('(Auto)');
-	// 			}
-	// 		},
-	// 		error: function () {},
-	// 		complete: function() {}
-	// 	})
-	// });
-
-	$('#frontside-btn').on('click', function() {
-		console.log(fsval)
-		const fs = $('#warnafrontside').find(':selected').text();
-		const fs_id = $('#warnafrontside').find(':selected').val();
-		// const length = $('.frontside-selected').children().length
-
-		if(fs_id !== '' && !fsval.includes(fs_id)) {
-			fsval.push(fs_id)
-			$('.frontside-selected').prepend(`
-				<div class="row mt-1" id="fs-row-${fs_id}">
-					<div class="col-sm-9">${fs}</div>
-					<input type="hidden" value="${fs_id}" name="frontside_colors[]" />
-					<div class="col-sm-3">
-						<button class="btn btn-danger btn-sm" data-id="${fs_id}" id="del-frontside-btn"><i class="fas fa-minus"></i></button>
-					</div>
-				</div>
-			`)
-		}
-		$('#warnafrontside option:first').prop('selected', true)
-		$('input[name="frontside"]').val(fsval.length)
-	})
-
-	$('#backside-btn').on('click', function() {
-		const fs = $('#warnabackside').find(':selected').text();
-		const fs_id = $('#warnabackside').find(':selected').val();
-		// const length = $('.backside-selected').children().length
-
-		if(fs_id !== '' && !bsval.includes(fs_id)) {
-			bsval.push(fs_id)
-			$('.backside-selected').prepend(`
-				<div class="row mt-1" id="bs-row-${fs_id}">
-					<div class="col-sm-9">${fs}</div>
-					<input type="hidden" value="${fs_id}" name="backside_colors[]" />
-					<div class="col-sm-3">
-						<button class="btn btn-danger btn-sm" data-id="${fs_id}" id="del-backside-btn"><i class="fas fa-minus"></i></button>
-					</div>
-				</div>
-			`)
-		}
-		$('#warnabackside option:first').prop('selected', true)
-		$('input[name="backside"]').val(bsval.length)
-	})
-
-	$('.frontside-selected').on('click', '#del-frontside-btn', function() {
-		const id = $(this).attr('data-id');
-		// const fsid = $(`.frontside-selected #fs-row-${id} input[name="frontside[]`).val()
-		const idx = fsval.indexOf(id)
-		if(idx > -1) {
-			fsval.splice(idx, 1)
-		}
-
-		$(`.frontside-selected #fs-row-${id}`).remove()
-		$('input[name="frontside"]').val(fsval.length)
-	})
-
-	$('.backside-selected').on('click', '#del-backside-btn', function() {
-		const id = $(this).attr('data-id');
-		// const bsid = $(`.backside-selected #bs-row-${id} input[name="backside[]`).val()
-		const idx = bsval.indexOf(id)
-		if(idx > -1) {
-			bsval.splice(idx, 1)
-		}
-
-		$(`.backside-selected #bs-row-${id}`).remove()
-		$('input[name="backside"]').val(bsval.length)
-	})
-
-	let fnsval = [];
-	$('#finishing-btn').on('click', function() {
-		const fs = $('#finishing').find(':selected').text();
-		const fs_id = $('#finishing').find(':selected').val();
-		// const length = $('.finishing-selected').children().length
-
-		if(fs_id !== '' && !fnsval.includes(fs_id)) {
-			fnsval.push(fs_id)
-			$('.finishing-selected').prepend(`
-				<div class="row mt-1" id="row-${fs_id}">
-					<div class="col-sm-9">${fs}</div>
-					<input type="hidden" value="${fs_id}" name="finishing[]" />
-					<div class="col-sm-3">
-						<button type="button" class="btn btn-danger btn-sm" data-id="${fs_id}"><i class="fas fa-minus"></i></button>
-					</div>
-				</div>
-			`)
-		}
-		$('#finishing option:first').prop('selected', true)
-	})
-	$('.finishing-selected').on('click', '.btn', function() {
-		const id = $(this).attr('data-id');
-		const idx = fnsval.indexOf(id)
-		if(idx > -1) {
-			fnsval.splice(idx, 1)
-		}
-		$(`.finishing-selected #row-${id}`).remove()
-	})
-
-	let mnval = []
-	$('#manual-btn').on('click', function() {
-		const fs = $('#manual').find(':selected').text();
-		const fs_id = $('#manual').find(':selected').val();
-		// const length = $('.manual-selected').children().length
-
-		if(fs_id !== '' && !mnval.includes(fs_id)) {
-			mnval.push(fs_id)
-			$('.manual-selected').prepend(`
-				<div class="row mt-1" id="row-${fs_id}">
-					<div class="col-sm-9">${fs}</div>
-					<input type="hidden" value="${fs_id}" name="manual[]" />
-					<div class="col-sm-3">
-						<button type="button" class="btn btn-danger btn-sm" data-id="${fs_id}"><i class="fas fa-minus"></i></button>
-					</div>
-				</div>
-			`)
-		}
-		$('#manual option:first').prop('selected', true)
-	})
-	$('.manual-selected').on('click', '.btn', function() {
-		const id = $(this).attr('data-id');
-		const idx = mnval.indexOf(id)
-		if(idx > -1) {
-			mnval.splice(idx, 1)
-		}
-		$(`.manual-selected #row-${id}`).remove()
-	})
-
-	let ksval = []
-	$('#khusus-btn').on('click', function() {
-		const fs = $('#khusus').find(':selected').text();
-		const fs_id = $('#khusus').find(':selected').val();
-		// const length = $('.khusus-selected').children().length
-
-		if(fs_id !== '' && !ksval.includes(fs_id)) {
-			ksval.push(fs_id)
-			$('.khusus-selected').prepend(`
-				<div class="row mt-1" id="row-${fs_id}">
-					<div class="col-sm-9">${fs}</div>
-					<input type="hidden" value="${fs_id}" name="khusus[]" />
-					<div class="col-sm-3">
-						<button type="button" class="btn btn-danger btn-sm" data-id="${fs_id}"><i class="fas fa-minus"></i></button>
-					</div>
-				</div>
-			`)
-		}
-		$('#khusus option:first').prop('selected', true)
-	})
-	$('.khusus-selected').on('click', '.btn', function() {
-		const id = $(this).attr('data-id');
-		const idx = ksval.indexOf(id)
-		if(idx > -1) {
-			ksval.splice(idx, 1)
-		}
-		$(`.khusus-selected #row-${id}`).remove()
-	})
-
 	$('.dynamic-content').on('submit', '.edit-revision-form', function(e) {
 		e.preventDefault();
 		const formData = new FormData(this)
-
-		// for (var pair of formData.entries()) {
-		// 	console.log(pair[0]+ ', ' + pair[1]);
-		// }
 
 		$.ajax({
 			type: 'POST',
@@ -528,43 +165,6 @@ $(function () {
 		})
 	})
 
-	// $('.add-new').on('click', function() {
-	// 	$('.csc-form')[0].reset();
-	// 	$('.csc-form').addClass('show add-new-fgd')
-	// 	$('.tbl-data-partproduct').removeClass('show')
-	// 	$('input[name="cariproduk"]').val('')
-	// 	$('.csc-form input[name="fgd"]').val('(Auto)');
-	// 	$('.csc-form .form-group.row-change-request').css('display', 'none')
-	// 	$('.csc-form input[name="trevisi"]').val('0');
-	// 	$('.frontside-selected').html('')
-	// 	$('.backside-selected').html('')
-	// 	$('.finishing-selected').html('')
-	// 	$('.manual-selected').html('')
-	// 	$('.khusus-selected').html('')
-	// 	$('input[name="no_dokumen"]').attr('disabled', true)
-	// })
-
-	// $('form[name="partproduct-form"]').on('click', 'select[name="kertas"]', function (e) {
-	// 	$.ajax({
-	// 		type: 'GET',
-	// 		url: `${HOST}/mfpartproduk/masters`,
-	// 		beforeSend: function () {
-	// 			$('select[name="kertas"]').append('<option value="loading">Loading...</option>')
-	// 		},
-	// 		success: function (response) {
-	// 			console.log($('select[name="kertas"]').length)
-	// 			if(response.success) {
-	// 				for(let i = 0;i < response.data.length;i++) {
-	// 					$('select[name="kertas"]').append(`<option value="${response.data[i].id}">${response.data[i].nama}</option>`)
-	// 				}
-	// 			}
-	// 		},
-	// 		complete: function () {
-	// 			$('select[name="kertas"] option[value="loading"]').remove();
-	// 		}
-	// 	});
-	// });
-
 	const id_part_arr = location.pathname.split('/');
 	const id_part = (id_part_arr.includes('rev')) ? id_part_arr[id_part_arr.length - 2] : id_part_arr[id_part_arr.length - 1];
 
@@ -611,6 +211,21 @@ $(function () {
 			}
 		});
 	})
+		.on('click', 'select[name="kertas"]', function (e) {
+			loadSelectOptions({select_element_name: 'kertas', url: `${HOST}/MFJenisKertas/getSelectOptions`})
+		})
+		.on('click', 'select[name="flute"]', function (e) {
+			loadSelectOptions({select_element_name: 'flute', url: `${HOST}/MFJenisFlute/getSelectOptions`})
+		})
+		.on('click', 'select[name="inner_pack"]', function (e) {
+			loadSelectOptions({select_element_name: 'inner_pack', url: `${HOST}/MFPacking/getSelectOptions/Inner`})
+		})
+		.on('click', 'select[name="outer_pack"]', function (e) {
+			loadSelectOptions({select_element_name: 'outer_pack', url: `${HOST}/MFPacking/getSelectOptions/Outer`})
+		})
+		.on('click', 'select[name="deliver_pack"]', function (e) {
+			loadSelectOptions({select_element_name: 'deliver_pack', url: `${HOST}/MFPacking/getSelectOptions/Delivery`})
+		})
 
 	$('form[name="partproduct-form_edit"]').on('submit', function (e) {
 		e.preventDefault();
@@ -646,7 +261,29 @@ $(function () {
 				}
 			}
 		})
-	});
+	})
+
+	$('form[name="partproduct-form_edit"], form[name="partproduct-form_rev"]')
+		.on('click', 'select[name="kertas"]', function (e) {
+			const val = $('form[name="partproduct-form_edit"] select[name="kertas"] option').filter(':selected').val();
+			loadSelectOptions({select_element_name: 'kertas', url: `${HOST}/MFJenisKertas/getSelectOptions`, defaultSelected: parseInt(val), add_form: false})
+		})
+		.on('click', 'select[name="flute"]', function (e) {
+			const val = $('form[name="partproduct-form_edit"] select[name="flute"] option').filter(':selected').val();
+			loadSelectOptions({select_element_name: 'flute', url: `${HOST}/MFJenisFlute/getSelectOptions`, defaultSelected: parseInt(val), add_form: false})
+		})
+		.on('click', 'select[name="inner_pack"]', function (e) {
+			const val = $('form[name="partproduct-form_edit"] select[name="inner_pack"] option').filter(':selected').val();
+			loadSelectOptions({select_element_name: 'inner_pack', url: `${HOST}/MFPacking/getSelectOptions/Inner`, defaultSelected: parseInt(val), add_form: false})
+		})
+		.on('click', 'select[name="outer_pack"]', function (e) {
+			const val = $('form[name="partproduct-form_edit"] select[name="outer_pack"] option').filter(':selected').val();
+			loadSelectOptions({select_element_name: 'outer_pack', url: `${HOST}/MFPacking/getSelectOptions/Outer`, defaultSelected: parseInt(val), add_form: false})
+		})
+		.on('click', 'select[name="deliver_pack"]', function (e) {
+			const val = $('form[name="partproduct-form_edit"] select[name="deliver_pack"] option').filter(':selected').val();
+			loadSelectOptions({select_element_name: 'deliver_pack', url: `${HOST}/MFPacking/getSelectOptions/Delivery`, defaultSelected: parseInt(val), add_form: false})
+		})
 
 	$('form[name="partproduct-form_rev"]').on('submit', function (e) {
 		e.preventDefault();
@@ -813,9 +450,7 @@ $(function () {
 				}, 3000);
 			}
 		})
-	});
-
-	$('#dataForm').on('submit', 'form[name="edit-sisi"]', function (e) {
+	}).on('submit', 'form[name="edit-sisi"]', function (e) {
 		e.preventDefault();
 		const formData = new FormData(this);
 
@@ -849,7 +484,22 @@ $(function () {
 				}, 3000);
 			}
 		})
-	});
+	})
+		.on('click', 'select[name="fscolors"]', function (e) {
+			loadSelectOptions({select_element_name: 'fscolors', url: `${HOST}/MFJenisTinta/getSelectOptions`})
+		})
+		.on('click', 'select[name="bscolors"]', function (e) {
+			loadSelectOptions({select_element_name: 'bscolors', url: `${HOST}/MFJenisTinta/getSelectOptions`})
+		})
+		.on('click', 'select[name="manualcolors"]', function (e) {
+			loadSelectOptions({select_element_name: 'manualcolors', url: `${HOST}/MFProsesManual/getSelectOptions`})
+		})
+		.on('click', 'select[name="finishingcolors"]', function (e) {
+			loadSelectOptions({select_element_name: 'finishingcolors', url: `${HOST}/MFProsesFinishing/getSelectOptions`})
+		})
+		.on('click', 'select[name="khususcolors"]', function (e) {
+			loadSelectOptions({select_element_name: 'khususcolors', url: `${HOST}/MFProsesKhusus/getSelectOptions`})
+		})
 
 	$('#dataList').on('click', '.edit-sisi', function(e) {
 		e.preventDefault();
@@ -1023,4 +673,41 @@ function colorDelItem(event)
 	const {item_container, item_class, group, tracker} = event.data;
 	const id = $(this).attr('id').split('-');
 	$(`.${item_container} .${item_class}-${id[1]}`).remove();;
+}
+
+function loadSelectOptions(objParam) {
+
+	const defaultSelected = (objParam.hasOwnProperty('defaultSelected')) ? objParam.defaultSelected : 0;
+	const add_form = (objParam.hasOwnProperty('add_form')) ? objParam.add_form : true;
+
+	const select = $(`select[name="${objParam.select_element_name}"] option`)
+	const existing_count = (add_form) ? 1 : 2;
+	if(select.length <= existing_count) {
+		const last_item = select.last();
+		$.ajax({
+			type: 'GET',
+			url: objParam.url,
+			beforeSend: function () {
+				if(!add_form) {
+					last_item.remove()
+				}
+				$(`select[name="${objParam.select_element_name}"]`).append('<option value="-1">Loading...</option>')
+			},
+			success: function (response) {
+				const options = response.data.map((item) => {
+					if (defaultSelected > 0 && item.id === defaultSelected) {
+						return `<option value="${item.id}" selected>${item.name}</option>`
+					}
+					return `<option value="${item.id}">${item.name}</option>`
+				})
+				if (defaultSelected > 0) {
+					$(`select[name="${objParam.select_element_name}"] option[value=""]`).prop('selected', false)
+				}
+				$(`select[name="${objParam.select_element_name}"]`).append(options.join(''));
+			},
+			complete: function () {
+				$(`select[name="${objParam.select_element_name}"] option[value="-1"]`).remove();
+			}
+		})
+	}
 }

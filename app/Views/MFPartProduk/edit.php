@@ -61,18 +61,14 @@
                 <div class="col-sm-4">
                     <select name="kertas" class="form-control" id="kertas">
                         <option value="0">Pilih Jenis Kertas</option>
-                        <?php foreach ($opsi_jeniskertas as $key => $opsi_jeniskertas_item) : ?>
-                            <option<?= ($opsi_jeniskertas_item->id == $data->kertas) ? ' selected' : '';?> value="<?= $opsi_jeniskertas_item->id;?>"><?= $opsi_jeniskertas_item->nama;?></option>
-                        <?php endforeach;?>
+                        <option selected value="<?= $data->kertas;?>"><?= $data->nama_kertas;?></option>
                     </select>
                 </div>
                 <label for="flute" class="col-sm-2 col-form-label">Flute </label>
                 <div class="col-sm-4">
                     <select name="flute" class="form-control" id="flute">
                         <option value="0">Pilih Jenis Flute</option>
-                        <?php foreach ($opsi_jenisflute as $key => $opsi_jenisflute_item) : ?>
-                            <option<?= ($opsi_jenisflute_item->id == $data->flute) ? ' selected' : '';?> value="<?= $opsi_jenisflute_item->id;?>"><?= $opsi_jenisflute_item->nama;?></option>
-                        <?php endforeach;?>
+                        <option selected value="<?= $data->flute;?>"><?= $data->nama_flute;?></option>
                     </select>
                 </div>
             </div>
@@ -102,9 +98,7 @@
                 <div class="col-sm-4">
                     <select name="inner_pack" class="form-control" id="inner_pack">
                         <option value="0">Pilih Jenis Inner Pack</option>
-                        <?php foreach ($opsi_innerpack as $key => $opsi_innerpack_item) : ?>
-                            <option<?= ($opsi_innerpack_item->id == $data->inner_pack) ? ' selected' : '';?> value="<?= $opsi_innerpack_item->id;?>"><?= $opsi_innerpack_item->nama;?></option>
-                        <?php endforeach;?>
+                        <option selected value="<?= $data->inner_pack;?>"><?= $data->NamaInnerPack;?></option>
                     </select>
                 </div>
                 <label for="jum_innerpack" class="col-sm-2 col-form-label">Jumlah </label>
@@ -118,9 +112,7 @@
                 <div class="col-sm-4">
                     <select name="outer_pack" class="form-control" id="outer_pack">
                         <option value="0">Pilih Jenis Outer Pack</option>
-                        <?php foreach ($opsi_outerpack as $key => $opsi_outerpack_item) : ?>
-                            <option<?= ($opsi_outerpack_item->id == $data->outer_pack) ? ' selected' : '';?> value="<?= $opsi_outerpack_item->id;?>"><?= $opsi_outerpack_item->nama;?></option>
-                        <?php endforeach;?>
+                        <option selected value="<?= $data->outer_pack;?>"><?= $data->NamaOuterPack;?></option>
                     </select>
                 </div>
                 <label for="jum_outerpack" class="col-sm-2 col-form-label">Jumlah </label>
@@ -134,9 +126,7 @@
                 <div class="col-sm-4">
                     <select name="deliver_pack" class="form-control" id="deliver_pack">
                         <option value="0">Pilih Jenis Delivery Pack</option>
-                        <?php foreach ($opsi_deliverypack as $key => $opsi_deliverypack_item) : ?>
-                            <option<?= ($opsi_deliverypack_item->id == $data->deliver_pack) ? ' selected' : '';?> value="<?= $opsi_deliverypack_item->id;?>"><?= $opsi_deliverypack_item->nama;?></option>
-                        <?php endforeach;?>
+                        <option selected value="<?= $data->deliver_pack;?>"><?= $data->NamaDeliverPack;?></option>
                     </select>
                 </div>
                 <label for="auto_pack" class="col-sm-4 col-form-label">Auto Packing Machine di Customer </label>
@@ -301,9 +291,6 @@
                                                 <div class="col-sm">
                                                     <select name="fscolors" class="form-control" id="tinta">
                                                         <option value="0" selected>-Pilih Warna-</option>
-                                                        <?php foreach ($opsi_jenistinta as $key => $opsi_jenistinta_item) : ?>
-                                                            <option value="<?= $opsi_jenistinta_item->id;?>"><?= $opsi_jenistinta_item->nama;?></option>
-                                                        <?php endforeach;?>
                                                     </select>
                                                 </div>
                                                 <div class="col-sm">
@@ -322,9 +309,6 @@
                                                 <div class="col-sm">
                                                     <select name="bscolors" class="form-control" id="tinta">
                                                         <option value="0" selected>-Pilih Warna-</option>
-                                                        <?php foreach ($opsi_jenistinta as $key => $opsi_jenistinta_item) : ?>
-                                                            <option value="<?= $opsi_jenistinta_item->id;?>"><?= $opsi_jenistinta_item->nama;?></option>
-                                                        <?php endforeach;?>
                                                     </select>
                                                 </div>
                                                 <div class="col-sm">
@@ -348,9 +332,6 @@
                                                 <div class="col-sm">
                                                     <select name="manualcolors" class="form-control" id="tinta">
                                                         <option value="0" selected>-Pilih Proses-</option>
-                                                        <?php foreach ($opsi_manual as $key => $opsi_manual_item) : ?>
-                                                            <option value="<?= $opsi_manual_item->id;?>"><?= $opsi_manual_item->proses;?></option>
-                                                        <?php endforeach;?>
                                                     </select>
                                                 </div>
                                                 <div class="col-sm">
@@ -369,9 +350,6 @@
                                                 <div class="col-sm">
                                                     <select name="finishingcolors" class="form-control" id="tinta">
                                                         <option value="0" selected>-Pilih Proses-</option>
-                                                        <?php foreach ($opsi_finishing as $key => $opsi_finishing_item) : ?>
-                                                            <option value="<?= $opsi_finishing_item->id;?>"><?= $opsi_finishing_item->proses;?></option>
-                                                        <?php endforeach;?>
                                                     </select>
                                                 </div>
                                                 <div class="col-sm">
@@ -390,9 +368,6 @@
                                                 <div class="col-sm">
                                                     <select name="khususcolors" class="form-control" id="tinta">
                                                         <option value="0" selected>-Pilih Proses-</option>
-                                                        <?php foreach ($opsi_khusus as $key => $opsi_khusus_item) : ?>
-                                                            <option value="<?= $opsi_khusus_item->id;?>"><?= $opsi_khusus_item->proses;?></option>
-                                                        <?php endforeach;?>
                                                     </select>
                                                 </div>
                                                 <div class="col-sm">

@@ -167,4 +167,22 @@ class Sales extends BaseController
 		return redirect()->back()
 			->with('error', 'Data gagal dihapus');
 	}
+
+    public function getSelectOptions()
+    {
+        $query = $this->model->getSales();
+
+        $data = [];
+        foreach ($query as $row) {
+            $data[] = [
+                'id' => $row->SalesID,
+                'name' => $row->SalesName
+            ];
+        }
+
+        return $this->response->setJSON([
+            'success' => true,
+            'data' => $data
+        ]);
+    }
 }

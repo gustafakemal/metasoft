@@ -20,4 +20,22 @@ class Segmen extends BaseController
             'data' => $query
         ]);
     }
+
+    public function getSelectOptions()
+    {
+        $query = $this->model->getAll();
+
+        $data = [];
+        foreach ($query as $row) {
+            $data[] = [
+                'id' => $row->OpsiVal,
+                'name' => $row->OpsiTeks
+            ];
+        }
+
+        return $this->response->setJSON([
+            'success' => true,
+            'data' => $data
+        ]);
+    }
 }

@@ -32,6 +32,20 @@ class MFPartProdukModel extends Model
         $this->validationMessages = $validationMessages;
     }
 
+    public function getEditingData($id)
+    {
+        $query = $this->select('MF_PartProduk.id, MF_PartProduk.fgd, MF_PartProduk.revisi, MF_PartProduk.nama, MF_PartProduk.tujuan_penggunaan, MF_PartProduk.technical_draw, MF_PartProduk.no_dokumen, MF_PartProduk.panjang, MF_PartProduk.lebar, MF_PartProduk.tinggi, MF_PartProduk.kertas, MF_PartProduk.flute, MF_PartProduk.metalize, MF_PartProduk.inner_pack, MF_PartProduk.jum_innerpack, MF_PartProduk.outer_pack, MF_PartProduk.jum_outerpack, MF_PartProduk.deliver_pack, MF_PartProduk.auto_pack, MF_PartProduk.special_req, MF_PartProduk.aktif, MF_PartProduk.added, MF_PartProduk.added_by, MF_PartProduk.updated, MF_PartProduk.updated_by, MF_PartProduk.no_dokcr, MF_PartProduk.file_dokcr, MF_JenisKertas.nama as nama_kertas, MF_JenisFlute.nama as nama_flute, P.nama as NamaInnerPack, V.nama as NamaOuterPack, D.nama as NamaDeliverPack')
+            ->join('MF_JenisKertas', 'MF_PartProduk.kertas = MF_JenisKertas.id', 'left')
+            ->join('MF_JenisFlute', 'MF_PartProduk.flute = MF_JenisFlute.id', 'left')
+            ->join('MF_Packing as P', 'MF_PartProduk.inner_pack = P.id', 'left')
+            ->join('MF_Packing as V', 'MF_PartProduk.outer_pack = V.id', 'left')
+            ->join('MF_Packing as D', 'MF_PartProduk.deliver_pack = D.id', 'left')
+            ->where('MF_PartProduk.id', $id)
+            ->get();
+
+        return $query->getResult();
+    }
+
     public function updatePart($id, $data)
     {
         return $this->where('id', $id)

@@ -60,69 +60,23 @@ class MFPartProduk extends BaseController
 
 	public function addPartProduct()
 	{
-//		$segmen_model = new \App\Models\SegmenModel();
-//		$customer_model = new \App\Models\CustomerModel();
-//		$sales_model = new \App\Models\SalesModel();
-		$tujuankirim_model = new \App\Models\MFTujuanKirimModel();
-		$jeniskertas_model = new \App\Models\MFJenisKertasModel();
-		$jenistinta_model = new \App\Models\MFJenisTintaModel();
-		$jenisflute_model = new \App\Models\MFJenisFluteModel();
-		$packing_model = new \App\Models\MFPackingModel();
-//		$finishing_model = new \App\Models\MFProsesFinishingModel();
-//		$manual_model = new \App\Models\MFProsesManualModel();
-//		$khusus_model = new \App\Models\MFProsesKhususModel();
 		return view('MFPartProduk/input', [
 			'page_title' => 'Input Part Produk MF',
             'ref' => $this->request->getGet('ref'),
             'id_produk' => $this->request->getGet('id_produk'),
-//			'opsi_segmen' => $segmen_model->getAll(),
-//			'opsi_customer' => $customer_model->getOpsi(),
-//			'opsi_sales' => $sales_model->getOpsi(),
-			// 'opsi_sales' => [],
-			'opsi_tujuankirim' => $tujuankirim_model->getOpsi(),
-			'opsi_kertas' => $tujuankirim_model->getOpsi(),
-			'opsi_jeniskertas' => $jeniskertas_model->getOpsi(),
-			'opsi_jenistinta' => $jenistinta_model->getOpsi(),
-			'opsi_jenisflute' => $jenisflute_model->getOpsi(),
-			'opsi_innerpack' => $packing_model->getOpsi('Inner'),
-			'opsi_outerpack' => $packing_model->getOpsi('Outer'),
-			'opsi_deliverypack' => $packing_model->getOpsi('Delivery'),
-//			'opsi_finishing' => $finishing_model->getOpsi(),
-//			'opsi_manual' => $manual_model->getOpsi(),
-//			'opsi_khusus' => $khusus_model->getOpsi(),
 		]);
 	}
 
     public function editPartProduct($id, $is_revision = 0)
     {
-        $data = $this->model->getById($id);
+        $data = $this->model->getEditingData($id)[0];
 
-        $tujuankirim_model = new \App\Models\MFTujuanKirimModel();
-        $jeniskertas_model = new \App\Models\MFJenisKertasModel();
-        $jenistinta_model = new \App\Models\MFJenisTintaModel();
-        $jenisflute_model = new \App\Models\MFJenisFluteModel();
-        $packing_model = new \App\Models\MFPackingModel();
-		$finishing_model = new \App\Models\MFProsesFinishingModel();
-		$manual_model = new \App\Models\MFProsesManualModel();
-		$khusus_model = new \App\Models\MFProsesKhususModel();
-//        dd($finishing_model->getOpsi());
         return view('MFPartProduk/edit', [
             'page_title' => ($is_revision == 0) ? 'Edit Part Produk MF' : 'Revisi Part Produk MF',
             'data' => $data,
             'id_produk' => $this->request->getGet('id_produk'),
             'is_revision' => $is_revision,
             'rev_no' => ($is_revision == 1) ? $this->model->revGenerator($data->fgd) : $data->revisi,
-            'opsi_tujuankirim' => $tujuankirim_model->getOpsi(),
-            'opsi_kertas' => $tujuankirim_model->getOpsi(),
-            'opsi_jeniskertas' => $jeniskertas_model->getOpsi(),
-            'opsi_jenistinta' => $jenistinta_model->getOpsi(),
-            'opsi_jenisflute' => $jenisflute_model->getOpsi(),
-            'opsi_innerpack' => $packing_model->getOpsi('Inner'),
-            'opsi_outerpack' => $packing_model->getOpsi('Outer'),
-            'opsi_deliverypack' => $packing_model->getOpsi('Delivery'),
-			'opsi_finishing' => $finishing_model->getOpsi(),
-			'opsi_manual' => $manual_model->getOpsi(),
-			'opsi_khusus' => $khusus_model->getOpsi(),
         ]);
     }
 
@@ -565,9 +519,7 @@ class MFPartProduk extends BaseController
                     $val->updated_by
                 ];
             } else {
-                $disabled_btn = ((new \App\Models\MFKelompokProdukModel())->checkLinkedProduct($val->id, $id_produk)) ? ' disabled' : '';
                 $add_btn = ((new \App\Models\MFKelompokProdukModel())->checkLinkedProduct($val->id, $id_produk)) ? '<button type="button" class="btn btn-danger del-from-product" data-idpart="'.$val->id.'" data-idproduk="'.$id_produk.'">Batalkan</button>' : '<button type="button" class="btn btn-primary add-to-product" data-idpart="'.$val->id.'" data-idproduk="'.$id_produk.'">Tambahkan</button>';
-//                $add_btn = '<button' . $disabled_btn . ' type="button" class="btn btn-primary add-to-product" data-idpart="'.$val->id.'" data-idproduk="'.$id_produk.'">Tambahkan</button';
 
                 $data[] = [
                     $key + 1,

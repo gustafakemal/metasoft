@@ -183,4 +183,22 @@ class MFJenisFlute extends BaseController
 		return redirect()->back()
 			->with('error', 'Data gagal dihapus');
 	}
+
+    public function getSelectOptions()
+    {
+        $query = $this->model->getMFJenisFlute();
+
+        $data = [];
+        foreach($query as $row) {
+            $data[] = [
+                'id' => $row->id,
+                'name' => $row->nama
+            ];
+        }
+
+        return $this->response->setJSON([
+            'success' => true,
+            'data' => $data
+        ]);
+    }
 }

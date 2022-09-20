@@ -187,4 +187,22 @@ class MFProsesFinishing extends BaseController
 		return redirect()->back()
 			->with('error', 'Data gagal dihapus');
 	}
+
+    public function getSelectOptions()
+    {
+        $query = $this->model->getMFProsesFinishing();
+
+        $data = [];
+        foreach ($query as $key => $row) {
+            $data[] = [
+                'id' => $row->id,
+                'name' => $row->proses
+            ];
+        }
+
+        return $this->response->setJSON([
+            'success' => true,
+            'data' => $data
+        ]);
+    }
 }

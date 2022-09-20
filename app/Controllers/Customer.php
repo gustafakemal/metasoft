@@ -183,4 +183,22 @@ class Customer extends BaseController
     	return redirect()->back()
     					->with('error', 'Data gagal dihapus');
     }
+
+    public function getSelectOptions()
+    {
+        $query = $this->model->getCustomers();
+
+        $data = [];
+        foreach ($query as $row) {
+            $data[] = [
+                'id' => $row->NoPemesan,
+                'name' => $row->NamaPemesan
+            ];
+        }
+
+        return $this->response->setJSON([
+            'success' => true,
+            'data' => $data
+        ]);
+    }
 }

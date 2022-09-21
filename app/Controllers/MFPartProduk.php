@@ -107,7 +107,6 @@ class MFPartProduk extends BaseController
         unset($data['finishingcolors']);
         unset($data['khususcolors']);
 
-//        $data['id'] = random_string('basic');
         $data['added_by'] = session()->get('UserID');
 
         if($id_part == 1) {
@@ -118,8 +117,6 @@ class MFPartProduk extends BaseController
             unset($data['no_fgd']);
             unset($data['revisi']);
         }
-
-//        return $this->response->setJSON($data);
 
         if($model->insert($data)) {
 
@@ -568,10 +565,6 @@ class MFPartProduk extends BaseController
 
 	public function apiGetAll()
 	{
-//		if ($this->request->getMethod() !== 'post') {
-//			return redirect()->to('mfpartproduk');
-//		}
-
         $query = $this->model->getAll();
 
         $data = [];
@@ -610,6 +603,10 @@ class MFPartProduk extends BaseController
     public function apiGetByProduct($id_produk)
     {
         $ids_part = (new \App\Models\MFKelompokProdukModel())->getIdsPart($id_produk);
+
+        if(count($ids_part) == 0) {
+            return $this->response->setJSON(['success' => true, 'data' => []]);
+        }
 
         $query = $this->model->getByIds($ids_part);
 
@@ -826,189 +823,6 @@ class MFPartProduk extends BaseController
         return $this->response->setJSON($response);
     }
 
-	public function apiEditRevision()
-	{
-		if ($this->request->getMethod() !== 'post') {
-			return redirect()->to('mfproduk');
-		}
-
-		$data = $this->request->getPost();
-		$data['updated_by'] = current_user()->UserID;
-		unset($data['fgd']);
-
-		if(array_key_exists('frontside_colors', $data) || array_key_exists('backside_colors', $data)) {
-			$data_colors = [];
-			if(array_key_exists('frontside_colors', $data)) {
-				$data_colors = array_merge($data_colors, $this->productColors($data['frontside_colors'], $data['id'], 'F'));
-			}
-			if(array_key_exists('backside_colors', $data)) {
-				$data_colors = array_merge($data_colors, $this->productColors($data['backside_colors'], $data['id'], 'B'));
-			}
-			if(count($data_colors) > 0) {
-				$color_model = new \App\Models\MFProdukWarnaModel();
-				$update_colors = $color_model->reInsert($data_colors);
-			}
-		}
-
-		if(array_key_exists('finishing', $data)) {
-			$data_finishing = $this->productProcess($data['finishing'], $data['id']);
-			if(count($data_finishing) > 0) {
-				$finishing_model = new \App\Models\MFProdukFinishingModel();
-				$update_finishing = $finishing_model->reInsert($data_finishing);
-			}
-		}
-
-		if(array_key_exists('manual', $data)) {
-			$data_manual = $this->productProcess($data['manual'], $data['id']);
-			if(count($data_manual) > 0) {
-				$manual_model = new \App\Models\MFProdukManualModel();
-				$update_manual = $manual_model->reInsert($data_manual);
-			}
-		}
-
-		if(array_key_exists('khusus', $data)) {
-			$data_khusus = $this->productProcess($data['khusus'], $data['id']);
-			if(count($data_khusus) > 0) {
-				$khusus_model = new \App\Models\MFProdukKhususModel();
-				$update_khusus = $khusus_model->reInsert($data_khusus);
-			}
-		}
-
-		// return $this->response->setJSON(['data' => $data]);
-
-		$main_data = $this->model->save($data);
-
-		if(isset($update_colors) && !$update_colors) {
-			array_push($this->errors, 'Data warna gagal diupdate.');
-		}
-		if(isset($update_finishing) && !$update_finishing) {
-			array_push($this->errors, 'Data finishing gagal diupdate.');
-		}
-		if(isset($update_manual) && !$update_manual) {
-			array_push($this->errors, 'Data manual gagal diupdate.');
-		}
-		if(isset($update_khusus) && !$update_khusus) {
-			array_push($this->errors, 'Data khusus gagal diupdate.');
-		}
-		if(!$main_data) {
-			$this->errors = array_merge($this->errors, $this->model->errors());
-		}
-
-    	if( count($this->errors) > 0 ) {
-    		return $this->response->setJSON([
-    			'success' => false,
-    			'msg' => '<p>' . implode('</p><p>', $this->errors) . '</p>',
-    			'data' => null,
-    		]);
-    	}
-
-    	return $this->response->setJSON([
-    		'success' => true,
-    		'msg' => 'Data revisi berhasil diupdate',
-    		'data' => [
-    			'id' => $data['id'],
-    		],
-    	]);
-	}
-
-	public function apiAddRevision() {
-
-		if ($this->request->getMethod() !== 'post') {
-			return redirect()->to('mfproduk');
-		}
-
-		$data = $this->request->getPost();
-		$id = $this->model->idGenerator();
-		$data['id'] = $id;
-		 $data['fgd'] = $this->model->fgdGenerator();
-		$data['revisi'] = 1 + $this->model->getLastRev('220600000007')->revisi;
-		$data['added_by'] = current_user()->UserID;
-
-		if(array_key_exists('frontside_colors', $data) || array_key_exists('backside_colors', $data)) {
-			$data_colors = [];
-			if(array_key_exists('frontside_colors', $data)) {
-				$data_colors = array_merge($data_colors, $this->productColors($data['frontside_colors'], $id, 'F'));
-			}
-			if(array_key_exists('backside_colors', $data)) {
-				$data_colors = array_merge($data_colors, $this->productColors($data['backside_colors'], $id, 'B'));
-			}
-			if(count($data_colors) > 0) {
-				$color_model = new \App\Models\MFProdukWarnaModel();
-				$insert_colors = $color_model->insertBatch($data_colors);
-			}
-		}
-
-		if(array_key_exists('finishing', $data)) {
-			$data_finishing = $this->productProcess($data['finishing'], $id);
-			if(count($data_finishing) > 0) {
-				$finishing_model = new \App\Models\MFProdukFinishingModel();
-				$insert_finishing = $finishing_model->insertBatch($data_finishing);
-			}
-		}
-
-		if(array_key_exists('manual', $data)) {
-			$data_manual = $this->productProcess($data['manual'], $id);
-			if(count($data_manual) > 0) {
-				$manual_model = new \App\Models\MFProdukManualModel();
-				$insert_manual = $manual_model->insertBatch($data_manual);
-			}
-		}
-
-		if(array_key_exists('khusus', $data)) {
-			$data_khusus = $this->productProcess($data['khusus'], $id);
-			if(count($data_khusus) > 0) {
-				$khusus_model = new \App\Models\MFProdukKhususModel();
-				$insert_khusus = $khusus_model->insertBatch($data_khusus);
-			}
-		}
-
-		$main_data = $this->model->insert($data);
-
-		if(isset($insert_colors) && !$insert_colors) {
-			array_push($this->errors, 'Data warna gagal diinsert.');
-		}
-		if(isset($insert_finishing) && !$insert_finishing) {
-			array_push($this->errors, 'Data finishing gagal diinsert.');
-		}
-		if(isset($insert_manual) && !$insert_manual) {
-			array_push($this->errors, 'Data manual gagal diinsert.');
-		}
-		if(isset($insert_khusus) && !$insert_khusus) {
-			array_push($this->errors, 'Data khusus gagal diinsert.');
-		}
-		if(!$main_data) {
-			$this->errors = array_merge($this->errors, $this->model->errors());
-		}
-
-    	if( count($this->errors) > 0 ) {
-    		if(isset($insert_colors) && $insert_colors) {
-    			$color_model->deleteByProdID($id);
-    		}
-    		if(isset($insert_finishing) && $insert_finishing) {
-    			$finishing_model->deleteByProdID($id);
-    		}
-    		if(isset($insert_manual) && $insert_manual) {
-    			$manual_model->deleteByProdID($id);
-    		}
-    		if(isset($insert_khusus) && $insert_khusus) {
-    			$khusus_model->deleteByProdID($id);
-    		}
-    		return $this->response->setJSON([
-    			'success' => false,
-    			'msg' => '<p>' . implode('</p><p>', $this->errors) . '</p>',
-    			'data' => null,
-    		]);
-    	}
-
-    	return $this->response->setJSON([
-    				'success' => true,
-    				'msg' => 'Revisi baru berhasil ditambahkan.',
-    				'data' => [
-    					'id' => $data['id'],
-    				],
-    			]);
-	}
-
 	public function apiEditProcess()
 	{
         if ($this->request->getMethod() !== 'post') {
@@ -1025,8 +839,6 @@ class MFPartProduk extends BaseController
             $data['added_by'] = current_user()->UserID;
             $data['revisi'] = $this->model->revGenerator($data['fgd']);
 
-//            $data_sisi = $this->cloneSelectSisi($existing_id);
-
         } else {
             $id = $data['id'];
             unset($data['id']);
@@ -1035,8 +847,6 @@ class MFPartProduk extends BaseController
         }
 
         $data['nama'] = strtoupper($data['nama']);
-
-//        return $this->response->setJSON(['data' => $data]);
 
         $file = $this->request->getFile('file_dokcr');
         $data['file_dokcr'] = $file->getName();

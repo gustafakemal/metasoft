@@ -1,11 +1,7 @@
 $(function () {
 
-	bsCustomFileInput.init()
-
 	let customerData;
 	let partProduk;
-	let fsval = [];
-	let bsval = [];
 
 	$("#dataList").DataTable({
 		data: customerData,
@@ -276,7 +272,7 @@ $(function () {
 
 	$('.edit-produk-form').on('click', 'select[name="segmen"]', function (e) {
 		const val = $('.edit-produk-form select[name="segmen"] option').filter(':selected').val();
-		loadSelectOptions({select_element_name: 'segmen', url: `${HOST}/segmen/getSelectOptions`, defaultSelected: parseInt(val), add_form: false});
+		loadSelectOptions({select_element_name: 'segmen', url: `${HOST}/segmen/getSelectOptions`, defaultSelected: val, add_form: false});
 	})
 		.on('click', 'select[name="sales"]', function (e) {
 			const val = $('.edit-produk-form select[name="sales"] option').filter(':selected').val();

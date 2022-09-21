@@ -189,7 +189,7 @@ class MFProsesManual extends BaseController
 
     public function getSelectOptions()
     {
-        $query = $this->model->getMFProsesManual();
+        $query = $this->model->getOpsi();
 
         $data = [];
         foreach ($query as $key => $row) {

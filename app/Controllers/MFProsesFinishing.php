@@ -190,7 +190,7 @@ class MFProsesFinishing extends BaseController
 
     public function getSelectOptions()
     {
-        $query = $this->model->getMFProsesFinishing();
+        $query = $this->model->getOpsi();
 
         $data = [];
         foreach ($query as $key => $row) {

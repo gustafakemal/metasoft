@@ -157,7 +157,6 @@ $(function () {
 				}
 			},
 			complete: function () {
-				// $('#cariPart .add-to-product').prop('disabled', false);
 				setTimeout(() => {
 					$('.floating-msg').removeClass('show').html('');
 				}, 3000)
@@ -194,7 +193,6 @@ $(function () {
 					}
 				},
 				complete: function () {
-					// $('#cariPart .add-to-product').prop('disabled', false);
 					setTimeout(() => {
 						$('.floating-msg').removeClass('show').html('');
 					}, 3000)

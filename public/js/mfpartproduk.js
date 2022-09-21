@@ -39,46 +39,6 @@ $(function () {
 		})
 	})
 
-	$('.dynamic-content').on('submit', '.edit-revision-form', function(e) {
-		e.preventDefault();
-		const formData = new FormData(this)
-
-		$.ajax({
-			type: 'POST',
-			url: `${HOST}/mfproduk/apiEditRevision`,
-			dataType: 'JSON',
-			data: formData,
-			contentType: false,
-			processData: false,
-			beforeSend: function () {
-				$('.edit-revision-form input, .edit-revision-form select, .edit-revision-form textarea, .edit-revision-form button').attr('disabled', true)
-			},
-			success: function (response) {
-				if(response.success) {
-					$('.csc-form')[0].reset();
-					$('.csc-form').removeClass('show edit-revision-form')
-					$('input[name="cariproduk"]').val('')
-					$('.csc-form input[name="id"]').remove()
-					$('.floating-msg').html(`
-						<div class="alert alert-success">${response.msg}</div>
-						`)
-				} else {
-					$('.floating-msg').addClass('show')
-					$('.floating-msg').html(`
-						<div class="alert alert-danger">${response.msg}</div>
-						`)
-				}
-			},
-			error: function () {},
-			complete: function() {
-				$('.edit-revision-form input, .edit-revision-form select, .edit-revision-form textarea, .edit-revision-form button').attr('disabled', false)
-				setTimeout(() => {
-					$('.floating-msg').removeClass('show');
-				}, 3000);
-			}
-		})
-	})
-
 	$('select[name="technical_draw"]').on('change', function() {
 		if( $('option:selected', this).val() === 'Y' ) {
 			$('input[name="no_dokumen"]').attr('disabled', false)
@@ -87,44 +47,6 @@ $(function () {
 			$('input[name="no_dokumen"]').attr('disabled', true)
 			$('.no-dok-mark').addClass('d-none');
 		}
-	})
-
-	$('.dynamic-content').on('submit', '.add-revision-form', function(e) {
-		e.preventDefault();
-		const formData = new FormData(this)
-
-		$.ajax({
-			type: 'POST',
-			url: `${HOST}/mfproduk/apiAddRevision`,
-			dataType: 'JSON',
-			data: formData,
-			contentType: false,
-			processData: false,
-			beforeSend: function () {
-				$('.add-revision-form input, .add-revision-form select, .add-revision-form textarea, .add-revision-form button').attr('disabled', true)
-			},
-			success: function (response) {
-				if(response.success) {
-					$('.csc-form')[0].reset();
-					$('.csc-form').removeClass('show add-revision-form')
-					$('input[name="cariproduk"]').val('')
-					$('.floating-msg').addClass('show').html(`
-						<div class="alert alert-success">${response.msg}</div>
-						`)
-				} else {
-					$('.floating-msg').addClass('show').html(`
-						<div class="alert alert-danger">${response.msg}</div>
-						`)
-				}
-			},
-			error: function () {},
-			complete: function() {
-				$('.add-revision-form input, .add-revision-form select, .add-revision-form textarea, .add-revision-form button').attr('disabled', false)
-				setTimeout(() => {
-					$('.floating-msg').removeClass('show');
-				}, 3000);
-			}
-		})
 	})
 
 	$('.dynamic-content').on('submit', '.add-new-fgd', function(e) {

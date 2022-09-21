@@ -37,11 +37,11 @@
                             <i class="far fa-user-circle"></i>
                         </div>
                         <div class="name"><?php echo (current_user()) ? current_user()->Nama : 'UNAUTHENTICATED' ?></div>
-                        <div class="dropdown-menu dropdown-menu-right">
-                            <a href="#" class="dropdown-item">Profil</a>
-                            <a href="<?= site_url('logout'); ?>" class="dropdown-item">Logout</a>
-                        </div>
                     </button>
+                    <div class="dropdown-menu dropdown-menu-right">
+                        <a href="#" class="dropdown-item">Profil</a>
+                        <a href="<?= site_url('logout'); ?>" class="dropdown-item">Logout</a>
+                    </div>
                 </div>
 
             </div>

@@ -166,14 +166,6 @@ class MFProduk extends BaseController
 
 		$id = $this->request->getPost('id');
 		$data = $this->model->getById($id)->getFirstRow();
-
-//		$warna_model = new \App\Models\MFProdukWarnaModel();
-//		$data->backside_colors = $warna_model->getByProdID($id, 'B');
-//		$data->frontside_colors = $warna_model->getByProdID($id, 'F');
-//
-//		$data->finishing = (new \App\Models\MFProdukFinishingModel())->getByProdID($id);
-//		$data->khusus = (new \App\Models\MFProdukKhususModel())->getByProdID($id);
-//		$data->manual = (new \App\Models\MFProdukManualModel())->getByProdID($id);
 		
 		$response = [
 			'success' => (null !== $this->model->getById($id)) ? true : false,

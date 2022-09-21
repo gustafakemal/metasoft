@@ -189,7 +189,7 @@ class MFProsesKhusus extends BaseController
 
     public function getSelectOptions()
     {
-        $query = $this->model->getMFProsesKhusus();
+        $query = $this->model->getOpsi();
 
         $data = [];
         foreach ($query as $key => $row) {

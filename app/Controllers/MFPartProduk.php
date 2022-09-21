@@ -20,41 +20,10 @@ class MFPartProduk extends BaseController
 		$this->model = new MFPartProdukModel();
 	}
 
-	// public function index2() {
-	// 	dd($this->model->getByFgdNama2('c'));
-	// }
-
 	public function index()
 	{
-
-//		$segmen_model = new \App\Models\SegmenModel();
-//		$customer_model = new \App\Models\CustomerModel();
-//		$sales_model = new \App\Models\SalesModel();
-//		$tujuankirim_model = new \App\Models\MFTujuanKirimModel();
-//		$jeniskertas_model = new \App\Models\MFJenisKertasModel();
-//		$jenistinta_model = new \App\Models\MFJenisTintaModel();
-//		$jenisflute_model = new \App\Models\MFJenisFluteModel();
-//		$packing_model = new \App\Models\MFPackingModel();
-//		$finishing_model = new \App\Models\MFProsesFinishingModel();
-//		$manual_model = new \App\Models\MFProsesManualModel();
-//		$khusus_model = new \App\Models\MFProsesKhususModel();
 		return view('MFPartProduk/cari', [
 			'page_title' => 'Cari Part Produk MF',
-//			'opsi_segmen' => $segmen_model->getAll(),
-//			'opsi_customer' => $customer_model->getOpsi(),
-//			'opsi_sales' => $sales_model->getOpsi(),
-			// 'opsi_sales' => [],
-//			'opsi_tujuankirim' => $tujuankirim_model->getOpsi(),
-//			'opsi_kertas' => $tujuankirim_model->getOpsi(),
-//			'opsi_jeniskertas' => $jeniskertas_model->getOpsi(),
-//			'opsi_jenistinta' => $jenistinta_model->getOpsi(),
-//			'opsi_jenisflute' => $jenisflute_model->getOpsi(),
-//			'opsi_innerpack' => $packing_model->getOpsi('Inner'),
-//			'opsi_outerpack' => $packing_model->getOpsi('Outer'),
-//			'opsi_deliverypack' => $packing_model->getOpsi('Delivery'),
-//			'opsi_finishing' => $finishing_model->getOpsi(),
-//			'opsi_manual' => $manual_model->getOpsi(),
-//			'opsi_khusus' => $khusus_model->getOpsi(),
 		]);
 	}
 
@@ -766,7 +735,6 @@ class MFPartProduk extends BaseController
             // Masukkan ke kelompok produk
             if($reference_link != '' && $id_produk != '') {
                 $this->insertToProduct($id_produk, $id);
-//                $redirect_url = site_url('mfproduk/edit/' . $id_produk);
                 $redirect_url = site_url('partproduk/edit/' . $id . '?id_produk=' . $id_produk);
             } else {
                 $redirect_url = site_url('partproduk/edit/' . $id);
@@ -783,7 +751,6 @@ class MFPartProduk extends BaseController
             $errors = $this->model->errors();
             if( ! $technical_draw ) {
                 $errors['no_dokumen'] = 'No dokumen wajib diisi';
-//                $errors['typeof'] = implode(',', $this->model->errors());
             }
 
             return $this->response->setJSON([
@@ -1325,13 +1292,6 @@ class MFPartProduk extends BaseController
         return $results;
     }
 
-	public function delete($id)
-	{
-	
-		return redirect()->back()
-			->with('error', 'Data gagal dihapus');
-	}
-
 	private function productColors($colors, $prod_id, $initial_position)
 	{
 		if(!is_array($colors) || count($colors) == 0) {
@@ -1360,13 +1320,4 @@ class MFPartProduk extends BaseController
 			];
 		}, $process);
 	}
-
-    public function masters()
-    {
-        $data = (new \App\Models\MFJenisKertasModel())->getOpsi();
-        return $this->response->setJSON([
-            'success' => true,
-            'data' => $data
-        ]);
-    }
 }

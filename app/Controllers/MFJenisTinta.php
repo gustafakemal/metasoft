@@ -182,7 +182,7 @@ class MFJenisTinta extends BaseController
 
     public function getSelectOptions()
     {
-        $query = $this->model->getMFJenisTinta();
+        $query = $this->model->getOpsi();
 
         $data = [];
         foreach($query as $row) {

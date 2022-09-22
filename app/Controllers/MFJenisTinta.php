@@ -35,9 +35,6 @@ class MFJenisTinta extends BaseController
 
 		$data = [];
 		foreach ($query as $key => $value) {
-			//$detail = '<a href="#" data-id="' . $value->id . '" class=" btn item-detail" title="Detail"><i class="far fa-file-alt"></i></a> ';
-			//$edit = '<a href="#" data-id="' . $value->id . '" class="item-edit" title="Edit"><i class="far fa-edit"></i></a> ';
-			//$hapus = '<a href="' . site_url('mfjenistinta/delete/' . $value->id) . '" onclick="return confirm(\'Apa Anda yakin menghapus user ini?\')" title="Delete"><i class="fas fa-trash-alt"></i></a>';
 
 			$CreateDate = (Time::parse($value->added))->toDateTimeString();
 			 
@@ -49,13 +46,13 @@ class MFJenisTinta extends BaseController
 			$data[] = [
 				$key + 1,
 				$value->id,
-				$CreateDate,
+                $this->common->dateFormat($CreateDate),
 				$value->nama,
 				number_format($value->harga,2,",","."),
 				$value->aktif,
-				$value->added,
+                $this->common->dateFormat($value->added),
 				$value->added_by,
-				$value->updated,
+                $this->common->dateFormat($value->updated),
 				$value->updated_by,
 				$detail . $edit . $hapus
 			];
@@ -112,10 +109,7 @@ class MFJenisTinta extends BaseController
 		}
 
 		$data = $this->request->getPost();
-		//$data['id'] = $this->model->getMaxId() + 1;
 		$data['added_by'] = current_user()->UserID;
-
-		// return $this->response->setJSON($data);
 
 		if ($this->model->insert($data)) {
 			$msg = 'Data berhasil ditambahkan';

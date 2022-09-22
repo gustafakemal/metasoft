@@ -34,8 +34,8 @@ $routes->setAutoRoute(true);
 // We get a performance increase by specifying the default
 // route since we don't have to scan directories.
 $routes->get('/', 'Home::index');
-$routes->add('login', 'Auth::login');
-$routes->add('logout', 'Auth::logout');
+$routes->get('login', 'Auth::login');
+$routes->get('logout', 'Auth::logout');
 $routes->add('partproduk/add', 'MFPartProduk::addPartProduct');
 $routes->add('partproduk/edit/(:any)', 'MFPartProduk::editPartProduct/$1');
 $routes->add('partproduk/rev/(:any)/(:any)', 'MFPartProduk::editPartProduct/$1/$2');

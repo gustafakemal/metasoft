@@ -32,29 +32,22 @@ class MFTujuanKirim extends BaseController
 		$data = [];
 		foreach ($query as $key => $value) {
 			$CreateDate = (Time::parse($value->added))->toDateTimeString();
-			$obj = [
-				'CreateDate' => $CreateDate,
-				'tujuan' => $value->tujuan,
-				'harga' => $value->harga
-			];
 
-			$objstring = json_encode($obj);
 			$detail = '<a class="btn btn-primary btn-sm item-detail mr-1" href="#" data-id="' . $value->id . '" title="Detail"><i class="far fa-file-alt"></i></a>';
 			$edit = '<a class="btn btn-success btn-sm item-edit mr-1" href="#" data-id="' . $value->id . '" data-tujuan="'.$value->tujuan.'" data-harga="'.$value->harga.'" data-added="'.$CreateDate.'" data-aktif="'.$value->aktif.'|Y,T" title="Edit"><i class="far fa-edit"></i></a>';
 			$hapus = '<a class="btn btn-danger btn-sm" href="' . site_url('mftujuankirim/delete/' . $value->id) . '" data-id="' . $value->id . '" onclick="return confirm(\'Apa Anda yakin menghapus data ini?\')" title="Hapus"><i class="fas fa-trash-alt"></i></a>';
-	
 		
 			$CreateDate = (Time::parse($value->added))->toDateTimeString();
 			$data[] = [
 				$key + 1,
 				$value->id,
-				$CreateDate,
+                $this->common->dateFormat($CreateDate),
 				$value->tujuan,
 				number_format($value->harga,2,",","."),
 				$value->aktif,
-				$value->added,
+                $this->common->dateFormat($value->added),
 				$value->added_by,
-				$value->updated,
+                $this->common->dateFormat($value->updated),
 				$value->updated_by,
 				$detail . $edit . $hapus
 			];
@@ -111,10 +104,7 @@ class MFTujuanKirim extends BaseController
 		}
 
 		$data = $this->request->getPost();
-		//$data['id'] = $this->model->getMaxId() + 1;
 		$data['added_by'] = current_user()->UserID;
-
-		//return $this->response->setJSON($data);
 
 		if ($this->model->insert($data)) {
 			$msg = 'Data berhasil ditambahkan';
@@ -149,11 +139,8 @@ class MFTujuanKirim extends BaseController
 		$id=$data["id"];
 		unset($data["id"]);
 
-		//return $this->response->setJSON($data);
-
 		if ($this->model->updateById($id, $data)) {
 			$msg = 'Data berhasil diupdate';
-			//session()->setFlashData('success', $msg);
 			$response = [
 				'success' => true,
 				'msg' => $msg,

@@ -36,6 +36,15 @@ $routes->setAutoRoute(true);
 $routes->get('/', 'Home::index');
 $routes->get('login', 'Auth::login');
 $routes->get('logout', 'Auth::logout');
+
+$routes->group('api', static function ($routes) {
+    $routes->group('master', static function ($routes) {
+        $routes->get('kertas', 'MFJenisKertas::apiGetAll');
+        $routes->get('kertas/(:num)', 'MFJenisKertas::apiGetById/$1');
+        $routes->post('kertas', 'MFJenisKertas::apiAddProcess');
+        $routes->put('kertas', 'MFJenisKertas::apiEditProcess');
+    });
+});
 $routes->add('partproduk/add', 'MFPartProduk::addPartProduct');
 $routes->add('partproduk/edit/(:any)', 'MFPartProduk::editPartProduct/$1');
 $routes->add('partproduk/rev/(:any)/(:any)', 'MFPartProduk::editPartProduct/$1/$2');

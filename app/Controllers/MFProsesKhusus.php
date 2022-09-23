@@ -25,13 +25,15 @@ class MFProsesKhusus extends BaseController
 		]);
 	}
 
-	public function apiGetAll()
+    /**
+     * @return \CodeIgniter\HTTP\ResponseInterface
+     * @throws \Exception
+     *
+     * Endpoint GET /api/master/khusus
+     */
+    public function apiGetAll()
 	{
-		if ($this->request->getMethod() !== 'post') {
-			return redirect()->to('mfproseskhusus');
-		}
-
-		$query = $this->model->getMFProsesKhusus();
+        $query = $this->model->getMFProsesKhusus();
 
 		$data = [];
 		foreach ($query as $key => $value) {
@@ -60,14 +62,15 @@ class MFProsesKhusus extends BaseController
 		return $this->response->setJSON($data);
 	}
 
-	public function apiGetById()
+    /**
+     * @return \CodeIgniter\HTTP\ResponseInterface
+     * @throws \Exception
+     *
+     * Endpoint GET /api/master/khusus/$1
+     */
+    public function apiGetById($id)
 	{
-		if ($this->request->getMethod() !== 'post') {
-			return redirect()->to('mfproseskhusus');
-		}
-
-		$id = $this->request->getPost('id');
-		$modified = $this->request->getPost('modified') ?? false;
+		$modified = $this->request->getGet('modified') == 'yes';
 
 		$query = $this->model->getById($id);
 
@@ -101,12 +104,14 @@ class MFProsesKhusus extends BaseController
 		return $this->response->setJSON($response);
 	}
 
-	public function apiAddProcess()
+    /**
+     * @return \CodeIgniter\HTTP\ResponseInterface
+     * @throws \Exception
+     *
+     * Endpoint POST /api/master/khusus
+     */
+    public function apiAddProcess()
 	{
-		if ($this->request->getMethod() !== 'post') {
-			return redirect()->to('mfproseskhusus');
-		}
-
 		$data = $this->request->getPost();
 		$data['added_by'] = current_user()->UserID;
 
@@ -131,13 +136,15 @@ class MFProsesKhusus extends BaseController
 		return $this->response->setJSON($response);
 	}
 
-	public function apiEditProcess()
+    /**
+     * @return \CodeIgniter\HTTP\ResponseInterface
+     * @throws \Exception
+     *
+     * Endpoint PUT /api/master/khusus
+     */
+    public function apiEditProcess()
 	{
-		if ($this->request->getMethod() !== 'post') {
-			return redirect()->to('mfproseskhusus');
-		}
-
-		$data = $this->request->getPost();
+        $data = $this->request->getRawInput();
 
 		$data['updated_by'] = current_user()->UserID;
 		$id=$data["id"];

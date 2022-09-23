@@ -4,44 +4,44 @@ $(function () {
 
 	$("#dataList").DataTable({
 		data: mfJenisTintaData,
-        buttons: [{
-                extend: 'excelHtml5',
-                exportOptions: { orthogonal: 'export' }
-            }],
+		buttons: [{
+			extend: 'excelHtml5',
+			exportOptions: { orthogonal: 'export' }
+		}],
 		columnDefs: [{
 			"searchable": false,
 			"orderable": false,
 			"targets": [0, 10]
 		},
-		// {
-		// 	"width": 60,
-		// 	"targets": 18
-		// },{
-		// 	"targets": 14,
-		// 	render: function ( data, type, row, meta ) {
-		// 		if(type === 'export') {
-		// 			return data;
-		// 		} else {
-		// 			return (data == 'Y') ? 'Ya' : 'Tidak';
-		// 		}
-		// 	}
-		// },
-		{
-			"width": 150,
-			"targets": 2
-		},
-		{
-			"width": 100,
-			"targets": 5
-		},
-		{
-			className: 'dt-body-nowrap',
-			"targets": 10
-		},
-		{
-			 "visible": false,
-			 "targets": [1,6,7,8,9]
-		}],
+			// {
+			// 	"width": 60,
+			// 	"targets": 18
+			// },{
+			// 	"targets": 14,
+			// 	render: function ( data, type, row, meta ) {
+			// 		if(type === 'export') {
+			// 			return data;
+			// 		} else {
+			// 			return (data == 'Y') ? 'Ya' : 'Tidak';
+			// 		}
+			// 	}
+			// },
+			{
+				"width": 150,
+				"targets": 2
+			},
+			{
+				"width": 100,
+				"targets": 5
+			},
+			{
+				className: 'dt-body-nowrap',
+				"targets": 10
+			},
+			{
+				"visible": false,
+				"targets": [1,6,7,8,9]
+			}],
 		order: [[ 1, 'desc' ]],
 		createdRow: function (row, data, dataIndex) {
 			$(row).find("td:eq(0)").attr("data-label", "No");
@@ -53,12 +53,12 @@ $(function () {
 		},
 		initComplete: function () {
 			const dropdown = `<div class="dropdown d-inline mr-2">` +
-								`<button class="btn btn-primary dropdown-toggle" type="button" id="customersDropdown" data-toggle="dropdown" aria-expanded="false"><i class="fas fa-cog"></i></button>` +
-								`<div class="dropdown-menu" aria-labelledby="customersDropdown">` +
-								`<a class="dropdown-item data-reload" href="#">Reload data</a>` +
-								`<a class="dropdown-item data-to-csv" href="#">Export to excel</a>` +
-							`</div>` +
-						`</div>`
+				`<button class="btn btn-primary dropdown-toggle" type="button" id="customersDropdown" data-toggle="dropdown" aria-expanded="false"><i class="fas fa-cog"></i></button>` +
+				`<div class="dropdown-menu" aria-labelledby="customersDropdown">` +
+				`<a class="dropdown-item data-reload" href="#">Reload data</a>` +
+				`<a class="dropdown-item data-to-csv" href="#">Export to excel</a>` +
+				`</div>` +
+				`</div>`
 			const add_btn = `<a href="#" class="btn btn-primary btn-add mr-2 add-data_btn">Tambah data</a>`;
 			$("#dataList_wrapper .dataTables_length").prepend(dropdown + add_btn);
 		},
@@ -67,7 +67,7 @@ $(function () {
 	setTimeout(() => {
 		const obj = {
 			beforeSend: function () {
-				
+
 				$('#dataList .dataTables_empty').html('<div class="spinner-icon"><span class="spinner-grow text-info"></span><span class="caption">Fetching data...</span></div>')
 			},
 			success: function (response) {
@@ -80,7 +80,7 @@ $(function () {
 			},
 			complete: function() {}
 		}
-		
+
 		getAllData(obj);
 	}, 50)
 
@@ -108,7 +108,7 @@ $(function () {
 
 		$.ajax({
 			type: "POST",
-			url: `${HOST}/mfjenistinta/apiAddProcess`,
+			url: `${HOST}/api/master/tinta`,
 			dataType: 'JSON',
 			data: formData,
 			contentType: false,
@@ -116,8 +116,8 @@ $(function () {
 			beforeSend: function () {
 				$('#dataForm .modal-footer .loading-indicator').html(
 					'<div class="spinner-icon">' +
-						'<span class="spinner-border text-info"></span>' +
-						'<span class="caption">Memproses data...</span>' +
+					'<span class="spinner-border text-info"></span>' +
+					'<span class="caption">Memproses data...</span>' +
 					'</div>')
 				$('form[name="addData"] input, form[name="addData"] textarea, form[name="addData"] button').attr('disabled', true)
 			},
@@ -149,10 +149,10 @@ $(function () {
 		$('#dataDetail').modal('show')
 		const id = $(this).attr('data-id')
 		$.ajax({
-			type: "POST",
-			url: `${HOST}/mfjenistinta/apiGetById`,
+			type: "GET",
+			url: `${HOST}/api/master/tinta/${id}?modified=yes`,
 			dataType: 'JSON',
-			data: { id, modified: true },
+			// data: { id, modified: true },
 			beforeSend: function () {},
 			success: function (response) {
 				if(response.success) {
@@ -199,9 +199,7 @@ $(function () {
 	const reload_tr = function() {
 		const obj = {
 			success: function (response) {
-				$('#dataList').DataTable().clear();
-				$('#dataList').DataTable().rows.add(response);
-				$('#dataList').DataTable().draw();
+				$('#dataList').DataTable().clear().rows.add(response).draw();
 			},
 		}
 		getAllData(obj);
@@ -209,58 +207,60 @@ $(function () {
 
 	$('body').on('click', '.click-to-close', reload_tr)
 	$('#dataList').on('click', '.cancel-tr-submit', reload_tr)
-	$('#dataList').on('click', 'tr#selected', function(e) {
-		e.stopPropagation()
-	})
-	$('#dataList').on('click', '.save-tr-record', function() {
-		const formData = new FormData();
-		formData.append('id', $('input[name="id"]').val())
-		formData.append('nama', $('input[name="nama"]').val())
-		formData.append('harga', $('input[name="harga"]').val())
-		formData.append('aktif', $('select[name="aktif"] option:selected').val())
-		$.ajax({
-			type: "POST",
-			url: `${HOST}/mfjenistinta/apiEditProcess`,
-			dataType: 'JSON',
-			data: formData,
-			contentType: false,
-			processData: false,
-			beforeSend: function () {},
-			success: function (response) {
-				let msgClass;
-				if(response.success) {
-					reload_tr();
-					msgClass = 'success'
-				} else {
-					msgClass = 'danger'
-				}
-				$('.floating-msg').addClass('show').html(`<div class="alert alert-${msgClass}">${response.msg}</div>`)
-			},
-			error: function () {},
-			complete: function() {
-				setTimeout(() => {
-					$('.floating-msg').removeClass('show').html('');
-				}, 3000);
-			}
+		.on('click', 'tr#selected', function(e) {
+			e.stopPropagation()
 		})
-	})
+		.on('click', '.save-tr-record', function() {
+			const data = {
+				id: $('input[name="id"]').val(),
+				nama: $('input[name="nama"]').val(),
+				harga: $('input[name="harga"]').val(),
+				aktif: $('select[name="aktif"] option:selected').val()
+			};
+			console.log(data)
+			$.ajax({
+				type: "PUT",
+				url: `${HOST}/api/master/tinta`,
+				headers: {'Content-Type': 'application/x-www-form-urlencoded'},
+				contentType: 'application/x-www-form-urlencoded; charset=utf-8',
+				dataType: 'JSON',
+				data: data,
+				beforeSend: function () {},
+				success: function (response) {
+					let msgClass;
+					if(response.success) {
+						reload_tr();
+						msgClass = 'success'
+					} else {
+						msgClass = 'danger'
+					}
+					$('.floating-msg').addClass('show').html(`<div class="alert alert-${msgClass}">${response.msg}</div>`)
+				},
+				error: function () {},
+				complete: function() {
+					setTimeout(() => {
+						$('.floating-msg').removeClass('show').html('');
+					}, 3000);
+				}
+			})
+		})
 
 	$('#dataForm').on('submit', 'form[name="editData"]', function(e) {
 		e.preventDefault();
 		const formData = new FormData(this);
 
 		$.ajax({
-			type: "POST",
-			url: `${HOST}/mfjenistinta/apiEditProcess`,
+			type: "PUT",
+			url: `${HOST}/api/master/tinta`,
+			headers: {'Content-Type': 'application/x-www-form-urlencoded'},
+			contentType: 'application/x-www-form-urlencoded; charset=utf-8',
 			dataType: 'JSON',
 			data: formData,
-			contentType: false,
-			processData: false,
 			beforeSend: function () {
 				$('#dataForm .modal-footer .loading-indicator').html(
 					'<div class="spinner-icon">' +
-						'<span class="spinner-border text-info"></span>' +
-						'<span class="caption">Memproses data...</span>' +
+					'<span class="spinner-border text-info"></span>' +
+					'<span class="caption">Memproses data...</span>' +
 					'</div>')
 				$('form[name="editData"] input, form[name="editData"] textarea, form[name="editData"] button').attr('disabled', true)
 			},
@@ -291,14 +291,11 @@ $(function () {
 		e.preventDefault();
 		const obj = {
 			beforeSend: function () {
-				$('#statusList').DataTable().clear();
-				$('#statusList').DataTable().draw();
+				$('#statusList').DataTable().clear().draw();
 				$('#dataList .dataTables_empty').html('<div class="spinner-icon"><span class="spinner-grow text-info"></span><span class="caption">Fetching data...</span></div>')
 			},
 			success: function (response) {
-				$('#dataList').DataTable().clear();
-				$('#dataList').DataTable().rows.add(response);
-				$('#dataList').DataTable().draw();
+				$('#dataList').DataTable().clear().rows.add(response).draw();
 			},
 			error: function () {
 				$('#dataList .dataTables_empty').html('Data gagal di retrieve.')
@@ -308,15 +305,15 @@ $(function () {
 		getAllData(obj);
 	})
 
-	
+
 });
 
 function getAllData(obj)
 {
-	
+
 	$.ajax({
-		type: "POST",
-		url: `${HOST}/mfjenistinta/apiGetAll`,
+		type: "GET",
+		url: `${HOST}/api/master/tinta`,
 		beforeSend: obj.beforeSend,
 		success: obj.success,
 		error: obj.error,

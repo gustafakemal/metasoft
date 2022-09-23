@@ -43,6 +43,31 @@ $routes->group('api', static function ($routes) {
         $routes->get('kertas/(:num)', 'MFJenisKertas::apiGetById/$1');
         $routes->post('kertas', 'MFJenisKertas::apiAddProcess');
         $routes->put('kertas', 'MFJenisKertas::apiEditProcess');
+
+        $routes->get('tinta', 'MFJenisTinta::apiGetAll');
+        $routes->get('tinta/(:num)', 'MFJenisTinta::apiGetById/$1');
+        $routes->post('tinta', 'MFJenisTinta::apiAddProcess');
+        $routes->put('tinta', 'MFJenisTinta::apiEditProcess');
+
+        $routes->get('flute', 'MFJenisFlute::apiGetAll');
+        $routes->get('flute/(:num)', 'MFJenisFlute::apiGetById/$1');
+        $routes->post('flute', 'MFJenisFlute::apiAddProcess');
+        $routes->put('flute', 'MFJenisFlute::apiEditProcess');
+
+        $routes->get('finishing', 'MFProsesFinishing::apiGetAll');
+        $routes->get('finishing/(:num)', 'MFProsesFinishing::apiGetById/$1');
+        $routes->post('finishing', 'MFProsesFinishing::apiAddProcess');
+        $routes->put('finishing', 'MFProsesFinishing::apiEditProcess');
+
+        $routes->get('manual', 'MFProsesManual::apiGetAll');
+        $routes->get('manual/(:num)', 'MFProsesManual::apiGetById/$1');
+        $routes->post('manual', 'MFProsesManual::apiAddProcess');
+        $routes->put('manual', 'MFProsesManual::apiEditProcess');
+
+        $routes->get('khusus', 'MFProsesKhusus::apiGetAll');
+        $routes->get('khusus/(:num)', 'MFProsesKhusus::apiGetById/$1');
+        $routes->post('khusus', 'MFProsesKhusus::apiAddProcess');
+        $routes->put('khusus', 'MFProsesKhusus::apiEditProcess');
     });
 });
 $routes->add('partproduk/add', 'MFPartProduk::addPartProduct');

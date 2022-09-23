@@ -8,11 +8,6 @@
 
 <h3 class="page-title"><?= $page_title; ?></h3>
 
-<?php echo form_open('api/master/kertas', 'method="put"');?>
-<input type="number" class="form-control" name="id">
-<button type="submit" name="submit" class="btn btn-primary">Sub</button>
-</form>
-
 <?php if (session()->has('success')) : ?>
 	<div class="alert alert-success"><?= session()->get('success'); ?></div>
 <?php endif; ?>

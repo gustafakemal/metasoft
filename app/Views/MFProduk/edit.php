@@ -8,42 +8,49 @@
 
 <h3 class="page-title"><?= $page_title; ?></h3>
 
+<?php if (session()->has('success')) : ?>
+    <div class="hidden-success-el d-none"><?= session()->get('success'); ?></div>
+<?php endif; ?>
+
+<div class="msg_success"></div>
+
+<form method="get" action="<?= site_url('mfproduk');?>">
+  <div class="form-row align-items-center">
+    <div class="col-6">
+      <label class="sr-only" for="cariproduk">Cari Produk</label>
+      <input type="text" style="text-transform:uppercase" class="form-control mb-2" name="keyword" id="cariproduk" placeholder="Cari Produk Berdasarkan Nama Produk">
+    </div>
+	<div class="col-auto">
+      <button type="submit" class="btn btn-primary mb-2">Cari</button>
+    </div>
+  </div>
+</form>
+
 <div class="dynamic-content">
 
-<form class="add-new-fgd">
+
+<form name="csc-form" class="csc-form show edit-produk-form">
 	<div class="msg"></div>
-	<div class="form-group row">
-		<label for="fgd" class="col-sm-2 col-form-label">No FGD</span></label>
-		<div class="col-sm-4">
-		<input type="text" class="form-control" id="fgd" name="fgd" value="(Auto)" readonly>
-		</div>
-		<label for="trevisi" class="col-sm-2 col-form-label">Revisi</span></label>
-		<div class="col-sm-4">
-			<input type="text" class="form-control" id="trevisi" name="trevisi" disabled>
-		</div>
-	</div>
+    <input type="hidden" name="id" value="<?= $data->id;?>" />
 	<div class="form-group row">
 		<label for="nama_produk" class="col-sm-2 col-form-label">Nama Produk <span class="text-danger">*</span></label>
 		<div class="col-sm-10">
-			<input type="text" class="form-control" id="nama_produk" name="nama_produk" value="<?= $data->nama_produk;?>">
+			<input type="text" class="form-control" id="nama_produk" name="nama_produk" value="<?= $data->nama_produk;?>" style="text-transform: uppercase">
 		</div>
 	</div>
 	<div class="form-group row">
 		<label for="segmen" class="col-sm-2 col-form-label">Segmen <span class="text-danger">*</span></label>
 		<div class="col-sm-4">
 			<select name="segmen" class="form-control" id="segmen">
-				<?php foreach ($opsi_segmen as $key => $opsisegmen_item) : ?>
-					<option<?= ($opsisegmen_item->OpsiVal == $data->segmen);?> value="<?= $opsisegmen_item->OpsiVal;?>"><?= $opsisegmen_item->OpsiTeks;?></option>
-				<?php endforeach;?>
+                <option value="">-Pilih segmen-</option>
+                <option selected value="<?= $data->OpsiVal;?>"><?= $data->OpsiTeks;?></option>
 			</select>
 		</div>
 		<label for="sales" class="col-sm-2 col-form-label">Sales <span class="text-danger">*</span></label>
 		<div class="col-sm-4">
 			<select name="sales" class="form-control" id="sales">
-				<!-- <option value="2" selected>--HARDCODED--</option> -->
-				<?php foreach ($opsi_sales as $key => $opsisales_item) : ?>
-					<option<?= ($opsisales_item->SalesID == $data->sales) ? ' selected' : '';?> value="<?= $opsisales_item->SalesID;?>"><?= $opsisales_item->SalesName;?></option>
-				<?php endforeach;?>
+                <option value="">-Pilih sales-</option>
+                <option selected value="<?= $data->SalesID;?>"><?= $data->SalesName;?></option>
 			</select>
 		</div>
 	</div>
@@ -51,9 +58,8 @@
 		<label for="customer" class="col-sm-2 col-form-label">Pelanggan <span class="text-danger">*</span></label>
 		<div class="col-sm-4">
 			<select name="customer" class="form-control" id="customer">
-				<?php foreach ($opsi_customer as $key => $opsicustomer_item) : ?>
-					<option<?= ($opsicustomer_item->NoPemesan == $data->customer) ? ' selected' : '';?> value="<?= $opsicustomer_item->NoPemesan;?>"><?= $opsicustomer_item->NamaPemesan;?></option>
-				<?php endforeach;?>
+                <option value="">-Pilih pelanggan-</option>
+                <option selected value="<?= $data->NoPemesan;?>"><?= $data->NamaPemesan;?></option>
 			</select>
 		</div>
 		<label for="contact_person" class="col-sm-2 col-form-label">Contact Person <span class="text-danger">*</span></label>
@@ -65,292 +71,15 @@
 		<label for="tujuan_kirim" class="col-sm-2 col-form-label">Tujuan Kirim <span class="text-danger">*</span></label>
 		<div class="col-sm-4">
 			<select name="tujuan_kirim" class="form-control" id="tujuan_kirim">
-				<?php foreach ($opsi_tujuankirim as $key => $opsitujuankirim_item) : ?>
-					<option<?= ($opsitujuankirim_item->id == $data->tujuan_kirim) ? ' selected' : '';?> value="<?= $opsitujuankirim_item->id;?>"><?= $opsitujuankirim_item->tujuan;?></option>
-				<?php endforeach;?>
+                <option value="">-Pilih tujuan-</option>
+                <option selected value="<?= $data->tujuan_id;?>"><?= $data->tujuan;?></option>
 			</select>
 		</div>
 	</div>
-	<div class="form-group row">
-		<label for="tujuan_penggunaan" class="col-sm-2 col-form-label">Tujuan Penggunaan</label>
-		<div class="col-sm-4">
-			<textarea name="tujuan_penggunaan" class="form-control" id="tujuan_penggunaan" row="3"><?= $data->tujuan_penggunaan;?></textarea>
-		</div>
-		<label for="special_req" class="col-sm-2 col-form-label">Kebutuhan Khusus</label>
-		<div class="col-sm-4">
-			<textarea name="special_req" class="form-control" id="special_req" row="3"></textarea>
-		</div>
-	</div>
-	<div class="form-group row row-change-request">
-		<label for="no_dokcr" class="col-sm-3 col-form-label">No Dokumen Change Request</label>
-		<div class="col-sm-4">
-			<input type="text" class="form-control" id="fgd" name="fgd">
-		</div>
-		<div class="custom-file col-sm-5">
-			<input type="file" class="custom-file-input" id="file_dokcr">
-			<label class="custom-file-label" for="file_dokcr">Pilih Dokumen...</label>
-			<div class="invalid-feedback">Example invalid custom file feedback</div>
-		</div>
-	</div>
-	<div class="form-group row">
-		<label for="frontside" class="col-sm-2 col-form-label">Warna Frontside</label>
-		<div class="col-sm-4">
-			<input type="number" readonly class="form-control" id="frontside" name="frontside" value="0">
-		</div>
-		<label for="backside" class="col-sm-2 col-form-label">Warna Backside</label>
-		<div class="col-sm-4">
-			<input type="number" readonly class="form-control" id="backside" name="backside" value="0">
-		</div>
-	</div>
-	<ul class="nav nav-tabs" id="myTab" role="tablist">
-  		<li class="nav-item">
-    		<a class="nav-link active" id="layout-tab" data-toggle="tab" href="#layout" role="tab" aria-controls="layout" aria-selected="true">Layout/Dimensi</a>
-  		</li>
-  		<li class="nav-item">
-    		<a class="nav-link" id="material-tab" data-toggle="tab" href="#material" role="tab" aria-controls="material" aria-selected="false">Material</a>
-  		</li>
-  		<li class="nav-item">
-    		<a class="nav-link" id="packing-tab" data-toggle="tab" href="#packing" role="tab" aria-controls="packing" aria-selected="false">Packing</a>
-  		</li>
-  		<li class="nav-item">
-    		<a class="nav-link" id="warna-tab" data-toggle="tab" href="#warna" role="tab" aria-controls="warna" aria-selected="false">Warna</a>
-  		</li>
-  		<li class="nav-item">
-    		<a class="nav-link" id="proses-tab" data-toggle="tab" href="#proses" role="tab" aria-controls="proses" aria-selected="false">Proses</a>
-  		</li>
-	</ul>
-	<div class="tab-content" id="myTabContent">
-  		<div class="tab-pane fade show active" id="layout" role="tabpanel" aria-labelledby="layout-tab">
-  			<div class="mt-4">
- 	 			<div class="form-group row">
-				  	<label for="technical_draw" class="col-sm-2 col-form-label">Technical Drawing</label>
-					<div class="col-sm-4">
-						<select class="form-control" id="technical_draw" name="technical_draw">
-							<option value="Y">Ya</option>
-							<option value="T" selected>Tidak</option>
-						</select>
-					</div>
-					<label for="no_dokumen" class="col-sm-2 col-form-label">No Dokumen</label>
-					<div class="col-sm-4">
-						<input type="text" class="form-control" id="no_dokumen" name="no_dokumen" disabled>
-					</div>
-				</div>
-				<div class="form-group row">
-					<label for="ukuranjadi" class="col-sm-2 col-form-label">Ukuran Jadi (mm)</label>
-					<div class="col-sm-3">
-					<input type="text" class="form-control" id="panjang" name="panjang" placeholder="Panjang">
-					</div>
-					<div class="col-sm-3">
-					<input type="text" class="form-control" id="lebar" name="lebar"  placeholder="Lebar">
-					</div>
-					<div class="col-sm-3">
-					<input type="text" class="form-control" id="tinggi" name="tinggi"  placeholder="Tinggi">
-					</div>
-				</div>
-			</div>	
-  		</div>
-  		<div class="tab-pane fade" id="material" role="tabpanel" aria-labelledby="material-tab">
-			<div class="mt-4">
-				<div class="form-group row">
-					<label for="kertas" class="col-sm-2 col-form-label">Kertas</label>
-					<div class="col-sm-3">
-						<select name="kertas" class="form-control" id="kertas">
-							<option value="">--Pilih Kertas--</option>
-							<?php foreach ($opsi_jeniskertas as $key => $opsijkertas_item) : ?>
-								<option value="<?= $opsijkertas_item->id;?>"><?= $opsijkertas_item->nama;?></option>
-							<?php endforeach;?>
-						</select>
-					</div>
-					<label for="flute" class="col-sm-1 col-form-label">Flute</label>
-					<div class="col-sm-3">
-						<select name="flute" class="form-control" id="flute">
-							<option value="">--Pilih Flute--</option>
-							<?php foreach ($opsi_jenisflute as $key => $opsijflute_item) : ?>
-								<option value="<?= $opsijflute_item->id;?>"><?= $opsijflute_item->nama;?></option>
-							<?php endforeach;?>
-						</select>
-					</div>
-					<label for="metalize" class="col-sm-1 col-form-label">Metalize</label>
-					<div class="col-sm-2">
-						<select class="form-control" id="metalize" name="metalize">
-							<option value="Y">Ya</option>
-							<option value="T" selected>Tidak</option>
-						</select>
-					</div>
-				</div>
-			</div>
-  		</div>
-		<div class="tab-pane fade" id="packing" role="tabpanel" aria-labelledby="packing-tab">
-			<div class="mt-4">
-				<div class="form-group row">
-					<label for="inner_pack" class="col-sm-2 col-form-label">Inner Pack</label>
-					<div class="col-sm-3">
-						<select name="inner_pack" class="form-control" id="inner_pack">
-							<option value="">--None--</option>
-							<?php foreach ($opsi_innerpack as $key => $opsiinpack_item) : ?>
-								<option value="<?= $opsiinpack_item->id;?>"><?= $opsiinpack_item->nama;?></option>
-							<?php endforeach;?>
-						</select>
-					</div>
-					<label for="jum_innerpack" class="col-sm-3 col-form-label">Jumlah per Pack</label>
-					<div class="col-sm-2">
-						<input type="number" class="form-control" id="jum_innerpack" name="jum_innerpack" value="0">
-					</div>
-				</div>
-				<div class="form-group row">
-					<label for="outer_pack" class="col-sm-2 col-form-label">Outer Pack</label>
-					<div class="col-sm-3">
-						<select name="outer_pack" class="form-control" id="outer_pack">
-							<option value="">--None--</option>
-							<?php foreach ($opsi_outerpack as $key => $opsioutpack_item) : ?>
-								<option value="<?= $opsioutpack_item->id;?>"><?= $opsioutpack_item->nama;?></option>
-							<?php endforeach;?>
-						</select>
-					</div>
-					<label for="jum_outerpack" class="col-sm-3 col-form-label">Jumlah per Pack</label>
-					<div class="col-sm-2">
-						<input type="number" class="form-control" id="jum_outerpack" name="jum_outerpack" value="0">
-					</div>
-				</div>
-				<div class="form-group row">
-					<label for="deliver_pack" class="col-sm-2 col-form-label">Deliver Pack</label>
-					<div class="col-sm-3">
-						<select name="deliver_pack" class="form-control" id="deliver_pack">
-							<option value="">--None--</option>
-							<?php foreach ($opsi_deliverypack as $key => $opsidelpack_item) : ?>
-								<option value="<?= $opsidelpack_item->id;?>"><?= $opsidelpack_item->nama;?></option>
-							<?php endforeach;?>
-						</select>
-					</div>
-					<label for="auto_pack" class="col-sm-3 col-form-label">Auto Packing Machine di Customer</label>
-					<div class="col-sm-2">
-						<select name="auto_pack" class="form-control" id="auto_pack">
-							<option value="Y">Ya</option>
-							<option value="T" selected>Tidak</option>
-						</select>
-					</div>
-				</div>
-			</div>
-		</div>
-		<div class="tab-pane fade color-tab" id="warna" role="tabpanel" aria-labelledby="warna-tab">
-			<div class="mt-4">
-				<div class="row">
-					<div class="col-sm">
-						<div class="row">
-							<label for="warnafrontside" class="col-sm col-form-label">Warna Frontside</label>
-							
-						</div>
-						<div class="row">
-							<div class="col-sm-9">
-								<select class="form-control" id="warnafrontside">
-									<option value="" selected>--Pilih Warna--</option>
-									<?php foreach ($opsi_jenistinta as $key => $opsitinta_item) : ?>
-										<option value="<?= $opsitinta_item->id;?>"><?= $opsitinta_item->nama;?></option>
-									<?php endforeach;?>
-								</select>
-							</div>
-							<div class="col-sm-3">
-								<button type="button" class="btn btn-primary btn-sm" id="frontside-btn"><i class="fas fa-plus"></i></button>
-							</div>
-						</div>
-						<div class="frontside-selected"></div>
-						
-					</div>
-					
-					<div class="col-sm">
-					<div class="row">
-						<label for="warnabackside" class="col-sm col-form-label">Warna Backside</label>
-							
-						</div>
-						<div class="row">
-							<div class="col-sm-9">
-								<select class="form-control" id="warnabackside">
-									<option value="" selected>--Pilih Warna--</option>
-									<?php foreach ($opsi_jenistinta as $key => $opsitinta_item) : ?>
-										<option value="<?= $opsitinta_item->id;?>"><?= $opsitinta_item->nama;?></option>
-									<?php endforeach;?>
-								</select>
-							</div>
-							<div class="col-sm-3">
-								<button type="button" class="btn btn-primary btn-sm" id="backside-btn"><i class="fas fa-plus"></i></button>
-							</div>
-						</div>
-						<div class="backside-selected"></div>
-						
-						
-					</div>
-				</div>
-			</div>
-		</div>
-		<div class="tab-pane fade" id="proses" role="tabpanel" aria-labelledby="proses-tab">
-		<div class="mt-4">
-				<div class="row">
-					<div class="col-sm">
-						<div class="row">
-							<label for="finishing" class="col-sm col-form-label">Finishing</label>
-							
-						</div>
-						<div class="row">
-							<div class="col-sm-9">
-								<select class="form-control" id="finishing">
-									<option value="" selected>--Pilih Finishing--</option>
-									<?php foreach ($opsi_finishing as $key => $opsifinishing_item) : ?>
-										<option value="<?= $opsifinishing_item->id;?>"><?= $opsifinishing_item->proses;?></option>
-									<?php endforeach;?>
-								</select>
-							</div>
-							<div class="col-sm-3">
-								<button type="button" class="btn btn-primary btn-sm" id="finishing-btn"><i class="fas fa-plus"></i></button>
-							</div>
-						</div>
-						<div class="finishing-selected"></div>
-					</div>
-					<div class="col-sm">
-						<div class="row">
-							<label for="manual" class="col-sm col-form-label">Manual</label>
-							
-						</div>
-						<div class="row">
-							<div class="col-sm-9">
-								<select class="form-control" id="manual">
-									<option value="" selected>--Pilih Manual--</option>
-									<?php foreach ($opsi_manual as $key => $opsimanual_item) : ?>
-										<option value="<?= $opsimanual_item->id;?>"><?= $opsimanual_item->proses;?></option>
-									<?php endforeach;?>
-								</select>
-							</div>
-							<div class="col-sm-3">
-								<button type="button" class="btn btn-primary btn-sm" id="manual-btn"><i class="fas fa-plus"></i></button>
-							</div>
-						</div>
-						<div class="manual-selected"></div>
 
-					</div>
-					<div class="col-sm">
-					<div class="row">
-						<label for="khusus" class="col-sm col-form-label">Khusus</label>
-							
-						</div>
-						<div class="row">
-							<div class="col-sm-9">
-								<select class="form-control" id="khusus">
-									<option value="" selected>--Pilih Khusus--</option>
-									<?php foreach ($opsi_khusus as $key => $opsikhusus_item) : ?>
-										<option value="<?= $opsikhusus_item->id;?>"><?= $opsikhusus_item->proses;?></option>
-									<?php endforeach;?>
-								</select>
-							</div>
-							<div class="col-sm-3">
-								<button type="button" class="btn btn-primary btn-sm" id="khusus-btn"><i class="fas fa-plus"></i></button>
-							</div>
-						</div>
-						<div class="khusus-selected"></div>
-						
-					</div>
-				</div>
-			</div>
-		</div>
-</div>
+
+
+
 
 <div class="row mt-4">
 	<div class="col-12">
@@ -358,7 +87,234 @@
 	</div>
 </div>
 
+
 </form>
+<div class="container mt-4">
+  <div class="row align-items-start mb-2">
+    <div class="col text-left">
+	<h5>Part Produk</h5>
+    </div>
+    <div class="col text-right">
+	<button type="button" class="btn btn-success open-search" data-id="<?= $data->id;?>">
+	<i class="fas fa-solid fa-search text-light"></i>&nbsp;Cari
+</button>
+	<a href="<?= site_url('partproduk/add?ref=y&id_produk=' . $data->id);?>" type="button" class="btn btn-success"><i class="fa fa-plus-circle text-light"></i>&nbsp;Tambah</a>
+    </div>
+  </div>
+ 
+</div>
+<div class="tbl-data-partproduct">
+<table id="dataPartProduk" class="table table-bordered table-striped" style="width: 100%;">
+	
+	<thead>
+		<tr>
+			<th>No</th>
+			<th>FGD</th>
+			<th>Revisi</th>
+			<th>Nama Part Produk</th>
+			<th>Kertas</th>
+			<th>Flute</th>
+			<th>Metalize</th>
+			<th>Ukuran</th>
+			<th>Dibuat</th>
+			<th>Dibuat<br>oleh</th>
+			<th>Update</th>
+			<th>Diupdate<br>oleh</th>
+			<th>&nbsp;</th>
+		</tr>
+	</thead>
+</table>
+
 </div>
 
-<?= $this->endSection();?>
+
+</div>
+
+
+<!-- Modal -->
+<div class="modal fade modalForm" id="cariPart" tabindex="-1" aria-labelledby="cariPartLabel" aria-hidden="true">
+	<div class="modal-dialog modal-xl">
+		<div class="modal-content">
+			<div class="modal-header">
+				<h5 class="modal-title" id="cariPartLabel">Cari Part Produk</h5>
+				<button type="button" class="close" data-dismiss="modal" aria-label="Close">
+					<span aria-hidden="true">&times;</span>
+				</button>
+			</div>
+			<div class="modal-body">
+			<form name="form-caripartproduk">
+  <div class="form-row align-items-center">
+    <div class="col-6">
+      <label class="sr-only" for="caripartproduk">Cari Part Produk</label>
+      <input type="text" style="text-transform:uppercase" class="form-control mb-2" name="caripartproduk" id="caripartproduk" placeholder="Cari Produk Berdasarkan Nomor FGD atau Nama Part Produk">
+    </div>
+	<div class="col-auto">
+      <button type="submit" class="btn btn-primary mb-2">Cari</button>
+    </div>
+  </div>
+</form>
+
+<div class="dynamic-content">
+
+<div class="tbl-data-partproduct">
+
+<table id="dataPartHasilCari" class="table table-bordered table-striped" style="width: 100%;">
+	
+	<thead>
+		<tr>
+			<th>No</th>
+			<th>FGD</th>
+			<th>Revisi</th>
+			<th>Nama Part</th>
+			<th>Kertas</th>
+			<th>Flute</th>
+			<th>Ukuran</th>
+			<th>&nbsp;</th>
+		</tr>
+	</thead>
+</table>
+
+</div>
+
+
+
+
+
+
+</div>
+			</div>
+			<div class="modal-footer">
+				<button name="cancel" type="button" class="btn btn-outline-secondary" data-dismiss="modal">Close</button>
+			</div>
+		</div>
+	</div>
+</div>
+
+    <!-- Modal -->
+    <div class="modal fade" id="dataDetail" tabindex="-1" aria-labelledby=dataDetailLabel" aria-hidden="true">
+        <div class="modal-dialog modal-lg">
+            <form class="sisi-form-modal">
+                <input type="hidden" name="id" value="" />
+                <div class="modal-content sisi-produk">
+                    <div class="modal-header">
+                        <h5 class="modal-title" id="dataDetailLabel"><span class="heading-sisi-produk">Sisi Part Produk</span><span class="part-produk-title"></span></h5>
+                        <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+                            <span aria-hidden="true">&times;</span>
+                        </button>
+                    </div>
+                    <div class="modal-body">
+                        <div class="msg"></div>
+                        <div class="row">
+                            <label for="fgd" class="col-sm-2 col-form-label">No FGD</span></label>
+                            <div class="col-sm-4">
+                                <div class="sisi-view fgd"></div>
+                            </div>
+                            <label for="trevisi" class="col-sm-2 col-form-label">Revisi</span></label>
+                            <div class="col-sm-4">
+                                <div class="sisi-view revisi"></div>
+                            </div>
+                        </div>
+                        <div class="row">
+                            <label for="sisi" class="col-sm-2 col-form-label">Sisi</span></label>
+                            <div class="col-sm">
+                                <div class="sisi-view sisi"></div>
+                            </div>
+                            <label for="frontside" class="col-sm col-form-label">Frontside</span></label>
+                            <div class="col-sm">
+                                <div class="sisi-view frontside"></div>
+                            </div>
+                            <label for="backside" class="col-sm col-form-label">Backside</span></label>
+                            <div class="col-sm">
+                                <div class="sisi-view backside"></div>
+                            </div>
+                        </div>
+                        <div class="row">
+                            <label for="special_req" class="col-sm-2 col-form-label">Special Requirement</span></label>
+                            <div class="col-sm">
+                                <div class="sisi-view special_req"></div>
+                            </div>
+
+                        </div>
+                        <div class="row">
+                            <label for="special_req" class="col-sm-2 col-form-label">Aktif</label>
+                            <div class="col-sm">
+                                <div class="sisi-view aktif"></div>
+                            </div>
+                        </div>
+                        <div class="row">
+                            <label for="fgd" class="col-sm-2 col-form-label">Ditambahkan pada</span></label>
+                            <div class="col-sm-4">
+                                <div class="sisi-view added"></div>
+                            </div>
+                            <label class="col-sm-2 col-form-label">Oleh</span></label>
+                            <div class="col-sm-4">
+                                <div class="sisi-view added_by"></div>
+                            </div>
+                        </div>
+
+                        <div class="mt-2">
+                            <nav>
+                                <div class="nav nav-tabs" id="det_nav-tab" role="tablist">
+                                    <button class="nav-link active" id="det_nav-warna-tab" data-toggle="tab" data-target="#det_nav-warna" type="button" role="tab" aria-controls="nav-home" aria-selected="true">Warna</button>
+                                    <button class="nav-link" id="det_nav-proses-tab" data-toggle="tab" data-target="#det_nav-proses" type="button" role="tab" aria-controls="nav-profile" aria-selected="false">Proses</button>
+                                </div>
+                            </nav>
+
+                            <div class="tab-content" id="det_nav-tabContent">
+                                <div class="tab-pane fade show active" id="det_nav-warna" role="tabpanel" aria-labelledby="det_nav-warna-tab">
+
+                                    <div class="row mt-2">
+                                        <div class="col-sm-6">
+                                            <div class="form-group row">
+                                                <label for="tinta" class="col-sm-2  col-form-label">Frontside</label>
+                                            </div>
+                                            <div class="fs-child"></div>
+
+                                        </div>
+                                        <div class="col-sm-6">
+                                            <div class="form-group row">
+                                                <label for="tinta" class="col-sm-2  col-form-label">Backside</label>
+                                            </div>
+                                            <div class="bs-child"></div>
+
+                                        </div>
+                                    </div>
+
+                                </div>
+                                <div class="tab-pane fade" id="det_nav-proses" role="tabpanel" aria-labelledby="det_nav-proses-tab">
+                                    <div class="row mt-2">
+                                        <div class="col-sm-4">
+                                            <label for="tinta" class="form-label">Proses Manual</label>
+                                            <div class="manual-child"></div>
+
+                                        </div>
+                                        <div class="col-sm-4">
+                                            <label for="tinta" class="form-label">Proses Finishing</label>
+                                            <div class="finishing-child"></div>
+                                        </div>
+
+                                        <div class="col-sm-4">
+                                            <label for="tinta" class="form-label">Proses Khusus</label>
+                                            <div class="khusus-child"></div>
+
+                                        </div>
+                                    </div>
+
+
+
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                    <div class="modal-footer">
+                        <div class="loading-indicator"></div>
+                        <div class="form-navigation">
+                            <button name="cancel" type="button" class="btn btn-link btn-cancel text-danger" data-dismiss="modal">Keluar</button>
+                        </div>
+                    </div>
+                </div>
+            </form>
+        </div>
+    </div>
+
+<?= $this->endSection() ?>

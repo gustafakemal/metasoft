@@ -58,4 +58,17 @@ class SalesModel extends Model
         return $this->where('SalesID', $id)
             ->delete();
     }
+
+    public function getName($SalesID)
+    {
+        $query = $this->select('SalesName')
+                        ->where('SalesID', $SalesID)
+                        ->get();
+
+        if($query->getNumRows() > 0) {
+            return $query->getResult()[0]->SalesName;
+        } else {
+            return null;
+        }
+    }
 }

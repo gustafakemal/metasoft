@@ -289,7 +289,7 @@ $(function () {
 function getAllCustomers(obj)
 {
 	$.ajax({
-		type: "POST",
+		type: "GET",
 		url: `${HOST}/customer/apiGetAll`,
 		beforeSend: obj.beforeSend,
 		success: obj.success,

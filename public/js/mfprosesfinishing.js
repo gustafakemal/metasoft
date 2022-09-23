@@ -43,14 +43,7 @@ $(function () {
 			 "targets": [1,6,7,8,9]
 		}],
 		order: [[ 1, 'desc' ]],
-		createdRow: function (row, data, dataIndex) {
-			$(row).find("td:eq(0)").attr("data-label", "No");
-			$(row).find("td:eq(1)").attr("data-label", "Tanggal dibuat");
-			$(row).find("td:eq(2)").attr("data-label", "Jenis Flute");
-			$(row).find("td:eq(3)").attr("data-label", "Harga");
-			$(row).find("td:eq(4)").attr("data-label", "Status Aktif");
-			$(row).find("td:eq(5)").attr("data-label", "&nbsp;");
-		},
+		
 		initComplete: function () {
 			const dropdown = `<div class="dropdown d-inline mr-2">` +
 								`<button class="btn btn-primary dropdown-toggle" type="button" id="customersDropdown" data-toggle="dropdown" aria-expanded="false"><i class="fas fa-cog"></i></button>` +
@@ -166,43 +159,87 @@ $(function () {
 		})
 	})
 
+	let dataListRow = null;
 	$('#dataList').on('click', '.item-edit', function(e) {
 		e.preventDefault();
-		$('#dataForm').modal({
-			show: true,
-			backdrop: 'static'
-		})
-		$('#dataForm .modal-title').html('Edit Data')
-		$('#dataForm form').attr('name', 'editData')
+		const tr = $(this).closest('tr');
+		const row = $("#dataList tr").index(tr);
+		dataListRow = $(`#dataList tr:nth-child(${row+1})`)
+		const objstring = $(this).attr('data-obj')
+		const id = $(this).attr('data-id');
+		const proses = $(this).attr('data-proses');
+		const harga = $(this).attr('data-harga');
+		const create_date = $(this).attr('data-added');
+		const aktif_arr = $(this).attr('data-aktif').split('|')
+		const aktif_opt_arr = aktif_arr[1].split(',');
+		const aktif_opt = []
+		for(let i = 0;i < aktif_opt_arr.length; i++) {
+			aktif_opt.push(`<option${aktif_opt_arr[i] == aktif_arr[0] ? ' selected' : ''} value="${aktif_opt_arr[i]}">${aktif_opt_arr[i]}</option>`)
+		}
+		const aktif = `<select name="aktif" class="form-control">${aktif_opt.join('')}</select>`
+		const btn = `<button type="button" class="btn btn-sm btn-success save-tr-record"><i class="fas fa-check"></i></button> <button type="button" class="btn btn-sm btn-secondary cancel-tr-submit"><i class="fas fa-times"></i></button>`
+		$(`#dataList tr:nth-child(${row})`).css('background-color', '#faecdc')
+		$(`#dataList tr:nth-child(${row}) td:nth-child(2)`).html(`<input type="text" class="form-control" value="${create_date}" readonly />`)
+		$(`#dataList tr:nth-child(${row}) td:nth-child(3)`).html(`<input type="text" class="form-control" placeholder="Nama Proses" value="${proses}" name="proses" />`)
+		$(`#dataList tr:nth-child(${row}) td:nth-child(4)`).html(`<input type="number" class="form-control" placeholder="Harga" value="${parseInt(harga)}" name="harga" /><input type="hidden" value="${id}" name="id" />`)
+		$(`#dataList tr:nth-child(${row}) td:nth-child(5)`).html(`${aktif}`)
+		$(`#dataList tr:nth-child(${row}) td:nth-child(6)`).html(`${btn}`)
 
-		const id = $(this).attr('data-id')
-		$('#dataForm form input[name="id"]').val(id)
-		//alert("cek")
+		$(`#dataList tr:nth-child(${row}`).attr('id', 'selected')
+
+		$('#page').addClass('click-to-close')
+	});
+
+	const reload_tr = function() {
+		const obj = {
+			success: function (response) {
+				$('#dataList').DataTable().clear();
+				$('#dataList').DataTable().rows.add(response);
+				$('#dataList').DataTable().draw();
+			},
+		}
+		getAllData(obj);
+	}
+
+	$('body').on('click', '.click-to-close', reload_tr)
+	$('#dataList').on('click', '.cancel-tr-submit', reload_tr)
+	$('#dataList').on('click', 'tr#selected', function(e) {
+		console.log('ok de')
+		e.stopPropagation()
+	})
+	$('#dataList').on('click', '.save-tr-record', function() {
+		const formData = new FormData();
+		formData.append('id', $('input[name="id"]').val())
+		formData.append('proses', $('input[name="proses"]').val())
+		formData.append('harga', $('input[name="harga"]').val())
+		formData.append('aktif', $('select[name="aktif"] option:selected').val())
 		$.ajax({
 			type: "POST",
-			url: `${HOST}/mfprosesfinishing/apiGetById`,
+			url: `${HOST}/mfprosesfinishing/apiEditProcess`,
 			dataType: 'JSON',
-			data: { id },
+			data: formData,
+			contentType: false,
+			processData: false,
 			beforeSend: function () {},
 			success: function (response) {
-				console.log(response)
+				let msgClass;
 				if(response.success) {
-					for(const property in response.data) {
-						$(`#dataForm input[name="${property}"], #dataForm textarea[name="${property}"]`).val(response.data[property])
-					}
-					$(`#dataForm select[name="aktif"] option`).removeAttr('selected')
-					if(response.data['aktif'] == "Y") {
-						$(`#dataForm select[name="aktif"] option[value="Y"]`).attr('selected', 'selected')
-					} else {
-						$(`#dataForm select[name="aktif"] option[value="T"]`).attr('selected', 'selected')
-					}
-					
+					reload_tr();
+					msgClass = 'success'
+				} else {
+					msgClass = 'danger'
 				}
+				$('.floating-msg').addClass('show').html(`<div class="alert alert-${msgClass}">${response.msg}</div>`)
 			},
 			error: function () {},
-			complete: function () {}
+			complete: function() {
+				setTimeout(() => {
+					$('.floating-msg').removeClass('show').html('');
+				}, 3000);
+			}
 		})
-	});
+	})
+
 	$('#dataForm').on('submit', 'form[name="editData"]', function(e) {
 		e.preventDefault();
 		const formData = new FormData(this);

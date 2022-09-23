@@ -26,6 +26,7 @@ class MFProsesFinishingModel extends Model
     public function getOpsi()
     {
         $query = $this->where('aktif', 'Y')
+                    ->distinct(true)
                     ->orderBy('proses', 'asc')
                     ->get();
         if($query->getNumRows() > 0) {

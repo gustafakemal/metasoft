@@ -20,7 +20,9 @@ $routes->setDefaultNamespace('App\Controllers');
 $routes->setDefaultController('Home');
 $routes->setDefaultMethod('index');
 $routes->setTranslateURIDashes(false);
-$routes->set404Override();
+$routes->set404Override(function() {
+    return view('Common/404_error');
+});
 $routes->setAutoRoute(true);
 
 /*
@@ -32,8 +34,22 @@ $routes->setAutoRoute(true);
 // We get a performance increase by specifying the default
 // route since we don't have to scan directories.
 $routes->get('/', 'Home::index');
-$routes->add('login', 'Auth::login');
-$routes->add('logout', 'Auth::logout');
+$routes->get('login', 'Auth::login');
+$routes->get('logout', 'Auth::logout');
+
+$routes->group('api', static function ($routes) {
+    $routes->group('master', static function ($routes) {
+        $routes->get('kertas', 'MFJenisKertas::apiGetAll');
+        $routes->get('kertas/(:num)', 'MFJenisKertas::apiGetById/$1');
+        $routes->post('kertas', 'MFJenisKertas::apiAddProcess');
+        $routes->put('kertas', 'MFJenisKertas::apiEditProcess');
+    });
+});
+$routes->add('partproduk/add', 'MFPartProduk::addPartProduct');
+$routes->add('partproduk/edit/(:any)', 'MFPartProduk::editPartProduct/$1');
+$routes->add('partproduk/rev/(:any)/(:any)', 'MFPartProduk::editPartProduct/$1/$2');
+$routes->add('partproduk/detail/(:any)', 'MFPartProduk::detailPartProduct/$1');
+$routes->add('partproduk/del/(:any)', 'MFPartProduk::delPartProduk/$1');
 
 /*
  * --------------------------------------------------------------------

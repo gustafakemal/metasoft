@@ -36,4 +36,18 @@ class MFPackingModel extends Model
             return [];
         }
     }
+
+    public function getNama($id, $kategori)
+    {
+        $query = $this->select('nama')
+            ->where('kategori',$kategori)
+            ->where('aktif', 'Y')
+            ->where('id', $id)
+            ->get();
+        if($query->getNumRows() == 0) {
+            return null;
+        }
+
+        return $query->getResult()[0]->nama;
+    }
 }

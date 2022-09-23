@@ -29,6 +29,10 @@ body {
   color: #999;
   border-color: #999;
 }
+
+.modalForm button[name="cancel"]:disabled {
+  color: #ccc !important;
+}
 #dataForm button[name="cancel"]:disabled {
   color: #ccc !important;
 }
@@ -41,7 +45,7 @@ body {
 #page > .floating-msg {
   position: fixed;
   width: 100%;
-  z-index: 499;
+  z-index: 1060;
   display: none;
   justify-content: center;
 }
@@ -139,6 +143,7 @@ body {
 }
 .top-nav .account-nav.show .dropdown-toggle {
   border: 1px solid transparent;
+  background-color: rgba(255,255,255,.9);
   color: #222;
 }
 .top-nav .account-nav.show .dropdown-toggle:hover {
@@ -158,11 +163,12 @@ body {
 }
 .top-nav .account-nav .dropdown-toggle {
   border: 1px solid transparent;
-  background-color: transparent;
+  background-color: rgba(255,255,255,.2);
   display: flex;
-  padding: 4px 10px;
+  padding: 4px 20px;
   border-radius: 3px;
   color: #fff;
+  font-weight: 500;
 }
 .top-nav .account-nav .dropdown-toggle:after {
   margin-top: 10px;
@@ -237,6 +243,14 @@ body {
   flex: 1;
 }
 
+.breadcrumb {
+  padding: 7px 15px;
+  margin: 0 0 30px 0;
+  font-size: 90%;
+  background-color: #f9f9f9;
+  color: rgba(0, 0, 0, 0.5);
+}
+
 .page-title {
   margin: 0 0 40px 0;
   padding: 0 0 15px 0;
@@ -258,13 +272,6 @@ body {
 }
 .main-menu > li a:hover {
   text-decoration: none;
-}
-.main-menu > li a .fa,
-.main-menu > li a .fas,
-.main-menu > li a .far,
-.main-menu > li a .fab {
-  margin-right: 10px;
-  color: rgba(0, 0, 0, 0.35);
 }
 .main-menu > li a[data-toggle="collapse"] {
   position: relative;
@@ -304,6 +311,11 @@ body {
 .main-menu > li > a {
   font-weight: 500;
   padding: 10px 30px;
+  display: flex;
+}
+.main-menu > li > a .icon {
+  width: 30px;
+  color: rgba(0,0,0,.5);
 }
 .main-menu > li > a:hover,
 .main-menu > .active a {
@@ -314,6 +326,18 @@ body {
   color: rgba(0,0,0,.5);
 }
 
+.modalForm .modal-footer {
+  justify-content: space-between;
+}
+.modalForm .modal-body,
+#dataDetail .modal-body {
+  background-color: #f9f9f9;
+  padding: 20px 30px;
+}
+.modalForm .modal-body label {
+  font-weight: 500;
+  margin-bottom: 4px;
+}
 
 #dataForm .modal-footer {
   justify-content: space-between;
@@ -326,6 +350,13 @@ body {
 #dataForm .modal-body label {
   font-weight: 500;
   margin-bottom: 4px;
+}
+#dataForm .modal-content.sisi-produk .modal-title .heading-sisi-produk {
+  display: block;
+  text-transform: uppercase;
+  font-size: 12px;
+  margin: 0;
+  color: rgba(0,0,0,.5);
 }
 
 /*#dataForm button[name="submit"]:disabled {
@@ -407,6 +438,62 @@ body {
 .tbl-data-product.show,
 .csc-form.show {
   display: block;
+}
+.csc-form.detail .row {
+  margin-bottom: 10px;
+}
+.csc-form.detail .row .val,
+#dataDetail .sisi-view,
+#dataDetail .sisi-view-static {
+  padding-left: 10px;
+  position: relative;
+  font-weight: 500;
+}
+.csc-form.detail .row .val:before,
+#dataDetail .sisi-view:before,
+#dataDetail .sisi-view-static:before {
+  position: absolute;
+  left: 0;
+  top: 0;
+  content: ':';
+}
+
+.dokcr-edit-wrap {
+  border: 1px solid #eee;
+  padding: 3px 5px;
+  overflow: hidden;
+  position: relative;
+  margin: 0 0 10px 0;
+}
+.dokcr-edit-wrap.hide {
+  display: none;
+}
+.dokcr-edit-wrap .icon {
+  position: absolute;
+  right: 5px;
+  top: 3px;
+  color: rgba(0,0,0,.5);
+}
+.dokcr-edit-wrap .icon:hover {
+  color: #ff253a;
+}
+
+.notfound-wrapper {
+  width: 500px;
+  background-color: #fff;
+  border: 1px solid #ddd;
+  border-radius: 5px;
+  padding: 30px;
+  text-align: center;
+}
+.notfound-wrapper .notfound-icon {
+  font-size: 3em;
+  color: rgba(0,0,0,.5);
+}
+.notfound-wrapper .title {
+  font-size: 1.5em;
+  font-weight: 700;
+  margin: 0 0 15px 0;
 }
 
 @media only screen and (max-width: 1120px) {

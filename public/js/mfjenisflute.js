@@ -71,9 +71,7 @@ $(function () {
 				$('#dataList .dataTables_empty').html('<div class="spinner-icon"><span class="spinner-grow text-info"></span><span class="caption">Fetching data...</span></div>')
 			},
 			success: function (response) {
-				$('#dataList').DataTable().clear();
-				$('#dataList').DataTable().rows.add(response);
-				$('#dataList').DataTable().draw();
+				$('#dataList').DataTable().clear().rows.add(response).draw();
 			},
 			error: function () {
 				$('#dataList .dataTables_empty').html('Data gagal di retrieve.')
@@ -166,43 +164,83 @@ $(function () {
 		})
 	})
 
+	let dataListRow = null;
 	$('#dataList').on('click', '.item-edit', function(e) {
 		e.preventDefault();
-		$('#dataForm').modal({
-			show: true,
-			backdrop: 'static'
-		})
-		$('#dataForm .modal-title').html('Edit Data')
-		$('#dataForm form').attr('name', 'editData')
+		const tr = $(this).closest('tr');
+		const row = $("#dataList tr").index(tr);
+		dataListRow = $(`#dataList tr:nth-child(${row+1})`)
+		const id = $(this).attr('data-id');
+		const nama = $(this).attr('data-nama');
+		const harga = $(this).attr('data-harga');
+		const create_date = $(this).attr('data-added');
+		const aktif_arr = $(this).attr('data-aktif').split('|')
+		const aktif_opt_arr = aktif_arr[1].split(',');
+		const aktif_opt = []
+		for(let i = 0;i < aktif_opt_arr.length; i++) {
+			aktif_opt.push(`<option${aktif_opt_arr[i] === aktif_arr[0] ? ' selected' : ''} value="${aktif_opt_arr[i]}">${aktif_opt_arr[i]}</option>`)
+		}
+		const aktif = `<select name="aktif" class="form-control">${aktif_opt.join('')}</select>`
+		const btn = `<button type="button" class="btn btn-sm btn-success save-tr-record"><i class="fas fa-check"></i></button> <button type="button" class="btn btn-sm btn-secondary cancel-tr-submit"><i class="fas fa-times"></i></button>`
+		$(`#dataList tr:nth-child(${row})`).css('background-color', '#faecdc')
+		$(`#dataList tr:nth-child(${row}) td:nth-child(2)`).html(`<input type="text" class="form-control" value="${create_date}" readonly />`)
+		$(`#dataList tr:nth-child(${row}) td:nth-child(3)`).html(`<input type="text" class="form-control" placeholder="Jenis flute" value="${nama}" name="nama" />`)
+		$(`#dataList tr:nth-child(${row}) td:nth-child(4)`).html(`<input type="number" class="form-control" placeholder="Harga" value="${parseInt(harga)}" name="harga" /><input type="hidden" value="${id}" name="id" />`)
+		$(`#dataList tr:nth-child(${row}) td:nth-child(5)`).html(`${aktif}`)
+		$(`#dataList tr:nth-child(${row}) td:nth-child(6)`).html(`${btn}`)
 
-		const id = $(this).attr('data-id')
-		$('#dataForm form input[name="id"]').val(id)
-		//alert("cek")
-		$.ajax({
-			type: "POST",
-			url: `${HOST}/mfjenisflute/apiGetById`,
-			dataType: 'JSON',
-			data: { id },
-			beforeSend: function () {},
-			success: function (response) {
-				console.log(response)
-				if(response.success) {
-					for(const property in response.data) {
-						$(`#dataForm input[name="${property}"], #dataForm textarea[name="${property}"]`).val(response.data[property])
-					}
-					$(`#dataForm select[name="aktif"] option`).removeAttr('selected')
-					if(response.data['aktif'] == "Y") {
-						$(`#dataForm select[name="aktif"] option[value="Y"]`).attr('selected', 'selected')
-					} else {
-						$(`#dataForm select[name="aktif"] option[value="T"]`).attr('selected', 'selected')
-					}
-					
-				}
-			},
-			error: function () {},
-			complete: function () {}
-		})
+		$(`#dataList tr:nth-child(${row}`).attr('id', 'selected')
+
+		$('#page').addClass('click-to-close')
 	});
+
+	const reload_tr = function() {
+		const obj = {
+			success: function (response) {
+				$('#dataList').DataTable().clear().rows.add(response).draw();
+			},
+		}
+		getAllData(obj);
+	}
+
+	$('body').on('click', '.click-to-close', reload_tr)
+	$('#dataList').on('click', '.cancel-tr-submit', reload_tr)
+		.on('click', 'tr#selected', function(e) {
+			e.stopPropagation()
+		})
+		.on('click', '.save-tr-record', function() {
+			const formData = new FormData();
+			formData.append('id', $('input[name="id"]').val())
+			formData.append('nama', $('input[name="nama"]').val())
+			formData.append('harga', $('input[name="harga"]').val())
+			formData.append('aktif', $('select[name="aktif"] option:selected').val())
+			$.ajax({
+				type: "POST",
+				url: `${HOST}/mfjenisflute/apiEditProcess`,
+				dataType: 'JSON',
+				data: formData,
+				contentType: false,
+				processData: false,
+				beforeSend: function () {},
+				success: function (response) {
+					let msgClass;
+					if(response.success) {
+						reload_tr();
+						msgClass = 'success'
+					} else {
+						msgClass = 'danger'
+					}
+					$('.floating-msg').addClass('show').html(`<div class="alert alert-${msgClass}">${response.msg}</div>`)
+				},
+				error: function () {},
+				complete: function() {
+					setTimeout(() => {
+						$('.floating-msg').removeClass('show').html('');
+					}, 3000);
+				}
+			})
+		})
+
 	$('#dataForm').on('submit', 'form[name="editData"]', function(e) {
 		e.preventDefault();
 		const formData = new FormData(this);
@@ -223,7 +261,6 @@ $(function () {
 				$('form[name="editData"] input, form[name="editData"] textarea, form[name="editData"] button').attr('disabled', true)
 			},
 			success: function (response) {
-				//console.log(response)
 				if(response.success) {
 					location.reload();
 				} else {
@@ -250,14 +287,11 @@ $(function () {
 		e.preventDefault();
 		const obj = {
 			beforeSend: function () {
-				$('#statusList').DataTable().clear();
-				$('#statusList').DataTable().draw();
+				$('#statusList').DataTable().clear().draw();
 				$('#dataList .dataTables_empty').html('<div class="spinner-icon"><span class="spinner-grow text-info"></span><span class="caption">Fetching data...</span></div>')
 			},
 			success: function (response) {
-				$('#dataList').DataTable().clear();
-				$('#dataList').DataTable().rows.add(response);
-				$('#dataList').DataTable().draw();
+				$('#dataList').DataTable().clear().rows.add(response).draw();
 			},
 			error: function () {
 				$('#dataList .dataTables_empty').html('Data gagal di retrieve.')

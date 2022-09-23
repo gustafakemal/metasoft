@@ -16,38 +16,31 @@ class Customer extends BaseController
 
     public function index()
     {
+        $this->breadcrumbs->add('Dashbor', '/');
+        $this->breadcrumbs->add('Data Pelanggan', '/customer');
+
         return view('Customer/main', [
         	'page_title' => 'Data Pelanggan',
+            'breadcrumbs' => $this->breadcrumbs->render(),
         ]);
     }
 
     public function apiGetAll()
     {
-        if($this->request->getMethod() !== 'post') {
-            return redirect()->to('customer');
-        }
-
     	$query = $this->model->getCustomers();
 
     	$data = [];
     	foreach ($query as $key => $value) {
-    		// $detail = '<a href="#" data-id="'.$value->NoPemesan.'" class="item-detail" title="Detail"><i class="far fa-file-alt"></i></a> ';
-    		// $edit = '<a href="#" data-id="'.$value->NoPemesan.'" class="item-edit" title="Edit"><i class="far fa-edit"></i></a> ';
-            // $hapus = '<a href="'.site_url('customer/delete/'.$value->NoPemesan).'" onclick="return confirm(\'Apa Anda yakin menghapus user ini?\')" title="Delete"><i class="fas fa-trash-alt"></i></a>';
              
 			$detail = '<a class="btn btn-primary btn-sm item-detail mr-1" href="#" data-id="' . $value->NoPemesan . '" title="Detail"><i class="far fa-file-alt"></i></a>';
 			$edit = '<a class="btn btn-success btn-sm item-edit mr-1" href="#" data-id="' . $value->NoPemesan . '" title="Edit"><i class="far fa-edit"></i></a>';
 			$hapus = '<a class="btn btn-danger btn-sm" href="' . site_url('customer/delete/'.$value->NoPemesan) . '" data-id="' . $value->NoPemesan . '" onclick="return confirm(\'Apa Anda yakin menghapus user ini?\')" title="Hapus"><i class="fas fa-trash-alt"></i></a>';
-	
-		
-			
-			
 			
 			$CreateDate = (Time::parse($value->CreateDate))->toDateTimeString();
     		$data[] = [
     			$key + 1,
                 $value->NoPemesan,
-    			$CreateDate,
+                $this->common->dateFormat($CreateDate),
     			$value->NamaPemesan,
                 $value->Alamat,
                 $value->NoFax,
@@ -62,7 +55,7 @@ class Customer extends BaseController
                 $value->FlagAktif,
                 $value->CreateBy,
                 $value->UpdateBy,
-                $value->LastUpdate,
+                $this->common->dateFormat($value->LastUpdate),
     			$detail . $edit . $hapus
     		];
     	}
@@ -185,5 +178,23 @@ class Customer extends BaseController
 
     	return redirect()->back()
     					->with('error', 'Data gagal dihapus');
+    }
+
+    public function getSelectOptions()
+    {
+        $query = $this->model->getCustomers();
+
+        $data = [];
+        foreach ($query as $row) {
+            $data[] = [
+                'id' => $row->NoPemesan,
+                'name' => $row->NamaPemesan
+            ];
+        }
+
+        return $this->response->setJSON([
+            'success' => true,
+            'data' => $data
+        ]);
     }
 }

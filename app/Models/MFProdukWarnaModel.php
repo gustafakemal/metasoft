@@ -7,8 +7,26 @@ use CodeIgniter\Model;
 class MFProdukWarnaModel extends Model
 {
     protected $table = 'MF_ProdukWarna';
-    protected $useTimestamps = false;
-    protected $allowedFields = ['id_produk', 'posisi', 'tinta'];
+    protected $useTimestamps = true;
+    protected $createdField  = 'added';
+    protected $updatedField  = 'updated';
+    protected $allowedFields = ['id_sisi', 'posisi', 'tinta', 'aktif', 'added', 'added_by', 'updated', 'updated_by'];
+
+    public function getTintaBySisi($id_sisi)
+    {
+        $query = $this->select('*')
+                        ->join('MF_JenisTinta', 'MF_ProdukWarna.tinta = MF_JenisTinta.id')
+                        ->where('MF_ProdukWarna.id_sisi', $id_sisi)
+                        ->get();
+
+        return $query;
+    }
+
+    public function deleteAllSisi($id_sisi)
+    {
+        return $this->where('id_sisi', $id_sisi)
+                    ->delete();
+    }
 
     public function getByProdID($prod_id, $position = '') {
     	if($position == '') {

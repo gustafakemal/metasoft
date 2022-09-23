@@ -25,13 +25,15 @@ class MFProsesFinishing extends BaseController
 		]);
 	}
 
-	public function apiGetAll()
+    /**
+     * @return \CodeIgniter\HTTP\ResponseInterface
+     * @throws \Exception
+     *
+     * Endpoint GET /api/master/finishing
+     */
+    public function apiGetAll()
 	{
-		if ($this->request->getMethod() !== 'post') {
-			return redirect()->to('mfprosesfinishing');
-		}
-
-		$query = $this->model->getMFProsesFinishing();
+        $query = $this->model->getMFProsesFinishing();
 
 		$data = [];
 		foreach ($query as $key => $value) {
@@ -60,14 +62,15 @@ class MFProsesFinishing extends BaseController
 		return $this->response->setJSON($data);
 	}
 
-	public function apiGetById()
+    /**
+     * @return \CodeIgniter\HTTP\ResponseInterface
+     * @throws \Exception
+     *
+     * Endpoint GET /api/master/finishing/$1
+     */
+    public function apiGetById($id)
 	{
-		if ($this->request->getMethod() !== 'post') {
-			return redirect()->to('mfprosesfinishing');
-		}
-
-		$id = $this->request->getPost('id');
-		$modified = $this->request->getPost('modified') ?? false;
+        $modified = $this->request->getPost('modified') == 'yes';
 
 		$query = $this->model->getById($id);
 
@@ -101,12 +104,14 @@ class MFProsesFinishing extends BaseController
 		return $this->response->setJSON($response);
 	}
 
-	public function apiAddProcess()
+    /**
+     * @return \CodeIgniter\HTTP\ResponseInterface
+     * @throws \Exception
+     *
+     * Endpoint POST /api/master/finishing
+     */
+    public function apiAddProcess()
 	{
-		if ($this->request->getMethod() !== 'post') {
-			return redirect()->to('mfprosesfinishing');
-		}
-
 		$data = $this->request->getPost();
 		$data['added_by'] = current_user()->UserID;
 
@@ -131,13 +136,15 @@ class MFProsesFinishing extends BaseController
 		return $this->response->setJSON($response);
 	}
 
-	public function apiEditProcess()
+    /**
+     * @return \CodeIgniter\HTTP\ResponseInterface
+     * @throws \Exception
+     *
+     * Endpoint PUT /api/master/finishing
+     */
+    public function apiEditProcess()
 	{
-		if ($this->request->getMethod() !== 'post') {
-			return redirect()->to('mfprosesfinishing');
-		}
-
-		$data = $this->request->getPost();
+        $data = $this->request->getRawInput();
 
 		$data['updated_by'] = current_user()->UserID;
 		$id=$data["id"];

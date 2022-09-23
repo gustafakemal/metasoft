@@ -106,7 +106,7 @@ $(function () {
 
 		$.ajax({
 			type: "POST",
-			url: `${HOST}/mfjenisflute/apiAddProcess`,
+			url: `${HOST}/api/master/flute`,
 			dataType: 'JSON',
 			data: formData,
 			contentType: false,
@@ -147,10 +147,9 @@ $(function () {
 		$('#dataDetail').modal('show')
 		const id = $(this).attr('data-id')
 		$.ajax({
-			type: "POST",
-			url: `${HOST}/mfjenisflute/apiGetById`,
+			type: "GET",
+			url: `${HOST}/api/master/flute/${id}?modified=yes`,
 			dataType: 'JSON',
-			data: { id, modified: true },
 			beforeSend: function () {},
 			success: function (response) {
 				if(response.success) {
@@ -209,18 +208,19 @@ $(function () {
 			e.stopPropagation()
 		})
 		.on('click', '.save-tr-record', function() {
-			const formData = new FormData();
-			formData.append('id', $('input[name="id"]').val())
-			formData.append('nama', $('input[name="nama"]').val())
-			formData.append('harga', $('input[name="harga"]').val())
-			formData.append('aktif', $('select[name="aktif"] option:selected').val())
+			const data = {
+				id: $('input[name="id"]').val(),
+				nama: $('input[name="nama"]').val(),
+				harga: $('input[name="harga"]').val(),
+				aktif: $('select[name="aktif"] option:selected').val()
+			};
 			$.ajax({
-				type: "POST",
-				url: `${HOST}/mfjenisflute/apiEditProcess`,
+				type: "PUT",
+				url: `${HOST}/api/master/flute`,
+				headers: {'Content-Type': 'application/x-www-form-urlencoded'},
+				contentType: 'application/x-www-form-urlencoded; charset=utf-8',
 				dataType: 'JSON',
-				data: formData,
-				contentType: false,
-				processData: false,
+				data: data,
 				beforeSend: function () {},
 				success: function (response) {
 					let msgClass;
@@ -246,12 +246,12 @@ $(function () {
 		const formData = new FormData(this);
 
 		$.ajax({
-			type: "POST",
-			url: `${HOST}/mfjenisflute/apiEditProcess`,
+			type: "PUT",
+			url: `${HOST}/api/master/flute`,
+			headers: {'Content-Type': 'application/x-www-form-urlencoded'},
+			contentType: 'application/x-www-form-urlencoded; charset=utf-8',
 			dataType: 'JSON',
 			data: formData,
-			contentType: false,
-			processData: false,
 			beforeSend: function () {
 				$('#dataForm .modal-footer .loading-indicator').html(
 					'<div class="spinner-icon">' +
@@ -308,8 +308,8 @@ function getAllData(obj)
 {
 	
 	$.ajax({
-		type: "POST",
-		url: `${HOST}/mfjenisflute/apiGetAll`,
+		type: "GET",
+		url: `${HOST}/api/master/flute`,
 		beforeSend: obj.beforeSend,
 		success: obj.success,
 		error: obj.error,

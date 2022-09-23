@@ -3,7 +3,9 @@
 namespace App\Controllers;
 
 use App\Models\MFJenisTintaModel;
+use CodeIgniter\Format\JSONFormatter;
 use CodeIgniter\I18n\Time;
+use PHPUnit\Util\Json;
 
 class MFJenisTinta extends BaseController
 {
@@ -25,13 +27,15 @@ class MFJenisTinta extends BaseController
 		]);
 	}
 
-	public function apiGetAll()
+    /**
+     * @return \CodeIgniter\HTTP\ResponseInterface
+     * @throws \Exception
+     *
+     * Endpoint GET /api/master/tinta
+     */
+    public function apiGetAll()
 	{
-		if ($this->request->getMethod() !== 'post') {
-			return redirect()->to('mfjenistinta');
-		}
-
-		$query = $this->model->getMFJenisTinta();
+        $query = $this->model->getMFJenisTinta();
 
 		$data = [];
 		foreach ($query as $key => $value) {
@@ -61,14 +65,15 @@ class MFJenisTinta extends BaseController
 		return $this->response->setJSON($data);
 	}
 
-	public function apiGetById()
+    /**
+     * @return \CodeIgniter\HTTP\ResponseInterface
+     * @throws \Exception
+     *
+     * Endpoint GET /api/master/tinta/$1
+     */
+    public function apiGetById($id)
 	{
-		if ($this->request->getMethod() !== 'post') {
-			return redirect()->to('mfjenistinta');
-		}
-
-		$id = $this->request->getPost('id');
-		$modified = $this->request->getPost('modified') ?? false;
+		$modified = $this->request->getGet('modified') == 'yes';
 
 		$query = $this->model->getById($id);
 
@@ -102,13 +107,15 @@ class MFJenisTinta extends BaseController
 		return $this->response->setJSON($response);
 	}
 
-	public function apiAddProcess()
+    /**
+     * @return \CodeIgniter\HTTP\ResponseInterface
+     * @throws \Exception
+     *
+     * Endpoint POST /api/master/tinta
+     */
+    public function apiAddProcess()
 	{
-		if ($this->request->getMethod() !== 'post') {
-			return redirect()->to('mfjenistinta');
-		}
-
-		$data = $this->request->getPost();
+        $data = $this->request->getPost();
 		$data['added_by'] = current_user()->UserID;
 
 		if ($this->model->insert($data)) {
@@ -132,13 +139,15 @@ class MFJenisTinta extends BaseController
 		return $this->response->setJSON($response);
 	}
 
-	public function apiEditProcess()
+    /**
+     * @return \CodeIgniter\HTTP\ResponseInterface
+     * @throws \Exception
+     *
+     * Endpoint PUT /api/master/tinta
+     */
+    public function apiEditProcess()
 	{
-		if ($this->request->getMethod() !== 'post') {
-			return redirect()->to('mfjenistinta');
-		}
-
-		$data = $this->request->getPost();
+        $data = $this->request->getRawInput();
 
 		$data['updated_by'] = current_user()->UserID;
 		$id=$data["id"];

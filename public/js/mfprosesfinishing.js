@@ -64,9 +64,7 @@ $(function () {
 				$('#dataList .dataTables_empty').html('<div class="spinner-icon"><span class="spinner-grow text-info"></span><span class="caption">Fetching data...</span></div>')
 			},
 			success: function (response) {
-				$('#dataList').DataTable().clear();
-				$('#dataList').DataTable().rows.add(response);
-				$('#dataList').DataTable().draw();
+				$('#dataList').DataTable().clear().rows.add(response).draw();
 			},
 			error: function () {
 				$('#dataList .dataTables_empty').html('Data gagal di retrieve.')
@@ -101,7 +99,7 @@ $(function () {
 
 		$.ajax({
 			type: "POST",
-			url: `${HOST}/mfprosesfinishing/apiAddProcess`,
+			url: `${HOST}/api/master/finishing`,
 			dataType: 'JSON',
 			data: formData,
 			contentType: false,
@@ -142,10 +140,9 @@ $(function () {
 		$('#dataDetail').modal('show')
 		const id = $(this).attr('data-id')
 		$.ajax({
-			type: "POST",
-			url: `${HOST}/mfprosesfinishing/apiGetById`,
+			type: "GET",
+			url: `${HOST}/api/master/finishing/${id}?modified=yes`,
 			dataType: 'JSON',
-			data: { id, modified: true },
 			beforeSend: function () {},
 			success: function (response) {
 				if(response.success) {
@@ -208,18 +205,19 @@ $(function () {
 		e.stopPropagation()
 	})
 	$('#dataList').on('click', '.save-tr-record', function() {
-		const formData = new FormData();
-		formData.append('id', $('input[name="id"]').val())
-		formData.append('proses', $('input[name="proses"]').val())
-		formData.append('harga', $('input[name="harga"]').val())
-		formData.append('aktif', $('select[name="aktif"] option:selected').val())
+		const data = {
+			id: $('input[name="id"]').val(),
+			proses: $('input[name="proses"]').val(),
+			harga: $('input[name="harga"]').val(),
+			aktif: $('select[name="aktif"] option:selected').val()
+		};
 		$.ajax({
-			type: "POST",
-			url: `${HOST}/mfprosesfinishing/apiEditProcess`,
+			type: "PUT",
+			url: `${HOST}/api/master/finishing`,
+			headers: {'Content-Type': 'application/x-www-form-urlencoded'},
+			contentType: 'application/x-www-form-urlencoded; charset=utf-8',
 			dataType: 'JSON',
-			data: formData,
-			contentType: false,
-			processData: false,
+			data: data,
 			beforeSend: function () {},
 			success: function (response) {
 				let msgClass;
@@ -245,12 +243,12 @@ $(function () {
 		const formData = new FormData(this);
 
 		$.ajax({
-			type: "POST",
-			url: `${HOST}/mfprosesfinishing/apiEditProcess`,
+			type: "PUT",
+			url: `${HOST}/api/master/finishing`,
+			headers: {'Content-Type': 'application/x-www-form-urlencoded'},
+			contentType: 'application/x-www-form-urlencoded; charset=utf-8',
 			dataType: 'JSON',
 			data: formData,
-			contentType: false,
-			processData: false,
 			beforeSend: function () {
 				$('#dataForm .modal-footer .loading-indicator').html(
 					'<div class="spinner-icon">' +
@@ -309,10 +307,9 @@ $(function () {
 
 function getAllData(obj)
 {
-	
 	$.ajax({
-		type: "POST",
-		url: `${HOST}/mfprosesfinishing/apiGetAll`,
+		type: "GET",
+		url: `${HOST}/api/master/finishing`,
 		beforeSend: obj.beforeSend,
 		success: obj.success,
 		error: obj.error,

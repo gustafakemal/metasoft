@@ -108,7 +108,7 @@ $(function () {
 
 		$.ajax({
 			type: "POST",
-			url: `${HOST}/mfjenistinta/apiAddProcess`,
+			url: `${HOST}/api/master/tinta`,
 			dataType: 'JSON',
 			data: formData,
 			contentType: false,
@@ -149,10 +149,10 @@ $(function () {
 		$('#dataDetail').modal('show')
 		const id = $(this).attr('data-id')
 		$.ajax({
-			type: "POST",
-			url: `${HOST}/mfjenistinta/apiGetById`,
+			type: "GET",
+			url: `${HOST}/api/master/tinta/${id}?modified=yes`,
 			dataType: 'JSON',
-			data: { id, modified: true },
+			// data: { id, modified: true },
 			beforeSend: function () {},
 			success: function (response) {
 				if(response.success) {
@@ -199,9 +199,7 @@ $(function () {
 	const reload_tr = function() {
 		const obj = {
 			success: function (response) {
-				$('#dataList').DataTable().clear();
-				$('#dataList').DataTable().rows.add(response);
-				$('#dataList').DataTable().draw();
+				$('#dataList').DataTable().clear().rows.add(response).draw();
 			},
 		}
 		getAllData(obj);
@@ -209,53 +207,55 @@ $(function () {
 
 	$('body').on('click', '.click-to-close', reload_tr)
 	$('#dataList').on('click', '.cancel-tr-submit', reload_tr)
-	$('#dataList').on('click', 'tr#selected', function(e) {
-		e.stopPropagation()
-	})
-	$('#dataList').on('click', '.save-tr-record', function() {
-		const formData = new FormData();
-		formData.append('id', $('input[name="id"]').val())
-		formData.append('nama', $('input[name="nama"]').val())
-		formData.append('harga', $('input[name="harga"]').val())
-		formData.append('aktif', $('select[name="aktif"] option:selected').val())
-		$.ajax({
-			type: "POST",
-			url: `${HOST}/mfjenistinta/apiEditProcess`,
-			dataType: 'JSON',
-			data: formData,
-			contentType: false,
-			processData: false,
-			beforeSend: function () {},
-			success: function (response) {
-				let msgClass;
-				if(response.success) {
-					reload_tr();
-					msgClass = 'success'
-				} else {
-					msgClass = 'danger'
-				}
-				$('.floating-msg').addClass('show').html(`<div class="alert alert-${msgClass}">${response.msg}</div>`)
-			},
-			error: function () {},
-			complete: function() {
-				setTimeout(() => {
-					$('.floating-msg').removeClass('show').html('');
-				}, 3000);
-			}
+		.on('click', 'tr#selected', function(e) {
+			e.stopPropagation()
 		})
-	})
+		.on('click', '.save-tr-record', function() {
+			const data = {
+				id: $('input[name="id"]').val(),
+				nama: $('input[name="nama"]').val(),
+				harga: $('input[name="harga"]').val(),
+				aktif: $('select[name="aktif"] option:selected').val()
+			};
+			console.log(data)
+			$.ajax({
+				type: "PUT",
+				url: `${HOST}/api/master/tinta`,
+				headers: {'Content-Type': 'application/x-www-form-urlencoded'},
+				contentType: 'application/x-www-form-urlencoded; charset=utf-8',
+				dataType: 'JSON',
+				data: data,
+				beforeSend: function () {},
+				success: function (response) {
+					let msgClass;
+					if(response.success) {
+						reload_tr();
+						msgClass = 'success'
+					} else {
+						msgClass = 'danger'
+					}
+					$('.floating-msg').addClass('show').html(`<div class="alert alert-${msgClass}">${response.msg}</div>`)
+				},
+				error: function () {},
+				complete: function() {
+					setTimeout(() => {
+						$('.floating-msg').removeClass('show').html('');
+					}, 3000);
+				}
+			})
+		})
 
 	$('#dataForm').on('submit', 'form[name="editData"]', function(e) {
 		e.preventDefault();
 		const formData = new FormData(this);
 
 		$.ajax({
-			type: "POST",
-			url: `${HOST}/mfjenistinta/apiEditProcess`,
+			type: "PUT",
+			url: `${HOST}/api/master/tinta`,
+			headers: {'Content-Type': 'application/x-www-form-urlencoded'},
+			contentType: 'application/x-www-form-urlencoded; charset=utf-8',
 			dataType: 'JSON',
 			data: formData,
-			contentType: false,
-			processData: false,
 			beforeSend: function () {
 				$('#dataForm .modal-footer .loading-indicator').html(
 					'<div class="spinner-icon">' +
@@ -291,14 +291,11 @@ $(function () {
 		e.preventDefault();
 		const obj = {
 			beforeSend: function () {
-				$('#statusList').DataTable().clear();
-				$('#statusList').DataTable().draw();
+				$('#statusList').DataTable().clear().draw();
 				$('#dataList .dataTables_empty').html('<div class="spinner-icon"><span class="spinner-grow text-info"></span><span class="caption">Fetching data...</span></div>')
 			},
 			success: function (response) {
-				$('#dataList').DataTable().clear();
-				$('#dataList').DataTable().rows.add(response);
-				$('#dataList').DataTable().draw();
+				$('#dataList').DataTable().clear().rows.add(response).draw();
 			},
 			error: function () {
 				$('#dataList .dataTables_empty').html('Data gagal di retrieve.')
@@ -315,8 +312,8 @@ function getAllData(obj)
 {
 
 	$.ajax({
-		type: "POST",
-		url: `${HOST}/mfjenistinta/apiGetAll`,
+		type: "GET",
+		url: `${HOST}/api/master/tinta`,
 		beforeSend: obj.beforeSend,
 		success: obj.success,
 		error: obj.error,

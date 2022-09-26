@@ -35,7 +35,7 @@
             <div class="form-group row">
                 <label for="nama_produk" class="col-sm-2 col-form-label">Nama Part Produk <span class="text-danger">*</span></label>
                 <div class="col-sm-10">
-                    <input value="<?= $data->nama;?>" type="text" class="form-control" id="nama_produk" name="nama">
+                    <input value="<?= $data->nama;?>" type="text" class="form-control" id="nama_produk" name="nama" style="text-transform: uppercase">
                 </div>
             </div>
             <div class="form-group row">

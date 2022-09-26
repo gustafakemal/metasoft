@@ -13,7 +13,7 @@ $(function () {
                 exportOptions: { orthogonal: 'export' }
             }],
 		columnDefs: [],
-		order: [[ 2, 'desc' ]],
+		order: [[ 1, 'desc' ]],
 		scrollX: true,
 		initComplete: function () {},
 	});
@@ -32,10 +32,19 @@ $(function () {
 					$('#dataList').DataTable().clear().rows.add(response.data).draw();
 				} else {
 					$('#dataList').DataTable().clear().draw();
+					$('.floating-msg').addClass('show').html(`
+							<div class="alert alert-danger">${response.msg}</div>
+							`)
 				}
 			},
 			error: function () {},
-			complete: function() {}
+			complete: function(res) {
+				if(!res.success) {
+					setTimeout(() => {
+						$('.floating-msg').removeClass('show').html('');
+					}, 3000)
+				}
+			}
 		})
 	})
 
@@ -264,14 +273,11 @@ $(function () {
 		$.get(`${HOST}/MFPartProduk/actualNomorSisi/${id_part}`, function (response) {
 			$('#dataForm input[name="sisi"]').val(response.no_sisi)
 		})
+
 		const part_name = $(this).attr('data-nama');
 		$('.part-produk-title').html(part_name)
 		$('#dataForm .sisi-form-modal').attr('name', 'add-sisi')
 	})
-
-	$('#dataForm, #dataDetail').on('hidden.bs.modal', function (event) {
-		resetSisiModal();
-	});
 
 	let color_tracker = {
 		frontside: [],
@@ -280,51 +286,67 @@ $(function () {
 		finishing: [],
 		khusus: []
 	};
-	const fs_params = {
+	let fs_params = {
 		selectbox: 'fscolors',
 		item_container: 'fs-child',
 		item_class: 'fscolor',
 		input_name: 'fscolor[]',
 		del_class: 'delfs',
 		group: 'frontside',
-		tracker: color_tracker.frontside
+		tracker: []
 	};
-	const bs_params = {
+	let bs_params = {
 		selectbox: 'bscolors',
 		item_container: 'bs-child',
 		item_class: 'bscolor',
 		input_name: 'bscolor[]',
 		del_class: 'delbs',
 		group: 'backside',
-		tracker: color_tracker.backside
+		tracker: []
 	};
-	const manual_params = {
+	let manual_params = {
 		selectbox: 'manualcolors',
 		item_container: 'manual-child',
 		item_class: 'manualcolor',
 		input_name: 'manualcolor[]',
 		del_class: 'delmanual',
 		group: 'manual',
-		tracker: color_tracker.manual
+		tracker: []
 	};
-	const finishing_params = {
+	let finishing_params = {
 		selectbox: 'finishingcolors',
 		item_container: 'finishing-child',
 		item_class: 'finishingcolor',
 		input_name: 'finishingcolor[]',
 		del_class: 'delfinishing',
 		group: 'finishing',
-		tracker: color_tracker.finishing
+		tracker: []
 	};
-	const khusus_params = {
+	let khusus_params = {
 		selectbox: 'khususcolors',
 		item_container: 'khusus-child',
 		item_class: 'khususcolor',
 		input_name: 'khususcolor[]',
 		del_class: 'delkhusus',
 		group: 'khusus',
-		tracker: color_tracker.khusus
+		tracker: []
 	};
+
+	$('#dataForm, #dataDetail').on('hidden.bs.modal', function (event) {
+		resetSisiModal();
+		// color_tracker = {
+		// 	frontside: [],
+		// 	backside: [],
+		// 	manual: [],
+		// 	finishing: [],
+		// 	khusus: []
+		// }
+		fs_params.tracker = [];
+		bs_params.tracker = [];
+		manual_params.tracker = [];
+		finishing_params.tracker = [];
+		khusus_params.tracker = [];
+	});
 
 	$('.add-fs').on('click', fs_params, colorAddItem);
 	$('.fs-child').on('click', '.delfs', fs_params, colorDelItem)
@@ -440,20 +462,21 @@ $(function () {
 				$('.sisi-form-modal input:not(#frontside):not(#backside):not(#trevisi), .sisi-form-modal textarea, .sisi-form-modal button').prop('disabled', true);
 			},
 			success: function (response) {
+				console.log(response)
 				const colors_el = ['fs_colors', 'bs_colors', 'manual_colors', 'finishing_colors', 'khusus_colors'];
 
 				for(const prop in response.data) {
 					if(colors_el.includes(prop)) {
 						const spliter = prop.split('_')
 						const prefix = spliter[0];
-						let edited_array;
-						if(prefix === 'fs') {
-							edited_array = 'frontside';
-						} else if(prefix === 'bs') {
-							edited_array = 'backside';
-						} else {
-							edited_array = prefix;
-						}
+						let edited_array = `${prefix}_params`;
+						// if(prefix === 'fs') {
+						// 	edited_array = 'frontside';
+						// } else if(prefix === 'bs') {
+						// 	edited_array = 'backside';
+						// } else {
+						// 	edited_array = prefix;
+						// }
 						let child_el = [];
 						for(let i = 0;i < response.data[prop].length;i++) {
 							let text;
@@ -475,7 +498,7 @@ $(function () {
 														</button>
 													</div>
 											</div>`)
-							color_tracker[edited_array].push(value.toString());
+							eval(edited_array).tracker.push(value.toString());
 						}
 						$(`.${prefix}-child`).html(child_el.join(''));
 					}
@@ -483,7 +506,6 @@ $(function () {
 					$(`.sisi-form-modal input[name="${prop}"]`).val(response.data[prop]);
 					$(`.sisi-form-modal textarea[name="${prop}"]`).val(response.data[prop]);
 				}
-				console.log(color_tracker.frontside)
 			},
 			complete: function () {
 				$('.sisi-form-modal input:not(#fgd):not(#trevisi), .sisi-form-modal textarea, .sisi-form-modal button').prop('disabled', false);

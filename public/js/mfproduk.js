@@ -354,7 +354,7 @@ function searchProduct(keyword)
 			} else {
 				$('#dataList').DataTable().clear().draw();
 				$('.floating-msg').addClass('show').html(`
-							<div class="alert alert-danger">Data tidak ditemukan.</div>
+							<div class="alert alert-danger">${response.msg}</div>
 							`)
 			}
 		},

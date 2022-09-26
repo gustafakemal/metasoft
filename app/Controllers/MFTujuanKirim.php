@@ -25,7 +25,13 @@ class MFTujuanKirim extends BaseController
 		]);
 	}
 
-	public function apiGetAll()
+    /**
+     * @return \CodeIgniter\HTTP\ResponseInterface
+     * @throws \Exception
+     *
+     * Endpoint GET /api/master/destination
+     */
+    public function apiGetAll()
 	{
 		$query = $this->model->getMFTujuanKirim();
 
@@ -56,14 +62,15 @@ class MFTujuanKirim extends BaseController
 		return $this->response->setJSON($data);
 	}
 
-	public function apiGetById()
+    /**
+     * @return \CodeIgniter\HTTP\ResponseInterface
+     * @throws \Exception
+     *
+     * Endpoint GET /api/master/destination/$1
+     */
+    public function apiGetById($id)
 	{
-		if ($this->request->getMethod() !== 'post') {
-			return redirect()->to('mftujuankirim');
-		}
-
-		$id = $this->request->getPost('id');
-		$modified = $this->request->getPost('modified') ?? false;
+		$modified = $this->request->getGet('modified') == 'yes';
 
 		$query = $this->model->getById($id);
 
@@ -97,12 +104,14 @@ class MFTujuanKirim extends BaseController
 		return $this->response->setJSON($response);
 	}
 
-	public function apiAddProcess()
+    /**
+     * @return \CodeIgniter\HTTP\ResponseInterface
+     * @throws \Exception
+     *
+     * Endpoint POST /api/master/destination
+     */
+    public function apiAddProcess()
 	{
-		if ($this->request->getMethod() !== 'post') {
-			return redirect()->to('mftujuankirim');
-		}
-
 		$data = $this->request->getPost();
 		$data['added_by'] = current_user()->UserID;
 
@@ -127,13 +136,15 @@ class MFTujuanKirim extends BaseController
 		return $this->response->setJSON($response);
 	}
 
-	public function apiEditProcess()
+    /**
+     * @return \CodeIgniter\HTTP\ResponseInterface
+     * @throws \Exception
+     *
+     * Endpoint PUT /api/master/destination
+     */
+    public function apiEditProcess()
 	{
-		if ($this->request->getMethod() !== 'post') {
-			return redirect()->to('mftujuankirim');
-		}
-
-		$data = $this->request->getPost();
+        $data = $this->request->getRawInput();
 
 		$data['updated_by'] = current_user()->UserID;
 		$id=$data["id"];

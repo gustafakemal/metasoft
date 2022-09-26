@@ -100,7 +100,7 @@ $(function () {
 
 		$.ajax({
 			type: "POST",
-			url: `${HOST}/customer/apiAddProcess`,
+			url: `${HOST}/api/master/customer`,
 			dataType: 'JSON',
 			data: formData,
 			contentType: false,
@@ -141,10 +141,9 @@ $(function () {
 		$('#dataDetail').modal('show')
 		const noPemesan = $(this).attr('data-id')
 		$.ajax({
-			type: "POST",
-			url: `${HOST}/customer/apiGetById`,
+			type: "GET",
+			url: `${HOST}/api/master/customer/${noPemesan}?modified=yes`,
 			dataType: 'JSON',
-			data: { noPemesan, modified: true },
 			beforeSend: function () {},
 			success: function (response) {
 				if(response.success) {
@@ -171,10 +170,9 @@ $(function () {
 		$('#dataForm form input[name="NoPemesan"]').val(noPemesan)
 
 		$.ajax({
-			type: "POST",
-			url: `${HOST}/customer/apiGetById`,
+			type: "GET",
+			url: `${HOST}/api/master/customer/${noPemesan}`,
 			dataType: 'JSON',
-			data: { noPemesan },
 			beforeSend: function () {},
 			success: function (response) {
 				console.log(response)
@@ -213,13 +211,16 @@ $(function () {
 	$('#dataForm').on('submit', 'form[name="editData"]', function(e) {
 		e.preventDefault();
 		const formData = new FormData(this);
+		// formData.append('_method', 'POST');
+		// console.log(...formData)
 
 		$.ajax({
-			type: "POST",
-			url: `${HOST}/customer/apiEditProcess`,
+			type: "PUT",
+			url: `${HOST}/api/master/customer`,
+			headers: {'Content-Type': 'application/x-www-form-urlencoded'},
+			// contentType: 'application/x-www-form-urlencoded; charset=utf-8',
 			dataType: 'JSON',
 			data: formData,
-			contentType: false,
 			processData: false,
 			beforeSend: function () {
 				$('#dataForm .modal-footer .loading-indicator').html(
@@ -290,7 +291,7 @@ function getAllCustomers(obj)
 {
 	$.ajax({
 		type: "GET",
-		url: `${HOST}/customer/apiGetAll`,
+		url: `${HOST}/api/master/customer`,
 		beforeSend: obj.beforeSend,
 		success: obj.success,
 		error: obj.error,

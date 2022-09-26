@@ -105,7 +105,7 @@ $(function () {
 
 		$.ajax({
 			type: "POST",
-			url: `${HOST}/sales/apiAddProcess`,
+			url: `${HOST}/api/master/sales`,
 			dataType: 'JSON',
 			data: formData,
 			contentType: false,
@@ -146,10 +146,9 @@ $(function () {
 		$('#dataDetail').modal('show')
 		const id = $(this).attr('data-id')
 		$.ajax({
-			type: "POST",
-			url: `${HOST}/sales/apiGetById`,
+			type: "GET",
+			url: `${HOST}/api/master/sales/${id}?modified=yes`,
 			dataType: 'JSON',
-			data: { id, modified: true },
 			beforeSend: function () {},
 			success: function (response) {
 				if(response.success) {
@@ -225,18 +224,19 @@ $(function () {
 		e.stopPropagation()
 	})
 	$('#dataList').on('click', '.save-tr-record', function() {
-		const formData = new FormData();
-		formData.append('SalesID', $('input[name="id"]').val())
-		formData.append('SalesName', $('input[name="nama"]').val())
-		formData.append('NIK', $('input[name="nik"]').val())
-		formData.append('FlagAktif', $('select[name="aktif"] option:selected').val())
+		const data = {
+			SalesID: $('input[name="id"]').val(),
+			SalesName: $('input[name="nama"]').val(),
+			NIK: $('input[name="nik"]').val(),
+			FlagAktif: $('select[name="aktif"] option:selected').val()
+		};
 		$.ajax({
-			type: "POST",
-			url: `${HOST}/sales/apiEditProcess`,
+			type: "PUT",
+			url: `${HOST}/api/master/sales`,
+			headers: {'Content-Type': 'application/x-www-form-urlencoded'},
+			contentType: 'application/x-www-form-urlencoded; charset=utf-8',
 			dataType: 'JSON',
-			data: formData,
-			contentType: false,
-			processData: false,
+			data: data,
 			beforeSend: function () {},
 			success: function (response) {
 				let msgClass;
@@ -262,12 +262,12 @@ $(function () {
 		const formData = new FormData(this);
 
 		$.ajax({
-			type: "POST",
-			url: `${HOST}/sales/apiEditProcess`,
+			type: "PUT",
+			url: `${HOST}/api/master/sales`,
+			headers: {'Content-Type': 'application/x-www-form-urlencoded'},
+			contentType: 'application/x-www-form-urlencoded; charset=utf-8',
 			dataType: 'JSON',
 			data: formData,
-			contentType: false,
-			processData: false,
 			beforeSend: function () {
 				$('#dataForm .modal-footer .loading-indicator').html(
 					'<div class="spinner-icon">' +
@@ -327,7 +327,7 @@ function getAllData(obj)
 {
 	$.ajax({
 		type: "GET",
-		url: `${HOST}/sales/apiGetAll`,
+		url: `${HOST}/api/master/sales`,
 		beforeSend: obj.beforeSend,
 		success: obj.success,
 		error: obj.error,

@@ -35,7 +35,7 @@ class MFProdukModel extends Model
 
     protected function initialize()
     {
-        $fields_req = ['id', 'nama_produk', 'segmen', 'customer', 'sales'];
+        $fields_req = ['id', 'nama_produk', 'segmen', 'customer', 'sales', 'tujuan_kirim', 'contact_person'];
         $validationRules = [];
         $validationMessages = [];
         foreach ($fields_req as $field) {

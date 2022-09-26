@@ -58,8 +58,8 @@
           </div>
       </a>
   </li>
-  <li class="<?= url_is('customer') ? 'active' : '' ?>">
-    <a href="<?= site_url('customer');?>">
+  <li class="<?= url_is('master/customer*') ? 'active' : '' ?>">
+    <a href="<?= site_url('master/customer');?>">
           <div class="icon">
             <i class="fas fa-user-circle"></i>
           </div>
@@ -68,8 +68,8 @@
           </div>
     </a>
   </li>
-  <li class="<?= url_is('sales') ? 'active' : '' ?>">
-    <a href="<?= site_url('sales');?>">
+  <li class="<?= url_is('master/sales*') ? 'active' : '' ?>">
+    <a href="<?= site_url('master/sales');?>">
       <div class="icon">
             <i class="fas fa-handshake"></i>
           </div>
@@ -78,8 +78,8 @@
           </div>
     </a>
   </li>
-  <li class="<?= url_is('mftujuankirim') ? 'active' : '' ?>">
-    <a href="<?= site_url('mftujuankirim');?>">
+  <li class="<?= url_is('master/destination*') ? 'active' : '' ?>">
+    <a href="<?= site_url('master/destination');?>">
         
         <div class="icon">
             <i class="fas fa-car-alt"></i>
@@ -121,8 +121,8 @@
       </div>
   </li>
   <li>
-      <a class="<?= (url_is('mfjeniskertas') || url_is('mfjenistinta') || url_is('mfjenisflute') || url_is('mfprosesfinishing') || url_is('mfprosesmanual') || url_is('mfproseskhusus')) ? '' : 'collapsed';?>" href="#" data-toggle="collapse" data-target="#dropdown-mfmaster"
-          aria-expanded="<?= (url_is('mfjeniskertas') || url_is('mfjenistinta') || url_is('mfjenisflute') || url_is('mfprosesfinishing') || url_is('mfprosesmanual') || url_is('mfproseskhusus')) ? 'true' : 'false'; ?>">
+      <a class="<?= (url_is('master/kertas*') || url_is('master/tinta*') || url_is('master/flute*') || url_is('master/finishing*') || url_is('master/manual*') || url_is('master/khusus*')) ? '' : 'collapsed';?>" href="#" data-toggle="collapse" data-target="#dropdown-mfmaster"
+          aria-expanded="<?= (url_is('master*')) ? 'true' : 'false'; ?>">
           <div class="icon">
             <i class="fas fa-envelope"></i>
           </div>
@@ -130,37 +130,37 @@
             Data Meta Fold
           </div>
       </a>
-      <div id="dropdown-mfmaster" class="collapse<?= (url_is('mfjeniskertas') || url_is('mfjenistinta') || url_is('mfjenisflute') || url_is('mfprosesfinishing') || url_is('mfprosesmanual') || url_is('mfproseskhusus')) ? ' show' : '';?>"
+      <div id="dropdown-mfmaster" class="collapse<?= (url_is('master/kertas*') || url_is('master/tinta*') || url_is('master/flute*') || url_is('master/finishing*') || url_is('master/manual*') || url_is('master/khusus*')) ? ' show' : '';?>"
           data-parent="#mainmenu">
           <ul class="">
               
-              <li class="<?= (url_is('mfjeniskertas')) ? 'active' : '';?>">
-              <a href="<?= site_url('mfjeniskertas');?>">
+              <li class="<?= (url_is('master/kertas*')) ? 'active' : '';?>">
+              <a href="<?= site_url('master/kertas');?>">
                     <i class="fas fa-arrow-circle-right"></i> Jenis Kertas
                 </a>
               </li>
-              <li class="<?= (url_is('mfjenistinta')) ? 'active' : '';?>">
-              <a href="<?= site_url('mfjenistinta');?>">
+              <li class="<?= (url_is('master/tinta*')) ? 'active' : '';?>">
+              <a href="<?= site_url('master/tinta');?>">
                     <i class="fas fa-arrow-circle-right"></i> Jenis Tinta
                 </a>
               </li>
-              <li class="<?= (url_is('mfjenisflute')) ? 'active' : '';?>">
-              <a href="<?= site_url('mfjenisflute');?>">
+              <li class="<?= (url_is('master/flute*')) ? 'active' : '';?>">
+              <a href="<?= site_url('master/flute');?>">
                     <i class="fas fa-arrow-circle-right"></i> Jenis Flute
                 </a>
               </li>
-              <li class="<?= (url_is('mfprosesfinishing')) ? 'active' : '';?>">
-              <a href="<?= site_url('mfprosesfinishing');?>">
+              <li class="<?= (url_is('master/finishing*')) ? 'active' : '';?>">
+              <a href="<?= site_url('master/finishing');?>">
                     <i class="fas fa-arrow-circle-right"></i> Proses Finishing
                 </a>
               </li>
-              <li class="<?= (url_is('mfprosesmanual')) ? 'active' : '';?>">
-              <a href="<?= site_url('mfprosesmanual');?>">
+              <li class="<?= (url_is('master/manual*')) ? 'active' : '';?>">
+              <a href="<?= site_url('master/manual');?>">
                     <i class="fas fa-arrow-circle-right"></i> Proses Manual
                 </a>
               </li>
-              <li class="<?= (url_is('mfproseskhusus')) ? 'active' : '';?>">
-              <a href="<?= site_url('mfproseskhusus');?>">
+              <li class="<?= (url_is('master/khusus*')) ? 'active' : '';?>">
+              <a href="<?= site_url('master/khusus');?>">
                     <i class="fas fa-arrow-circle-right"></i> Proses Khusus
                 </a>
               </li>
@@ -234,31 +234,31 @@
         <script src="<?= site_url('js/bs-custom-file-input.min.js'); ?>"></script>
         <script src="<?= site_url('js/mfproduk.js'); ?>"></script>
     <?php endif; ?>
-    <?php if (url_is('customer')) : ?>
+    <?php if (url_is('master/customer*')) : ?>
         <script src="<?= site_url('js/customer.js'); ?>"></script>
     <?php endif; ?>
-    <?php if (url_is('sales')) : ?>
+    <?php if (url_is('master/sales*')) : ?>
         <script src="<?= site_url('js/sales.js'); ?>"></script>
     <?php endif; ?>
-    <?php if (url_is('mfjeniskertas')) : ?>
+    <?php if (url_is('master/kertas*')) : ?>
         <script src="<?= site_url('js/mfjeniskertas.js'); ?>"></script>
     <?php endif; ?>
-    <?php if (url_is('mfjenistinta')) : ?>
+    <?php if (url_is('master/tinta*')) : ?>
         <script src="<?= site_url('js/mfjenistinta.js'); ?>"></script>
     <?php endif; ?>
-    <?php if (url_is('mfjenisflute')) : ?>
+    <?php if (url_is('master/flute*')) : ?>
         <script src="<?= site_url('js/mfjenisflute.js'); ?>"></script>
     <?php endif; ?>
-    <?php if (url_is('mfprosesfinishing')) : ?>
+    <?php if (url_is('master/finishing*')) : ?>
         <script src="<?= site_url('js/mfprosesfinishing.js'); ?>"></script>
     <?php endif; ?>
-    <?php if (url_is('mfprosesmanual')) : ?>
+    <?php if (url_is('master/manual*')) : ?>
         <script src="<?= site_url('js/mfprosesmanual.js'); ?>"></script>
     <?php endif; ?>
-    <?php if (url_is('mfproseskhusus')) : ?>
+    <?php if (url_is('master/khusus*')) : ?>
         <script src="<?= site_url('js/mfproseskhusus.js'); ?>"></script>
     <?php endif; ?>
-    <?php if (url_is('mftujuankirim')) : ?>
+    <?php if (url_is('master/destination*')) : ?>
         <script src="<?= site_url('js/mftujuankirim.js'); ?>"></script>
     <?php endif; ?>
     <script src="<?= site_url('js/custom.js'); ?>"></script>

@@ -22,26 +22,40 @@ class MFPartProduk extends BaseController
 
 	public function index()
 	{
+        $this->breadcrumbs->add('Dashbor', '/');
+        $this->breadcrumbs->add('Data Part Produk MF', '/mfproduk');
+
 		return view('MFPartProduk/cari', [
-			'page_title' => 'Cari Part Produk MF',
+			'page_title' => 'Data Part Produk MF',
+            'breadcrumbs' => $this->breadcrumbs->render(),
 		]);
 	}
 
 	public function addPartProduct()
 	{
+        $this->breadcrumbs->add('Dashbor', '/');
+        $this->breadcrumbs->add('Part Produk', '/mfpartproduk');
+        $this->breadcrumbs->add('Input Part Produk MF', '/mfproduk');
+
 		return view('MFPartProduk/input', [
 			'page_title' => 'Input Part Produk MF',
             'ref' => $this->request->getGet('ref'),
             'id_produk' => $this->request->getGet('id_produk'),
+            'breadcrumbs' => $this->breadcrumbs->render(),
 		]);
 	}
 
     public function editPartProduct($id, $is_revision = 0)
     {
+        $this->breadcrumbs->add('Dashbor', '/');
+        $this->breadcrumbs->add('Part Produk', '/mfpartproduk');
+        $this->breadcrumbs->add(($is_revision == 0) ? 'Edit Part Produk MF' : 'Revisi Part Produk MF', '/mfproduk');
+
         $data = $this->model->getEditingData($id)[0];
 
         return view('MFPartProduk/edit', [
             'page_title' => ($is_revision == 0) ? 'Edit Part Produk MF' : 'Revisi Part Produk MF',
+            'breadcrumbs' => $this->breadcrumbs->render(),
             'data' => $data,
             'id_produk' => $this->request->getGet('id_produk'),
             'is_revision' => $is_revision,
@@ -336,6 +350,9 @@ class MFPartProduk extends BaseController
             $edit = ' <a href="#" title="Edit" class="edit-sisi" data-revisi="' . $item->revisi . '" data-fgd="' . $item->fgd . '" data-id="' . $item->id . '"><i class="far fa-edit"></i></a>';
             $del = ' <a href="' . site_url('mfpartproduk/delSisi/' . $item->id) . '" title="Hapus" onclick="return confirm('.$del_confirm.')"><i class="far fa-trash-alt"></i></a>';
 
+            $added = Time::parse($item->added);
+            $updated = Time::parse($item->updated);
+
             $data[] = [
                 $item->sisi,
                 $item->frontside,
@@ -343,7 +360,7 @@ class MFPartProduk extends BaseController
                 $item->special_req,
                 $this->common->dateFormat($item->added),
                 $item->added_by,
-                $this->common->dateFormat($item->updated),
+                ($added->equals($updated)) ? '' : $this->common->dateFormat($item->updated),
                 $item->updated_by,
                 $view . $edit . $del
             ];
@@ -376,6 +393,9 @@ class MFPartProduk extends BaseController
                 $edit = ' <a href="#" title="Edit" class="edit-sisi" data-id="' . $row->id . '"><i class="far fa-edit"></i></a>';
                 $del = ' <a href="' . site_url('mfpartproduk/delSisi/' . $row->id) . '" title="Hapus" onclick="return confirm('.$del_confirm.')"><i class="far fa-trash-alt"></i></a>';
 
+                $added = Time::parse($row->added);
+                $updated = Time::parse($row->updated);
+
                 $data[] = [
                     $row->sisi,
                     $row->frontside,
@@ -383,7 +403,7 @@ class MFPartProduk extends BaseController
                     $row->special_req,
                     $this->common->dateFormat($row->added),
                     $row->added_by,
-                    $this->common->dateFormat($row->updated),
+                    ($added->equals($updated)) ? '' : $this->common->dateFormat($row->updated),
                     $row->updated_by,
                 ];
                 if($is_revision === null) {
@@ -459,7 +479,23 @@ class MFPartProduk extends BaseController
         $full = (! $this->request->getPost('full') );
         $id_produk = $this->request->getPost('id_produk');
 
+//        if($keyword == '') {
+//            return $this->response->setJSON([
+//                'success' => false,
+//                'msg' => 'Silahkan isikan form cari',
+//                'data' => []
+//            ]);
+//        }
+
 		$query = $this->model->getByFgdNama("$keyword");
+
+        if(count($query) == 0) {
+            return $this->response->setJSON([
+                'success' => false,
+                'msg' => 'Data tidak ditemukan.',
+                'data' => []
+            ]);
+        }
 
 		$data = [];
 		foreach($query as $key => $val) {
@@ -467,6 +503,9 @@ class MFPartProduk extends BaseController
 			$edit_btn = '<a title="Edit" data-toggle="tooltip" data-placement="left" class="btn btn-sm btn-success edit-rev-item mr-2" href="' . site_url('partproduk/edit/' . $val->id) . '"><i class="far fa-edit"></i></a>';
 			$revisi_btn = '<a title="Revisi" data-toggle="tooltip" data-placement="left" class="btn btn-sm btn-info rev-item" href="' . site_url('partproduk/rev/' . $val->id . '/1').'"><i class="far fa-clone"></i></a>';
             $del_btn = '<a title="Hapus" data-toggle="tooltip" data-placement="left" class="btn btn-sm btn-danger" href="' . site_url('partproduk/del/' . $val->id).'" onclick="return confirm('.$confirm.')"><i class="far fa-trash-alt"></i></a>';
+
+            $added = Time::parse($val->added);
+            $updated = Time::parse($val->updated);
 
             if($full) {
                 $data[] = [
@@ -481,7 +520,7 @@ class MFPartProduk extends BaseController
                     (int)$val->panjang . 'x' . (int)$val->lebar . 'x' . (int)$val->tinggi,
                     $this->common->dateFormat($val->added),
                     $val->added_by,
-                    $this->common->dateFormat($val->updated),
+                    ($added->equals($updated)) ? '' : $this->common->dateFormat($val->updated),
                     $val->updated_by
                 ];
             } else {
@@ -575,6 +614,9 @@ class MFPartProduk extends BaseController
             $edit = ' <a href="' . site_url('MFPartProduk/editPartProduct/' . $item->id) . '" title="Edit"><i class="far fa-edit"></i></a>';
             $del = ' <a href="' . site_url('mfpartproduk/delPart/' . $item->id) . '" title="Hapus" onclick="return confirm('.$del_confirm.')"><i class="far fa-trash-alt"></i></a>';
 
+            $added = Time::parse($item->added);
+            $updated = Time::parse($item->updated);
+
             $data[] = [
                 $key + 1,
                 $item->fgd,
@@ -586,7 +628,7 @@ class MFPartProduk extends BaseController
                 (int)$item->panjang . ' x ' . (int)$item->lebar . ' x ' . (int)$item->tinggi,
                 $this->common->dateFormat($item->added),
                 $item->added_by,
-                $this->common->dateFormat($item->updated),
+                ($added->equals($updated)) ? '' : $this->common->dateFormat($item->updated),
                 $item->updated_by,
                 $view . $edit . $del
             ];
@@ -612,6 +654,10 @@ class MFPartProduk extends BaseController
 
         $results = [];
         foreach($query->getResult() as $key => $row) {
+
+            $added = Time::parse($row->added);
+            $updated = Time::parse($row->updated);
+
             $confirm = "'Hapus item ini?'";
             $results[] = [
                 $key + 1,
@@ -624,7 +670,7 @@ class MFPartProduk extends BaseController
                 (int)$row->panjang . 'x' . (int)$row->lebar . 'x' . (int)$row->tinggi,
                 $this->common->dateFormat($row->added),
                 $row->added_by,
-                $this->common->dateFormat($row->updated),
+                ($added->equals($updated)) ? '' : $this->common->dateFormat($row->updated),
                 $row->updated_by,
                 '<a title="Hapus" href="'.site_url('MFProduk/delItemKelProduk/' . $id_produk . '/' . $row->id).'" onclick="return confirm('.$confirm.')" href="#"><i class="far fa-trash-alt"></i></a>'
             ];
@@ -860,10 +906,16 @@ class MFPartProduk extends BaseController
                 in_array($file->getExtension(), $this->filedokcr_extension) &&
                 in_array($file->getMimeType(), $this->filedokcr_mime_type)
             ) {
-                $rev_format = str_pad($data['revisi'], 3, '0', STR_PAD_LEFT);
-                $dokcr_filename = 'DOKCR_' . $data['fgd'] . '_' . $rev_format . '.' . $file->getExtension();
-                $file->move( WRITEPATH . 'uploads/file_dokcr',  $dokcr_filename);
-                $data['file_dokcr'] = $dokcr_filename;
+                if(array_key_exists('is_revision', $data)) {
+                    $rev_format = str_pad($data['revisi'], 3, '0', STR_PAD_LEFT);
+                    $dokcr_filename = 're_DOKCR_' . $data['fgd'] . '_' . $rev_format . '.' . $file->getExtension();
+                    $data['file_dokcr'] = $dokcr_filename;
+                } else {
+                    $rev_format = str_pad($data['revisi'], 3, '0', STR_PAD_LEFT);
+                    $dokcr_filename = 'DOKCR_' . $data['fgd'] . '_' . $rev_format . '.' . $file->getExtension();
+                    $file->move(WRITEPATH . 'uploads/file_dokcr', $dokcr_filename, true);
+                    $data['file_dokcr'] = $dokcr_filename;
+                }
             } else {
                 if( ! $file->isValid() ) {
                     $filedokcr_errors[] = 'Dokumen dokcr tidak valid';
@@ -926,7 +978,7 @@ class MFPartProduk extends BaseController
                 ]);
             }
         } else {
-            if($technical_draw && $this->model->updatePart($id, $data) && count($filedokcr_errors) == 0) {
+            if($technical_draw && count($filedokcr_errors) == 0 && $this->model->updatePart($id, $data)) {
 
                 session()->setFlashdata('success', 'Part produk berhasil diubah.');
                 return $this->response->setJSON([

@@ -37,6 +37,18 @@ $routes->get('/', 'Home::index');
 $routes->get('login', 'Auth::login');
 $routes->get('logout', 'Auth::logout');
 
+$routes->group('master', static function ($routes) {
+    $routes->get('kertas', 'MFJenisKertas::index');
+    $routes->get('tinta', 'MFJenisTinta::index');
+    $routes->get('flute', 'MFJenisFlute::index');
+    $routes->get('finishing', 'MFProsesFinishing::index');
+    $routes->get('manual', 'MFProsesManual::index');
+    $routes->get('khusus', 'MFProsesKhusus::index');
+    $routes->get('destination', 'MFTujuanKirim::index');
+    $routes->get('sales', 'Sales::index');
+    $routes->get('customer', 'Customer::index');
+});
+
 $routes->group('api', static function ($routes) {
     $routes->group('master', static function ($routes) {
         $routes->get('kertas', 'MFJenisKertas::apiGetAll');
@@ -68,6 +80,21 @@ $routes->group('api', static function ($routes) {
         $routes->get('khusus/(:num)', 'MFProsesKhusus::apiGetById/$1');
         $routes->post('khusus', 'MFProsesKhusus::apiAddProcess');
         $routes->put('khusus', 'MFProsesKhusus::apiEditProcess');
+
+        $routes->get('destination', 'MFTujuanKirim::apiGetAll');
+        $routes->get('destination/(:num)', 'MFTujuanKirim::apiGetById/$1');
+        $routes->post('destination', 'MFTujuanKirim::apiAddProcess');
+        $routes->put('destination', 'MFTujuanKirim::apiEditProcess');
+
+        $routes->get('customer', 'Customer::apiGetAll');
+        $routes->get('customer/(:num)', 'Customer::apiGetById/$1');
+        $routes->post('customer', 'Customer::apiAddProcess');
+        $routes->put('customer', 'Customer::apiEditProcess');
+
+        $routes->get('sales', 'Sales::apiGetAll');
+        $routes->get('sales/(:num)', 'Sales::apiGetById/$1');
+        $routes->post('sales', 'Sales::apiAddProcess');
+        $routes->put('sales', 'Sales::apiEditProcess');
     });
 });
 $routes->add('partproduk/add', 'MFPartProduk::addPartProduct');

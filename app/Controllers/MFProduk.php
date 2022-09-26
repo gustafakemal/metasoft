@@ -18,7 +18,7 @@ class MFProduk extends BaseController
 	public function index()
 	{
 		$this->breadcrumbs->add('Dashbor', '/');
-        $this->breadcrumbs->add('Input Produk MF', '/mfproduk');
+        $this->breadcrumbs->add('Data Produk MF', '/mfproduk');
 
         if($this->request->getGet('keyword') !== null) {
             $query_string = [
@@ -58,10 +58,30 @@ class MFProduk extends BaseController
 		$keyword = $this->request->getPost('keyword');
 		$query = $this->model->getByFgdNama("$keyword");
 
+        if($keyword == '') {
+            return $this->response->setJSON([
+                'success' => false,
+                'msg' => 'Silahkan isikan form cari',
+                'data' => []
+            ]);
+        }
+
+        if(count($query) == 0) {
+            return $this->response->setJSON([
+                'success' => false,
+                'msg' => 'Data tidak ditemukan.',
+                'data' => []
+            ]);
+        }
+
 		$data = [];
 		foreach($query as $key => $val) {
 			$edit_btn = '<a data-toggle="tooltip" data-placement="left" title="Edit" href="'. site_url('MFProduk/edit/' . $val->id) .'" class="btn btn-sm btn-success mr-2"><i class="far fa-edit"></i></a>';
 			$del_btn = '<a data-toggle="tooltip" data-placement="left" title="Hapus" href="#" class="btn btn-sm btn-danger del-item-product" data-keyword="'. $keyword .'" data-id="'. $val->id .'"><i class="far fa-trash-alt"></i></a>';
+
+            $added = Time::parse($val->added);
+            $updated = Time::parse($val->updated);
+
 			$data[] = [
 				$key + 1,
                 $edit_btn . $del_btn,
@@ -71,13 +91,13 @@ class MFProduk extends BaseController
                 (new \App\Models\SalesModel())->getName($val->sales),
                 $this->common->dateFormat($val->added),
 				$val->added_by,
-                $this->common->dateFormat($val->updated),
+                ($added->equals($updated)) ? '' : $this->common->dateFormat($val->updated),
 				$val->updated_by,
 			];
 		}
 
 		$response = [
-			'success' => (count($data) > 0) ? true : false,
+			'success' => true,
 			'data' => $data
 		];
 
@@ -117,6 +137,10 @@ class MFProduk extends BaseController
         
         $data = [];
         foreach ($query->getResult() as $key => $item) {
+
+            $added = Time::parse($item->added);
+            $updated = Time::parse($item->updated);
+
             $confirm = "'Yakin menghapus?'";
             $edit = '<a href="#" class="edit-produk" data-id="' . $item->id . '"><i class=" far fa-edit"></i></a>';
             $del = ' <a href="' . site_url('mfproduk/delete/' . $item->id) . '" onclick="return confirm(' . $confirm . ')"><i class=" far fa-trash-alt"></i></a>';
@@ -128,7 +152,7 @@ class MFProduk extends BaseController
                 $item->SalesName,
                 $this->common->dateFormat($item->added),
                 $item->added_by,
-                $this->common->dateFormat($item->updated),
+                ($added->equals($updated)) ? '' : $this->common->dateFormat($item->updated),
                 $item->updated_by,
                 $edit . $del
             ];

@@ -100,7 +100,7 @@ $(function () {
 
 		$.ajax({
 			type: "POST",
-			url: `${HOST}/mftujuankirim/apiAddProcess`,
+			url: `${HOST}/api/master/destination`,
 			dataType: 'JSON',
 			data: formData,
 			contentType: false,
@@ -141,10 +141,9 @@ $(function () {
 		$('#dataDetail').modal('show')
 		const id = $(this).attr('data-id')
 		$.ajax({
-			type: "POST",
-			url: `${HOST}/mftujuankirim/apiGetById`,
+			type: "GET",
+			url: `${HOST}/api/master/destination/${id}?modified=yes`,
 			dataType: 'JSON',
-			data: { id, modified: true },
 			beforeSend: function () {},
 			success: function (response) {
 				if(response.success) {
@@ -206,18 +205,19 @@ $(function () {
 		e.stopPropagation()
 	})
 	$('#dataList').on('click', '.save-tr-record', function() {
-		const formData = new FormData();
-		formData.append('id', $('input[name="id"]').val())
-		formData.append('tujuan', $('input[name="tujuan"]').val())
-		formData.append('harga', $('input[name="harga"]').val())
-		formData.append('aktif', $('select[name="aktif"] option:selected').val())
+		const data = {
+			id: $('input[name="id"]').val(),
+			tujuan: $('input[name="tujuan"]').val(),
+			harga: $('input[name="harga"]').val(),
+			aktif: $('select[name="aktif"] option:selected').val()
+		}
 		$.ajax({
-			type: "POST",
-			url: `${HOST}/mftujuankirim/apiEditProcess`,
+			type: "PUT",
+			url: `${HOST}/api/master/destination`,
+			headers: {'Content-Type': 'application/x-www-form-urlencoded'},
+			contentType: 'application/x-www-form-urlencoded; charset=utf-8',
 			dataType: 'JSON',
-			data: formData,
-			contentType: false,
-			processData: false,
+			data: data,
 			beforeSend: function () {},
 			success: function (response) {
 				let msgClass;
@@ -307,10 +307,9 @@ $(function () {
 
 function getAllData(obj)
 {
-	
 	$.ajax({
 		type: "GET",
-		url: `${HOST}/mftujuankirim/apiGetAll`,
+		url: `${HOST}/api/master/destination`,
 		beforeSend: obj.beforeSend,
 		success: obj.success,
 		error: obj.error,

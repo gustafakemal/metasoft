@@ -25,6 +25,12 @@ class Customer extends BaseController
         ]);
     }
 
+    /**
+     * @return \CodeIgniter\HTTP\ResponseInterface
+     * @throws \Exception
+     *
+     * Endpoint GET /api/master/customer
+     */
     public function apiGetAll()
     {
     	$query = $this->model->getCustomers();
@@ -63,14 +69,15 @@ class Customer extends BaseController
     	return $this->response->setJSON($data);
     }
 
-    public function apiGetById()
+    /**
+     * @return \CodeIgniter\HTTP\ResponseInterface
+     * @throws \Exception
+     *
+     * Endpoint GET /api/master/customer/$1
+     */
+    public function apiGetById($no_pemesan)
     {
-        if($this->request->getMethod() !== 'post') {
-            return redirect()->to('customer');
-        }
-
-    	$no_pemesan = $this->request->getPost('noPemesan');
-        $modified = $this->request->getPost('modified') ?? false;
+        $modified = $this->request->getGet('modified') == 'yes';
 
     	$query = $this->model->getById($no_pemesan);
 
@@ -108,12 +115,14 @@ class Customer extends BaseController
 	    return $this->response->setJSON($response);
     }
 
+    /**
+     * @return \CodeIgniter\HTTP\ResponseInterface
+     * @throws \Exception
+     *
+     * Endpoint POST /api/master/customer
+     */
     public function apiAddProcess()
     {
-        if($this->request->getMethod() !== 'post') {
-            return redirect()->to('customer');
-        }
-
     	$data = $this->request->getPost();
     	$data['NoPemesan'] = $this->model->getMaxNoPemesan() + 1;
         $data['CreateBy'] = current_user()->UserID;
@@ -139,14 +148,18 @@ class Customer extends BaseController
     	return $this->response->setJSON($response);
     }
 
+    /**
+     * @return \CodeIgniter\HTTP\ResponseInterface
+     * @throws \Exception
+     *
+     * Endpoint PUT /api/master/customer
+     */
     public function apiEditProcess()
     {
-        if($this->request->getMethod() !== 'post') {
-            return redirect()->to('customer');
-        }
-        
-    	$data = $this->request->getPost();
-        $data['UpdateBy'] = current_user()->UserID;
+        $data = $this->request->getRawInput();
+//        $data['UpdateBy'] = current_user()->UserID;
+
+        return $this->response->setJSON($data);
 
     	if( $this->model->updateById($data['NoPemesan'], $data) ) {
     		$msg = 'Data berhasil diupdate';

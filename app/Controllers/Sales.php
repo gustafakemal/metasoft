@@ -25,7 +25,13 @@ class Sales extends BaseController
 		]);
 	}
 
-	public function apiGetAll()
+    /**
+     * @return \CodeIgniter\HTTP\ResponseInterface
+     * @throws \Exception
+     *
+     * Endpoint GET /api/master/sales
+     */
+    public function apiGetAll()
 	{
         $query = $this->model->getSales();
 
@@ -50,14 +56,15 @@ class Sales extends BaseController
 		return $this->response->setJSON($data);
 	}
 
-	public function apiGetById()
+    /**
+     * @return \CodeIgniter\HTTP\ResponseInterface
+     * @throws \Exception
+     *
+     * Endpoint GET /api/master/sales/$1
+     */
+    public function apiGetById($id)
 	{
-		if ($this->request->getMethod() !== 'post') {
-			return redirect()->to('sales');
-		}
-
-		$id = $this->request->getPost('id');
-		$modified = $this->request->getPost('modified') ?? false;
+		$modified = $this->request->getGet('modified') == 'yes';
 
 		$query = $this->model->getById($id);
 
@@ -89,16 +96,16 @@ class Sales extends BaseController
 		return $this->response->setJSON($response);
 	}
 
-	public function apiAddProcess()
+    /**
+     * @return \CodeIgniter\HTTP\ResponseInterface
+     * @throws \Exception
+     *
+     * Endpoint POST /api/master/sales
+     */
+    public function apiAddProcess()
 	{
-		if ($this->request->getMethod() !== 'post') {
-			return redirect()->to('sales');
-		}
-
 		$data = $this->request->getPost();
 		$data['SalesID'] = $this->model->getMaxId() + 1;
-		
-		//return $this->response->setJSON($data);
 
 		if ($this->model->insert($data, false)) {
 			$msg = 'Data berhasil ditambahkan';
@@ -121,24 +128,21 @@ class Sales extends BaseController
 		return $this->response->setJSON($response);
 	}
 
-	public function apiEditProcess()
+    /**
+     * @return \CodeIgniter\HTTP\ResponseInterface
+     * @throws \Exception
+     *
+     * Endpoint PUT /api/master/sales
+     */
+    public function apiEditProcess()
 	{
-		if ($this->request->getMethod() !== 'post') {
-			return redirect()->to('sales');
-		}
-
-		$data = $this->request->getPost();
-
-		$id = $this->request->getPost('SalesID');
+        $data = $this->request->getRawInput();
+        $id = $data['SalesID'];
 
     	$query = $this->model->getById($id);
-		
-
-		//return $this->response->setJSON($data);
 
 		if ($this->model->updateById($id, $data)) {
 			$msg = 'Data berhasil diupdate';
-			// session()->setFlashData('success', $msg);
 			$response = [
 				'success' => true,
 				'msg' => $msg,

@@ -89,6 +89,7 @@ class MFPartProdukModel extends Model
         $query = $this->where('aktif', 'Y')
                         ->like('fgd', $key, 'both')
                         ->orLike('nama', $key, 'both')
+                        ->orderBy('added', 'desc')
                         ->get();
 
         if($query->getNumRows() == 0) {

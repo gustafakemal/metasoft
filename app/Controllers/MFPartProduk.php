@@ -479,13 +479,13 @@ class MFPartProduk extends BaseController
         $full = (! $this->request->getPost('full') );
         $id_produk = $this->request->getPost('id_produk');
 
-//        if($keyword == '') {
-//            return $this->response->setJSON([
-//                'success' => false,
-//                'msg' => 'Silahkan isikan form cari',
-//                'data' => []
-//            ]);
-//        }
+        if($keyword == '') {
+            return $this->response->setJSON([
+                'success' => false,
+                'msg' => 'Silahkan isikan form cari',
+                'data' => []
+            ]);
+        }
 
 		$query = $this->model->getByFgdNama("$keyword");
 

@@ -13,19 +13,6 @@ $(function () {
 			"orderable": false,
 			"targets": [0, 10]
 		},
-		// {
-		// 	"width": 60,
-		// 	"targets": 18
-		// },{
-		// 	"targets": 14,
-		// 	render: function ( data, type, row, meta ) {
-		// 		if(type === 'export') {
-		// 			return data;
-		// 		} else {
-		// 			return (data == 'Y') ? 'Ya' : 'Tidak';
-		// 		}
-		// 	}
-		// },
 		{
 			"width": 150,
 			"targets": 2
@@ -175,7 +162,7 @@ $(function () {
 		}
 		const aktif = `<select name="aktif" class="form-control">${aktif_opt.join('')}</select>`
 		const btn = `<button type="button" class="btn btn-sm btn-success save-tr-record"><i class="fas fa-check"></i></button> <button type="button" class="btn btn-sm btn-secondary cancel-tr-submit"><i class="fas fa-times"></i></button>`
-		$(`#dataList tr:nth-child(${row})`).css('background-color', '#faecdc')
+		$(`#dataList tbody tr:nth-child(${row})`).css('background-color', '#faecdc')
 		$(`#dataList tr:nth-child(${row}) td:nth-child(2)`).html(`<input type="text" class="form-control" value="${create_date}" readonly />`)
 		$(`#dataList tr:nth-child(${row}) td:nth-child(3)`).html(`<input type="text" class="form-control" placeholder="Tujuan Kirim" value="${tujuan}" name="tujuan" />`)
 		$(`#dataList tr:nth-child(${row}) td:nth-child(4)`).html(`<input type="number" class="form-control" placeholder="Harga" value="${parseInt(harga)}" name="harga" /><input type="hidden" value="${id}" name="id" />`)
@@ -201,7 +188,6 @@ $(function () {
 	$('body').on('click', '.click-to-close', reload_tr)
 	$('#dataList').on('click', '.cancel-tr-submit', reload_tr)
 	$('#dataList').on('click', 'tr#selected', function(e) {
-		console.log('ok de')
 		e.stopPropagation()
 	})
 	$('#dataList').on('click', '.save-tr-record', function() {

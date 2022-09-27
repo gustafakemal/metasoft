@@ -175,7 +175,6 @@ $(function () {
 			dataType: 'JSON',
 			beforeSend: function () {},
 			success: function (response) {
-				console.log(response)
 				if(response.success) {
 					for(const property in response.data) {
 						$(`#dataForm input[name="${property}"], #dataForm textarea[name="${property}"]`).val(response.data[property])
@@ -211,17 +210,15 @@ $(function () {
 	$('#dataForm').on('submit', 'form[name="editData"]', function(e) {
 		e.preventDefault();
 		const formData = new FormData(this);
-		// formData.append('_method', 'POST');
-		// console.log(...formData)
+		formData.append('_method', 'PUT');
 
 		$.ajax({
-			type: "PUT",
+			type: "POST",
 			url: `${HOST}/api/master/customer`,
-			headers: {'Content-Type': 'application/x-www-form-urlencoded'},
-			// contentType: 'application/x-www-form-urlencoded; charset=utf-8',
 			dataType: 'JSON',
 			data: formData,
 			processData: false,
+			contentType: false,
 			beforeSend: function () {
 				$('#dataForm .modal-footer .loading-indicator').html(
 					'<div class="spinner-icon">' +

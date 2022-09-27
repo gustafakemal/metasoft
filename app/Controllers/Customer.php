@@ -156,10 +156,9 @@ class Customer extends BaseController
      */
     public function apiEditProcess()
     {
-        $data = $this->request->getRawInput();
-//        $data['UpdateBy'] = current_user()->UserID;
-
-        return $this->response->setJSON($data);
+        $data = $this->request->getPost();
+        $data['UpdateBy'] = current_user()->UserID;
+        unset($data['_method']);
 
     	if( $this->model->updateById($data['NoPemesan'], $data) ) {
     		$msg = 'Data berhasil diupdate';

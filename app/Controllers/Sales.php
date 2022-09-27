@@ -138,6 +138,7 @@ class Sales extends BaseController
 	{
         $data = $this->request->getRawInput();
         $id = $data['SalesID'];
+        unset($data['SalesID']);
 
     	$query = $this->model->getById($id);
 

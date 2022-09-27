@@ -13,19 +13,6 @@ $(function () {
 			"orderable": false,
 			"targets": [0, 10]
 		},
-		// {
-		// 	"width": 60,
-		// 	"targets": 18
-		// },{
-		// 	"targets": 14,
-		// 	render: function ( data, type, row, meta ) {
-		// 		if(type === 'export') {
-		// 			return data;
-		// 		} else {
-		// 			return (data == 'Y') ? 'Ya' : 'Tidak';
-		// 		}
-		// 	}
-		// },
 		{
 			"width": 150,
 			"targets": 2
@@ -198,7 +185,6 @@ $(function () {
 	$('body').on('click', '.click-to-close', reload_tr)
 	$('#dataList').on('click', '.cancel-tr-submit', reload_tr)
 	$('#dataList').on('click', 'tr#selected', function(e) {
-		console.log('ok de')
 		e.stopPropagation()
 	})
 	$('#dataList').on('click', '.save-tr-record', function() {

@@ -196,7 +196,7 @@ $(function () {
 		}
 		const aktif = `<select name="aktif" class="form-control">${aktif_opt.join('')}</select>`
 		const btn = `<button type="button" class="btn btn-sm btn-success save-tr-record"><i class="fas fa-check"></i></button> <button type="button" class="btn btn-sm btn-secondary cancel-tr-submit"><i class="fas fa-times"></i></button>`
-		$(`#dataList tr:nth-child(${row})`).css('background-color', '#faecdc')
+		$(`#dataList tbody tr:nth-child(${row})`).css('background-color', '#faecdc')
 		$(`#dataList tr:nth-child(${row}) td:nth-child(2)`).html(`<input type="text" class="form-control" placeholder="Nama Sales" value="${nama}" name="nama" />`)
 		$(`#dataList tr:nth-child(${row}) td:nth-child(3)`).html(`<input type="text" class="form-control" placeholder="NIK" value="${nik}" name="nik" /><input type="hidden" value="${id}" name="id" />`)
 		$(`#dataList tr:nth-child(${row}) td:nth-child(4)`).html(`${aktif}`)

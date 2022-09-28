@@ -908,7 +908,7 @@ class MFPartProduk extends BaseController
             ) {
                 if(array_key_exists('is_revision', $data)) {
                     $rev_format = str_pad($data['revisi'], 3, '0', STR_PAD_LEFT);
-                    $dokcr_filename = 're_DOKCR_' . $data['fgd'] . '_' . $rev_format . '.' . $file->getExtension();
+                    $dokcr_filename = 'DOKCR_' . $data['fgd'] . '_' . $rev_format . '.' . $file->getExtension();
                     $data['file_dokcr'] = $dokcr_filename;
                 } else {
                     $rev_format = str_pad($data['revisi'], 3, '0', STR_PAD_LEFT);
@@ -943,6 +943,8 @@ class MFPartProduk extends BaseController
                         $data['file_dokcr'] = $newfilename;
                     }
                     unset($data['ex_file_dokcr']);
+                } else {
+                    $filedokcr_errors[] = 'Dokumen change request wajib disertakan.';
                 }
             } else {
                 if(array_key_exists('ex_file_dokcr', $data)) {
@@ -958,7 +960,7 @@ class MFPartProduk extends BaseController
         }
 
         if(array_key_exists('is_revision', $data)) {
-            if($technical_draw && $this->model->insert($data, false) && count($filedokcr_errors) == 0) {
+            if($technical_draw && count($filedokcr_errors) == 0 && $this->model->insert($data, false)) {
 
                 $data_sisi = $this->cloneSelectSisi($existing_id, $id);
                 $insert_sisi = $this->cloneInsertSisi($data_sisi);

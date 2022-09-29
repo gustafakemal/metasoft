@@ -338,6 +338,129 @@ class MFPartProduk extends BaseController
         return $this->response->setJSON(['success' => true, 'no_sisi' => $no]);
     }
 
+    public function addcopysisi()
+    {
+        if ($this->request->getMethod() !== 'post') {
+            return redirect()->to('mfpartproduk');
+        }
+
+        $model = new \App\Models\MFSisiProdukModel();
+
+        $id_part = $this->request->getPost('id_part');
+
+        $query = (new \App\Models\MFSisiProdukModel())->where('id_part', $id_part)
+                                                    ->where('aktif', 'Y')
+                                                    ->orderBy('id', 'desc')
+                                                    ->get();
+
+        if($query->getNumRows() == 0) {
+
+            $this->insertBlankSisi($id_part);
+
+            return $this->response->setJSON([
+                'success' => true,
+                'msg' => 'Data sisi berhasil ditambahkan',
+            ]);
+        }
+
+        $data = $query->getFirstRow('array');
+        $sisi = $data['sisi'];
+        $data['sisi'] = $sisi + 1;
+        $data['added_by'] = current_user()->UserID;
+        unset($data['added']);
+        unset($data['updated']);
+        unset($data['updated_by']);
+
+        if($model->insert($data)) {
+            $insert_id = $model->getInsertID();
+
+            $warna_model = new \App\Models\MFProdukWarnaModel();
+            $manual_model = new \App\Models\MFProdukManualModel();
+            $finishing_model = new \App\Models\MFProdukFinishingModel();
+            $khusus_model = new \App\Models\MFProdukKhususModel();
+
+            $data_warna_old = $warna_model->where('id_sisi', $sisi)
+                                                            ->get()
+                                                            ->getResultArray();
+            if(count($data_warna_old) > 0) {
+                $data_warna = array_map(function ($item) use ($insert_id) {
+                    $item['id_sisi'] = $insert_id;
+                    $item['added_by'] = current_user()->UserID;
+                    unset($item['added']);
+                    unset($item['updated']);
+                    unset($item['updated_by']);
+                    return $item;
+                }, $data_warna_old);
+                $insert_warna = $warna_model->insertBatch($data_warna);
+            } else {
+                $data_warna = [];
+                $insert_warna = true;
+            }
+
+            $manual_old = $manual_model->where('id_sisi', $sisi)
+                ->get()
+                ->getResultArray();
+            if(count($manual_old) > 0) {
+                $data_manual = array_map(function ($item) use ($insert_id) {
+                    $item['id_sisi'] = $insert_id;
+                    return $item;
+                }, $manual_old);
+                $insert_manual = $manual_model->insertBatch($data_manual);
+            } else {
+                $data_manual = [];
+                $insert_manual = true;
+            }
+
+            $finishing_old = $finishing_model->where('id_sisi', $sisi)
+                ->get()
+                ->getResultArray();
+            if(count($finishing_old) > 0) {
+                $data_finishing = array_map(function ($item) use ($insert_id) {
+                    $item['id_sisi'] = $insert_id;
+                    return $item;
+                }, $finishing_old);
+                $insert_finishing = $finishing_model->insertBatch($data_finishing);
+            } else {
+                $data_finishing = [];
+                $insert_finishing = true;
+            }
+
+            $khusus_old = $khusus_model->where('id_sisi', $sisi)
+                ->get()
+                ->getResultArray();
+            if(count($khusus_old) > 0) {
+                $data_khusus = array_map(function ($item) use ($insert_id) {
+                    $item['id_sisi'] = $insert_id;
+                    return $item;
+                }, $khusus_old);
+                $insert_khusus = $khusus_model->insertBatch($data_khusus);
+            } else {
+                $data_khusus = [];
+                $insert_khusus = true;
+            }
+
+            if($insert_warna && $insert_khusus && $insert_finishing && $insert_manual) {
+                $response = [
+                    'success' => true,
+                    'msg' => 'Data sisi berhasil ditambahkan',
+                ];
+            } else {
+                $response = [
+                    'success' => false,
+                    'msg' => 'Data warna & proses gagal ditambahkan.',
+                ];
+            }
+        } else {
+            $response = [
+                'success' => false,
+                'msg' => 'Data sisi gagal ditambahkan',
+                'data' => null
+            ];
+        }
+
+        return $this->response->setJSON($response);
+    }
+
     public function apiAllSisi()
     {
         $query = (new \App\Models\MFSisiProdukModel())->getAllSisi();
@@ -429,7 +552,7 @@ class MFPartProduk extends BaseController
     {
         $model = new \App\Models\MFSisiProdukModel();
 
-        if($model->where('id', $id)->set(['aktif' => 'T'])->update()) {
+        if($model->where('id', $id)->set(['aktif' => 'T', 'sisi' => 0])->update()) {
             return redirect()->back()
                             ->with('success', 'Item sisi berhasil dihapus');
         } else {
@@ -757,15 +880,6 @@ class MFPartProduk extends BaseController
             }
         }
 
-        $data_sisi = [
-            'id_part' => $id,
-            'sisi' => 1,
-            'frontside' => 0,
-            'backside' => 0,
-            'aktif' => 'Y',
-            'added_by' => current_user()->UserID
-        ];
-
         $technical_draw = true;
         if($data['technical_draw'] == 'Y' && array_key_exists('no_dokumen', $data) && $data['no_dokumen'] == '') {
             $technical_draw = false;
@@ -773,7 +887,7 @@ class MFPartProduk extends BaseController
 
         if($technical_draw && $this->model->insert($data, false) && count($filedokcr_errors) == 0) {
 
-            $sisi_model = (new \App\Models\MFSisiProdukModel())->insert($data_sisi);
+            $this->insertBlankSisi($id);
 
             // Masukkan ke kelompok produk
             if($reference_link != '' && $id_produk != '') {
@@ -803,6 +917,20 @@ class MFPartProduk extends BaseController
             ]);
         }
 	}
+
+    private function insertBlankSisi($id_part)
+    {
+        $data = [
+            'id_part' => $id_part,
+            'sisi' => 1,
+            'frontside' => 0,
+            'backside' => 0,
+            'aktif' => 'Y',
+            'added_by' => current_user()->UserID
+        ];
+
+        return (new \App\Models\MFSisiProdukModel())->insert($data);
+    }
 
     private function insertToProduct($id_produk, $id_part)
     {

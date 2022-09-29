@@ -186,7 +186,7 @@
                 </div>
                 <?php if($is_revision == 0) : ?>
                 <div class="col text-right">
-                    <button data-part="<?= $data->id;?>" type="button" class="btn btn-primary open-sisi-form"<?= ($is_revision == 0) ? '' : ' disabled';?>>
+                    <button data-part="<?= $data->id;?>" type="button" class="btn btn-primary add-copy-sisi"<?= ($is_revision == 0) ? '' : ' disabled';?>>
                         Tambah Sisi
                     </button>
                 </div>

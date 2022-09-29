@@ -263,20 +263,54 @@ $(function () {
 		}
 	})
 
-	$('.open-sisi-form').on('click', function (e) {
-		e.preventDefault();
-		$('#dataForm').modal({
-			show: true,
-			backdrop: 'static'
-		});
-		const id_part = $(this).attr('data-part');
-		$.get(`${HOST}/MFPartProduk/actualNomorSisi/${id_part}`, function (response) {
-			$('#dataForm input[name="sisi"]').val(response.no_sisi)
-		})
+	// $('.open-sisi-form').on('click', function (e) {
+	// 	e.preventDefault();
+	// 	$('#dataForm').modal({
+	// 		show: true,
+	// 		backdrop: 'static'
+	// 	});
+	// 	const id_part = $(this).attr('data-part');
+	// 	$.get(`${HOST}/MFPartProduk/actualNomorSisi/${id_part}`, function (response) {
+	// 		$('#dataForm input[name="sisi"]').val(response.no_sisi)
+	// 	})
+	//
+	// 	const part_name = $(this).attr('data-nama');
+	// 	$('.part-produk-title').html(part_name)
+	// 	$('#dataForm .sisi-form-modal').attr('name', 'add-sisi')
+	// })
 
-		const part_name = $(this).attr('data-nama');
-		$('.part-produk-title').html(part_name)
-		$('#dataForm .sisi-form-modal').attr('name', 'add-sisi')
+	$('.add-copy-sisi').on('click', function (e) {
+		e.preventDefault();
+		const id_part = $(this).attr('data-part');
+		const sisi_num = parseInt($(`#dataList tbody tr:last-child td:first-child`).text()) + 1;
+
+		if(confirm(`Menambah sisi ${sisi_num} ?`)) {
+			$.ajax({
+				type: 'POST',
+				url: `${HOST}/partproduk/addcopysisi`,
+				dataType: 'JSON',
+				data: {id_part},
+				beforeSend: function () {},
+				success: function (response) {
+					if(response.success) {
+						$('.floating-msg').html(`<div class="alert alert-success">${response.msg}</div>`).addClass('show');
+						loadDataSisi(id_part)
+						startBlinking(`#dataList tbody tr:last-child`)
+					} else {
+						$('.floating-msg').html(`<div class="alert alert-danger">${response.msg}</div>`).addClass('show');
+					}
+				},
+				complete: function () {
+					$([document.documentElement, document.body]).animate({
+						scrollTop: $("#dataList").offset().top
+					}, 500);
+					setTimeout(() => {
+						$('.floating-msg').html('').removeClass('show');
+						stopBlinking()
+					}, 5000);
+				}
+			})
+		}
 	})
 
 	let color_tracker = {
@@ -653,4 +687,29 @@ function loadSelectOptions(objParam) {
 			}
 		})
 	}
+}
+
+let blinkInterval = null;
+function startBlinking(element)
+{
+	if (!blinkInterval) {
+		blinkInterval = setInterval(function () {
+			blink(element)
+		}, 1000);
+	}
+	return blinkInterval;
+}
+
+function stopBlinking()
+{
+	if (blinkInterval) clearInterval(blinkInterval);
+	blinkInterval = null;
+}
+
+function blink(element)
+{
+	$(element).css('background-color', '#fce8de');
+	setTimeout(function () {
+		$(element).css('background-color', 'rgba(0,0,0,.05)');
+	}, 500);
 }

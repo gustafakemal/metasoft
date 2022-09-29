@@ -33,6 +33,20 @@ class MFPartProduk extends BaseController
 
 	public function addPartProduct()
 	{
+//        $data = [
+//            'nama' => '',
+//            'tujuan_penggunaan' => '',
+//            'umur' => ''
+//        ];
+//        $this->model->setValidationRule('umur', 'required');
+//        if($this->model->insert($data, false)) {
+//            $errors = '';
+//        } else {
+//            $errors = $this->model->errors();
+//            $errors['ak'] = 'adsad';
+//        }
+//        dd($errors);
+
         $this->breadcrumbs->add('Dashbor', '/');
         $this->breadcrumbs->add('Part Produk', '/mfpartproduk');
         $this->breadcrumbs->add('Input Part Produk MF', '/mfproduk');
@@ -851,41 +865,41 @@ class MFPartProduk extends BaseController
         unset($data['ref']);
         unset($data['id_produk']);
 
-        $filedokcr_errors = [];
-
         if( $file->getName() != '' ) {
-            if( $file->isValid() &&
-                $file->getName() !== '' &&
-                ($file->getSize() <= $this->filedokcr_max_size) &&
-                in_array($file->getExtension(), $this->filedokcr_extension) &&
-                in_array($file->getMimeType(), $this->filedokcr_mime_type)
-            ) {
+            $upload_rules = [];
+            if( ! $file->isValid() ) {
+                $upload_rules[] = 'is_image[file_dokcr]';
+            }
+            if($file->getSize() > 50000) {
+                $upload_rules[] = 'max_size[file_dokcr, 50]';
+            }
+            if( ! in_array($file->getMimeType(), $this->filedokcr_mime_type) ) {
+                $upload_rules[] = 'mime_in[file_dokcr, '. implode(', ', $this->filedokcr_mime_type) .']';
+            }
+            if( ! in_array($file->getExtension(), $this->filedokcr_extension) ) {
+                $upload_rules[] = 'ext_in[file_dokcr, ' . implode(', ', $this->filedokcr_extension) . ']';
+            }
+
+            if(count($upload_rules) > 0) {
+                $this->model->setValidationRule('file_dokcr', [
+                        'label' => 'File DOKCR',
+                        'rules' => implode('|', $upload_rules),
+                    ]
+                );
+            } else {
                 $rev_format = str_pad($data['revisi'], 3, '0', STR_PAD_LEFT);
                 $dokcr_filename = 'DOKCR_' . $data['fgd'] . '_' . $rev_format . '.' . $file->getExtension();
                 $file->move( WRITEPATH . 'uploads/file_dokcr',  $dokcr_filename);
                 $data['file_dokcr'] = $dokcr_filename;
-            } else {
-                if( ! $file->isValid() ) {
-                    $filedokcr_errors[] = 'Dokumen dokcr tidak valid';
-                }
-                if($file->getSize() > $this->filedokcr_max_size) {
-                    $filedokcr_errors[] = 'Ukuran dokcr harus tidak lebih dari ' . $this->filedokcr_max_size;
-                }
-                if( ! in_array($file->getExtension(), $this->filedokcr_extension) ) {
-                    $filedokcr_errors[] = 'Ekstensi dokcr harus diantara ' . implode(', ', $this->filedokcr_extension);
-                }
-                if( ! in_array($file->getMimeType(), $this->filedokcr_mime_type) ) {
-                    $filedokcr_errors[] = 'MimeType dokcr harus diantara ' . implode(', ', $this->filedokcr_mime_type);
-                }
             }
         }
 
-        $technical_draw = true;
         if($data['technical_draw'] == 'Y' && array_key_exists('no_dokumen', $data) && $data['no_dokumen'] == '') {
-            $technical_draw = false;
+            $this->model->setValidationRule('no_dokumen', 'required');
+            $this->model->setValidationMessage('no_dokumen', ['required' => 'Field no_dokumen wajib diisi']);
         }
 
-        if($technical_draw && $this->model->insert($data, false) && count($filedokcr_errors) == 0) {
+        if($this->model->insert($data, false)) {
 
             $this->insertBlankSisi($id);
 
@@ -906,9 +920,6 @@ class MFPartProduk extends BaseController
             ]);
         } else {
             $errors = $this->model->errors();
-            if( ! $technical_draw ) {
-                $errors['no_dokumen'] = 'No dokumen wajib diisi';
-            }
 
             return $this->response->setJSON([
                 'success' => false,

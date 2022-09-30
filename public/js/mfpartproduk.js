@@ -224,7 +224,7 @@ $(function () {
 
 		$.ajax({
 			type: 'POST',
-			url: `${HOST}/mfpartproduk/apieditprocess`,
+			url: `${HOST}/mfpartproduk/apirevprocess`,
 			dataType: 'JSON',
 			data: formData,
 			contentType: false,
@@ -240,7 +240,7 @@ $(function () {
 				}
 			},
 			complete: function (res) {
-				$('form[name="partproduct-form_rev"] input, form[name="partproduct-form_rev"] select, form[name="partproduct-form_rev"] textarea, form[name="partproduct-form_rev"] button').attr('disabled', false)
+				$('form[name="partproduct-form_rev"] input:not(#trevisi), form[name="partproduct-form_rev"] select, form[name="partproduct-form_rev"] textarea, form[name="partproduct-form_rev"] button').attr('disabled', false)
 				const td = $('form[name="partproduct-form_rev"] select[name="technical_draw"] option').filter(':selected').val();
 				if(td === 'T') {
 					$('form[name="partproduct-form_rev"] input[name="no_dokumen"]').prop('disabled', true);

@@ -45,15 +45,15 @@
                 </div>
             </div>
             <div class="form-group row">
-                <label for="panjang" class="col-sm-2 col-form-label">Ukuran Jadi<span class="text-danger">*</span></label>
+                <label for="panjang" class="col-sm-2 col-form-label">Ukuran Jadi (mm)<span class="text-danger">*</span></label>
                 <div class="col-sm-4">
-                    <input value="<?= $data->panjang;?>" type="number" class="form-control" id="panjang" name="panjang"  placeholder="Panjang">
+                    <input value="<?= (int)$data->panjang;?>" type="number" class="form-control" id="panjang" name="panjang"  placeholder="Panjang">
                 </div>
                 <div class="col-sm-3">
-                    <input value="<?= $data->lebar;?>" type="number" class="form-control" id="lebar" name="lebar"  placeholder="Lebar">
+                    <input value="<?= (int)$data->lebar;?>" type="number" class="form-control" id="lebar" name="lebar"  placeholder="Lebar">
                 </div>
                 <div class="col-sm-3">
-                    <input value="<?= $data->tinggi;?>" type="number" class="form-control" id="tinggi" name="tinggi"  placeholder="Tinggi">
+                    <input value="<?= (int)$data->tinggi;?>" type="number" class="form-control" id="tinggi" name="tinggi"  placeholder="Tinggi">
                 </div>
             </div>
             <div class="form-group row">
@@ -88,7 +88,7 @@
                         <option value="T"<?= ($data->technical_draw == 'T') ? ' selected' : '';?>>Tidak</option>
                     </select>
                 </div>
-                <label for="no_dokumen" class="col-sm-2 col-form-label">No Dokumen <span class="no-dok-mark<?= ($data->technical_draw == 'Y') ? ' d-one' : '';?> text-danger">*</span></label>
+                <label for="no_dokumen" class="col-sm-2 col-form-label">No Dokumen <span class="no-dok-mark<?= ($data->technical_draw == 'T') ? ' d-none' : '';?> text-danger">*</span></label>
                 <div class="col-sm-2">
                     <input type="text" value="<?= $data->no_dokumen;?>" class="form-control" id="no_dokumen" name="no_dokumen"<?= ($data->technical_draw == 'T') ? ' disabled' : '';?>>
                 </div>
@@ -145,13 +145,14 @@
 
                 </div>
             </div>
+            <?php if($rev_no > 0) : ?>
             <div class="form-group row">
 
-                <label for="no_dokcr" class="col-sm-3 col-form-label">Dokumen Change Request </label>
+                <label for="no_dokcr" class="col-sm-3 col-form-label">Dokumen Change Request <span class="text-danger">*</span></label>
                 <div class="col-sm-3">
                     <input value="<?= $data->no_dokcr;?>" type="text" class="form-control" id="no_dokcr" name="no_dokcr">
                 </div>
-                <label for="file_dokcr" class="col-sm-2 col-form-label">Upload Dokumen <span class="tooltip-icon" data-toggle="tooltip" title="Ukuran max 500Kb, harus berformat .pdf atau .jpg."><i class="fas fa-question-circle"></i></span></label>
+                <label for="file_dokcr" class="col-sm-2 col-form-label">Upload Dokumen <span class="text-danger">*</span> <span class="tooltip-icon" data-toggle="tooltip" title="Ukuran max 500Kb, harus berformat .pdf atau .jpg."><i class="fas fa-question-circle"></i></span></label>
                 <div class="col-sm-4">
                     <?php if($data->file_dokcr != null) : ?>
                         <div class="dokcr-edit-wrap">
@@ -165,8 +166,7 @@
                     <input type="file" class="form-control" id="file_dokcr" name="file_dokcr">
                 </div>
             </div>
-
-
+            <?php endif;?>
 
 
 

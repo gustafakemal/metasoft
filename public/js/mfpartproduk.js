@@ -142,19 +142,19 @@ $(function () {
 			}
 		});
 	})
-		.on('click', 'select[name="kertas"]', function (e) {
+		.on('focus', 'select[name="kertas"]', function (e) {
 			loadSelectOptions({select_element_name: 'kertas', url: `${HOST}/MFJenisKertas/getSelectOptions`})
 		})
-		.on('click', 'select[name="flute"]', function (e) {
+		.on('focus', 'select[name="flute"]', function (e) {
 			loadSelectOptions({select_element_name: 'flute', url: `${HOST}/MFJenisFlute/getSelectOptions`})
 		})
-		.on('click', 'select[name="inner_pack"]', function (e) {
+		.on('focus', 'select[name="inner_pack"]', function (e) {
 			loadSelectOptions({select_element_name: 'inner_pack', url: `${HOST}/MFPacking/getSelectOptions/Inner`})
 		})
-		.on('click', 'select[name="outer_pack"]', function (e) {
+		.on('focus', 'select[name="outer_pack"]', function (e) {
 			loadSelectOptions({select_element_name: 'outer_pack', url: `${HOST}/MFPacking/getSelectOptions/Outer`})
 		})
-		.on('click', 'select[name="deliver_pack"]', function (e) {
+		.on('focus', 'select[name="deliver_pack"]', function (e) {
 			loadSelectOptions({select_element_name: 'deliver_pack', url: `${HOST}/MFPacking/getSelectOptions/Delivery`})
 		})
 
@@ -195,23 +195,23 @@ $(function () {
 	})
 
 	$('form[name="partproduct-form_edit"], form[name="partproduct-form_rev"]')
-		.on('click', 'select[name="kertas"]', function (e) {
+		.on('focus', 'select[name="kertas"]', function (e) {
 			const val = $('form[name="partproduct-form_edit"] select[name="kertas"] option').filter(':selected').val();
 			loadSelectOptions({select_element_name: 'kertas', url: `${HOST}/MFJenisKertas/getSelectOptions`, defaultSelected: parseInt(val), add_form: false})
 		})
-		.on('click', 'select[name="flute"]', function (e) {
+		.on('focus', 'select[name="flute"]', function (e) {
 			const val = $('form[name="partproduct-form_edit"] select[name="flute"] option').filter(':selected').val();
 			loadSelectOptions({select_element_name: 'flute', url: `${HOST}/MFJenisFlute/getSelectOptions`, defaultSelected: parseInt(val), add_form: false})
 		})
-		.on('click', 'select[name="inner_pack"]', function (e) {
+		.on('focus', 'select[name="inner_pack"]', function (e) {
 			const val = $('form[name="partproduct-form_edit"] select[name="inner_pack"] option').filter(':selected').val();
 			loadSelectOptions({select_element_name: 'inner_pack', url: `${HOST}/MFPacking/getSelectOptions/Inner`, defaultSelected: parseInt(val), add_form: false})
 		})
-		.on('click', 'select[name="outer_pack"]', function (e) {
+		.on('focus', 'select[name="outer_pack"]', function (e) {
 			const val = $('form[name="partproduct-form_edit"] select[name="outer_pack"] option').filter(':selected').val();
 			loadSelectOptions({select_element_name: 'outer_pack', url: `${HOST}/MFPacking/getSelectOptions/Outer`, defaultSelected: parseInt(val), add_form: false})
 		})
-		.on('click', 'select[name="deliver_pack"]', function (e) {
+		.on('focus', 'select[name="deliver_pack"]', function (e) {
 			const val = $('form[name="partproduct-form_edit"] select[name="deliver_pack"] option').filter(':selected').val();
 			loadSelectOptions({select_element_name: 'deliver_pack', url: `${HOST}/MFPacking/getSelectOptions/Delivery`, defaultSelected: parseInt(val), add_form: false})
 		})
@@ -457,25 +457,25 @@ $(function () {
 			complete: function () {
 				$('.sisi-form-modal input:not(#trevisi):not(#fgd), .sisi-form-modal textarea, .sisi-form-modal select, .sisi-form-modal button').prop('disabled', false);
 				setTimeout(() => {
-					$('.floating-msg').html('');
-					$('.floating-msg').removeClass('show');
+					$('.floating-msg').html('').removeClass('show');
 				}, 3000);
 			}
 		})
 	})
-		.on('click', 'select[name="fscolors"]', function (e) {
+		.on('focus', 'select[name="fscolors"]', function (e) {
+			$('select[name="fscolors"] option').css('width', '100%')
 			loadSelectOptions({select_element_name: 'fscolors', url: `${HOST}/MFJenisTinta/getSelectOptions`})
 		})
-		.on('click', 'select[name="bscolors"]', function (e) {
+		.on('focus', 'select[name="bscolors"]', function (e) {
 			loadSelectOptions({select_element_name: 'bscolors', url: `${HOST}/MFJenisTinta/getSelectOptions`})
 		})
-		.on('click', 'select[name="manualcolors"]', function (e) {
+		.on('focus', 'select[name="manualcolors"]', function (e) {
 			loadSelectOptions({select_element_name: 'manualcolors', url: `${HOST}/MFProsesManual/getSelectOptions`})
 		})
-		.on('click', 'select[name="finishingcolors"]', function (e) {
+		.on('focus', 'select[name="finishingcolors"]', function (e) {
 			loadSelectOptions({select_element_name: 'finishingcolors', url: `${HOST}/MFProsesFinishing/getSelectOptions`})
 		})
-		.on('click', 'select[name="khususcolors"]', function (e) {
+		.on('focus', 'select[name="khususcolors"]', function (e) {
 			loadSelectOptions({select_element_name: 'khususcolors', url: `${HOST}/MFProsesKhusus/getSelectOptions`})
 		})
 
@@ -496,7 +496,6 @@ $(function () {
 				$('.sisi-form-modal input:not(#frontside):not(#backside):not(#trevisi), .sisi-form-modal textarea, .sisi-form-modal button').prop('disabled', true);
 			},
 			success: function (response) {
-				console.log(response)
 				const colors_el = ['fs_colors', 'bs_colors', 'manual_colors', 'finishing_colors', 'khusus_colors'];
 
 				for(const prop in response.data) {

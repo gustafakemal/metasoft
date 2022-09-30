@@ -142,19 +142,19 @@ $(function () {
 			}
 		});
 	})
-		.on('click', 'select[name="kertas"]', function (e) {
+		.on('focus', 'select[name="kertas"]', function (e) {
 			loadSelectOptions({select_element_name: 'kertas', url: `${HOST}/MFJenisKertas/getSelectOptions`})
 		})
-		.on('click', 'select[name="flute"]', function (e) {
+		.on('focus', 'select[name="flute"]', function (e) {
 			loadSelectOptions({select_element_name: 'flute', url: `${HOST}/MFJenisFlute/getSelectOptions`})
 		})
-		.on('click', 'select[name="inner_pack"]', function (e) {
+		.on('focus', 'select[name="inner_pack"]', function (e) {
 			loadSelectOptions({select_element_name: 'inner_pack', url: `${HOST}/MFPacking/getSelectOptions/Inner`})
 		})
-		.on('click', 'select[name="outer_pack"]', function (e) {
+		.on('focus', 'select[name="outer_pack"]', function (e) {
 			loadSelectOptions({select_element_name: 'outer_pack', url: `${HOST}/MFPacking/getSelectOptions/Outer`})
 		})
-		.on('click', 'select[name="deliver_pack"]', function (e) {
+		.on('focus', 'select[name="deliver_pack"]', function (e) {
 			loadSelectOptions({select_element_name: 'deliver_pack', url: `${HOST}/MFPacking/getSelectOptions/Delivery`})
 		})
 
@@ -195,23 +195,23 @@ $(function () {
 	})
 
 	$('form[name="partproduct-form_edit"], form[name="partproduct-form_rev"]')
-		.on('click', 'select[name="kertas"]', function (e) {
+		.on('focus', 'select[name="kertas"]', function (e) {
 			const val = $('form[name="partproduct-form_edit"] select[name="kertas"] option').filter(':selected').val();
 			loadSelectOptions({select_element_name: 'kertas', url: `${HOST}/MFJenisKertas/getSelectOptions`, defaultSelected: parseInt(val), add_form: false})
 		})
-		.on('click', 'select[name="flute"]', function (e) {
+		.on('focus', 'select[name="flute"]', function (e) {
 			const val = $('form[name="partproduct-form_edit"] select[name="flute"] option').filter(':selected').val();
 			loadSelectOptions({select_element_name: 'flute', url: `${HOST}/MFJenisFlute/getSelectOptions`, defaultSelected: parseInt(val), add_form: false})
 		})
-		.on('click', 'select[name="inner_pack"]', function (e) {
+		.on('focus', 'select[name="inner_pack"]', function (e) {
 			const val = $('form[name="partproduct-form_edit"] select[name="inner_pack"] option').filter(':selected').val();
 			loadSelectOptions({select_element_name: 'inner_pack', url: `${HOST}/MFPacking/getSelectOptions/Inner`, defaultSelected: parseInt(val), add_form: false})
 		})
-		.on('click', 'select[name="outer_pack"]', function (e) {
+		.on('focus', 'select[name="outer_pack"]', function (e) {
 			const val = $('form[name="partproduct-form_edit"] select[name="outer_pack"] option').filter(':selected').val();
 			loadSelectOptions({select_element_name: 'outer_pack', url: `${HOST}/MFPacking/getSelectOptions/Outer`, defaultSelected: parseInt(val), add_form: false})
 		})
-		.on('click', 'select[name="deliver_pack"]', function (e) {
+		.on('focus', 'select[name="deliver_pack"]', function (e) {
 			const val = $('form[name="partproduct-form_edit"] select[name="deliver_pack"] option').filter(':selected').val();
 			loadSelectOptions({select_element_name: 'deliver_pack', url: `${HOST}/MFPacking/getSelectOptions/Delivery`, defaultSelected: parseInt(val), add_form: false})
 		})
@@ -224,7 +224,7 @@ $(function () {
 
 		$.ajax({
 			type: 'POST',
-			url: `${HOST}/mfpartproduk/apieditprocess`,
+			url: `${HOST}/mfpartproduk/apirevprocess`,
 			dataType: 'JSON',
 			data: formData,
 			contentType: false,
@@ -240,7 +240,7 @@ $(function () {
 				}
 			},
 			complete: function (res) {
-				$('form[name="partproduct-form_rev"] input, form[name="partproduct-form_rev"] select, form[name="partproduct-form_rev"] textarea, form[name="partproduct-form_rev"] button').attr('disabled', false)
+				$('form[name="partproduct-form_rev"] input:not(#trevisi), form[name="partproduct-form_rev"] select, form[name="partproduct-form_rev"] textarea, form[name="partproduct-form_rev"] button').attr('disabled', false)
 				const td = $('form[name="partproduct-form_rev"] select[name="technical_draw"] option').filter(':selected').val();
 				if(td === 'T') {
 					$('form[name="partproduct-form_rev"] input[name="no_dokumen"]').prop('disabled', true);
@@ -457,25 +457,25 @@ $(function () {
 			complete: function () {
 				$('.sisi-form-modal input:not(#trevisi):not(#fgd), .sisi-form-modal textarea, .sisi-form-modal select, .sisi-form-modal button').prop('disabled', false);
 				setTimeout(() => {
-					$('.floating-msg').html('');
-					$('.floating-msg').removeClass('show');
+					$('.floating-msg').html('').removeClass('show');
 				}, 3000);
 			}
 		})
 	})
-		.on('click', 'select[name="fscolors"]', function (e) {
+		.on('focus', 'select[name="fscolors"]', function (e) {
+			$('select[name="fscolors"] option').css('width', '100%')
 			loadSelectOptions({select_element_name: 'fscolors', url: `${HOST}/MFJenisTinta/getSelectOptions`})
 		})
-		.on('click', 'select[name="bscolors"]', function (e) {
+		.on('focus', 'select[name="bscolors"]', function (e) {
 			loadSelectOptions({select_element_name: 'bscolors', url: `${HOST}/MFJenisTinta/getSelectOptions`})
 		})
-		.on('click', 'select[name="manualcolors"]', function (e) {
+		.on('focus', 'select[name="manualcolors"]', function (e) {
 			loadSelectOptions({select_element_name: 'manualcolors', url: `${HOST}/MFProsesManual/getSelectOptions`})
 		})
-		.on('click', 'select[name="finishingcolors"]', function (e) {
+		.on('focus', 'select[name="finishingcolors"]', function (e) {
 			loadSelectOptions({select_element_name: 'finishingcolors', url: `${HOST}/MFProsesFinishing/getSelectOptions`})
 		})
-		.on('click', 'select[name="khususcolors"]', function (e) {
+		.on('focus', 'select[name="khususcolors"]', function (e) {
 			loadSelectOptions({select_element_name: 'khususcolors', url: `${HOST}/MFProsesKhusus/getSelectOptions`})
 		})
 
@@ -496,7 +496,6 @@ $(function () {
 				$('.sisi-form-modal input:not(#frontside):not(#backside):not(#trevisi), .sisi-form-modal textarea, .sisi-form-modal button').prop('disabled', true);
 			},
 			success: function (response) {
-				console.log(response)
 				const colors_el = ['fs_colors', 'bs_colors', 'manual_colors', 'finishing_colors', 'khusus_colors'];
 
 				for(const prop in response.data) {
@@ -523,9 +522,8 @@ $(function () {
 							}
 							const add_el = (prefix == 'fs' || prefix == 'bs') ? `<label for="tinta" class="col-sm-2">&nbsp</label>` : '';
 							child_el.push(`<div class="row mb-1 ${item_class}-${value}">
-													${add_el}
 													<div class="col-sm">${text}</div>
-													<div class="col-sm">
+													<div class="col-sm-auto">
 														<input type="hidden" name="${item_class}[]" value="${value}" />
 														<button type="button" class="btn-sm btn-danger del${prefix}" id="del${prefix}-${value}">
 															<i class="fas fa-trash-alt text-light"></i>
@@ -631,9 +629,8 @@ function colorAddItem(e)
 	const add_el = (group === 'frontside' || group === 'backside') ? `<label for="tinta" class="col-sm-2">&nbsp</label>` : '';
 	if(value !== '0' && !tracker.includes(value)) {
 		$(`.${item_container}`).prepend(`<div class="row mb-1 ${item_class}-${value}">
-							${add_el}
 							<div class="col-sm">${text}</div>
-							<div class="col-sm">
+							<div class="col-sm-auto">
 								<input type="hidden" name="${input_name}" value="${value}" />
 								<button type="button" class="btn-sm btn-danger ${del_class}" id="${del_class}-${value}">
 									<i class="fas fa-trash-alt text-light"></i>

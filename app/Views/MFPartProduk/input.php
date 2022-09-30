@@ -142,17 +142,17 @@
 
                 </div>
             </div>
-            <div class="form-group row">
-
-                <label for="no_dokcr" class="col-sm-3 col-form-label">Dokumen Change Request </label>
-                <div class="col-sm-3">
-                    <input type="text" class="form-control" id="no_dokcr" name="no_dokcr">
-                </div>
-                <label for="file_dokcr" class="col-sm-2 col-form-label">Upload Dokumen <span class="tooltip-icon" data-toggle="tooltip" title="Ukuran max 500Kb, harus berformat .pdf atau .jpg."><i class="fas fa-question-circle"></i></span></label>
-                <div class="col-sm-4">
-                    <input type="file" class="form-control" id="file_dokcr" name="file_dokcr">
-                </div>
-            </div>
+<!--            <div class="form-group row">-->
+<!---->
+<!--                <label for="no_dokcr" class="col-sm-3 col-form-label">Dokumen Change Request </label>-->
+<!--                <div class="col-sm-3">-->
+<!--                    <input type="text" class="form-control" id="no_dokcr" name="no_dokcr">-->
+<!--                </div>-->
+<!--                <label for="file_dokcr" class="col-sm-2 col-form-label">Upload Dokumen <span class="tooltip-icon" data-toggle="tooltip" title="Ukuran max 500Kb, harus berformat .pdf atau .jpg."><i class="fas fa-question-circle"></i></span></label>-->
+<!--                <div class="col-sm-4">-->
+<!--                    <input type="file" class="form-control" id="file_dokcr" name="file_dokcr">-->
+<!--                </div>-->
+<!--            </div>-->
 
 
 

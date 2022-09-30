@@ -11,7 +11,7 @@ class MFPartProduk extends BaseController
 	private $model;
 	private $errors = [];
 
-    private $filedokcr_max_size = 512000;
+    private $filedokcr_max_size = 500; // in kb
     private $filedokcr_extension = ['jpg', 'jpeg', 'pdf'];
     private $filedokcr_mime_type = ['image/jpg', 'image/jpeg', 'application/pdf'];
 
@@ -1016,127 +1016,190 @@ class MFPartProduk extends BaseController
 
         $data = $this->request->getPost();
 
-        if(array_key_exists('is_revision', $data)) {
-            $existing_id = $data['id'];
-
-            $id = $this->model->idGenerator();
-            $data['id'] = $id;
-            $data['added_by'] = current_user()->UserID;
-            $data['revisi'] = $this->model->revGenerator($data['fgd']);
-
-        } else {
-            $id = $data['id'];
-            unset($data['id']);
-            $data['revisi'] = 0;
-            $data['updated_by'] = current_user()->UserID;
-        }
+        $id = $data['id'];
+        $revisi = (int)$data['revisi'];
+        $fgd = $data['fgd'];
+        unset($data['revisi']);
+        unset($data['id']);
+        unset($data['fgd']);
+        $data['updated_by'] = current_user()->UserID;
 
         $data['nama'] = strtoupper($data['nama']);
 
         $file = $this->request->getFile('file_dokcr');
         $data['file_dokcr'] = $file->getName();
 
-        $filedokcr_errors = [];
-
         if( $file->getName() != '' ) {
-            if( $file->isValid() &&
-                $file->getName() !== '' &&
-                ($file->getSize() <= $this->filedokcr_max_size) &&
-                in_array($file->getExtension(), $this->filedokcr_extension) &&
-                in_array($file->getMimeType(), $this->filedokcr_mime_type)
-            ) {
-                if(array_key_exists('is_revision', $data)) {
-                    $rev_format = str_pad($data['revisi'], 3, '0', STR_PAD_LEFT);
-                    $dokcr_filename = 'DOKCR_' . $data['fgd'] . '_' . $rev_format . '.' . $file->getExtension();
-                    $data['file_dokcr'] = $dokcr_filename;
-                } else {
-                    $rev_format = str_pad($data['revisi'], 3, '0', STR_PAD_LEFT);
-                    $dokcr_filename = 'DOKCR_' . $data['fgd'] . '_' . $rev_format . '.' . $file->getExtension();
-                    $file->move(WRITEPATH . 'uploads/file_dokcr', $dokcr_filename, true);
-                    $data['file_dokcr'] = $dokcr_filename;
-                }
+
+            $rules = $this->fileDokcrRules($file);
+
+            if(count($rules['upload_rules']) > 0) {
+                $this->model->setValidationRule('file_dokcr', [
+                        'label' => 'File DOKCR',
+                        'rules' => implode('|', $rules['upload_rules']),
+                        'errors' => $rules['upload_msg_errors']
+                    ]
+                );
             } else {
-                if( ! $file->isValid() ) {
-                    $filedokcr_errors[] = 'Dokumen dokcr tidak valid';
-                }
-                if($file->getSize() > $this->filedokcr_max_size) {
-                    $filedokcr_errors[] = 'Ukuran dokcr harus tidak lebih dari ' . $this->filedokcr_max_size;
-                }
-                if( ! in_array($file->getExtension(), $this->filedokcr_extension) ) {
-                    $filedokcr_errors[] = 'Ekstensi dokcr harus diantara ' . implode(', ', $this->filedokcr_extension);
-                }
-                if( ! in_array($file->getMimeType(), $this->filedokcr_mime_type) ) {
-                    $filedokcr_errors[] = 'MimeType dokcr harus diantara ' . implode(', ', $this->filedokcr_mime_type);
-                }
+
+                $data['file_dokcr'] = $this->fileDokcrUpload($file, ['revisi' => $revisi, 'fgd' => $fgd]);
             }
         } else {
-            if(array_key_exists('is_revision', $data)) {
-                if (array_key_exists('ex_file_dokcr', $data)) {
-                    $ext_file = explode('.', $data['ex_file_dokcr']);
-                    $newfilename = 'DOKCR_' . $data['fgd'] . '_' . str_pad($data['revisi'], 3, '0', STR_PAD_LEFT) . '.' . end($ext_file);
-                    $ex_file = WRITEPATH . 'uploads/file_dokcr/' . $data['ex_file_dokcr'];
-                    $copy_file = WRITEPATH . 'uploads/file_dokcr/' . $newfilename;
-                    if(!copy($ex_file, $copy_file)) {
-                        $data['file_dokcr'] = $data['ex_file_dokcr'];
-                    } else {
-                        $data['file_dokcr'] = $newfilename;
-                    }
-                    unset($data['ex_file_dokcr']);
-                } else {
-                    $filedokcr_errors[] = 'Dokumen change request wajib disertakan.';
-                }
-            } else {
-                if(array_key_exists('ex_file_dokcr', $data)) {
-                    $data['file_dokcr'] = $data['ex_file_dokcr'];
-                    unset($data['ex_file_dokcr']);
-                }
+            if(array_key_exists('ex_file_dokcr', $data)) {
+                $data['file_dokcr'] = $data['ex_file_dokcr'];
+                unset($data['ex_file_dokcr']);
             }
         }
 
-        $technical_draw = true;
+        if($revisi > 0 && $data['file_dokcr'] == '') {
+            $this->model->setValidationRule('file_dokcr', 'required');
+            $this->model->setValidationMessage('file_dokcr', ['required' => 'File dokumen change request wajib disertakan']);
+        }
+
+        if($revisi > 0) {
+            $this->model->setValidationRule('no_dokcr', 'required');
+            $this->model->setValidationMessage('no_dokcr', ['required' => 'Dokumen change request wajib diisi']);
+        }
+
         if($data['technical_draw'] == 'Y' && array_key_exists('no_dokumen', $data) && $data['no_dokumen'] == '') {
-            $technical_draw = false;
+            $this->model->setValidationRule('no_dokumen', 'required');
+            $this->model->setValidationMessage('no_dokumen', ['required' => 'Field no_dokumen wajib diisi']);
         }
 
-        if(array_key_exists('is_revision', $data)) {
-            if($technical_draw && count($filedokcr_errors) == 0 && $this->model->insert($data, false)) {
+        if($this->model->updatePart($id, $data)) {
 
-                $data_sisi = $this->cloneSelectSisi($existing_id, $id);
-                $insert_sisi = $this->cloneInsertSisi($data_sisi);
-
-                session()->setFlashdata('success', 'Revisi baru berhasil ditambahkan.');
-                return $this->response->setJSON([
-                    'success' => true,
-                    'msg' => 'Revisi baru berhasil ditambahkan.',
-                    'redirect_url' => site_url('partproduk/edit/' . $id)
-                ]);
-            } else {
-                $errors = array_merge($this->model->errors(), $filedokcr_errors);
-                return $this->response->setJSON([
-                    'success' => false,
-                    'msg' => '<p>' . implode('</p><p>', $errors) . '</p>',
-                    'data' => $data
-                ]);
-            }
-        } else {
-            if($technical_draw && count($filedokcr_errors) == 0 && $this->model->updatePart($id, $data)) {
-
-                session()->setFlashdata('success', 'Part produk berhasil diubah.');
-                return $this->response->setJSON([
+            session()->setFlashdata('success', 'Part produk berhasil diubah.');
+            return $this->response->setJSON([
                     'success' => true,
                     'msg' => 'Part produk berhasil diubah.',
                     'redirect_url' => site_url('partproduk/edit/' . $id)
-                ]);
-            } else {
-                $errors = array_merge($this->model->errors(), $filedokcr_errors);
-                return $this->response->setJSON([
+            ]);
+        } else {
+            return $this->response->setJSON([
                     'success' => false,
-                    'msg' => '<p>' . implode('</p><p>', $errors) . '</p>',
+                    'msg' => '<p>' . implode('</p><p>', $this->model->errors()) . '</p>',
                     'data' => $data
-                ]);
-            }
+            ]);
         }
 	}
+
+    public function apiRevProcess()
+    {
+        if ($this->request->getMethod() !== 'post') {
+            return redirect()->to('mfpartproduk');
+        }
+
+        $data = $this->request->getPost();
+
+        $existing_id = $data['id'];
+
+        $id = $this->model->idGenerator();
+        $data['id'] = $id;
+        $data['added_by'] = current_user()->UserID;
+        $data['revisi'] = $this->model->revGenerator($data['fgd']);
+
+        $data['nama'] = strtoupper($data['nama']);
+
+        $file = $this->request->getFile('file_dokcr');
+        $data['file_dokcr'] = $file->getName();
+
+        if( $file->getName() != '' ) {
+
+            $rules = $this->fileDokcrRules($file);
+
+            if(count($rules['upload_rules']) > 0) {
+                $this->model->setValidationRule('file_dokcr', [
+                        'label' => 'File DOKCR',
+                        'rules' => implode('|', $rules['upload_rules']),
+                        'errors' => $rules['upload_msg_errors']
+                    ]
+                );
+            } else {
+                $data['file_dokcr'] = $this->fileDokcrUpload($file, ['revisi' => $data['revisi'], 'fgd' => $data['fgd']]);
+            }
+        } else {
+            if (array_key_exists('ex_file_dokcr', $data)) {
+                $ext_file = explode('.', $data['ex_file_dokcr']);
+                $newfilename = 'DOKCR_' . $data['fgd'] . '_' . str_pad($data['revisi'], 3, '0', STR_PAD_LEFT) . '.' . end($ext_file);
+                $ex_file = WRITEPATH . 'uploads/file_dokcr/' . $data['ex_file_dokcr'];
+                $copy_file = WRITEPATH . 'uploads/file_dokcr/' . $newfilename;
+                if(!copy($ex_file, $copy_file)) {
+                    $data['file_dokcr'] = $data['ex_file_dokcr'];
+                } else {
+                    $data['file_dokcr'] = $newfilename;
+                }
+                unset($data['ex_file_dokcr']);
+            } else {
+                $this->model->setValidationRule('file_dokcr', 'required');
+                $this->model->setValidationMessage('file_dokcr', ['required' => 'File dokumen change request wajib disertakan']);
+            }
+        }
+
+        $this->model->setValidationRule('no_dokcr', 'required');
+        $this->model->setValidationMessage('no_dokcr', ['required' => 'Dokumen change request wajib diisi']);
+
+        if($data['technical_draw'] == 'Y' && array_key_exists('no_dokumen', $data) && $data['no_dokumen'] == '') {
+            $this->model->setValidationRule('no_dokumen', 'required');
+            $this->model->setValidationMessage('no_dokumen', ['required' => 'Field no_dokumen wajib diisi']);
+        }
+
+        if($this->model->insert($data, false)) {
+
+            $data_sisi = $this->cloneSelectSisi($existing_id, $id);
+            $insert_sisi = $this->cloneInsertSisi($data_sisi);
+
+            session()->setFlashdata('success', 'Revisi baru berhasil ditambahkan.');
+            return $this->response->setJSON([
+                'success' => true,
+                'msg' => 'Revisi baru berhasil ditambahkan.',
+                'redirect_url' => site_url('partproduk/edit/' . $id)
+            ]);
+        } else {
+            $errors = $this->model->errors();
+            return $this->response->setJSON([
+                'success' => false,
+                'msg' => '<p>' . implode('</p><p>', $errors) . '</p>',
+                'data' => $data
+            ]);
+        }
+    }
+
+    private function fileDokcrRules($file)
+    {
+        $upload_rules = [];
+        $upload_msg_errors = [];
+
+        if( ! $file->isValid() ) {
+            $upload_rules[] = 'is_image[file_dokcr]';
+            $upload_msg_errors['is_image'] = 'File tidak valid';
+        }
+        if($file->getSizeByUnit('kb') > $this->filedokcr_max_size) {
+            $upload_rules[] = 'max_size[file_dokcr, '. $this->filedokcr_max_size .']';
+            $upload_msg_errors['max_size'] = 'Ukuran file max. ' . $this->filedokcr_max_size . 'kb';
+        }
+        if( ! in_array($file->getMimeType(), $this->filedokcr_mime_type) ) {
+            $upload_rules[] = 'mime_in[file_dokcr, '. implode(', ', $this->filedokcr_mime_type) .']';
+            $upload_msg_errors['mime_in'] = 'Mime file yang diijinkan '. implode(', ', $this->filedokcr_mime_type);
+        }
+        if( ! in_array($file->getExtension(), $this->filedokcr_extension) ) {
+            $upload_rules[] = 'ext_in[file_dokcr, ' . implode(', ', $this->filedokcr_extension) . ']';
+            $upload_msg_errors['ext_in'] = 'Ext file yang diijinkan ' . implode(', ', $this->filedokcr_extension);
+        }
+
+        return [
+            'upload_rules' => $upload_rules,
+            'upload_msg_errors' => $upload_msg_errors
+        ];
+    }
+
+    private function fileDokcrUpload($file, $param)
+    {
+        $rev_format = str_pad($param['revisi'], 3, '0', STR_PAD_LEFT);
+        $dokcr_filename = 'DOKCR_' . $param['fgd'] . '_' . $rev_format . '.' . $file->getExtension();
+        $file->move(WRITEPATH . 'uploads/file_dokcr', $dokcr_filename, true);
+
+        return $dokcr_filename;
+    }
 
     private function cloneSelectSisi($existing_id_part, $new_id_part)
     {

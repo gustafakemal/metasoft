@@ -283,35 +283,33 @@
                             <div class="tab-content" id="nav-tabContent">
                                 <div class="tab-pane fade show active" id="nav-warna" role="tabpanel" aria-labelledby="nav-warna-tab">
 
-                                    <div class="row mt-2">
+                                    <div class="row mt-3">
                                         <div class="col-sm-6">
-                                            <!--                                            <form>-->
-                                            <div class="form-group row">
-                                                <label for="tinta" class="col-sm-2  col-form-label">Frontside</label>
+
+                                            <label for="tinta" class="">Frontside</label>
+                                            <div class="row">
                                                 <div class="col-sm">
                                                     <select name="fscolors" class="form-control" id="tinta">
                                                         <option value="0" selected>-Pilih Warna-</option>
                                                     </select>
                                                 </div>
-                                                <div class="col-sm">
+                                                <div class="col-sm-auto">
                                                     <button type="button" class="btn btn-sm btn-primary add-fs">+</button>
                                                 </div>
                                             </div>
 
-                                            <!--                                            </form>-->
                                             <div class="fs-child"></div>
 
                                         </div>
                                         <div class="col-sm-6">
-                                            <!--                                            <form>-->
-                                            <div class="form-group row">
-                                                <label for="tinta" class="col-sm-2  col-form-label">Backside</label>
+                                            <label for="tinta" class="">Backside</label>
+                                            <div class="row">
                                                 <div class="col-sm">
                                                     <select name="bscolors" class="form-control" id="tinta">
                                                         <option value="0" selected>-Pilih Warna-</option>
                                                     </select>
                                                 </div>
-                                                <div class="col-sm">
+                                                <div class="col-sm-auto">
                                                     <button type="button" class="btn btn-sm btn-primary add-bs">+</button>
                                                 </div>
                                             </div>
@@ -326,56 +324,50 @@
                                 <div class="tab-pane fade" id="nav-proses" role="tabpanel" aria-labelledby="nav-proses-tab">
                                     <div class="row mt-2">
                                         <div class="col-sm-4">
-                                            <!--                                            <form>-->
                                             <label for="tinta" class="form-label">Proses Manual</label>
-                                            <div class="form-group row">
+                                            <div class="row">
                                                 <div class="col-sm">
                                                     <select name="manualcolors" class="form-control" id="tinta">
                                                         <option value="0" selected>-Pilih Proses-</option>
                                                     </select>
                                                 </div>
-                                                <div class="col-sm">
+                                                <div class="col-sm-auto">
                                                     <button type="button" class="btn btn-sm btn-primary add-manual">+</button>
                                                 </div>
                                             </div>
 
-                                            <!--                                            </form>-->
                                             <div class="manual-child"></div>
 
                                         </div>
                                         <div class="col-sm-4">
-                                            <!--                                            <form>-->
                                             <label for="tinta" class="form-label">Proses Finishing</label>
-                                            <div class="form-group row">
+                                            <div class="row">
                                                 <div class="col-sm">
                                                     <select name="finishingcolors" class="form-control" id="tinta">
                                                         <option value="0" selected>-Pilih Proses-</option>
                                                     </select>
                                                 </div>
-                                                <div class="col-sm">
+                                                <div class="col-sm-auto">
                                                     <button type="button" class="btn btn-sm btn-primary add-finishing">+</button>
                                                 </div>
                                             </div>
 
-                                            <!--                                            </form>-->
                                             <div class="finishing-child"></div>
                                         </div>
 
                                         <div class="col-sm-4">
-                                            <!--                                            <form>-->
                                             <label for="tinta" class="form-label">Proses Khusus</label>
-                                            <div class="form-group row">
+                                            <div class="row">
                                                 <div class="col-sm">
                                                     <select name="khususcolors" class="form-control" id="tinta">
                                                         <option value="0" selected>-Pilih Proses-</option>
                                                     </select>
                                                 </div>
-                                                <div class="col-sm">
+                                                <div class="col-sm-auto">
                                                     <button type="button" class="btn btn-sm btn-primary add-khusus">+</button>
                                                 </div>
                                             </div>
 
-                                            <!--                                            </form>-->
                                             <div class="khusus-child"></div>
 
                                         </div>

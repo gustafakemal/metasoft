@@ -522,9 +522,8 @@ $(function () {
 							}
 							const add_el = (prefix == 'fs' || prefix == 'bs') ? `<label for="tinta" class="col-sm-2">&nbsp</label>` : '';
 							child_el.push(`<div class="row mb-1 ${item_class}-${value}">
-													${add_el}
 													<div class="col-sm">${text}</div>
-													<div class="col-sm">
+													<div class="col-sm-auto">
 														<input type="hidden" name="${item_class}[]" value="${value}" />
 														<button type="button" class="btn-sm btn-danger del${prefix}" id="del${prefix}-${value}">
 															<i class="fas fa-trash-alt text-light"></i>
@@ -630,9 +629,8 @@ function colorAddItem(e)
 	const add_el = (group === 'frontside' || group === 'backside') ? `<label for="tinta" class="col-sm-2">&nbsp</label>` : '';
 	if(value !== '0' && !tracker.includes(value)) {
 		$(`.${item_container}`).prepend(`<div class="row mb-1 ${item_class}-${value}">
-							${add_el}
 							<div class="col-sm">${text}</div>
-							<div class="col-sm">
+							<div class="col-sm-auto">
 								<input type="hidden" name="${input_name}" value="${value}" />
 								<button type="button" class="btn-sm btn-danger ${del_class}" id="${del_class}-${value}">
 									<i class="fas fa-trash-alt text-light"></i>

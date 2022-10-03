@@ -30,6 +30,14 @@ $(function () {
 			 "targets": [1,6,7,8,9]
 		}],
 		order: [[ 1, 'desc' ]],
+		createdRow: function (row, data, dataIndex) {
+			$(row).find("td:eq(0)").attr("data-label", "No");
+			$(row).find("td:eq(1)").attr("data-label", "Tanggal dibuat");
+			$(row).find("td:eq(2)").attr("data-label", "Proses Manual");
+			$(row).find("td:eq(3)").attr("data-label", "Harga");
+			$(row).find("td:eq(4)").attr("data-label", "Status Aktif");
+			$(row).find("td:eq(5)").attr("data-label", "Action");
+		},
 		initComplete: function () {
 			const dropdown = `<div class="dropdown d-inline mr-2">` +
 								`<button class="btn btn-primary dropdown-toggle" type="button" id="customersDropdown" data-toggle="dropdown" aria-expanded="false"><i class="fas fa-cog"></i></button>` +

@@ -42,8 +42,8 @@ $(function () {
 			$(row).find("td:eq(1)").attr("data-label", "Tanggal dibuat");
 			$(row).find("td:eq(2)").attr("data-label", "Nama Pemesan");
 			$(row).find("td:eq(3)").attr("data-label", "Contact person");
-			$(row).find("td:eq(4)").attr("data-label", "Wajib pajak");
-			$(row).find("td:eq(5)").attr("data-label", "&nbsp;");
+			$(row).find("td:eq(4)").attr("data-label", "Status Aktif");
+			$(row).find("td:eq(5)").attr("data-label", "Action");
 		},
 		initComplete: function () {
 			const dropdown = `<div class="dropdown d-inline mr-2">` +

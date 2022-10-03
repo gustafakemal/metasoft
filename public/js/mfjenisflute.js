@@ -36,7 +36,7 @@ $(function () {
 			$(row).find("td:eq(2)").attr("data-label", "Jenis Flute");
 			$(row).find("td:eq(3)").attr("data-label", "Harga");
 			$(row).find("td:eq(4)").attr("data-label", "Status Aktif");
-			$(row).find("td:eq(5)").attr("data-label", "&nbsp;");
+			$(row).find("td:eq(5)").attr("data-label", "Action");
 		},
 		initComplete: function () {
 			const dropdown = `<div class="dropdown d-inline mr-2">` +

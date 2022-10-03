@@ -29,6 +29,10 @@ body {
   background-color: #ccc;
   color: #999;
   border-color: #999;
+  font-size: inherit;
+}
+.dropdown-menu {
+  font-size: inherit;
 }
 
 .modalForm button[name="cancel"]:disabled {
@@ -70,6 +74,9 @@ body {
 }
 #page > .overlay.show {
   display: block;
+}
+#page > .overlay.show.menu {
+  background-color: rgba(0,0,0,.3);
 }
 
 .page-container {
@@ -127,15 +134,25 @@ body {
   -webkit-box-shadow: 0px 2px 5px 0px rgba(0,0,0,0.2);
   -moz-box-shadow: 0px 2px 5px 0px rgba(0,0,0,0.3);
 }
-.app-header .sidebar-nav {
+.app-header .sidebar-nav,
+.app-header .sidebar-mob {
   margin: 0 20px 0;
   cursor: pointer;
   color: rgba(255,255,255,1);
+}
+.app-header .sidebar-mob {
+  display: none;
 }
 .app-header .top-nav {
   flex: 1;
   text-align: right;
   color: #fff;
+}
+.app-header .logo {
+  width: auto;
+}
+.app-header .logo img {
+  width: 100%;
 }
 .top-nav .account-nav {
   text-align: right;
@@ -163,8 +180,8 @@ body {
   top: 27px !important;
 }
 .top-nav .account-nav .dropdown-toggle {
-  border: 1px solid transparent;
-  background-color: rgba(255,255,255,.2);
+  border: 1px solid rgba(255,255,255,.1);
+  background-color: transparent;
   display: flex;
   padding: 4px 20px;
   border-radius: 3px;
@@ -176,7 +193,7 @@ body {
   margin-left: 10px;
 }
 .top-nav .account-nav .dropdown-toggle:hover {
-  border: 1px solid transparent;
+  border: 1px solid rgba(255,255,255,.2);
 }
 .top-nav .account-nav .dropdown-toggle .icon {
   margin: 0 10px 0 0;
@@ -223,6 +240,12 @@ body {
 }
 .sidebar.hide {
   left: -240px;
+}
+.sidebar.mob-show {
+  left: 0;
+  top: 0;
+  height: 100%;
+  z-index: 1010;
 }
 
 .content-wrapper {
@@ -498,8 +521,60 @@ body {
 }
 
 @media only screen and (max-width: 1120px) {
+  .sidebar {
+    left: -240px;
+  }
+  .content-wrapper {
+    width: 100%;
+    margin-left: 0;
+  }
+  .app-header .sidebar-mob {
+    display: block;
+  }
+  .app-header .sidebar-nav {
+    display: none;
+  }
 }
 @media only screen and (max-width: 992px) {
+  .app-header {
+    padding: 0 30px;
+  }
+  .table:not(.table-sm),
+  .table:not(.table-sm) thead,
+  .table:not(.table-sm) tbody,
+  .table:not(.table-sm) th,
+  .table:not(.table-sm) td,
+  .table:not(.table-sm) tr {
+    display: block;
+  }
+  .table:not(.table-sm) thead tr {
+    position: absolute;
+    top: -9999px;
+    left: -9999px;
+  }
+  .table:not(.table-sm) tbody tr td {
+    min-height: 24px;
+  }
+  .table:not(.table-sm) tbody tr td::before {
+    content: attr(data-label);
+    float: left;
+    text-transform: capitalize;
+    font-weight: 500;
+  }
+  .table:not(.table-sm) tbody tr td {
+    display: block;
+    text-align: right;
+  }
 }
 @media only screen and (max-width: 768px) {
+  .app-header {
+    padding: 0 20px;
+    height: 70px;
+  }
+  .app-header .logo {
+    width: 140px;
+  }
+  .content-wrapper {
+    margin-top: 70px;
+  }
 }

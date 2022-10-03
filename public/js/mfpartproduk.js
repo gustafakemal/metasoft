@@ -14,6 +14,21 @@ $(function () {
             }],
 		columnDefs: [],
 		order: [[ 1, 'desc' ]],
+		createdRow: function (row, data, dataIndex) {
+			$(row).find("td:eq(0)").attr("data-label", "No");
+			$(row).find("td:eq(1)").attr("data-label", "Action");
+			$(row).find("td:eq(2)").attr("data-label", "FGD");
+			$(row).find("td:eq(3)").attr("data-label", "Revisi");
+			$(row).find("td:eq(4)").attr("data-label", "Nama Part");
+			$(row).find("td:eq(5)").attr("data-label", "Kertas");
+			$(row).find("td:eq(6)").attr("data-label", "Flute");
+			$(row).find("td:eq(7)").attr("data-label", "Metalizes");
+			$(row).find("td:eq(8)").attr("data-label", "Ukuran (mm)");
+			$(row).find("td:eq(9)").attr("data-label", "Dibuat");
+			$(row).find("td:eq(10)").attr("data-label", "Dibuat oleh");
+			$(row).find("td:eq(11)").attr("data-label", "Update");
+			$(row).find("td:eq(12)").attr("data-label", "Diupdate oleh");
+		},
 		scrollX: true,
 		initComplete: function () {},
 	});
@@ -263,22 +278,6 @@ $(function () {
 		}
 	})
 
-	// $('.open-sisi-form').on('click', function (e) {
-	// 	e.preventDefault();
-	// 	$('#dataForm').modal({
-	// 		show: true,
-	// 		backdrop: 'static'
-	// 	});
-	// 	const id_part = $(this).attr('data-part');
-	// 	$.get(`${HOST}/MFPartProduk/actualNomorSisi/${id_part}`, function (response) {
-	// 		$('#dataForm input[name="sisi"]').val(response.no_sisi)
-	// 	})
-	//
-	// 	const part_name = $(this).attr('data-nama');
-	// 	$('.part-produk-title').html(part_name)
-	// 	$('#dataForm .sisi-form-modal').attr('name', 'add-sisi')
-	// })
-
 	$('.add-copy-sisi').on('click', function (e) {
 		e.preventDefault();
 		const id_part = $(this).attr('data-part');
@@ -368,13 +367,6 @@ $(function () {
 
 	$('#dataForm, #dataDetail').on('hidden.bs.modal', function (event) {
 		resetSisiModal();
-		// color_tracker = {
-		// 	frontside: [],
-		// 	backside: [],
-		// 	manual: [],
-		// 	finishing: [],
-		// 	khusus: []
-		// }
 		fs_params.tracker = [];
 		bs_params.tracker = [];
 		manual_params.tracker = [];

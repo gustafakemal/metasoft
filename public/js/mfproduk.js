@@ -13,6 +13,18 @@ $(function () {
             }],
 		columnDefs: [],
 		order: [[ 2, 'desc' ]],
+		createdRow: function (row, data, dataIndex) {
+			$(row).find("td:eq(0)").attr("data-label", "No");
+			$(row).find("td:eq(1)").attr("data-label", "Action");
+			$(row).find("td:eq(2)").attr("data-label", "Nama Produk");
+			$(row).find("td:eq(3)").attr("data-label", "Segmen");
+			$(row).find("td:eq(4)").attr("data-label", "Pemesan");
+			$(row).find("td:eq(5)").attr("data-label", "Sales");
+			$(row).find("td:eq(6)").attr("data-label", "Dibuat");
+			$(row).find("td:eq(7)").attr("data-label", "Dibuat oleh");
+			$(row).find("td:eq(8)").attr("data-label", "Update");
+			$(row).find("td:eq(9)").attr("data-label", "Diupdate oleh");
+		},
 		initComplete: function () {},
 	});
 
@@ -26,6 +38,21 @@ $(function () {
 		}],
 		columnDefs: [],
 		order: [[ 1, 'desc' ]],
+		createdRow: function (row, data, dataIndex) {
+			$(row).find("td:eq(0)").attr("data-label", "No");
+			$(row).find("td:eq(1)").attr("data-label", "FGD");
+			$(row).find("td:eq(2)").attr("data-label", "Revisi");
+			$(row).find("td:eq(3)").attr("data-label", "Nama Part Produk");
+			$(row).find("td:eq(4)").attr("data-label", "Kertas");
+			$(row).find("td:eq(5)").attr("data-label", "Flute");
+			$(row).find("td:eq(6)").attr("data-label", "Metalize");
+			$(row).find("td:eq(7)").attr("data-label", "Ukuran");
+			$(row).find("td:eq(8)").attr("data-label", "Dibuat");
+			$(row).find("td:eq(9)").attr("data-label", "Dibuat oleh");
+			$(row).find("td:eq(8)").attr("data-label", "Update");
+			$(row).find("td:eq(9)").attr("data-label", "Diupdate oleh");
+			$(row).find("td:eq(9)").attr("data-label", "Action");
+		},
 		scrollX: true,
 		initComplete: function () {},
 	});
@@ -123,10 +150,19 @@ $(function () {
 						$('#dataPartHasilCari').DataTable().clear().rows.add(response.data).draw();
 					} else {
 						$('#dataPartHasilCari').DataTable().clear().draw();
+						$('.floating-msg').addClass('show').html(`
+							<div class="alert alert-danger">${response.msg}</div>
+							`)
 					}
 				},
 				error: function () {},
-				complete: function() {}
+				complete: function(res) {
+					if(!res.success) {
+						setTimeout(() => {
+							$('.floating-msg').removeClass('show').html('');
+						}, 3000)
+					}
+				}
 			})
 		})
 	})

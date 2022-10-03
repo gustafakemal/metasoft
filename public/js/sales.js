@@ -41,11 +41,10 @@ $(function () {
 		order: [[ 1, 'desc' ]],
 		createdRow: function (row, data, dataIndex) {
 			$(row).find("td:eq(0)").attr("data-label", "No");
-			$(row).find("td:eq(1)").attr("data-label", "ID Sales");
-			$(row).find("td:eq(2)").attr("data-label", "Nama Sales");
-			$(row).find("td:eq(3)").attr("data-label", "NIK Sales");
-			$(row).find("td:eq(4)").attr("data-label", "Status Aktif");
-			$(row).find("td:eq(5)").attr("data-label", "&nbsp;");
+			$(row).find("td:eq(1)").attr("data-label", "Nama Sales");
+			$(row).find("td:eq(2)").attr("data-label", "NIK");
+			$(row).find("td:eq(3)").attr("data-label", "Status Aktif");
+			$(row).find("td:eq(4)").attr("data-label", "Action");
 		},
 		initComplete: function () {
 			const dropdown = `<div class="dropdown d-inline mr-2">` +

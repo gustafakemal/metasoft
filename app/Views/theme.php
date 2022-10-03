@@ -27,6 +27,9 @@
             <div class="sidebar-nav">
                 <span data-placement="bottom" class="burger-icon active"><i class="fas fa-bars"></i></span>
             </div>
+            <div class="sidebar-mob">
+                <span data-placement="bottom" class="burger-icon active"><i class="fas fa-bars"></i></span>
+            </div>
             <div class="logo">
                 <img src="<?= site_url('images/logo.png'); ?>" alt="" />
             </div>

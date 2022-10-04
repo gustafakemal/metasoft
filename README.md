@@ -1,7 +1,4 @@
-<<<<<<< HEAD
 # MetaSoft
-=======
-# Meta
 
 ## Instalasi
 
@@ -56,4 +53,3 @@ RewriteRule (.*) public/$1 [L]
 ```
 
 - Untuk melakukan update atau sync aplikasi terbaru (paling mutakhir) jalankan melalui perintah `git pull origin main`
->>>>>>> d10d09f9654e0cc7f3bb583198d04c8e362a41ac

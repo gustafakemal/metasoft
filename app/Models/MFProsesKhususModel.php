@@ -8,59 +8,83 @@ class MFProsesKhususModel extends Model
 {
     protected $table = 'MF_ProsesKhusus';
     protected $useTimestamps = true;
-    protected $createdField  = 'added';
-    protected $updatedField  = 'updated';
+    protected $createdField = 'added';
+    protected $updatedField = 'updated';
     protected $allowedFields = ['id', 'proses', 'harga', 'aktif', "added", 'added_by', 'updated', 'updated_by'];
     protected $validationRules = [
         'proses' => 'required',
         'harga' => 'required',
     ];
     protected $validationMessages = [
-        'proses'        => [
+        'proses' => [
             'required' => 'Field Proses Khusus harus diisi.',
         ],
-        'harga'        => [
+        'harga' => [
             'required' => 'Field Harga harus diisi.',
         ],
     ];
 
-    public function getOpsi()
+    /**
+     * @return array
+     */
+    public function getOpsi(): array
     {
         $query = $this->where('aktif', 'Y')
-                    ->orderBy('proses', 'asc')
-                    ->get();
-        if($query->getNumRows() > 0) {
+            ->orderBy('proses', 'asc')
+            ->get();
+        if ($query->getNumRows() > 0) {
             return $query->getResult();
         } else {
             return [];
         }
     }
-    public function getMFProsesKhusus()
+
+    /**
+     * @return array
+     */
+    public function getMFProsesKhusus(): array
     {
         return $this->orderBy('proses', 'desc')
             ->asObject()
             ->findAll();
     }
 
-    public function getById($id)
+    /**
+     * @param $id
+     * @return array
+     */
+    public function getById($id): array
     {
         return $this->where('id', $id)->findAll();
     }
 
-    public function getMaxId()
+    /**
+     * @return int
+     */
+    public function getMaxId(): int
     {
         $query = $this->selectMax('id')->get();
 
         return (int)$query->getResult()[0]->id;
     }
 
-    public function updateById($id, $data)
+    /**
+     * @param $id
+     * @param $data
+     * @return bool
+     * @throws \ReflectionException
+     */
+    public function updateById($id, $data): bool
     {
         return $this->where('id', $id)
             ->set($data)
             ->update();
     }
 
+    /**
+     * @param $id
+     * @return bool|\CodeIgniter\Database\BaseResult
+     */
     public function deleteById($id)
     {
         return $this->where('id', $id)

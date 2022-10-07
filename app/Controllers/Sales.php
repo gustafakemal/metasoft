@@ -3,6 +3,8 @@
 namespace App\Controllers;
 
 use App\Models\SalesModel;
+use CodeIgniter\HTTP\RedirectResponse;
+use CodeIgniter\HTTP\ResponseInterface;
 use CodeIgniter\I18n\Time;
 
 class Sales extends BaseController
@@ -14,7 +16,10 @@ class Sales extends BaseController
 		$this->model = new SalesModel();
 	}
 
-	public function index()
+    /**
+     * @return string
+     */
+    public function index(): string
 	{
 		$this->breadcrumbs->add('Dashbor', '/');
         $this->breadcrumbs->add('Data Sales', '/sales');
@@ -31,7 +36,7 @@ class Sales extends BaseController
      *
      * Endpoint GET /api/master/sales
      */
-    public function apiGetAll()
+    public function apiGetAll(): ResponseInterface
 	{
         $query = $this->model->getSales();
 
@@ -62,7 +67,7 @@ class Sales extends BaseController
      *
      * Endpoint GET /api/master/sales/$1
      */
-    public function apiGetById($id)
+    public function apiGetById($id): ResponseInterface
 	{
 		$modified = $this->request->getGet('modified') == 'yes';
 
@@ -102,7 +107,7 @@ class Sales extends BaseController
      *
      * Endpoint POST /api/master/sales
      */
-    public function apiAddProcess()
+    public function apiAddProcess(): ResponseInterface
 	{
 		$data = $this->request->getPost();
 		$data['SalesID'] = $this->model->getMaxId() + 1;
@@ -134,7 +139,7 @@ class Sales extends BaseController
      *
      * Endpoint PUT /api/master/sales
      */
-    public function apiEditProcess()
+    public function apiEditProcess(): ResponseInterface
 	{
         $data = $this->request->getRawInput();
         $id = $data['SalesID'];
@@ -162,7 +167,11 @@ class Sales extends BaseController
 		return $this->response->setJSON($response);
 	}
 
-	public function delete($id)
+    /**
+     * @param $id
+     * @return RedirectResponse
+     */
+    public function delete($id): RedirectResponse
 	{
 		if ($this->model->deleteById($id)) {
 			return redirect()->back()
@@ -173,7 +182,10 @@ class Sales extends BaseController
 			->with('error', 'Data gagal dihapus');
 	}
 
-    public function getSelectOptions()
+    /**
+     * @return ResponseInterface
+     */
+    public function getSelectOptions(): ResponseInterface
     {
         $query = $this->model->getSales();
 

@@ -4,7 +4,10 @@ namespace App\Controllers;
 
 class Home extends BaseController
 {
-    public function index()
+    /**
+     * @return string
+     */
+    public function index(): string
     {
     	$this->breadcrumbs->add('Dashbor', '/');
 

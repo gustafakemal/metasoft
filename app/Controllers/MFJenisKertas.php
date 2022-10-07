@@ -3,6 +3,8 @@
 namespace App\Controllers;
 
 use App\Models\MFJenisKertasModel;
+use CodeIgniter\HTTP\RedirectResponse;
+use CodeIgniter\HTTP\ResponseInterface;
 use CodeIgniter\I18n\Time;
 
 class MFJenisKertas extends BaseController
@@ -14,7 +16,10 @@ class MFJenisKertas extends BaseController
 		$this->model = new MFJenisKertasModel();
 	}
 
-	public function index()
+    /**
+     * @return string
+     */
+    public function index(): string
 	{
 		$this->breadcrumbs->add('Dashbor', '/');
         $this->breadcrumbs->add('Data Jenis Kertas MF', '/mfjeniskertas');
@@ -31,7 +36,7 @@ class MFJenisKertas extends BaseController
      *
      * Endpoint GET /api/master/kertas
      */
-    public function apiGetAll()
+    public function apiGetAll(): ResponseInterface
 	{
 		$query = $this->model->getMFJenisKertas();
 
@@ -65,11 +70,11 @@ class MFJenisKertas extends BaseController
 
     /**
      * @return \CodeIgniter\HTTP\ResponseInterface
-     * @throws \Exception
+     * @param $id
      *
      * Endpoint GET /api/master/kertas/$1
      */
-    public function apiGetById($id)
+    public function apiGetById($id): ResponseInterface
 	{
 		$modified = $this->request->getPost('modified') ?? false;
 
@@ -111,7 +116,7 @@ class MFJenisKertas extends BaseController
      *
      * Endpoint POST /api/master/kertas
      */
-    public function apiAddProcess()
+    public function apiAddProcess(): ResponseInterface
 	{
 		$data = $this->request->getPost();
 		$data['added_by'] = current_user()->UserID;
@@ -137,7 +142,11 @@ class MFJenisKertas extends BaseController
 		return $this->response->setJSON($response);
 	}
 
-    public function getPut($raw_input)
+    /**
+     * @param $raw_input
+     * @return array
+     */
+    public function getPut($raw_input): array
     {
         $input_string = $raw_input[array_keys($raw_input)[0]];
 
@@ -145,9 +154,7 @@ class MFJenisKertas extends BaseController
 
         $json_string = '{' . $match[1] . '}';
 
-        $data = (array) json_decode($json_string);
-
-        return $data;
+        return (array) json_decode($json_string);
     }
 
     /**
@@ -156,7 +163,7 @@ class MFJenisKertas extends BaseController
      *
      * Endpoint PUT /api/master/kertas
      */
-    public function apiEditProcess()
+    public function apiEditProcess(): ResponseInterface
 	{
         $data = $this->request->getRawInput();
 
@@ -184,7 +191,11 @@ class MFJenisKertas extends BaseController
 		return $this->response->setJSON($response);
 	}
 
-	public function delete($id)
+    /**
+     * @param $id
+     * @return RedirectResponse
+     */
+    public function delete($id): RedirectResponse
 	{
 		if ($this->model->deleteById($id)) {
 			return redirect()->back()
@@ -195,7 +206,10 @@ class MFJenisKertas extends BaseController
 			->with('error', 'Data gagal dihapus');
 	}
 
-    public function getSelectOptions()
+    /**
+     * @return ResponseInterface
+     */
+    public function getSelectOptions(): ResponseInterface
     {
         $query = $this->model->getMFJenisKertas();
 

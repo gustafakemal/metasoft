@@ -2,6 +2,8 @@
 
 namespace App\Controllers;
 
+use CodeIgniter\HTTP\ResponseInterface;
+
 class Segmen extends BaseController
 {
     private $model;
@@ -11,7 +13,10 @@ class Segmen extends BaseController
         $this->model = new \App\Models\SegmenModel();
     }
 
-    public function apiGetAll()
+    /**
+     * @return ResponseInterface
+     */
+    public function apiGetAll(): ResponseInterface
     {
         $query = $this->model->getAll();
 
@@ -21,7 +26,10 @@ class Segmen extends BaseController
         ]);
     }
 
-    public function getSelectOptions()
+    /**
+     * @return ResponseInterface
+     */
+    public function getSelectOptions(): ResponseInterface
     {
         $query = $this->model->getAll();
 

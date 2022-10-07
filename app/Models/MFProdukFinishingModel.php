@@ -2,6 +2,7 @@
 
 namespace App\Models;
 
+use CodeIgniter\Database\ResultInterface;
 use CodeIgniter\Model;
 
 class MFProdukFinishingModel extends Model
@@ -10,7 +11,11 @@ class MFProdukFinishingModel extends Model
     protected $useTimestamps = false;
     protected $allowedFields = ['id_sisi', 'proses'];
 
-    public function getTintaBySisi($id_sisi)
+    /**
+     * @param $id_sisi
+     * @return \CodeIgniter\Database\ResultInterface|false|string
+     */
+    public function getTintaBySisi($id_sisi): ResultInterface
     {
         $query = $this->select('*')
             ->join('MF_ProsesFinishing', 'MF_ProdukFinishing.proses = MF_ProsesFinishing.id')
@@ -20,37 +25,57 @@ class MFProdukFinishingModel extends Model
         return $query;
     }
 
+    /**
+     * @param $id_sisi
+     * @return bool|\CodeIgniter\Database\BaseResult
+     */
     public function deleteAllSisi($id_sisi)
     {
         return $this->where('id_sisi', $id_sisi)
             ->delete();
     }
 
-    public function getByProdID($prod_id) {
-    	$query = $this->select('MF_ProdukFinishing.proses as id, MF_ProsesFinishing.proses')
-    					->join('MF_ProsesFinishing', 'MF_ProdukFinishing.proses = MF_ProsesFinishing.id')
-    					->where('MF_ProdukFinishing.id_produk', $prod_id)
-    					->get();
+    /**
+     * @param $prod_id
+     * @return array
+     */
+    public function getByProdID($prod_id): array
+    {
+        $query = $this->select('MF_ProdukFinishing.proses as id, MF_ProsesFinishing.proses')
+            ->join('MF_ProsesFinishing', 'MF_ProdukFinishing.proses = MF_ProsesFinishing.id')
+            ->where('MF_ProdukFinishing.id_produk', $prod_id)
+            ->get();
 
-    	if($query->getNumRows() > 0) {
-    		return $query->getResult();
-    	}
+        if ($query->getNumRows() > 0) {
+            return $query->getResult();
+        }
 
-    	return [];
+        return [];
     }
 
-    public function reInsert($data) {
-        $ids = array_map(function($item) {
+    /**
+     * @param $data
+     * @return bool|int
+     * @throws \ReflectionException
+     */
+    public function reInsert($data)
+    {
+        $ids = array_map(function ($item) {
             return $item['id_produk'];
         }, $data);
         $this->whereIn('id_produk', $ids)
-                ->delete();
+            ->delete();
 
         return $this->insertBatch($data);
     }
 
-    public function deleteByProdID($prod_id) {
-    	return $this->where('id_produk', $prod_id)
-    				->delete();
+    /**
+     * @param $prod_id
+     * @return bool|\CodeIgniter\Database\BaseResult
+     */
+    public function deleteByProdID($prod_id)
+    {
+        return $this->where('id_produk', $prod_id)
+            ->delete();
     }
 }

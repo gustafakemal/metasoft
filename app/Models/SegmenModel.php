@@ -13,30 +13,37 @@ class SegmenModel extends Model
         'OpsiTeks' => 'required',
     ];
     protected $validationMessages = [
-        'OpsiTeks'        => [
+        'OpsiTeks' => [
             'required' => 'Field Nama Segmen harus diisi.',
         ],
     ];
 
-    public function getAll()
+    /**
+     * @return array
+     */
+    public function getAll(): array
     {
         $query = $this->where('Kategori', 'Segmen')
-                    ->where('FlagAktif', 'A')
-                    ->orderBy('OpsiTeks', 'asc')
-                    ->get();
-        if($query->getNumRows() > 0) {
+            ->where('FlagAktif', 'A')
+            ->orderBy('OpsiTeks', 'asc')
+            ->get();
+        if ($query->getNumRows() > 0) {
             return $query->getResult();
         } else {
             return [];
         }
     }
 
+    /**
+     * @param $id
+     * @return null|string
+     */
     public function getName($id)
     {
         $query = $this->where('Kategori', 'Segmen')
             ->where('OpsiVal', $id)
             ->get();
-        if($query->getNumRows() > 0) {
+        if ($query->getNumRows() > 0) {
             return $query->getResult()[0]->OpsiTeks;
         } else {
             return null;

@@ -2,6 +2,8 @@
 
 namespace App\Controllers;
 
+use CodeIgniter\HTTP\ResponseInterface;
+
 class MFPacking extends BaseController
 {
     protected $model;
@@ -11,7 +13,11 @@ class MFPacking extends BaseController
         $this->model = new \App\Models\MFPackingModel();
     }
 
-    public function getSelectOptions($kategori)
+    /**
+     * @param $kategori
+     * @return ResponseInterface
+     */
+    public function getSelectOptions($kategori): ResponseInterface
     {
         $query = $this->model->getOpsi($kategori);
 

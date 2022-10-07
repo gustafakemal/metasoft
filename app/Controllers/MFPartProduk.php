@@ -3,8 +3,11 @@
 namespace App\Controllers;
 
 use App\Models\MFPartProdukModel;
+use CodeIgniter\HTTP\RedirectResponse;
+use CodeIgniter\HTTP\ResponseInterface;
 use CodeIgniter\I18n\Time;
 use CodeIgniter\Files\File;
+use phpDocumentor\Reflection\Types\Mixed_;
 
 class MFPartProduk extends BaseController
 {
@@ -20,7 +23,10 @@ class MFPartProduk extends BaseController
 		$this->model = new MFPartProdukModel();
 	}
 
-	public function index()
+    /**
+     * @return string
+     */
+    public function index(): string
 	{
         $this->breadcrumbs->add('Dashbor', '/');
         $this->breadcrumbs->add('Data Part Produk MF', '/mfproduk');
@@ -31,22 +37,11 @@ class MFPartProduk extends BaseController
 		]);
 	}
 
-	public function addPartProduct()
+    /**
+     * @return string
+     */
+    public function addPartProduct(): string
 	{
-//        $data = [
-//            'nama' => '',
-//            'tujuan_penggunaan' => '',
-//            'umur' => ''
-//        ];
-//        $this->model->setValidationRule('umur', 'required');
-//        if($this->model->insert($data, false)) {
-//            $errors = '';
-//        } else {
-//            $errors = $this->model->errors();
-//            $errors['ak'] = 'adsad';
-//        }
-//        dd($errors);
-
         $this->breadcrumbs->add('Dashbor', '/');
         $this->breadcrumbs->add('Part Produk', '/mfpartproduk');
         $this->breadcrumbs->add('Input Part Produk MF', '/mfproduk');
@@ -59,7 +54,12 @@ class MFPartProduk extends BaseController
 		]);
 	}
 
-    public function editPartProduct($id, $is_revision = 0)
+    /**
+     * @param $id
+     * @param $is_revision
+     * @return string
+     */
+    public function editPartProduct($id, $is_revision = 0): string
     {
         $this->breadcrumbs->add('Dashbor', '/');
         $this->breadcrumbs->add('Part Produk', '/mfpartproduk');
@@ -77,7 +77,11 @@ class MFPartProduk extends BaseController
         ]);
     }
 
-    public function detailPartProduct($id)
+    /**
+     * @param $id
+     * @return string
+     */
+    public function detailPartProduct($id): string
     {
         $data = $this->model->getById($id);
 
@@ -101,6 +105,10 @@ class MFPartProduk extends BaseController
         ]);
     }
 
+    /**
+     * @param $id
+     * @return void
+     */
     public function dokcr($id)
     {
         $data = $this->model->getById($id);
@@ -120,7 +128,12 @@ class MFPartProduk extends BaseController
         }
     }
 
-    public function apiAddSisi($id_part = 0)
+    /**
+     * @param $id_part
+     * @return ResponseInterface
+     * @throws \ReflectionException
+     */
+    public function apiAddSisi($id_part = 0): ResponseInterface
     {
         $model = new \App\Models\MFSisiProdukModel();
         $model_warna = new \App\Models\MFProdukWarnaModel();
@@ -237,7 +250,11 @@ class MFPartProduk extends BaseController
         return $this->response->setJSON($response);
     }
 
-    public function apiEditSisi()
+    /**
+     * @return ResponseInterface
+     * @throws \ReflectionException
+     */
+    public function apiEditSisi(): ResponseInterface
     {
         $model = new \App\Models\MFSisiProdukModel();
         $model_warna = new \App\Models\MFProdukWarnaModel();
@@ -345,14 +362,25 @@ class MFPartProduk extends BaseController
         return $this->response->setJSON($response);
     }
 
-    public function actualNomorSisi($id_part)
+    /**
+     * @param $id_part
+     * @return ResponseInterface
+     */
+    public function actualNomorSisi($id_part): ResponseInterface
     {
         $no = (new \App\Models\MFSisiProdukModel())->lastNomorSisi($id_part) + 1;
 
-        return $this->response->setJSON(['success' => true, 'no_sisi' => $no]);
+        return $this->response->setJSON([
+            'success' => true,
+            'no_sisi' => $no
+        ]);
     }
 
-    public function addcopysisi()
+    /**
+     * @return ResponseInterface
+     * @throws \ReflectionException
+     */
+    public function addcopysisi(): ResponseInterface
     {
         if ($this->request->getMethod() !== 'post') {
             return redirect()->to('mfpartproduk');
@@ -475,7 +503,11 @@ class MFPartProduk extends BaseController
         return $this->response->setJSON($response);
     }
 
-    public function apiAllSisi()
+    /**
+     * @return ResponseInterface
+     * @throws \Exception
+     */
+    public function apiAllSisi(): ResponseInterface
     {
         $query = (new \App\Models\MFSisiProdukModel())->getAllSisi();
 
@@ -511,7 +543,11 @@ class MFPartProduk extends BaseController
         return $this->response->setJSON($response);
     }
 
-    public function apiAllSisiByPart()
+    /**
+     * @return ResponseInterface
+     * @throws \Exception
+     */
+    public function apiAllSisiByPart(): ResponseInterface
     {
 		if ($this->request->getMethod() !== 'post') {
 			return redirect()->to('mfpartproduk');
@@ -562,7 +598,12 @@ class MFPartProduk extends BaseController
         return $this->response->setJSON($response);
     }
 
-    public function delSisi($id)
+    /**
+     * @param $id
+     * @return RedirectResponse
+     * @throws \ReflectionException
+     */
+    public function delSisi($id): RedirectResponse
     {
         $model = new \App\Models\MFSisiProdukModel();
 
@@ -575,7 +616,11 @@ class MFPartProduk extends BaseController
         }
     }
 
-    public function getSisiById($id)
+    /**
+     * @param $id
+     * @return ResponseInterface
+     */
+    public function getSisiById($id): ResponseInterface
     {
         $query = (new \App\Models\MFSisiProdukModel())->getSisiById($id);
         $query_fsbs = (new \App\Models\MFProdukWarnaModel())->getTintaBySisi($id);
@@ -610,7 +655,11 @@ class MFPartProduk extends BaseController
         return $this->response->setJSON($response);
     }
 
-	public function partProductSearch()
+    /**
+     * @return ResponseInterface
+     * @throws \Exception
+     */
+    public function partProductSearch(): ResponseInterface
 	{
 		$keyword = $this->request->getPost('keyword');
         $full = (! $this->request->getPost('full') );
@@ -684,7 +733,12 @@ class MFPartProduk extends BaseController
 		return $this->response->setJSON($response);
 	}
 
-    public function delPartProduk($id)
+    /**
+     * @param $id
+     * @return RedirectResponse
+     * @throws \ReflectionException
+     */
+    public function delPartProduk($id): RedirectResponse
     {
         $query = (new \App\Models\MFPartProdukModel())->where('id', $id)
                                                     ->set(['aktif' => 'T'])
@@ -693,7 +747,10 @@ class MFPartProduk extends BaseController
                         ->with('success', 'Part produk berhasil dihapus');
     }
 
-    public function getDistinctiveFGD()
+    /**
+     * @return ResponseInterface
+     */
+    public function getDistinctiveFGD(): ResponseInterface
     {
         $query = $this->model->getDistinctiveFGD();
 
@@ -716,7 +773,11 @@ class MFPartProduk extends BaseController
         return $this->response->setJSON($response);
     }
 
-    public function getRevisiByFGD($fgd)
+    /**
+     * @param $fgd
+     * @return ResponseInterface
+     */
+    public function getRevisiByFGD($fgd): ResponseInterface
     {
         $query = $this->model->getRevisiByFGD($fgd);
 
@@ -739,7 +800,11 @@ class MFPartProduk extends BaseController
         return $this->response->setJSON($response);
     }
 
-	public function apiGetAll()
+    /**
+     * @return ResponseInterface
+     * @throws \Exception
+     */
+    public function apiGetAll(): ResponseInterface
 	{
         $query = $this->model->getAll();
 
@@ -779,7 +844,12 @@ class MFPartProduk extends BaseController
         return $this->response->setJSON($response);
 	}
 
-    public function apiGetByProduct($id_produk)
+    /**
+     * @param $id_produk
+     * @return ResponseInterface
+     * @throws \Exception
+     */
+    public function apiGetByProduct($id_produk): ResponseInterface
     {
         $ids_part = (new \App\Models\MFKelompokProdukModel())->getIdsPart($id_produk);
 
@@ -816,7 +886,10 @@ class MFPartProduk extends BaseController
         return $this->response->setJSON(['success' => true, 'data' => $results]);
     }
 
-	public function apiGetById()
+    /**
+     * @return ResponseInterface
+     */
+    public function apiGetById(): ResponseInterface
 	{
 		if ($this->request->getMethod() !== 'post') {
 			return redirect()->to('mfproduk');
@@ -841,7 +914,11 @@ class MFPartProduk extends BaseController
 		return $this->response->setJSON($response);
 	}
 
-	public function apiAddProcess()
+    /**
+     * @return ResponseInterface
+     * @throws \ReflectionException
+     */
+    public function apiAddProcess(): ResponseInterface
 	{
 		if ($this->request->getMethod() !== 'post') {
 			return redirect()->to('mfpartproduk');
@@ -929,6 +1006,11 @@ class MFPartProduk extends BaseController
         }
 	}
 
+    /**
+     * @param $id_part
+     * @return \CodeIgniter\Database\BaseResult|false|int|object|string
+     * @throws \ReflectionException
+     */
     private function insertBlankSisi($id_part)
     {
         $data = [
@@ -943,6 +1025,12 @@ class MFPartProduk extends BaseController
         return (new \App\Models\MFSisiProdukModel())->insert($data);
     }
 
+    /**
+     * @param $id_produk
+     * @param $id_part
+     * @return \CodeIgniter\Database\BaseResult|false|int|object|string
+     * @throws \ReflectionException
+     */
     private function insertToProduct($id_produk, $id_part)
     {
         $data = [
@@ -956,7 +1044,10 @@ class MFPartProduk extends BaseController
         return (new \App\Models\MFKelompokProdukModel())->insert($data);
     }
 
-    public function apiAddToProduct()
+    /**
+     * @return ResponseInterface
+     */
+    public function apiAddToProduct(): ResponseInterface
     {
         if ($this->request->getMethod() !== 'post') {
             return redirect()->to('mfpartproduk');
@@ -980,7 +1071,10 @@ class MFPartProduk extends BaseController
         return $this->response->setJSON($response);
     }
 
-    public function apiDelFromProduct()
+    /**
+     * @return ResponseInterface
+     */
+    public function apiDelFromProduct(): ResponseInterface
     {
         if ($this->request->getMethod() !== 'post') {
             return redirect()->to('mfpartproduk');
@@ -1008,7 +1102,10 @@ class MFPartProduk extends BaseController
         return $this->response->setJSON($response);
     }
 
-	public function apiEditProcess()
+    /**
+     * @return ResponseInterface
+     */
+    public function apiEditProcess(): ResponseInterface
 	{
         if ($this->request->getMethod() !== 'post') {
             return redirect()->to('mfpartproduk');
@@ -1083,7 +1180,11 @@ class MFPartProduk extends BaseController
         }
 	}
 
-    public function apiRevProcess()
+    /**
+     * @return ResponseInterface
+     * @throws \ReflectionException
+     */
+    public function apiRevProcess(): ResponseInterface
     {
         if ($this->request->getMethod() !== 'post') {
             return redirect()->to('mfpartproduk');
@@ -1164,7 +1265,11 @@ class MFPartProduk extends BaseController
         }
     }
 
-    private function fileDokcrRules($file)
+    /**
+     * @param $file
+     * @return array
+     */
+    private function fileDokcrRules($file): array
     {
         $upload_rules = [];
         $upload_msg_errors = [];
@@ -1192,7 +1297,12 @@ class MFPartProduk extends BaseController
         ];
     }
 
-    private function fileDokcrUpload($file, $param)
+    /**
+     * @param $file
+     * @param $param
+     * @return string
+     */
+    private function fileDokcrUpload($file, $param): string
     {
         $rev_format = str_pad($param['revisi'], 3, '0', STR_PAD_LEFT);
         $dokcr_filename = 'DOKCR_' . $param['fgd'] . '_' . $rev_format . '.' . $file->getExtension();
@@ -1201,7 +1311,12 @@ class MFPartProduk extends BaseController
         return $dokcr_filename;
     }
 
-    private function cloneSelectSisi($existing_id_part, $new_id_part)
+    /**
+     * @param $existing_id_part
+     * @param $new_id_part
+     * @return array|array[]
+     */
+    private function cloneSelectSisi($existing_id_part, $new_id_part): array
     {
         $query_sisi = (new \App\Models\MFSisiProdukModel())->getAllSisiByPart($existing_id_part);
 
@@ -1246,7 +1361,12 @@ class MFPartProduk extends BaseController
         return $data_sisi;
     }
 
-    private function cloneInsertSisi(array $data)
+    /**
+     * @param array $data
+     * @return array
+     * @throws \ReflectionException
+     */
+    private function cloneInsertSisi(array $data): array
     {
         $model = new \App\Models\MFSisiProdukModel();
         $model_colors = new \App\Models\MFProdukWarnaModel();
@@ -1358,7 +1478,13 @@ class MFPartProduk extends BaseController
         return $results;
     }
 
-	private function productColors($colors, $prod_id, $initial_position)
+    /**
+     * @param $colors
+     * @param $prod_id
+     * @param $initial_position
+     * @return array
+     */
+    private function productColors($colors, $prod_id, $initial_position): array
 	{
 		if(!is_array($colors) || count($colors) == 0) {
 			return [];
@@ -1373,7 +1499,12 @@ class MFPartProduk extends BaseController
 		}, $colors);
 	}
 
-	private function productProcess($process, $prod_id)
+    /**
+     * @param $process
+     * @param $prod_id
+     * @return array
+     */
+    private function productProcess($process, $prod_id): array
 	{
 		if(!is_array($process) || count($process) == 0) {
 			return [];

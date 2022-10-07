@@ -4,6 +4,8 @@ namespace App\Controllers;
 
 use App\Models\MFJenisTintaModel;
 use CodeIgniter\Format\JSONFormatter;
+use CodeIgniter\HTTP\RedirectResponse;
+use CodeIgniter\HTTP\ResponseInterface;
 use CodeIgniter\I18n\Time;
 use PHPUnit\Util\Json;
 
@@ -16,7 +18,10 @@ class MFJenisTinta extends BaseController
 		$this->model = new MFJenisTintaModel();
 	}
 
-	public function index()
+    /**
+     * @return string
+     */
+    public function index(): string
 	{
 		$this->breadcrumbs->add('Dashbor', '/');
         $this->breadcrumbs->add('Data Jenis Tinta MF', '/mfjenistinta');
@@ -33,7 +38,7 @@ class MFJenisTinta extends BaseController
      *
      * Endpoint GET /api/master/tinta
      */
-    public function apiGetAll()
+    public function apiGetAll(): ResponseInterface
 	{
         $query = $this->model->getMFJenisTinta();
 
@@ -71,7 +76,7 @@ class MFJenisTinta extends BaseController
      *
      * Endpoint GET /api/master/tinta/$1
      */
-    public function apiGetById($id)
+    public function apiGetById($id): ResponseInterface
 	{
 		$modified = $this->request->getGet('modified') == 'yes';
 
@@ -113,7 +118,7 @@ class MFJenisTinta extends BaseController
      *
      * Endpoint POST /api/master/tinta
      */
-    public function apiAddProcess()
+    public function apiAddProcess(): ResponseInterface
 	{
         $data = $this->request->getPost();
 		$data['added_by'] = current_user()->UserID;
@@ -145,7 +150,7 @@ class MFJenisTinta extends BaseController
      *
      * Endpoint PUT /api/master/tinta
      */
-    public function apiEditProcess()
+    public function apiEditProcess(): ResponseInterface
 	{
         $data = $this->request->getRawInput();
 
@@ -172,7 +177,11 @@ class MFJenisTinta extends BaseController
 		return $this->response->setJSON($response);
 	}
 
-	public function delete($id)
+    /**
+     * @param $id
+     * @return RedirectResponse
+     */
+    public function delete($id): RedirectResponse
 	{
 		if ($this->model->deleteById($id)) {
 			return redirect()->back()
@@ -183,7 +192,10 @@ class MFJenisTinta extends BaseController
 			->with('error', 'Data gagal dihapus');
 	}
 
-    public function getSelectOptions()
+    /**
+     * @return ResponseInterface
+     */
+    public function getSelectOptions(): ResponseInterface
     {
         $query = $this->model->getOpsi();
 

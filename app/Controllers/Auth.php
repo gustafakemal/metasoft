@@ -2,6 +2,7 @@
 
 namespace App\Controllers;
 use App\Models\UsersModel;
+use CodeIgniter\HTTP\RedirectResponse;
 
 class Auth extends BaseController
 {
@@ -12,18 +13,21 @@ class Auth extends BaseController
 		$this->model = new UsersModel();
 	}
 
-    public function login()
+    /**
+     * @return string
+     */
+    public function login(): string
     {
         return view('login');
     }
 
-    public function verify()
+    /**
+     * @return RedirectResponse
+     */
+    public function verify(): RedirectResponse
     {
         $username = $this->request->getPost('username');
         $password = $this->request->getPost('password');
-
-        
-        
 
         $auth = service('auth');
         $result=$auth->login($username, $password);
@@ -35,7 +39,10 @@ class Auth extends BaseController
         }
     }
 
-    public function logout()
+    /**
+     * @return RedirectResponse
+     */
+    public function logout(): RedirectResponse
     {
         service('auth')->logout();
 

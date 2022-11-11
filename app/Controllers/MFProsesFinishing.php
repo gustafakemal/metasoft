@@ -3,6 +3,8 @@
 namespace App\Controllers;
 
 use App\Models\MFProsesFinishingModel;
+use CodeIgniter\HTTP\RedirectResponse;
+use CodeIgniter\HTTP\ResponseInterface;
 use CodeIgniter\I18n\Time;
 
 class MFProsesFinishing extends BaseController
@@ -14,7 +16,10 @@ class MFProsesFinishing extends BaseController
 		$this->model = new MFProsesFinishingModel();
 	}
 
-	public function index()
+    /**
+     * @return string
+     */
+    public function index(): string
 	{
 		$this->breadcrumbs->add('Dashbor', '/');
         $this->breadcrumbs->add('Data Proses Finishing MF', '/mfprosesfinishing');
@@ -31,7 +36,7 @@ class MFProsesFinishing extends BaseController
      *
      * Endpoint GET /api/master/finishing
      */
-    public function apiGetAll()
+    public function apiGetAll(): ResponseInterface
 	{
         $query = $this->model->getMFProsesFinishing();
 
@@ -68,7 +73,7 @@ class MFProsesFinishing extends BaseController
      *
      * Endpoint GET /api/master/finishing/$1
      */
-    public function apiGetById($id)
+    public function apiGetById($id): ResponseInterface
 	{
         $modified = $this->request->getPost('modified') == 'yes';
 
@@ -110,7 +115,7 @@ class MFProsesFinishing extends BaseController
      *
      * Endpoint POST /api/master/finishing
      */
-    public function apiAddProcess()
+    public function apiAddProcess(): ResponseInterface
 	{
 		$data = $this->request->getPost();
 		$data['added_by'] = current_user()->UserID;
@@ -142,7 +147,7 @@ class MFProsesFinishing extends BaseController
      *
      * Endpoint PUT /api/master/finishing
      */
-    public function apiEditProcess()
+    public function apiEditProcess(): ResponseInterface
 	{
         $data = $this->request->getRawInput();
 
@@ -170,7 +175,11 @@ class MFProsesFinishing extends BaseController
 		return $this->response->setJSON($response);
 	}
 
-	public function delete($id)
+    /**
+     * @param $id
+     * @return RedirectResponse
+     */
+    public function delete($id): RedirectResponse
 	{
 		if ($this->model->deleteById($id)) {
 			return redirect()->back()
@@ -181,7 +190,10 @@ class MFProsesFinishing extends BaseController
 			->with('error', 'Data gagal dihapus');
 	}
 
-    public function getSelectOptions()
+    /**
+     * @return ResponseInterface
+     */
+    public function getSelectOptions(): ResponseInterface
     {
         $query = $this->model->getOpsi();
 

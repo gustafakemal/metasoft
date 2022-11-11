@@ -3,6 +3,8 @@
 namespace App\Controllers;
 
 use App\Models\MFProdukModel;
+use CodeIgniter\HTTP\RedirectResponse;
+use CodeIgniter\HTTP\ResponseInterface;
 use CodeIgniter\I18n\Time;
 
 class MFProduk extends BaseController
@@ -15,7 +17,10 @@ class MFProduk extends BaseController
 		$this->model = new MFProdukModel();
 	}
 
-	public function index()
+    /**
+     * @return string
+     */
+    public function index(): string
 	{
 		$this->breadcrumbs->add('Dashbor', '/');
         $this->breadcrumbs->add('Data Produk MF', '/mfproduk');
@@ -39,7 +44,11 @@ class MFProduk extends BaseController
 		]);
 	}
 
-    public function edit($id)
+    /**
+     * @param $id
+     * @return string
+     */
+    public function edit($id): string
     {
         $this->breadcrumbs->add('Dashbor', '/');
         $this->breadcrumbs->add('Data Produk MF', '/mfproduk');
@@ -53,7 +62,11 @@ class MFProduk extends BaseController
         ]);
     }
 
-	public function productSearch()
+    /**
+     * @return ResponseInterface
+     * @throws \Exception
+     */
+    public function productSearch(): ResponseInterface
 	{
 		$keyword = $this->request->getPost('keyword');
 		$query = $this->model->getByFgdNama("$keyword");
@@ -104,7 +117,11 @@ class MFProduk extends BaseController
 		return $this->response->setJSON($response);
 	}
 
-    public function delItemProduct()
+    /**
+     * @return ResponseInterface
+     * @throws \ReflectionException
+     */
+    public function delItemProduct(): ResponseInterface
     {
         if ($this->request->getMethod() !== 'post') {
             return redirect()->to('mfproduk');
@@ -131,7 +148,11 @@ class MFProduk extends BaseController
         return $this->response->setJSON($response);
     }
 
-	public function apiGetAll()
+    /**
+     * @return ResponseInterface
+     * @throws \Exception
+     */
+    public function apiGetAll(): ResponseInterface
 	{
         $query = $this->model->getMFProduk();
         
@@ -167,7 +188,12 @@ class MFProduk extends BaseController
 
 	}
 
-    public function delItemKelProduk($id_produk, $id_part)
+    /**
+     * @param $id_produk
+     * @param $id_part
+     * @return RedirectResponse
+     */
+    public function delItemKelProduk($id_produk, $id_part): RedirectResponse
     {
         $query = (new \App\Models\MFKelompokProdukModel())->where('id_produk', $id_produk)
                                                         ->where('id_part', $id_part)
@@ -182,7 +208,10 @@ class MFProduk extends BaseController
         }
     }
 
-	public function apiGetById()
+    /**
+     * @return ResponseInterface
+     */
+    public function apiGetById(): ResponseInterface
 	{
 		if ($this->request->getMethod() !== 'post') {
 			return redirect()->to('mfproduk');
@@ -199,7 +228,11 @@ class MFProduk extends BaseController
 		return $this->response->setJSON($response);
 	}
 
-	public function apiAddProcess()
+    /**
+     * @return ResponseInterface
+     * @throws \ReflectionException
+     */
+    public function apiAddProcess(): ResponseInterface
 	{
 		if ($this->request->getMethod() !== 'post') {
 			return redirect()->to('mfproduk');
@@ -230,7 +263,11 @@ class MFProduk extends BaseController
         return $this->response->setJSON($response);
 	}
 
-	public function apiEditProcess()
+    /**
+     * @return ResponseInterface
+     * @throws \ReflectionException
+     */
+    public function apiEditProcess(): ResponseInterface
 	{
         if ($this->request->getMethod() !== 'post') {
             return redirect()->to('mfproduk');

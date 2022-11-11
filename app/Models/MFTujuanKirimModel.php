@@ -8,58 +8,83 @@ class MFTujuanKirimModel extends Model
 {
     protected $table = 'MF_TujuanKirim';
     protected $useTimestamps = true;
-    protected $createdField  = 'added';
-    protected $updatedField  = 'updated';
+    protected $createdField = 'added';
+    protected $updatedField = 'updated';
     protected $allowedFields = ['id', 'tujuan', 'harga', 'aktif', "added", 'added_by', 'updated', 'updated_by'];
     protected $validationRules = [
         'tujuan' => 'required',
         'harga' => 'required',
     ];
     protected $validationMessages = [
-        'tujuan'        => [
+        'tujuan' => [
             'required' => 'Field Tujuan Kirim harus diisi.',
         ],
-        'harga'        => [
+        'harga' => [
             'required' => 'Field Harga harus diisi.',
         ],
     ];
-    public function getOpsi()
+
+    /**
+     * @return array
+     */
+    public function getOpsi(): array
     {
         $query = $this->where('aktif', 'Y')
-                    ->orderBy('tujuan', 'asc')
-                    ->get();
-        if($query->getNumRows() > 0) {
+            ->orderBy('tujuan', 'asc')
+            ->get();
+        if ($query->getNumRows() > 0) {
             return $query->getResult();
         } else {
             return [];
         }
     }
-    public function getMFTujuanKirim()
+
+    /**
+     * @return array
+     */
+    public function getMFTujuanKirim(): array
     {
         return $this->orderBy('tujuan', 'desc')
             ->asObject()
             ->findAll();
     }
 
-    public function getById($id)
+    /**
+     * @param $id
+     * @return array
+     */
+    public function getById($id): array
     {
         return $this->where('id', $id)->findAll();
     }
 
-    public function getMaxId()
+    /**
+     * @return int
+     */
+    public function getMaxId(): int
     {
         $query = $this->selectMax('id')->get();
 
         return (int)$query->getResult()[0]->id;
     }
 
-    public function updateById($id, $data)
+    /**
+     * @param $id
+     * @param $data
+     * @return bool
+     * @throws \ReflectionException
+     */
+    public function updateById($id, $data): bool
     {
         return $this->where('id', $id)
             ->set($data)
             ->update();
     }
 
+    /**
+     * @param $id
+     * @return bool|\CodeIgniter\Database\BaseResult
+     */
     public function deleteById($id)
     {
         return $this->where('id', $id)

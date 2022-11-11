@@ -3,6 +3,8 @@
 namespace App\Controllers;
 
 use App\Models\CustomerModel;
+use CodeIgniter\HTTP\RedirectResponse;
+use CodeIgniter\HTTP\ResponseInterface;
 use CodeIgniter\I18n\Time;
 
 class Customer extends BaseController
@@ -14,7 +16,10 @@ class Customer extends BaseController
 		$this->model = new CustomerModel();
 	}
 
-    public function index()
+    /**
+     * @return string
+     */
+    public function index(): string
     {
         $this->breadcrumbs->add('Dashbor', '/');
         $this->breadcrumbs->add('Data Pelanggan', '/customer');
@@ -31,7 +36,7 @@ class Customer extends BaseController
      *
      * Endpoint GET /api/master/customer
      */
-    public function apiGetAll()
+    public function apiGetAll(): ResponseInterface
     {
     	$query = $this->model->getCustomers();
 
@@ -75,7 +80,7 @@ class Customer extends BaseController
      *
      * Endpoint GET /api/master/customer/$1
      */
-    public function apiGetById($no_pemesan)
+    public function apiGetById($no_pemesan): ResponseInterface
     {
         $modified = $this->request->getGet('modified') == 'yes';
 
@@ -121,7 +126,7 @@ class Customer extends BaseController
      *
      * Endpoint POST /api/master/customer
      */
-    public function apiAddProcess()
+    public function apiAddProcess(): ResponseInterface
     {
     	$data = $this->request->getPost();
     	$data['NoPemesan'] = $this->model->getMaxNoPemesan() + 1;
@@ -154,7 +159,7 @@ class Customer extends BaseController
      *
      * Endpoint PUT /api/master/customer
      */
-    public function apiEditProcess()
+    public function apiEditProcess(): ResponseInterface
     {
         $data = $this->request->getPost();
         $data['UpdateBy'] = current_user()->UserID;
@@ -181,7 +186,11 @@ class Customer extends BaseController
     	return $this->response->setJSON($response);
     }
 
-    public function delete($NoPemesan)
+    /**
+     * @param $NoPemesan
+     * @return RedirectResponse
+     */
+    public function delete($NoPemesan): RedirectResponse
     {
     	if($this->model->deleteById($NoPemesan)) {
     		return redirect()->back()
@@ -192,7 +201,10 @@ class Customer extends BaseController
     					->with('error', 'Data gagal dihapus');
     }
 
-    public function getSelectOptions()
+    /**
+     * @return ResponseInterface
+     */
+    public function getSelectOptions(): ResponseInterface
     {
         $query = $this->model->getCustomers();
 

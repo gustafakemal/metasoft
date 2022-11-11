@@ -3,6 +3,8 @@
 namespace App\Controllers;
 
 use App\Models\MFJenisFluteModel;
+use CodeIgniter\HTTP\RedirectResponse;
+use CodeIgniter\HTTP\ResponseInterface;
 use CodeIgniter\I18n\Time;
 
 class MFJenisFlute extends BaseController
@@ -14,7 +16,10 @@ class MFJenisFlute extends BaseController
 		$this->model = new MFJenisFluteModel();
 	}
 
-	public function index()
+    /**
+     * @return string
+     */
+    public function index(): string
 	{
 		$this->breadcrumbs->add('Dashbor', '/');
         $this->breadcrumbs->add('Data Jenis Flute MF', '/mfjenisflute');
@@ -31,7 +36,7 @@ class MFJenisFlute extends BaseController
      *
      * Endpoint GET /api/master/flute
      */
-    public function apiGetAll()
+    public function apiGetAll(): ResponseInterface
 	{
 		$query = $this->model->getMFJenisFlute();
 
@@ -68,7 +73,7 @@ class MFJenisFlute extends BaseController
      *
      * Endpoint GET /api/master/flute/$1
      */
-    public function apiGetById($id)
+    public function apiGetById($id): ResponseInterface
 	{
         $modified = $this->request->getGet('modified') == 'yes';
 
@@ -110,7 +115,7 @@ class MFJenisFlute extends BaseController
      *
      * Endpoint POST /api/master/flute
      */
-    public function apiAddProcess()
+    public function apiAddProcess(): ResponseInterface
 	{
         $data = $this->request->getPost();
 		$data['added_by'] = current_user()->UserID;
@@ -142,7 +147,7 @@ class MFJenisFlute extends BaseController
      *
      * Endpoint PUT /api/master/flute
      */
-    public function apiEditProcess()
+    public function apiEditProcess(): ResponseInterface
 	{
         $data = $this->request->getRawInput();
 
@@ -170,7 +175,11 @@ class MFJenisFlute extends BaseController
 		return $this->response->setJSON($response);
 	}
 
-	public function delete($id)
+    /**
+     * @param $id
+     * @return RedirectResponse
+     */
+    public function delete($id): RedirectResponse
 	{
 		if ($this->model->deleteById($id)) {
 			return redirect()->back()
@@ -181,7 +190,10 @@ class MFJenisFlute extends BaseController
 			->with('error', 'Data gagal dihapus');
 	}
 
-    public function getSelectOptions()
+    /**
+     * @return ResponseInterface
+     */
+    public function getSelectOptions(): ResponseInterface
     {
         $query = $this->model->getMFJenisFlute();
 

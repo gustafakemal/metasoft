@@ -47,10 +47,19 @@ class Authentication
         //     return false;
         // }
 
+        $db = \Config\Database::connect();
+        $niks = $db->query("select * from MF_ModulMapPriv where nik='" . $UserID . "'");
+        $modul_ids = array_map(function ($item) {
+            return $item->modul_id;
+        }, $niks->getResult());
+        $modul_ids = implode(', ', $modul_ids);
+        $query = $db->query("select a.id, a.display, a.parent, a.menu_icon, a.route, a.dependant_routes, a.site, a.active, b.method, b.path, b.src from MF_ModulDef a left join MF_ModulRoutes b on a.route = b.name where a.id in (". $modul_ids . ")");
+
         $session = session();
-        $session->regenerate();
+        //$session->regenerate();
         $session->set('UserID', $UserID);
         $session->set('UserName', $UserName);
+        $session->set('priv', $query->getResult());
 
         return [
             'isValid' => $isValid,

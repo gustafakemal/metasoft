@@ -137,6 +137,9 @@
     <?php if (url_is('master/destination*')) : ?>
         <script src="<?= site_url('js/mftujuankirim.js'); ?>"></script>
     <?php endif; ?>
+    <?php if (url_is('setting*')) : ?>
+        <script src="<?= site_url('js/setting.js'); ?>"></script>
+    <?php endif; ?>
     <script src="<?= site_url('js/custom.js'); ?>"></script>
     <!-- -->
 

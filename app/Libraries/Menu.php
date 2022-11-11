@@ -158,6 +158,7 @@ class Menu
             '<div id="dropdown-setting" class="collapse' . $collapse_show . '" data-parent="#mainmenu">' .
             '<ul class="">' .
             '<li class="' . $class_active .'"><a href="' . site_url('setting/modul') . '">Modul</a></li>' .
+            '<li class="' . $class_active .'"><a href="' . site_url('setting/routes') . '">Routes</a></li>' .
             '</ul>' .
             '</div>' .
             '</li>';

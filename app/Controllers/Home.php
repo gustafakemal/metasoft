@@ -12,12 +12,9 @@ class Home extends BaseController
         //dd(session()->get('priv'));
     	$this->breadcrumbs->add('Dashbor', '/');
 
-        $menu = new \App\Libraries\Menu();
+        $this->views['page_title'] = 'Dashboard';
+        $this->views['breadcrumbs'] = $this->breadcrumbs->render();
 
-        return view('Home/main', [
-            'main_menu' => $menu->render(),
-        	'page_title' => 'Dashbor',
-            'breadcrumbs' => $this->breadcrumbs->render(),
-        ]);
+        return view('Home/main', $this->views);
     }
 }

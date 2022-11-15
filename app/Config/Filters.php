@@ -25,6 +25,7 @@ class Filters extends BaseConfig
         'secureheaders' => SecureHeaders::class,
         'login' => \App\Filters\LoginFilter::class,
         'guest' => \App\Filters\GuestFilter::class,
+        'restricted' => \App\Filters\RestrictedFilter::class,
     ];
 
     /**
@@ -67,6 +68,7 @@ class Filters extends BaseConfig
      * @var array
      */
     public $filters = [
+        'restricted' => [],
         'guest' => [
             'before' => [
                 'login'
@@ -75,19 +77,7 @@ class Filters extends BaseConfig
         'login' => [
             'before' => [
                 '/',
-                'customer',
-                'sales',
-                'mftujuankirim',
-                'mfproduk',
-                'mfproduk/*',
-                'mfpartproduk',
-                'partproduk/*',
-                'mfjeniskertas',
-                'mfjenistinta',
-                'mfjenisflute',
-                'mfprosesfinishing',
-                'mfprosesmanual',
-                'mfproseskhusus',
+                'logout'
             ]
         ],
     ];

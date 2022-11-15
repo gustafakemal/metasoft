@@ -237,7 +237,7 @@
         <script src="<?= site_url('js/bs-custom-file-input.min.js'); ?>"></script>
         <script src="<?= site_url('js/mfproduk.js'); ?>"></script>
     <?php endif; ?>
-    <?php if (url_is('master/customer*')) : ?>
+    <?php if (url_is('customer*')) : ?>
         <script src="<?= site_url('js/customer.js'); ?>"></script>
     <?php endif; ?>
     <?php if (url_is('master/sales*')) : ?>

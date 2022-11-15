@@ -142,7 +142,7 @@ $(function () {
 		const noPemesan = $(this).attr('data-id')
 		$.ajax({
 			type: "GET",
-			url: `${HOST}/api/master/customer/${noPemesan}?modified=yes`,
+			url: `${HOST}/pelanggan/api/${noPemesan}?modified=yes`,
 			dataType: 'JSON',
 			beforeSend: function () {},
 			success: function (response) {
@@ -171,7 +171,7 @@ $(function () {
 
 		$.ajax({
 			type: "GET",
-			url: `${HOST}/api/master/customer/${noPemesan}`,
+			url: `${HOST}/customer/api/${noPemesan}`,
 			dataType: 'JSON',
 			beforeSend: function () {},
 			success: function (response) {
@@ -288,7 +288,7 @@ function getAllCustomers(obj)
 {
 	$.ajax({
 		type: "GET",
-		url: `${HOST}/api/master/customer`,
+		url: `${HOST}/customer/api`,
 		beforeSend: obj.beforeSend,
 		success: obj.success,
 		error: obj.error,

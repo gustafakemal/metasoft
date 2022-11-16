@@ -13,11 +13,15 @@ class Home extends BaseController
     {
         //dd(Services::Routes()->getRoutes('edit'));
 
-        $def = new \App\Libraries\AccessDefinition('pelanggan', 3);
-//        $filt = array_filter($def->availableRoutes(), function ($item) {
-//            return preg_match('/(^pelanggan\/add|^pelanggan\/edit)/', $item);
-//        }, ARRAY_FILTER_USE_KEY);
-        dd($def->write());
+        //$def = new \App\Libraries\AccessDefinition('pelanggan', 1);
+        //dd($def->get());
+
+        //$priv = new \App\Libraries\Priviledge();
+        //dd($priv->resticted());
+        //dd($priv->get());
+
+//        $filters = new \Config\Filters();
+//        dd($filters->filters);
 
     	$this->breadcrumbs->add('Dashbor', '/');
 

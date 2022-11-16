@@ -240,7 +240,7 @@
     <?php if (url_is('customer*')) : ?>
         <script src="<?= site_url('js/customer.js'); ?>"></script>
     <?php endif; ?>
-    <?php if (url_is('master/sales*')) : ?>
+    <?php if (url_is('sales*')) : ?>
         <script src="<?= site_url('js/sales.js'); ?>"></script>
     <?php endif; ?>
     <?php if (url_is('master/kertas*')) : ?>

@@ -104,7 +104,7 @@ $(function () {
 
 		$.ajax({
 			type: "POST",
-			url: `${HOST}/api/master/sales`,
+			url: `${HOST}/sales/add/api`,
 			dataType: 'JSON',
 			data: formData,
 			contentType: false,
@@ -146,7 +146,7 @@ $(function () {
 		const id = $(this).attr('data-id')
 		$.ajax({
 			type: "GET",
-			url: `${HOST}/api/master/sales/${id}?modified=yes`,
+			url: `${HOST}/sales/api/${id}?modified=yes`,
 			dataType: 'JSON',
 			beforeSend: function () {},
 			success: function (response) {
@@ -231,7 +231,7 @@ $(function () {
 		};
 		$.ajax({
 			type: "PUT",
-			url: `${HOST}/api/master/sales`,
+			url: `${HOST}/sales/edit/api`,
 			headers: {'Content-Type': 'application/x-www-form-urlencoded'},
 			contentType: 'application/x-www-form-urlencoded; charset=utf-8',
 			dataType: 'JSON',
@@ -263,7 +263,7 @@ $(function () {
 
 		$.ajax({
 			type: "POST",
-			url: `${HOST}/api/master/sales`,
+			url: `${HOST}/sales/edit/api`,
 			dataType: 'JSON',
 			data: formData,
 			processData: false,
@@ -327,7 +327,7 @@ function getAllData(obj)
 {
 	$.ajax({
 		type: "GET",
-		url: `${HOST}/api/master/sales`,
+		url: `${HOST}/sales/api`,
 		beforeSend: obj.beforeSend,
 		success: obj.success,
 		error: obj.error,

@@ -6,21 +6,33 @@ use Config\Services;
 
 class AccessDefinition
 {
-    private $modul_name;
+    private $route;
     private $access_level;
 
+    /**
+     * READ access pattern
+     */
     private const READ = '/(^%s$|^%s\/api)/';
+
+    /**
+     * WRITE access pattern
+     */
     private const WRITE = '/(^%1$s\/add|^%2$s\/edit)/';
 
-    public function __construct(string $modul_name, int $access_level)
-    {
-        $this->modul_name = $modul_name;
-        $this->access_level = $access_level;
-    }
+    /**
+     * DELETE access pattern
+     */
+    private const DELETE = '/^%1$s\/delete/';
 
-    public function formula()
-    {
+//    public function __construct(string $route, int $access_level)
+//    {
+//        $this->route = $route;
+//        $this->access_level = $access_level;
+//    }
 
+    public function get()
+    {
+        return $this->formula();
     }
 
     public function availableRoutes()
@@ -36,32 +48,68 @@ class AccessDefinition
 
     public function modulRoutes()
     {
-        $modul_name = $this->modul_name;
-        return array_filter($this->availableRoutes(), function ($item) use ($modul_name) {
-            return preg_match('/^' . $modul_name . '/', $item);
-        }, ARRAY_FILTER_USE_KEY);
+        $pattern = '/^' . $this->route . '/';
+        return $this->filter($pattern);
     }
 
     public function read()
     {
-        return $this->filter('/(^' . $this->modul_name . '$|^' . $this->modul_name . '\/api)/');
+        $pattern = sprintf(self::READ, $this->route, $this->route);
+        return $this->filter($pattern);
     }
 
     public function write()
     {
-        $pattern = sprintf(self::WRITE, $this->modul_name, $this->modul_name);
+        $pattern = sprintf(self::WRITE, $this->route, $this->route);
         return $this->filter($pattern);
     }
 
     public function delete()
     {
-        return $this->filter('/^' . $this->modul_name . '\/delete)/');
+        $pattern = sprintf(self::DELETE, $this->route);
+        return $this->filter($pattern);
     }
 
-    public function filter($pattern)
+    private function formula()
+    {
+        switch ($this->access_level) {
+            case 1:
+                $user_access = $this->read();
+                break;
+            case 2:
+                $user_access = array_merge($this->read(), $this->write());
+                break;
+            case 3:
+                $user_access = array_merge($this->read(), $this->write(), $this->delete());
+                break;
+            default:
+                $user_access = [];
+                break;
+        }
+
+        return $user_access;
+    }
+
+    private function filter($pattern)
     {
         return array_filter($this->availableRoutes(), function ($item) use ($pattern) {
             return preg_match($pattern, $item);
         }, ARRAY_FILTER_USE_KEY);
+    }
+
+    /**
+     * @param mixed $route
+     */
+    public function setRoute($route): void
+    {
+        $this->route = $route;
+    }
+
+    /**
+     * @param mixed $access_level
+     */
+    public function setAccessLevel($access_level): void
+    {
+        $this->access_level = $access_level;
     }
 }

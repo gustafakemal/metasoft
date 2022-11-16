@@ -11,7 +11,7 @@ class Home extends BaseController
      */
     public function index(): string
     {
-        //dd(Services::Routes()->getRoutes('edit'));
+        //dd(session()->get('priv'));
 
         //$def = new \App\Libraries\AccessDefinition('pelanggan', 1);
         //dd($def->get());
@@ -22,6 +22,11 @@ class Home extends BaseController
 
 //        $filters = new \Config\Filters();
 //        dd($filters->filters);
+
+        $menu = new \App\Libraries\Menu();
+        //dd($menu->rootLevel());
+
+
 
     	$this->breadcrumbs->add('Dashbor', '/');
 

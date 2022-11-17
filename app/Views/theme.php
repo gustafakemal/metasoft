@@ -51,137 +51,9 @@
         </header>
 
         <div class="sidebar">
-        <ul class="main-menu accordion" id="mainmenu">
-  <li class="<?= (url_is(base_url()) || url_is('home') || url_is('')) ? 'active' : '' ?>">
-      <a href="<?= site_url() ?>">
-          <div class="icon">
-            <i class="fas fa-home"></i>
-          </div>
-          <div class="caption">Dashbor
-          </div>
-      </a>
-  </li>
-  <li class="<?= url_is('master/customer*') ? 'active' : '' ?>">
-    <a href="<?= site_url('master/customer');?>">
-          <div class="icon">
-            <i class="fas fa-user-circle"></i>
-          </div>
-          <div class="caption">
-            Data Pelanggan
-          </div>
-    </a>
-  </li>
-  <li class="<?= url_is('master/sales*') ? 'active' : '' ?>">
-    <a href="<?= site_url('master/sales');?>">
-      <div class="icon">
-            <i class="fas fa-handshake"></i>
-          </div>
-          <div class="caption">
-            Data Sales
-          </div>
-    </a>
-  </li>
-  <li class="<?= url_is('master/destination*') ? 'active' : '' ?>">
-    <a href="<?= site_url('master/destination');?>">
-        
-        <div class="icon">
-            <i class="fas fa-car-alt"></i>
-          </div>
-          <div class="caption">
-            Tujuan Kirim
-          </div>
-    </a>
-    </li>
-    <li>
-      <a class="<?= url_is('mfproduk') ? '' : 'collapsed';?>" href="#" data-toggle="collapse" data-target="#dropdown-mf"
-          aria-expanded="<?= url_is('mfproduk') ? 'true' : 'false'; ?>">
-          
-          <div class="icon">
-            <i class="fas fa-flushed"></i>
-          </div>
-          <div class="caption">
-            Meta Fold
-          </div>
-      </a>
-      <div id="dropdown-mf" class="collapse<?= (url_is('mfproduk') || url_is('mfproduk/*') || url_is('MFProduk') || url_is('MFProduk/*') || url_is('mfpartproduk') || url_is('partproduk') || url_is('partproduk/*')) ? ' show' : '';?>"
-          data-parent="#mainmenu">
-          <ul class="">
-              
-              <li class="<?= (url_is('mfproduk') || url_is('mfproduk/*') || url_is('MFProduk') || url_is('MFProduk/*')) ? 'active' : '';?>">
-              <a href="<?= site_url('mfproduk');?>">
-                    <i class="fas fa-arrow-circle-right text-dark"></i> Data Produk
-                </a>
-              </li>
 
-              <li class="<?= (url_is('mfpartproduk') || url_is('partproduk/*')) ? 'active' : '';?>">
-                  <a href="<?= site_url('mfpartproduk');?>">
-                      <i class="fas fa-arrow-circle-right text-dark"></i> Data Part Produk
-                  </a>
-              </li>
-              
-              
-          </ul>
-      </div>
-  </li>
-  <li>
-      <a class="<?= (url_is('master/kertas*') || url_is('master/tinta*') || url_is('master/flute*') || url_is('master/finishing*') || url_is('master/manual*') || url_is('master/khusus*')) ? '' : 'collapsed';?>" href="#" data-toggle="collapse" data-target="#dropdown-mfmaster"
-          aria-expanded="<?= (url_is('master*')) ? 'true' : 'false'; ?>">
-          <div class="icon">
-            <i class="fas fa-envelope"></i>
-          </div>
-          <div class="caption">
-            Data Meta Fold
-          </div>
-      </a>
-      <div id="dropdown-mfmaster" class="collapse<?= (url_is('master/kertas*') || url_is('master/tinta*') || url_is('master/flute*') || url_is('master/finishing*') || url_is('master/manual*') || url_is('master/khusus*')) ? ' show' : '';?>"
-          data-parent="#mainmenu">
-          <ul class="">
-              
-              <li class="<?= (url_is('master/kertas*')) ? 'active' : '';?>">
-              <a href="<?= site_url('master/kertas');?>">
-                    <i class="fas fa-arrow-circle-right"></i> Jenis Kertas
-                </a>
-              </li>
-              <li class="<?= (url_is('master/tinta*')) ? 'active' : '';?>">
-              <a href="<?= site_url('master/tinta');?>">
-                    <i class="fas fa-arrow-circle-right"></i> Jenis Tinta
-                </a>
-              </li>
-              <li class="<?= (url_is('master/flute*')) ? 'active' : '';?>">
-              <a href="<?= site_url('master/flute');?>">
-                    <i class="fas fa-arrow-circle-right"></i> Jenis Flute
-                </a>
-              </li>
-              <li class="<?= (url_is('master/finishing*')) ? 'active' : '';?>">
-              <a href="<?= site_url('master/finishing');?>">
-                    <i class="fas fa-arrow-circle-right"></i> Proses Finishing
-                </a>
-              </li>
-              <li class="<?= (url_is('master/manual*')) ? 'active' : '';?>">
-              <a href="<?= site_url('master/manual');?>">
-                    <i class="fas fa-arrow-circle-right"></i> Proses Manual
-                </a>
-              </li>
-              <li class="<?= (url_is('master/khusus*')) ? 'active' : '';?>">
-              <a href="<?= site_url('master/khusus');?>">
-                    <i class="fas fa-arrow-circle-right"></i> Proses Khusus
-                </a>
-              </li>
-              
-          </ul>
-      </div>
-  </li>
-  <li>
-      <a href="<?= site_url('logout');?>" onclick="return confirm('Anda yakin untuk Logout?')">
-          <div class="icon">
-            <i class="fas fa-users"></i>
-          </div>
-          <div class="caption">
-            Logout
-          </div>
-      </a>
-  </li>
-</ul>
+            <?= $main_menu;?>
+
         </div>
 
         <div class="content-wrapper">
@@ -263,6 +135,9 @@
     <?php endif; ?>
     <?php if (url_is('master/destination*')) : ?>
         <script src="<?= site_url('js/mftujuankirim.js'); ?>"></script>
+    <?php endif; ?>
+    <?php if (url_is('setting/*')) : ?>
+        <script src="<?= site_url('js/setting.js'); ?>"></script>
     <?php endif; ?>
     <script src="<?= site_url('js/custom.js'); ?>"></script>
     <!-- -->

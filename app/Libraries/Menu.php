@@ -25,15 +25,80 @@ class Menu
 
                 $trackers[] = ($this->modul[$i]->group_menu == null) ? $this->modul[$i]->nama_modul : $this->modul[$i]->group_menu;
 
-                $root[] = [
+                $root[] = (object) [
                     'access' => $this->modul[$i]->access,
                     'nama_modul' => ($this->modul[$i]->group_menu == null) ? $this->modul[$i]->nama_modul : $this->modul[$i]->group_menu,
+                    'icon' => 'fas fa-home',
                     'route' => ($this->modul[$i]->group_menu == null) ? $this->modul[$i]->route : null,
                 ];
             }
         }
 
         return $root;
+    }
+
+    public function items()
+    {
+        $items = [];
+        foreach ($this->rootLevel() as $menu) {
+            if ($menu->route != null) {
+                $item = $this->listItem($menu->route, $menu->icon, $menu->nama_modul);
+            } else {
+                $item = $this->listItemDropdown($menu->nama_modul, $menu->route, $menu->icon, $menu->nama_modul);
+            }
+            $items[] = $item;
+        }
+
+        return implode('', $items);
+    }
+
+    private function listItem($route, $icon, $modul_name)
+    {
+        $active_class = $route && url_is($route) ? 'active' : '';
+        return '<li class="' . $active_class . '">' .
+            '<a href="' . site_url($route ?? '/') . '">' .
+            $this->icon($icon) .
+            $this->caption($modul_name).
+            '</a>' .
+            '</li>';
+    }
+
+    private function listItemDropdown($group_menu, $route, $icon, $modul_name)
+    {
+        $collapsed = $route && url_is($route) ? '' : 'collapsed';
+        $aria_expanded = $route && url_is($route) ? 'true' : 'false';
+        $dropdown_show = $route && (url_is($route) || url_is($route . '/*')) ? ' show' : '';
+
+        $children = [];
+        foreach ($this->child($group_menu) as $item) {
+            $children[] = $this->childItem($item->route, $item->nama_modul);
+        }
+
+        return '<li>' .
+            '<a class="' . $collapsed . '" href="#" data-toggle="collapse" data-target="#dropdown-mf"
+               aria-expanded="' . $aria_expanded . '">' .
+            $this->icon($icon) .
+            $this->caption($modul_name).
+            '</a>' .
+            '<div id="dropdown-mf" class="collapse' . $dropdown_show . '" data-parent="#mainmenu">' .
+            '<ul class="">' .
+            implode('', $children) .
+            '</ul>' .
+            '</div>' .
+            '</li>';
+    }
+
+    public function child($group_menu)
+    {
+        return array_filter($this->modul, function ($item) use ($group_menu) {
+            return $item->group_menu == $group_menu;
+        });
+    }
+
+    private function childItem($route, $modul_name)
+    {
+        $active_class = (url_is('mfproduk') || url_is('mfproduk/*') || url_is('MFProduk') || url_is('MFProduk/*')) ? 'active' : '';
+        return '<li class="' . $active_class .'"><a href="' . site_url($route ?? '/') . '">' . $modul_name . '</a></li>';
     }
 
     public function render()
@@ -43,7 +108,6 @@ class Menu
         return $body .
             $this->dashboard() .
             $this->items() .
-            $this->setting() .
             $this->logout() .
             '</ul>';
     }
@@ -67,61 +131,12 @@ class Menu
         return '<div class="caption">' . $caption . '</div>';
     }
 
-    private function listItem($path, $icon, $display)
-    {
-        $active_class = $path && url_is($path) ? 'active' : '';
-        return '<li class="' . $active_class . '">' .
-            '<a href="' . site_url($path ?? '/') . '">' .
-            $this->icon($icon) .
-            $this->caption($display).
-            '</a>' .
-            '</li>';
-    }
-
-    private function listItemDropdown($id, $path, $icon, $display)
-    {
-        $collapsed = $path && url_is($path) ? '' : 'collapsed';
-        $aria_expanded = $path && url_is($path) ? 'true' : 'false';
-        $dropdown_show = $path && (url_is($path) || url_is($path . '/*')) ? ' show' : '';
-
-        $children = [];
-        foreach ($this->child($id) as $item) {
-            array_push($children, $this->childItem($item->path, $item->display));
-        }
-
-        return '<li>' .
-            '<a class="' . $collapsed . '" href="#" data-toggle="collapse" data-target="#dropdown-mf"
-               aria-expanded="' . $aria_expanded . '">' .
-            $this->icon($icon) .
-            $this->caption($display).
-            '</a>' .
-            '<div id="dropdown-mf" class="collapse' . $dropdown_show . '" data-parent="#mainmenu">' .
-            '<ul class="">' .
-            implode('', $children) .
-            '</ul>' .
-            '</div>' .
-            '</li>';
-    }
-
-    private function childItem($path, $display)
-    {
-        $active_class = (url_is('mfproduk') || url_is('mfproduk/*') || url_is('MFProduk') || url_is('MFProduk/*')) ? 'active' : '';
-        return '<li class="' . $active_class .'"><a href="' . site_url($path ?? '/') . '">' . $display . '</a></li>';
-    }
-
 //    private function parent()
 //    {
 //        return array_filter($this->priviledges, function ($item) {
 //            return $item->parent == 0;
 //        });
 //    }
-
-    private function child($id_prop)
-    {
-        return array_filter($this->modul, function ($item) use ($id_prop) {
-            return $item->parent == $id_prop;
-        });
-    }
 
     private function isNested($id_prop)
     {
@@ -130,21 +145,6 @@ class Menu
         }, $this->modul);
 
         return in_array($id_prop, $priv_mapped);
-    }
-
-    public function items()
-    {
-        $items = [];
-        foreach ($this->parent() as $menu) {
-            if ($this->isNested($menu->id) == 0) {
-                $item = $this->listItem($menu->path, $menu->menu_icon, $menu->display);
-            } else {
-                $item = $this->listItemDropdown($menu->id, $menu->path, $menu->menu_icon, $menu->display);
-            }
-            array_push($items, $item);
-        }
-
-        return implode('', $items);
     }
 
     private function dashboard()
@@ -165,27 +165,6 @@ class Menu
             $this->icon('fas fa-users') .
             $this->caption('Logout') .
             '</a>' .
-            '</li>';
-    }
-
-    private function setting()
-    {
-        $collapsed = url_is('setting') ? '' : 'collapsed';
-        $aria_expanded = url_is('setting') ? "true" : "false";
-        $collapse_show = (url_is('setting') || url_is('setting/*')) ? ' show' : '';
-        $class_active = url_is('setting') ? "active" : "";
-
-        return '<li>' .
-            '<a class="' . $collapsed . '" href="#" data-toggle="collapse" data-target="#dropdown-setting" aria-expanded="' . $aria_expanded . '">' .
-            $this->icon('fas fa-cog') .
-            $this->caption('Setting').
-            '</a>' .
-            '<div id="dropdown-setting" class="collapse' . $collapse_show . '" data-parent="#mainmenu">' .
-            '<ul class="">' .
-            '<li class="' . $class_active .'"><a href="' . site_url('setting/modul') . '">Modul</a></li>' .
-            '<li class="' . $class_active .'"><a href="' . site_url('setting/routes') . '">Routes</a></li>' .
-            '</ul>' .
-            '</div>' .
             '</li>';
     }
 }

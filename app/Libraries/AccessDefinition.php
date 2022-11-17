@@ -102,7 +102,8 @@ class AccessDefinition
      */
     public function setRoute($route): void
     {
-        $this->route = $route;
+        $pattern = str_replace('/', '\/', $route);
+        $this->route = $pattern;
     }
 
     /**

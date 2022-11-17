@@ -123,6 +123,7 @@ $routes->group('setting', static function ($routes) {
     $routes->group('modul', static function ($routes) {
         $routes->get('/', 'Setting::modul');
         $routes->get('api', 'Setting::apiGetModul');
+        $routes->post('add/api', 'Setting::apiAddModul');
     });
 });
 

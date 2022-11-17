@@ -6,10 +6,14 @@ use CodeIgniter\Model;
 
 class SettingModel extends Model
 {
+    public function setModulTbl()
+    {
+        return $this->db->table('MF_Modul');
+    }
+
     public function getModul()
     {
-        $db = $this->db->table('MF_Modul');
-        return $db->orderBy('nama_modul', 'asc')
+        return $this->setModulTbl()->orderBy('nama_modul', 'asc')
                     ->get();
     }
 }

@@ -1,71 +1,65 @@
+import {Datatable} from './libs/Datatable.js'
+
 $(function () {
 
-    let mfJenisKertasData;
-
-    $("#dataList").DataTable({
-        data: mfJenisKertasData,
-        buttons: [{
-            extend: 'excelHtml5',
-            exportOptions: { orthogonal: 'export' }
-        }],
-        columnDefs: [{
-            "searchable": false,
-            "orderable": false,
-            "targets": [0]
+    const config = {
+        columnDefs: {
+            falseSearchable: [0],
+            falseOrderable: [0],
+            width: ['0(30)','4(120)','2(150)','3(90)','5(100)']
         },
-            {
-                "width": 150,
-                "targets": 2
-            }],
-        order: [[ 1, 'desc' ]],
-        createdRow: function (row, data, dataIndex) {
-            $(row).find("td:eq(0)").attr("data-label", "No");
-            $(row).find("td:eq(1)").attr("data-label", "Tanggal dibuat");
-            $(row).find("td:eq(2)").attr("data-label", "Jenis Kertas");
-            $(row).find("td:eq(3)").attr("data-label", "Berat");
-            $(row).find("td:eq(4)").attr("data-label", "Harga");
-            $(row).find("td:eq(5)").attr("data-label", "Action");
-        },
+        createdRow: ['No', 'Nama Modul', 'Route', 'Icon', 'Parent/Group', 'Action'],
         initComplete: function () {
             const add_btn = `<a href="#" class="btn btn-primary btn-add mr-2 add-data_btn">Tambah data</a>`;
             $("#dataList_wrapper .dataTables_length").prepend(add_btn);
         },
-    });
+    }
+    const datatable = new Datatable('#dataList', config, `${HOST}/setting/modul/api`, 'GET')
+    datatable.load()
 
-    setTimeout(() => {
-        const obj = {
+    $('#dataList_wrapper').on('click', '.add-data_btn', function (e) {
+        e.preventDefault();
+        $('#dataForm').modal({
+            show: true,
+            backdrop: true
+        })
+        $('#dataForm form').attr('name', 'addModul');
+    })
+
+    $('#dataForm').on('submit', 'form[name="addModul"]', function (e) {
+        e.preventDefault();
+        const formData = new FormData(this);
+
+        $.ajax({
+            type: 'POST',
+            url: `${HOST}/setting/modul/add/api`,
+            dataType: 'JSON',
+            data: formData,
+            contentType: false,
+            processData: false,
             beforeSend: function () {
-                $('#dataList .dataTables_empty').html('<div class="spinner-icon"><span class="spinner-grow text-info"></span><span class="caption">Fetching data...</span></div>')
+                $('form[name="addModul"] input, form[name="addModul"] textarea, form[name="addModul"] button').attr('disabled', true)
             },
             success: function (response) {
-                $('#dataList').DataTable().clear().rows.add(response).draw();
+                if(response.success) {
+                    location.reload();
+                } else {
+                    $('#dataForm .msg').html(`<div class="alert alert-danger">${response.msg}</div>`)
+                    $('#dataForm, html, body').animate({
+                        scrollTop: 0
+                    }, 500);
+                }
             },
-            error: function () {
-                $('#dataList .dataTables_empty').html('Data gagal di retrieve.')
-            },
-            complete: function() {}
-        }
+            complete: function () {
+                $('form[name="addModul"] input, form[name="addModul"] textarea, form[name="addModul"] button').attr('disabled', false)
+            }
+        })
+    })
 
-        getAllData(obj);
-    }, 50)
-
-    $('#dataList').DataTable().on( 'order.dt search.dt', function () {
-        let i = 1;
-        $('#dataList').DataTable().cells(null, 0, {search:'applied', order:'applied'}).every( function (cell) {
-            this.data(i++);
-        });
-    }).draw();
+    $('#dataForm').on('hidden.bs.modal', function (event) {
+        $('#dataForm form[name="addModul"], #dataForm form[name="editModul"]')[0].reset();
+        $('#dataForm .msg').html('');
+        $('#dataForm form').removeAttr('name');
+    })
 
 });
-
-function getAllData(obj)
-{
-    $.ajax({
-        type: "GET",
-        url: `${HOST}/setting/modul/api`,
-        beforeSend: obj.beforeSend,
-        success: obj.success,
-        error: obj.error,
-        complete: obj.complete
-    })
-}

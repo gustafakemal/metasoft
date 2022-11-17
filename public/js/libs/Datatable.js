@@ -1,25 +1,38 @@
-class Datatable {
-	constructor(element, config, url) {
+export class Datatable {
+	constructor(element, config, url, type, ajaxData = null, stickNumb = true, ajaxCustomSuccess = null) {
 		this.element = element;
 		this.config = config;
 		this.url = url;
+		this.type = type;
+		this.ajaxData = ajaxData;
+		this.stickNumb = stickNumb;
+		this.ajaxCustomSuccess = ajaxCustomSuccess;
 	}
 
 	load() {
 		this.init();
 		this.timeout();
-		this.stickNumbers();
+		if (this.stickNumb) {
+			this.stickNumbers();
+		}
+	}
+
+	reload() {
+		this.timeout();
+		if (this.stickNumb) {
+			this.stickNumbers();
+		}
 	}
 
 	init() {
-		$(`${this.element}`).DataTable( this.configObj() )
+		$(`${this.element}`).DataTable(this.configObj())
 	}
 
-	timeout() {
-		const { url, element } = this;
+	timeout(param_obj = this.ajaxData) {
+		const {url, element, type, ajaxCustomSuccess} = this;
 		setTimeout(() => {
-			$.ajax({
-				type: "POST",
+			const ajaxObj = {
+				type,
 				url,
 				beforeSend: function () {
 					$(`${element} .dataTables_empty`).html(`
@@ -29,26 +42,39 @@ class Datatable {
 												</div>
 											`);
 				},
-				success: function (response) {
-					$(`${element}`).DataTable().clear();
-					$(`${element}`).DataTable().rows.add(response).draw();
-				},
 				error: function () {
 					$(`${element} .dataTables_empty`).html('Data gagal di retrieve.')
 				},
-				complete: function() {}
-			})
+				complete: function () {
+				}
+			};
+
+			if (param_obj != null) {
+				ajaxObj.dataType = "JSON";
+				ajaxObj.data = param_obj;
+			}
+
+			if (ajaxCustomSuccess == null) {
+				ajaxObj.success = function (response) {
+					$(`${element}`).DataTable().clear().rows.add(response).draw()
+				};
+			} else {
+				ajaxObj.success = ajaxCustomSuccess;
+			}
+
+			$.ajax(ajaxObj);
+
 		}, 50);
 	}
 
 	stickNumbers() {
 		const {element} = this;
-		$(`${element}`).DataTable().on( 'order.dt search.dt', function () {
+		$(`${element}`).DataTable().on('order.dt search.dt', function () {
 			let i = 1;
 			$(`${element}`).DataTable().cells(null, 0, {
-				search:'applied',
-				order:'applied'
-			}).every( function (cell) {
+				search: 'applied',
+				order: 'applied'
+			}).every(function (cell) {
 				this.data(i++);
 			});
 		}).draw();
@@ -62,20 +88,9 @@ class Datatable {
 			columnDefs: this.columnDefs(),
 			order: this.order(),
 			createdRow: this.createdRow(),
-			initComplete: function() {
-				const dropdown = `<div class="dropdown d-inline mr-2">` +
-								`<button class="btn btn-primary dropdown-toggle" type="button" id="dtDropdown" data-toggle="dropdown" aria-expanded="false"><i class="fas fa-cog"></i></button>` +
-								`<div class="dropdown-menu" aria-labelledby="dtDropdown">` +
-								`<a class="dropdown-item data-reload" href="#">Reload data</a>` +
-								`<a class="dropdown-item data-to-csv" href="#">Export to excel</a>` +
-							`</div>` +
-						`</div>`
-				const add_btn = `<a href="#" class="btn btn-primary btn-add mr-2 add-data_btn">Tambah data</a>`;
-				$(`${element}_wrapper .dataTables_length`).prepend(dropdown + add_btn);
-			}
 		};
 
-		if( this.config.hasOwnProperty('initComplete')) {
+		if (this.config.hasOwnProperty('initComplete')) {
 			obj.initComplete = this.config.initComplete
 		}
 
@@ -98,40 +113,43 @@ class Datatable {
 
 	columnDefs() {
 		let mainSettings = [{
-				"searchable": false,
-				"targets": [0]
-			},
-			{	
+			"searchable": false,
+			"targets": []
+		},
+			{
 				"orderable": false,
-				"targets": [0]
+				"targets": []
 			}]
-		if( this.config.hasOwnProperty('columnDefs') ) {
-			if(this.config.columnDefs.hasOwnProperty('falseSearchable')) {
+		if (this.config.hasOwnProperty('columnDefs')) {
+			if (this.config.columnDefs.hasOwnProperty('falseSearchable')) {
 				mainSettings[0].targets = this.config.columnDefs.falseSearchable;
 			}
-			if(this.config.columnDefs.hasOwnProperty('falseOrderable')) {
+			if (this.config.columnDefs.hasOwnProperty('falseOrderable')) {
 				mainSettings[1].targets = this.config.columnDefs.falseOrderable;
 			}
-			if(this.config.columnDefs.hasOwnProperty('width')) {
+			if (this.config.columnDefs.hasOwnProperty('width')) {
 				let widths = [];
-				for(const property in this.config.columnDefs.width) {
-					const target = property.split('-')
+				for (const property in this.config.columnDefs.width) {
+					// ambil string diluar parenthesis
+					const width_props = /\(([^)]+)\)/.exec(this.config.columnDefs.width[property])
+					// ambil kuota masing2 array def
+					const targets_props = /([^\(]+)/.exec(this.config.columnDefs.width[property])
 					const width = {
-						"width": this.config.columnDefs.width[property],
-						"targets": parseInt(target[1])
+						"width": parseInt(width_props[1]),
+						"targets": parseInt(targets_props[1])
 					};
 					widths.push(width);
 				}
 				mainSettings = [...mainSettings, ...widths];
 			}
-			if(this.config.columnDefs.hasOwnProperty('falseVisibility')) {
+			if (this.config.columnDefs.hasOwnProperty('falseVisibility')) {
 				const visibility = {
 					"visible": false,
 					"targets": this.config.columnDefs.falseVisibility
 				}
 				mainSettings.push(visibility);
 			}
-			if(this.config.columnDefs.hasOwnProperty('custom')) {
+			if (this.config.columnDefs.hasOwnProperty('custom')) {
 				mainSettings = [...mainSettings, ...this.config.columnDefs.custom];
 			}
 		}
@@ -140,20 +158,20 @@ class Datatable {
 	}
 
 	buttons() {
-		if( ! this.config.hasOwnProperty('buttons') ) {
+		if (!this.config.hasOwnProperty('buttons')) {
 			return [{
-						extend: 'excelHtml5',
-						exportOptions: {
-							orthogonal: 'export'
-						}
-					}]
+				extend: 'excelHtml5',
+				exportOptions: {
+					orthogonal: 'export'
+				}
+			}]
 		}
 
 		return this.config.buttons
 	}
 
 	order() {
-		if( ! this.config.hasOwnProperty('order') ) {
+		if (!this.config.hasOwnProperty('order')) {
 			return [[1, 'desc']];
 		}
 

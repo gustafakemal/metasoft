@@ -27,6 +27,7 @@ class Customer extends BaseController
         return view('Customer/main', [
         	'page_title' => 'Data Pelanggan',
             'breadcrumbs' => $this->breadcrumbs->render(),
+            'main_menu' => (new \App\Libraries\Menu())->render()
         ]);
     }
 

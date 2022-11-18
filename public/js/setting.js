@@ -24,7 +24,16 @@ $(function () {
             backdrop: true
         })
         $('#dataForm form').attr('name', 'addModul');
+        $('#dataForm .modal-title').html('Tambah modul');
     })
+        .on('click', '.item-edit', function (e) {
+            e.preventDefault();
+            const id = $(this).attr('data-id');
+
+            $.get(`${HOST}/setting/modul/${id}`, function (data) {
+                console.log(data)
+            })
+        })
 
     $('#dataForm').on('submit', 'form[name="addModul"]', function (e) {
         e.preventDefault();

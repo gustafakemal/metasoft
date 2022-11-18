@@ -12,6 +12,7 @@ class Setting extends BaseController
     {
         $this->model = new SettingModel();
     }
+
     public function modul()
     {
         $this->breadcrumbs->add('Dashbor', '/');
@@ -31,7 +32,7 @@ class Setting extends BaseController
         foreach ($query->getResult() as $key => $value) {
 
             $detail = '<a class="btn btn-primary btn-sm item-detail mr-1" href="#" data-id="" title="Detail"><i class="far fa-file-alt"></i></a>';
-            $edit = '<a class="btn btn-success btn-sm item-edit mr-1" href="#" title="Edit"><i class="far fa-edit"></i></a>';
+            $edit = '<a data-id="' . $value->id . '" class="btn btn-success btn-sm item-edit mr-1" href="#" title="Edit"><i class="far fa-edit"></i></a>';
             $hapus = '<a class="btn btn-danger btn-sm" href="' . site_url('mfjenisflute/delete/' . $value->id) . '" data-id="' . $value->id . '" onclick="return confirm(\'Apa Anda yakin menghapus data ini?\')" title="Hapus"><i class="fas fa-trash-alt"></i></a>';
 
             $data[] = [
@@ -47,13 +48,15 @@ class Setting extends BaseController
         return $this->response->setJSON($data);
     }
 
+    public function apiGetModulById() {}
+
     public function apiAddModul()
     {
         $request = $this->request->getPost();
 
         unset($request['id']);
 
-        $tbl = $this->model->setModulTbl();
+        $this->model->setTable('MF_Modul');
         $this->model->setAllowedFields(['nama_modul', 'route', 'icon', 'group_menu']);
 
         $rules = [
@@ -71,7 +74,7 @@ class Setting extends BaseController
         ];
         $this->model->setValidationMessages($messages);
 
-        if($tbl->insert($request)) {
+        if($this->model->insert($request)) {
             $response = [
                 'success' => true,
                 'msg' => 'Modul ' . $request['nama_modul'] . ' berhasil ditambahkan.'

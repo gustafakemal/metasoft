@@ -12,6 +12,11 @@ class UsersModel extends Model
     protected $validationRules = [];
     protected $validationMessages = [];
 
+    public function getAll()
+    {
+        return $this->asObject()->findAll();
+    }
+
     /**
      * @param $UserID
      * @return \CodeIgniter\Database\ResultInterface|false|string

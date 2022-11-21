@@ -69,18 +69,20 @@ class Menu
         $aria_expanded = $route && url_is($route) ? 'true' : 'false';
         $dropdown_show = $route && (url_is($route) || url_is($route . '/*')) ? ' show' : '';
 
+        $data_target = "dropdown-" . str_replace(' ', '', $modul_name);
+
         $children = [];
         foreach ($this->child($group_menu) as $item) {
             $children[] = $this->childItem($item->route, $item->nama_modul);
         }
 
         return '<li>' .
-            '<a class="' . $collapsed . '" href="#" data-toggle="collapse" data-target="#dropdown-mf"
+            '<a class="' . $collapsed . '" href="#" data-toggle="collapse" data-target="#' . $data_target . '"
                aria-expanded="' . $aria_expanded . '">' .
             $this->icon($icon) .
             $this->caption($modul_name).
             '</a>' .
-            '<div id="dropdown-mf" class="collapse' . $dropdown_show . '" data-parent="#mainmenu">' .
+            '<div id="' . $data_target . '" class="collapse' . $dropdown_show . '" data-parent="#mainmenu">' .
             '<ul class="">' .
             implode('', $children) .
             '</ul>' .

@@ -126,6 +126,13 @@ $routes->group('setting', static function ($routes) {
         $routes->get('api/(:num)', 'Setting::apiGetModulById/$1');
         $routes->post('add/api', 'Setting::apiAddModul');
     });
+    $routes->group('hakakses', static function ($routes) {
+        $routes->get('/', 'Setting::accessright');
+        $routes->get('api', 'Setting::apiGetAccessRight');
+        $routes->get('api/(:any)', 'Setting::modulAccess/$1');
+        $routes->post('edit/api', 'Setting::updateAccess');
+//        $routes->post('add/api', 'Setting::apiAddModul');
+    });
 });
 
 $routes->group('produk', static function ($routes) {

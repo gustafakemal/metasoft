@@ -99,4 +99,101 @@ class Setting extends BaseController
             'main_menu' => (new \App\Libraries\Menu())->render()
         ]);
     }
+
+    public function apiGetAccessRight()
+    {
+        $query = (new \App\Models\UsersModel())->getAll();
+
+        $data = [];
+        foreach ($query as $key => $value) {
+
+            $detail = '<a class="btn btn-primary btn-block btn-sm user-access" href="#" data-uid="' . $value->UserID . '" data-nama="' . $value->Nama . '" title="Hak Akses"><i class="fas fa-lock"></i> set akses</a>';
+
+            $data[] = [
+                $key + 1,
+                $value->UserID,
+                $value->Nama,
+                $value->NIK,
+                $detail
+            ];
+        }
+
+        return $this->response->setJSON($data);
+    }
+
+    public function modulAccess($UserID)
+    {
+        $query = $this->model->getModul();
+
+        $data = [];
+        foreach ($query->getResult() as $key => $value) {
+
+            $access = $this->model->modulAccess($value->id, $UserID);
+
+            $read = ($access > 0) ? '<input value="' . $UserID . '_' . $value->id.'_1" type="checkbox" class="access_check" checked />' : '<input value="' . $UserID . '_' . $value->id.'_1" type="checkbox" class="access_check" />';
+            $readWrite = ($access > 1) ? '<input value="' . $UserID . '_' . $value->id.'_2" class="access_check" type="checkbox" checked />' : '<input type="checkbox" class="access_check" value="' . $UserID . '_' . $value->id.'_2" />';
+            $rwd = ($access > 2) ? '<input class="access_check" type="checkbox" value="' . $UserID . '_' . $value->id.'_3" checked />' : '<input class="access_check" type="checkbox" value="' . $UserID . '_' . $value->id.'_3" />';
+
+            $data[] = [
+                $key + 1,
+                $value->nama_modul,
+                $read,
+                $readWrite,
+                $rwd
+            ];
+        }
+
+        return $this->response->setJSON($data);
+    }
+
+    public function updateAccess()
+    {
+        $request = $this->request->getPost();
+//        [$uid, $modul, $access, $checked] = $request;
+        $modul = $request['modul'];
+        $uid = $request['uid'];
+        $access = $request['access'];
+        $checked = $request['checked'];
+
+        $query = $this->model->getAccess($uid, $modul);
+
+        if( $checked ) {
+            if($query->getNumRows() == 0) {
+                $insertAccess = $this->model->insertAccess([
+                    'nik' => $uid,
+                    'modul' => $modul,
+                    'access' => $access,
+                ]);
+                return $this->response->setJSON([
+                    'success' => $insertAccess,
+                ]);
+            }
+
+            if( $query->getNumRows() > 0 ) {
+                $updateAccess = $this->model->updateAccess($uid, $modul, [
+                    'access' => $access,
+                ]);
+                return $this->response->setJSON([
+                    'success' => $updateAccess,
+                ]);
+            }
+        } else {
+
+            if( $access > 1 ) {
+                $access -= 1;
+                $updateAccess = $this->model->updateAccess($uid, $modul, [
+                    'access' => $access,
+                ]);
+                return $this->response->setJSON([
+                    'success' => $updateAccess,
+                ]);
+            } else {
+                $deleteAccess = $this->model->deleteAccess($uid, $modul);
+                return $this->response->setJSON([
+                    'success' => $deleteAccess,
+                ]);
+            }
+
+        }
+    }
 }

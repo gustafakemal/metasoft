@@ -71,4 +71,72 @@ $(function () {
         $('#dataForm form').removeAttr('name');
     })
 
+    const config2 = {
+        columnDefs: {
+            falseSearchable: [0],
+            falseOrderable: [0],
+            width: ['0(30)','1(130)','3(120)','4(100)']
+        },
+        createdRow: ['No', 'Nama Modul', 'Route', 'Icon', 'Action'],
+    }
+    const datatable2 = new Datatable('#dataAccessRight', config2, `${HOST}/setting/hakakses/api`, 'GET')
+    datatable2.load()
+
+    let datatable3;
+    $('#dataAccessRight').on('click', '.user-access', function (e) {
+        e.preventDefault();
+        $('#modalUserAccess').modal({
+            show: true,
+            backdrop: true
+        })
+        const uid = $(this).attr('data-uid')
+
+        $('span.uid').html(uid)
+        $('span.nama_peg').html($(this).attr('data-nama'))
+
+        const config3 = {
+            columnDefs: {
+                falseSearchable: [0, 2, 3, 4],
+                falseOrderable: [0, 2, 3, 4],
+                width: ['0(30)', '2(40)','3(40)','4(40)']
+            },
+            createdRow: ['No', 'Nama Modul', 'R', 'R/W', 'R/W/D'],
+        }
+        datatable3 = new Datatable('#modulPriv', config3, `${HOST}/setting/hakakses/api/${uid}`, 'GET')
+        datatable3.load()
+    })
+
+    $("#modalUserAccess").on("hidden.bs.modal", function () {
+        $("#modulPriv").DataTable().destroy();
+        $('span.uid').html('')
+        $('span.nama_peg').html('')
+    });
+
+    $('#modulPriv').on('click', '.access_check', function (e) {
+        const arr_value = $(this).val().split('_')
+        const uid = arr_value[0]
+        const modul = parseInt(arr_value[1])
+        const access = parseInt(arr_value[2])
+
+        const data = { uid, modul, access, checked: $(this).prop('checked') }
+
+        $.ajax({
+            type: 'POST',
+            url: `${HOST}/setting/hakakses/edit/api`,
+            dataType: 'JSON',
+            data: data,
+            beforeSend: function () {
+                $('#modulPriv input[type="checkbox"]').prop('disabled', true)
+            },
+            success: function (response) {
+                if(response.success) {
+                    datatable3.reload()
+                }
+            },
+            complete: function (response) {
+                $('#modulPriv input[type="checkbox"]').prop('disabled', false)
+            }
+        })
+    })
+
 });

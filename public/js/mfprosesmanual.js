@@ -302,7 +302,7 @@ function getAllData(obj)
 {
 	$.ajax({
 		type: "GET",
-		url: `${HOST}/api/master/manual`,
+		url: `${HOST}/prosesmanual/api`,
 		beforeSend: obj.beforeSend,
 		success: obj.success,
 		error: obj.error,

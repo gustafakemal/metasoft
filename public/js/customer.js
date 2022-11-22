@@ -288,7 +288,7 @@ function getAllCustomers(obj)
 {
 	$.ajax({
 		type: "GET",
-		url: `${HOST}/customer/api`,
+		url: `${HOST}/pelanggan/api`,
 		beforeSend: obj.beforeSend,
 		success: obj.success,
 		error: obj.error,

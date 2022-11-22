@@ -137,7 +137,7 @@ $(function () {
         $('#modulPriv_wrapper').remove();
         $('span.uid').html('')
         $('span.nama_peg').html('')
-        $("#modalUserAccess .modal-body").append('<table id="modulPriv" class="table table-bordered table-striped" style="width: 100%">\n' +
+        $("#modalUserAccess .modal-body .tbl-modul").html('<table id="modulPriv" class="table table-bordered table-striped" style="width: 100%">\n' +
             '                            <thead>\n' +
             '                            <tr>\n' +
             '                                <th>No</th>\n' +

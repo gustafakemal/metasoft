@@ -93,7 +93,7 @@ $(function () {
 
 		$.ajax({
 			type: "POST",
-			url: `${HOST}/api/master/flute`,
+			url: `${HOST}/jenisflute/add/api`,
 			dataType: 'JSON',
 			data: formData,
 			contentType: false,
@@ -135,7 +135,7 @@ $(function () {
 		const id = $(this).attr('data-id')
 		$.ajax({
 			type: "GET",
-			url: `${HOST}/api/master/flute/${id}?modified=yes`,
+			url: `${HOST}/jenisflute/api/${id}?modified=yes`,
 			dataType: 'JSON',
 			beforeSend: function () {},
 			success: function (response) {
@@ -296,7 +296,7 @@ function getAllData(obj)
 	
 	$.ajax({
 		type: "GET",
-		url: `${HOST}/api/master/flute`,
+		url: `${HOST}/jenisflute/api`,
 		beforeSend: obj.beforeSend,
 		success: obj.success,
 		error: obj.error,

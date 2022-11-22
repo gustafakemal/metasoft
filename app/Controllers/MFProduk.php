@@ -40,7 +40,8 @@ class MFProduk extends BaseController
 		return view('MFProduk/input', [
 			'page_title' => 'Data Produk MF',
 			'breadcrumbs' => $this->breadcrumbs->render(),
-            'query_string' => $query_string
+            'query_string' => $query_string,
+            'main_menu' => (new \App\Libraries\Menu())->render()
 		]);
 	}
 
@@ -59,6 +60,7 @@ class MFProduk extends BaseController
             'page_title' => 'Edit Produk MF',
             'breadcrumbs' => $this->breadcrumbs->render(),
             'data' => $data[0],
+            'main_menu' => (new \App\Libraries\Menu())->render()
         ]);
     }
 

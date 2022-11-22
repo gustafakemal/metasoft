@@ -27,6 +27,7 @@ class MFProsesKhusus extends BaseController
 		return view('MFProsesKhusus/main', [
 			'page_title' => 'Data Proses Khusus MF',
 			'breadcrumbs' => $this->breadcrumbs->render(),
+            'main_menu' => (new \App\Libraries\Menu())->render()
 		]);
 	}
 

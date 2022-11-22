@@ -34,6 +34,7 @@ class MFPartProduk extends BaseController
 		return view('MFPartProduk/cari', [
 			'page_title' => 'Data Part Produk MF',
             'breadcrumbs' => $this->breadcrumbs->render(),
+            'main_menu' => (new \App\Libraries\Menu())->render()
 		]);
 	}
 

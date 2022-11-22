@@ -27,6 +27,7 @@ class MFTujuanKirim extends BaseController
 		return view('MFTujuanKirim/main', [
 			'page_title' => 'Data Tujuan Kirim',
 			'breadcrumbs' => $this->breadcrumbs->render(),
+            'main_menu' => (new \App\Libraries\Menu())->render()
 		]);
 	}
 

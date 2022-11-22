@@ -27,6 +27,7 @@ class MFProsesManual extends BaseController
 		return view('MFProsesManual/main', [
 			'page_title' => 'Data Proses Manual MF',
 			'breadcrumbs' => $this->breadcrumbs->render(),
+            'main_menu' => (new \App\Libraries\Menu())->render()
 		]);
 	}
 

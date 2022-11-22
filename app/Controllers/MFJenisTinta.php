@@ -29,6 +29,7 @@ class MFJenisTinta extends BaseController
 		return view('MFJenisTinta/main', [
 			'page_title' => 'Data Jenis Tinta MF',
             'breadcrumbs' => $this->breadcrumbs->render(),
+            'main_menu' => (new \App\Libraries\Menu())->render()
 		]);
 	}
 

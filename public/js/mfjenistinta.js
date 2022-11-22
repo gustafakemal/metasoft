@@ -300,7 +300,7 @@ function getAllData(obj)
 
 	$.ajax({
 		type: "GET",
-		url: `${HOST}/api/master/tinta`,
+		url: `${HOST}/jenistinta/api`,
 		beforeSend: obj.beforeSend,
 		success: obj.success,
 		error: obj.error,

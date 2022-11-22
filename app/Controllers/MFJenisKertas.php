@@ -27,6 +27,7 @@ class MFJenisKertas extends BaseController
 		return view('MFJenisKertas/main', [
 			'page_title' => 'Data Jenis Kertas MF',
             'breadcrumbs' => $this->breadcrumbs->render(),
+            'main_menu' => (new \App\Libraries\Menu())->render()
 		]);
 	}
 

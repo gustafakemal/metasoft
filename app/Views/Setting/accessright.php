@@ -49,6 +49,8 @@
                             </div>
                         </div>
 
+                        <div class="tbl-modul">
+
                         <table id="modulPriv" class="table table-bordered table-striped" style="width: 100%">
                             <thead>
                             <tr>
@@ -60,6 +62,8 @@
                             </tr>
                             </thead>
                         </table>
+
+                        </div>
 
                     </div>
 

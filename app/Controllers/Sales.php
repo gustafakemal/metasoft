@@ -27,6 +27,7 @@ class Sales extends BaseController
 		return view('Sales/main', [
 			'page_title' => 'Data Sales',
 			'breadcrumbs' => $this->breadcrumbs->render(),
+            'main_menu' => (new \App\Libraries\Menu())->render()
 		]);
 	}
 

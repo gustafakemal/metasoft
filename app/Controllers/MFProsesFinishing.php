@@ -27,6 +27,7 @@ class MFProsesFinishing extends BaseController
 		return view('MFProsesFinishing/main', [
 			'page_title' => 'Data Proses Finishing MF',
 			'breadcrumbs' => $this->breadcrumbs->render(),
+            'main_menu' => (new \App\Libraries\Menu())->render()
 		]);
 	}
 

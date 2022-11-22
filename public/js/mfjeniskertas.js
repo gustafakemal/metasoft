@@ -297,7 +297,7 @@ function getAllData(obj)
 {
 	$.ajax({
 		type: "GET",
-		url: `${HOST}/api/master/kertas`,
+		url: `${HOST}/jeniskertas/api`,
 		beforeSend: obj.beforeSend,
 		success: obj.success,
 		error: obj.error,

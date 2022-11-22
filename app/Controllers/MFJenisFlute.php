@@ -27,6 +27,7 @@ class MFJenisFlute extends BaseController
 		return view('MFJenisFlute/main', [
 			'page_title' => 'Data Jenis Flute MF',
             'breadcrumbs' => $this->breadcrumbs->render(),
+            'main_menu' => (new \App\Libraries\Menu())->render()
 		]);
 	}
 

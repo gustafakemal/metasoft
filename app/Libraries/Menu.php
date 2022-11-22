@@ -28,7 +28,7 @@ class Menu
                 $root[] = (object) [
                     'access' => $this->modul[$i]->access,
                     'nama_modul' => ($this->modul[$i]->group_menu == null) ? $this->modul[$i]->nama_modul : $this->modul[$i]->group_menu,
-                    'icon' => 'fas fa-home',
+                    'icon' => ($this->modul[$i]->icon !== null) ? $this->modul[$i]->icon : 'fas fa-home',
                     'route' => ($this->modul[$i]->group_menu == null) ? $this->modul[$i]->route : null,
                 ];
             }
@@ -72,14 +72,17 @@ class Menu
         $data_target = "dropdown-" . str_replace(' ', '', $modul_name);
 
         $children = [];
-        foreach ($this->child($group_menu) as $item) {
-            $children[] = $this->childItem($item->route, $item->nama_modul);
+        foreach ($this->child($group_menu) as $key => $item) {
+            $namamodul = '<i class="fas fa-arrow-circle-right text-dark"></i> ' . $item->nama_modul;
+            $children[] = $this->childItem($item->route, $namamodul);
         }
+
+        $grup_icon = $this->getGrupMenuIcon($group_menu);
 
         return '<li>' .
             '<a class="' . $collapsed . '" href="#" data-toggle="collapse" data-target="#' . $data_target . '"
                aria-expanded="' . $aria_expanded . '">' .
-            $this->icon($icon) .
+            $this->icon($grup_icon) .
             $this->caption($modul_name).
             '</a>' .
             '<div id="' . $data_target . '" class="collapse' . $dropdown_show . '" data-parent="#mainmenu">' .
@@ -101,6 +104,25 @@ class Menu
     {
         $active_class = (url_is('mfproduk') || url_is('mfproduk/*') || url_is('MFProduk') || url_is('MFProduk/*')) ? 'active' : '';
         return '<li class="' . $active_class .'"><a href="' . site_url($route ?? '/') . '">' . $modul_name . '</a></li>';
+    }
+
+    private function getGrupMenuIcon($grup_menu)
+    {
+        $icon = null;
+        $db = \Config\Database::connect();
+        $query = $db->query("select icon from MF_Modul where group_menu='" . $grup_menu . "'");
+        foreach ($query->getResult() as $row) {
+            if( $row->icon != null || $row->icon != '') {
+                $icon = $row->icon;
+                break;
+            }
+        }
+
+        if($icon == null) {
+            $icon = 'fas fa-home';
+        }
+
+        return $icon;
     }
 
     public function render()

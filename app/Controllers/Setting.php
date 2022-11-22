@@ -130,20 +130,52 @@ class Setting extends BaseController
 
             $access = $this->model->modulAccess($value->id, $UserID);
 
-            $read = ($access > 0) ? '<input value="' . $UserID . '_' . $value->id.'_1" type="checkbox" class="access_check" checked />' : '<input value="' . $UserID . '_' . $value->id.'_1" type="checkbox" class="access_check" />';
-            $readWrite = ($access > 1) ? '<input value="' . $UserID . '_' . $value->id.'_2" class="access_check" type="checkbox" checked />' : '<input type="checkbox" class="access_check" value="' . $UserID . '_' . $value->id.'_2" />';
-            $rwd = ($access > 2) ? '<input class="access_check" type="checkbox" value="' . $UserID . '_' . $value->id.'_3" checked />' : '<input class="access_check" type="checkbox" value="' . $UserID . '_' . $value->id.'_3" />';
+            $prop1 = $UserID . '_' . $value->id.'_1';
+            $prop2 = $UserID . '_' . $value->id.'_2';
+            $prop3 = $UserID . '_' . $value->id.'_3';
+
+            switch($access) {
+                case 3:
+                    $read = $this->checkbox($prop1, false);
+                    $readWrite = $this->checkbox($prop2, false);
+                    $rwd = $this->checkbox($prop3, true);
+                    break;
+                case 2:
+                    $read = $this->checkbox($prop1, false);
+                    $readWrite = $this->checkbox($prop2, true);
+                    $rwd = $this->checkbox($prop3, false);
+                    break;
+                case 1:
+                    $read = $this->checkbox($prop1, true);
+                    $readWrite = $this->checkbox($prop2, false);
+                    $rwd = $this->checkbox($prop3, false);
+                    break;
+                default:
+                    $read = $this->checkbox($prop1, false);
+                    $readWrite = $this->checkbox($prop2, false);
+                    $rwd = $this->checkbox($prop3, false);
+                    break;
+            }
 
             $data[] = [
                 $key + 1,
                 $value->nama_modul,
                 $read,
                 $readWrite,
-                $rwd
+                $rwd,
+                [$UserID, $value->id, $access]
             ];
         }
 
         return $this->response->setJSON($data);
+    }
+
+    private function checkbox($prop, $checked = false)
+    {
+        $checked = $checked ? ' checked' : '';
+        $checkbox = '<input name="' . $prop . '" value="' . $prop . '" type="checkbox"' . $checked . ' class="custom-control-input access_check" id="accessCheck_' . $prop . '"/>';
+        $label = '<label class="custom-control-label" for="accessCheck_' . $prop . '"></label>';
+        return '<div class="custom-control custom-checkbox">' . $checkbox . $label . '</div>';
     }
 
     public function updateAccess()
@@ -157,7 +189,7 @@ class Setting extends BaseController
 
         $query = $this->model->getAccess($uid, $modul);
 
-        if( $checked ) {
+        if( $checked == 1) {
             if($query->getNumRows() == 0) {
                 $insertAccess = $this->model->insertAccess([
                     'nik' => $uid,

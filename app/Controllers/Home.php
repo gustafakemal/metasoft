@@ -11,10 +11,6 @@ class Home extends BaseController
      */
     public function index(): string
     {
-//        $ad = new \App\Libraries\AccessDefinition();
-//        $ad->setAccessLevel(3);
-//        $ad->setRoute('pelanggan');
-//        dd($ad->write());
     	$this->breadcrumbs->add('Dashbor', '/');
 
         return view('Home/main', [

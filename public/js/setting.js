@@ -98,7 +98,29 @@ $(function () {
             columnDefs: {
                 falseSearchable: [0, 2, 3, 4],
                 falseOrderable: [0, 2, 3, 4],
-                width: ['0(30)', '2(40)','3(40)','4(40)']
+                falseVisibility: [5],
+                width: ['0(30)', '2(40)','3(40)','4(40)'],
+                custom: [
+                    {
+                        render: function (data, type, row) {
+                            const checkbox1 = $('<div/>').append(row[2]).find('.access_check').attr('name')
+                            const checkbox2 = $('<div/>').append(row[3]).find('.access_check').attr('name')
+
+                            setTimeout(function () {
+                                if( row[5][2] === 3) {
+                                    $(`#modulPriv input[name="${checkbox1}"]`).prop('indeterminate', true)
+                                    $(`#modulPriv input[name="${checkbox2}"]`).prop('indeterminate', true)
+                                }
+                                if( row[5][2] === 2) {
+                                    $(`#modulPriv input[name="${checkbox1}"]`).prop('indeterminate', true)
+                                }
+                            }, 10)
+
+                            return data
+                        },
+                        targets: 1,
+                    }
+                ]
             },
             createdRow: ['No', 'Nama Modul', 'R', 'R/W', 'R/W/D'],
         }
@@ -117,8 +139,9 @@ $(function () {
         const uid = arr_value[0]
         const modul = parseInt(arr_value[1])
         const access = parseInt(arr_value[2])
+        const checked = $(this).prop('checked') ? 1 : 0;
 
-        const data = { uid, modul, access, checked: $(this).prop('checked') }
+        const data = { uid, modul, access, checked }
 
         $.ajax({
             type: 'POST',
@@ -140,3 +163,11 @@ $(function () {
     })
 
 });
+
+function checkbox(prop, checked = false)
+{
+    const isChecked = checked ? ' checked' : '';
+    const checkbox = `<input name="${prop}" value="${prop}" type="checkbox"${isChecked} class="custom-control-input access_check" id="accessCheck_${prop}"/>`;
+    const label = `<label class="custom-control-label" for="accessCheck_${prop}"></label>`;
+    return `<div class="custom-control custom-checkbox">${checkbox}${label}</div>`;
+}

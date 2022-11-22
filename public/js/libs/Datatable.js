@@ -28,6 +28,13 @@ export class Datatable {
 		$(`${this.element}`).DataTable(this.configObj())
 	}
 
+	destroy() {
+		$(`${this.element}`).DataTable().clear().draw().fnDestroy();
+		setTimeout(function () {
+			$(`${this.element}`).removeClass('dataTable')
+		}, 1000)
+	}
+
 	timeout(param_obj = this.ajaxData) {
 		const {url, element, type, ajaxCustomSuccess} = this;
 		setTimeout(() => {

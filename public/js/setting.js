@@ -106,15 +106,18 @@ $(function () {
                             const checkbox1 = $('<div/>').append(row[2]).find('.access_check').attr('name')
                             const checkbox2 = $('<div/>').append(row[3]).find('.access_check').attr('name')
 
-                            setTimeout(function () {
-                                if( row[5][2] === 3) {
-                                    $(`#modulPriv input[name="${checkbox1}"]`).prop('indeterminate', true)
-                                    $(`#modulPriv input[name="${checkbox2}"]`).prop('indeterminate', true)
-                                }
-                                if( row[5][2] === 2) {
-                                    $(`#modulPriv input[name="${checkbox1}"]`).prop('indeterminate', true)
-                                }
-                            }, 10)
+                            if( row[5][2] != null) {
+
+                                setTimeout(function () {
+                                    if (row[5][2] === 3) {
+                                        $(`#modulPriv input[name="${checkbox1}"]`).prop('indeterminate', true)
+                                        $(`#modulPriv input[name="${checkbox2}"]`).prop('indeterminate', true)
+                                    }
+                                    if (row[5][2] === 2) {
+                                        $(`#modulPriv input[name="${checkbox1}"]`).prop('indeterminate', true)
+                                    }
+                                }, 10)
+                            }
 
                             return data
                         },
@@ -125,13 +128,26 @@ $(function () {
             createdRow: ['No', 'Nama Modul', 'R', 'R/W', 'R/W/D'],
         }
         datatable3 = new Datatable('#modulPriv', config3, `${HOST}/setting/hakakses/api/${uid}`, 'GET')
-        datatable3.load()
+        datatable3.load();
     })
 
     $("#modalUserAccess").on("hidden.bs.modal", function () {
-        $("#modulPriv").DataTable().destroy();
+        $("#modulPriv").DataTable().draw();
+        $("#modulPriv").DataTable().clear()
+        $('#modulPriv_wrapper').remove();
         $('span.uid').html('')
         $('span.nama_peg').html('')
+        $("#modalUserAccess .modal-body").append('<table id="modulPriv" class="table table-bordered table-striped" style="width: 100%">\n' +
+            '                            <thead>\n' +
+            '                            <tr>\n' +
+            '                                <th>No</th>\n' +
+            '                                <th>Nama Modul</th>\n' +
+            '                                <th>R</th>\n' +
+            '                                <th>R/W</th>\n' +
+            '                                <th>R/W/D</th>\n' +
+            '                            </tr>\n' +
+            '                            </thead>\n' +
+            '                        </table>')
     });
 
     $('#modulPriv').on('click', '.access_check', function (e) {

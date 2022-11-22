@@ -185,7 +185,7 @@ class Menu
     private function logout()
     {
         return '<li>' .
-            '<a href="' . site_url() . '" onclick="return confirm(\'Anda yakin untuk Logout?\')">' .
+            '<a href="' . site_url('logout') . '" onclick="return confirm(\'Anda yakin untuk Logout?\')">' .
             $this->icon('fas fa-users') .
             $this->caption('Logout') .
             '</a>' .

@@ -38,7 +38,7 @@ class Authentication
                 $session->set('UserID', $UserID);
                 $session->set('UserName', $UserName);
                 $session->set('priv', $priviledge);
-                
+
                 } else {
                      $msg = "Password tidak sesuai";
                  }

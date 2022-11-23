@@ -127,27 +127,19 @@ $(function () {
             },
             createdRow: ['No', 'Nama Modul', 'R', 'R/W', 'R/W/D'],
         }
-        datatable3 = new Datatable('#modulPriv', config3, `${HOST}/setting/hakakses/api/${uid}`, 'GET')
-        datatable3.load();
+
+        if(datatable3 == null) {
+            datatable3 = new Datatable('#modulPriv', config3, `${HOST}/setting/hakakses/api/${uid}`, 'GET')
+            datatable3.load();
+        } else {
+            datatable3 = new Datatable('#modulPriv', config3, `${HOST}/setting/hakakses/api/${uid}`, 'GET')
+            datatable3.reload();
+        }
     })
 
     $("#modalUserAccess").on("hidden.bs.modal", function () {
-        $("#modulPriv").DataTable().draw();
-        $("#modulPriv").DataTable().clear()
-        $('#modulPriv_wrapper').remove();
         $('span.uid').html('')
         $('span.nama_peg').html('')
-        $("#modalUserAccess .modal-body .tbl-modul").html('<table id="modulPriv" class="table table-bordered table-striped" style="width: 100%">\n' +
-            '                            <thead>\n' +
-            '                            <tr>\n' +
-            '                                <th>No</th>\n' +
-            '                                <th>Nama Modul</th>\n' +
-            '                                <th>R</th>\n' +
-            '                                <th>R/W</th>\n' +
-            '                                <th>R/W/D</th>\n' +
-            '                            </tr>\n' +
-            '                            </thead>\n' +
-            '                        </table>')
     });
 
     $('#modulPriv').on('click', '.access_check', function (e) {

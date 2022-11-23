@@ -28,6 +28,7 @@ class BaseController extends Controller
      */
     protected $request;
     protected $common;
+    protected $menu;
 
     /**
      * An array of helpers to be loaded automatically upon
@@ -37,6 +38,7 @@ class BaseController extends Controller
      * @var array
      */
     protected $helpers = ['form', 'auth', 'text'];
+    protected $views = [];
 
     /**
      * Constructor.
@@ -48,6 +50,10 @@ class BaseController extends Controller
 
         $this->breadcrumbs = new \App\Libraries\Breadcrumbs;
         $this->common = new \App\Libraries\Common();
+
+        $this->menu = new \App\Libraries\Menu();
+
+        $this->views['main_menu'] = $this->menu->render();
 
         // Preload any models, libraries, etc, here.
 

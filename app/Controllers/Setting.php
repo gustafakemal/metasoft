@@ -80,7 +80,7 @@ class Setting extends BaseController
                 'msg' => 'Modul ' . $request['nama_modul'] . ' berhasil ditambahkan.'
             ];
         } else {
-               $response = [
+            $response = [
                 'success' => false,
                 'msg' => '<p>' . implode('</p><p>', $this->model->errors()) . '</p>'
             ];

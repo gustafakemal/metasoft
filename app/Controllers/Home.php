@@ -11,7 +11,7 @@ class Home extends BaseController
      */
     public function index(): string
     {
-    	$this->breadcrumbs->add('Dashbor', '/');
+        $this->breadcrumbs->add('Dashbor', '/');
 
         return view('Home/main', [
         	'page_title' => 'Dashbor',

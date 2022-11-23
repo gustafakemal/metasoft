@@ -14,12 +14,11 @@
 	<div class="alert alert-success"><?=session()->get('success');?></div>
 <?php endif;?>
 
-<div class="msg_success"></div>
+<?php if (session()->has('error')): ?>
+    <div class="alert alert-danger"><?=session()->get('error');?></div>
+<?php endif;?>
 
-<div class="dynamic-content">
-
-<form name="MXProspect-form" class="csc-form show">
-    <div class="msg"></div>
+<?php echo form_open('mxprospect/addProcess');?>
 
     <div class="row">
         <div class="col-6">
@@ -54,9 +53,9 @@
                 <div class="col-lg-8 col-sm-12">
                     <select id="pemesan" name="pemesan" class="form-control">
                         <option value="">Pilih</option>
-					    <?php foreach ($customer as $key => $customer) : ?>
-						<option value="<?= $customer->id;?>"><?= $customer->nama;?></option>
-					    <?php endforeach;?>
+                        <?php foreach ($customers as $key => $customer) : ?>
+                            <option value="<?= $customer->NoPemesan;?>"><?= $customer->NamaPemesan;?></option>
+                        <?php endforeach;?>
                     </select>
                 </div>
             </div>
@@ -67,9 +66,6 @@
                 <div class="col-lg-8 col-sm-12">
                     <select id="jenis_produk" name="jenis_produk" class="form-control">
                         <option value="">Pilih</option>
-						<?php foreach ($jenis_produk as $key => $jenis_produk) : ?>
-						<option value="<?= $jenis_produk->id;?>"><?= $jenis_produk->nama;?></option>
-					    <?php endforeach;?>	   
                     </select>
                 </div>
             </div>
@@ -83,9 +79,7 @@
                 <div class="col-lg-8 col-sm-12">
                     <select id="segmen" name="segmen" class="form-control">
                         <option value="">Pilih</option>
-						<?php foreach ($segmen as $key => $segmen) : ?>
-						<option value="<?= $segmen->id;?>"><?= $segmen->nama;?></option>
-					    <?php endforeach;?>		  
+
                     </select>
                 </div>
             </div>
@@ -96,9 +90,7 @@
                 <div class="col-lg-8 col-sm-12">
                     <select id="konten" name="konten" class="form-control">
                         <option value="">Pilih</option>
-						<?php foreach ($konten as $key => $konten) : ?>
-						<option value="<?= $konten->id;?>"><?= $konten->nama;?></option>
-					    <?php endforeach;?>		  	   
+
                     </select>
                 </div>
             </div>
@@ -126,36 +118,28 @@
         <div class="col-sm-2">
             <select id="material1" name="material1" class="form-control">
                 <option value="">Pilih</option>
-				<?php foreach ($material as $key => $material) : ?>
-				<option value="<?= $material->nama;?>"><?= $material->nama;?></option>
-				<?php endforeach;?>		  	 
+
             </select>
 			<input type="number" class="form-control" id="tebal_material1" name="tebal_material1" placeholder="Tebal">
         </div>
         <div class="col-sm-2">
             <select id="material2" name="material2" class="form-control">
                 <option value="">Pilih</option>
-				<?php foreach ($material as $key => $material) : ?>
-				<option value="<?= $material->nama;?>"><?= $material->nama;?></option>
-				<?php endforeach;?>		  	 
+
             </select>
 			<input type="number" class="form-control" id="tebal_material2" name="tebal_material2" placeholder="Tebal">
         </div>
         <div class="col-sm-2">
             <select id="material3" name="material3" class="form-control">
                 <option value="">Pilih</option>
-				<?php foreach ($material as $key => $material) : ?>
-				<option value="<?= $material->nama;?>"><?= $material->nama;?></option>
-				<?php endforeach;?>		  	 
+
             </select>
 			<input type="number" class="form-control" id="tebal_material3" name="tebal_material3" placeholder="Tebal">
         </div>
         <div class="col-sm-2">
             <select id="material4" name="material4" class="form-control">
                 <option value="">Pilih</option>
-				<?php foreach ($material as $key => $material) : ?>
-				<option value="<?= $material->nama;?>"><?= $material->nama;?></option>
-				<?php endforeach;?>		  	 
+
             </select>
 			<input type="number" class="form-control" id="tebal_material4" name="tebal_material4" placeholder="Tebal">
         </div>
@@ -220,9 +204,7 @@
                 <div class="col-lg-8 col-sm-12">
                     <select id="warna_tape" name="warna_tape" class="form-control">
                         <option value="">Pilih</option>
-				        <?php foreach ($warnatape as $key => $warnatape) : ?>
-				        <option value="<?= $warnatape->nama;?>"><?= $warnatape->nama;?></option>
-				        <?php endforeach;?>		  	 		
+
                     </select>
                 </div>
             </div>
@@ -236,9 +218,7 @@
                 <div class="col-lg-8 col-sm-12">
                     <select  id="bag_making" name="bag_making" class="form-control">
                         <option value="">Pilih</option>
-				        <?php foreach ($bag_making as $key => $bag_making) : ?>
-				        <option value="<?= $bag_making->id;?>"><?= $bag_making->nama;?></option>
-				        <?php endforeach;?>		  	    
+
                     </select>
                 </div>
             </div>
@@ -249,9 +229,7 @@
                 <div class="col-lg-8 col-sm-12">
                     <select id="bottom" name="bottom" class="form-control">
                         <option value="">Pilih</option>
-				        <?php foreach ($bottom as $key => $bottom) : ?>
-				        <option value="<?= $bottom->id;?>"><?= $bottom->nama;?></option>
-				        <?php endforeach;?>		  	         
+
                     </select>
                 </div>
             </div>
@@ -279,9 +257,7 @@
                         <div class="col-sm">
                             <select  id="aksesoris" name="aksesoris" class="form-control">
                                 <option value="">Pilih</option>
-								<?php foreach ($aksesoris as $key => $aksesoris) : ?>
-				                <option value="<?= $aksesoris->id;?>"><?= $aksesoris->nama;?></option>
-				                <?php endforeach;?>		  	 					 
+
                             </select>
                         </div>
                         <div class="col-sm-auto">
@@ -382,9 +358,7 @@
                 <div class="col-lg-7 col-sm-12">
                     <select  id="area" name="area" class="form-control">
                         <option value="">Pilih</option>
-						<?php foreach ($area as $key => $area) : ?>
-				        <option value="<?= $area->id;?>"><?= $area->nama;?></option>
-				        <?php endforeach;?>		  	 	
+
                     </select>
                 </div>
             </div>

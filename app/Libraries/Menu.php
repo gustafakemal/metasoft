@@ -5,10 +5,12 @@ namespace App\Libraries;
 class Menu
 {
     private $modul;
+    private $db;
 
     public function __construct()
     {
         $this->modul = session()->get('priv');
+        $this->db = \Config\Database::connect();
     }
 
     public function get()
@@ -65,9 +67,9 @@ class Menu
 
     private function listItemDropdown($group_menu, $route, $icon, $modul_name)
     {
-        $collapsed = $route && url_is($route) ? '' : 'collapsed';
-        $aria_expanded = $route && url_is($route) ? 'true' : 'false';
-        $dropdown_show = $route && (url_is($route) || url_is($route . '/*')) ? ' show' : '';
+        $collapsed = $this->urlInsideDropdown($group_menu) ? '' : 'collapsed';
+        $aria_expanded = $this->urlInsideDropdown($group_menu) ? 'true' : 'false';
+        $dropdown_show = $this->urlInsideDropdown($group_menu) ? ' show' : '';
 
         $data_target = "dropdown-" . str_replace(' ', '', $modul_name);
 
@@ -93,6 +95,24 @@ class Menu
             '</li>';
     }
 
+    private function allRouteDropdown($group_menu)
+    {
+        $routes = [];
+        $query = $this->db->query("select route from MF_Modul where group_menu='" . $group_menu . "'");
+        if($query->getNumRows() > 0) {
+            foreach ($query->getResult() as $item) {
+                $routes[] = $item->route;
+            }
+        }
+
+        return $routes;
+    }
+
+    private function urlInsideDropdown($group_menu)
+    {
+        return in_array(uri_string(true), $this->allRouteDropdown($group_menu));
+    }
+
     public function child($group_menu)
     {
         return array_filter($this->modul, function ($item) use ($group_menu) {
@@ -102,15 +122,14 @@ class Menu
 
     private function childItem($route, $modul_name)
     {
-        $active_class = (url_is('mfproduk') || url_is('mfproduk/*') || url_is('MFProduk') || url_is('MFProduk/*')) ? 'active' : '';
+        $active_class = (url_is($route)) ? 'active' : '';
         return '<li class="' . $active_class .'"><a href="' . site_url($route ?? '/') . '">' . $modul_name . '</a></li>';
     }
 
     private function getGrupMenuIcon($grup_menu)
     {
         $icon = null;
-        $db = \Config\Database::connect();
-        $query = $db->query("select icon from MF_Modul where group_menu='" . $grup_menu . "'");
+        $query = $this->db->query("select icon from MF_Modul where group_menu='" . $grup_menu . "'");
         foreach ($query->getResult() as $row) {
             if( $row->icon != null || $row->icon != '') {
                 $icon = $row->icon;

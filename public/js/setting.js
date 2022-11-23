@@ -87,7 +87,7 @@ $(function () {
         e.preventDefault();
         $('#modalUserAccess').modal({
             show: true,
-            backdrop: true
+            backdrop: 'static'
         })
         const uid = $(this).attr('data-uid')
 

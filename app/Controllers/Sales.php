@@ -3,6 +3,8 @@
 namespace App\Controllers;
 
 use App\Models\SalesModel;
+use CodeIgniter\HTTP\RedirectResponse;
+use CodeIgniter\HTTP\ResponseInterface;
 use CodeIgniter\I18n\Time;
 
 class Sales extends BaseController
@@ -14,7 +16,10 @@ class Sales extends BaseController
 		$this->model = new SalesModel();
 	}
 
-	public function index()
+    /**
+     * @return string
+     */
+    public function index(): string
 	{
 		$this->breadcrumbs->add('Dashbor', '/');
         $this->breadcrumbs->add('Data Sales', '/sales');
@@ -22,22 +27,22 @@ class Sales extends BaseController
 		return view('Sales/main', [
 			'page_title' => 'Data Sales',
 			'breadcrumbs' => $this->breadcrumbs->render(),
+            'main_menu' => (new \App\Libraries\Menu())->render()
 		]);
 	}
 
-	public function apiGetAll()
+    /**
+     * @return \CodeIgniter\HTTP\ResponseInterface
+     * @throws \Exception
+     *
+     * Endpoint GET /api/master/sales
+     */
+    public function apiGetAll(): ResponseInterface
 	{
-		if ($this->request->getMethod() !== 'post') {
-			return redirect()->to('sales');
-		}
-
-		$query = $this->model->getSales();
+        $query = $this->model->getSales();
 
 		$data = [];
 		foreach ($query as $key => $value) {
-			//$detail = '<a href="#" data-id="' . $value->id . '" class=" btn item-detail" title="Detail"><i class="far fa-file-alt"></i></a> ';
-			//$edit = '<a href="#" data-id="' . $value->id . '" class="item-edit" title="Edit"><i class="far fa-edit"></i></a> ';
-			//$hapus = '<a href="' . site_url('sales/delete/' . $value->id) . '" onclick="return confirm(\'Apa Anda yakin menghapus user ini?\')" title="Delete"><i class="fas fa-trash-alt"></i></a>';
 			 
 			$detail = '<a class="btn btn-primary btn-sm item-detail mr-1" href="#" data-id="' . $value->SalesID . '" title="Detail"><i class="far fa-file-alt"></i></a>';
 			$edit = '<a class="btn btn-success btn-sm item-edit mr-1" href="#" data-id="' . $value->SalesID . '" data-nama="'.$value->SalesName.'" data-nik="'.$value->NIK.'" data-aktif="'.$value->FlagAktif.'|A,N" title="Edit"><i class="far fa-edit"></i></a>';
@@ -57,14 +62,15 @@ class Sales extends BaseController
 		return $this->response->setJSON($data);
 	}
 
-	public function apiGetById()
+    /**
+     * @return \CodeIgniter\HTTP\ResponseInterface
+     * @throws \Exception
+     *
+     * Endpoint GET /api/master/sales/$1
+     */
+    public function apiGetById($id): ResponseInterface
 	{
-		if ($this->request->getMethod() !== 'post') {
-			return redirect()->to('sales');
-		}
-
-		$id = $this->request->getPost('id');
-		$modified = $this->request->getPost('modified') ?? false;
+		$modified = $this->request->getGet('modified') == 'yes';
 
 		$query = $this->model->getById($id);
 
@@ -96,16 +102,16 @@ class Sales extends BaseController
 		return $this->response->setJSON($response);
 	}
 
-	public function apiAddProcess()
+    /**
+     * @return \CodeIgniter\HTTP\ResponseInterface
+     * @throws \Exception
+     *
+     * Endpoint POST /api/master/sales
+     */
+    public function apiAddProcess(): ResponseInterface
 	{
-		if ($this->request->getMethod() !== 'post') {
-			return redirect()->to('sales');
-		}
-
 		$data = $this->request->getPost();
 		$data['SalesID'] = $this->model->getMaxId() + 1;
-		
-		//return $this->response->setJSON($data);
 
 		if ($this->model->insert($data, false)) {
 			$msg = 'Data berhasil ditambahkan';
@@ -128,24 +134,22 @@ class Sales extends BaseController
 		return $this->response->setJSON($response);
 	}
 
-	public function apiEditProcess()
+    /**
+     * @return \CodeIgniter\HTTP\ResponseInterface
+     * @throws \Exception
+     *
+     * Endpoint PUT /api/master/sales
+     */
+    public function apiEditProcess(): ResponseInterface
 	{
-		if ($this->request->getMethod() !== 'post') {
-			return redirect()->to('sales');
-		}
-
-		$data = $this->request->getPost();
-
-		$id = $this->request->getPost('SalesID');
+        $data = $this->request->getRawInput();
+        $id = $data['SalesID'];
+        unset($data['SalesID']);
 
     	$query = $this->model->getById($id);
-		
-
-		//return $this->response->setJSON($data);
 
 		if ($this->model->updateById($id, $data)) {
 			$msg = 'Data berhasil diupdate';
-			// session()->setFlashData('success', $msg);
 			$response = [
 				'success' => true,
 				'msg' => $msg,
@@ -164,7 +168,11 @@ class Sales extends BaseController
 		return $this->response->setJSON($response);
 	}
 
-	public function delete($id)
+    /**
+     * @param $id
+     * @return RedirectResponse
+     */
+    public function delete($id): RedirectResponse
 	{
 		if ($this->model->deleteById($id)) {
 			return redirect()->back()
@@ -174,4 +182,25 @@ class Sales extends BaseController
 		return redirect()->back()
 			->with('error', 'Data gagal dihapus');
 	}
+
+    /**
+     * @return ResponseInterface
+     */
+    public function getSelectOptions(): ResponseInterface
+    {
+        $query = $this->model->getSales();
+
+        $data = [];
+        foreach ($query as $row) {
+            $data[] = [
+                'id' => $row->SalesID,
+                'name' => $row->SalesName
+            ];
+        }
+
+        return $this->response->setJSON([
+            'success' => true,
+            'data' => $data
+        ]);
+    }
 }

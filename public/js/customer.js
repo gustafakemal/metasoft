@@ -42,8 +42,8 @@ $(function () {
 			$(row).find("td:eq(1)").attr("data-label", "Tanggal dibuat");
 			$(row).find("td:eq(2)").attr("data-label", "Nama Pemesan");
 			$(row).find("td:eq(3)").attr("data-label", "Contact person");
-			$(row).find("td:eq(4)").attr("data-label", "Wajib pajak");
-			$(row).find("td:eq(5)").attr("data-label", "&nbsp;");
+			$(row).find("td:eq(4)").attr("data-label", "Status Aktif");
+			$(row).find("td:eq(5)").attr("data-label", "Action");
 		},
 		initComplete: function () {
 			const dropdown = `<div class="dropdown d-inline mr-2">` +
@@ -100,7 +100,7 @@ $(function () {
 
 		$.ajax({
 			type: "POST",
-			url: `${HOST}/customer/apiAddProcess`,
+			url: `${HOST}/api/master/customer`,
 			dataType: 'JSON',
 			data: formData,
 			contentType: false,
@@ -141,10 +141,9 @@ $(function () {
 		$('#dataDetail').modal('show')
 		const noPemesan = $(this).attr('data-id')
 		$.ajax({
-			type: "POST",
-			url: `${HOST}/customer/apiGetById`,
+			type: "GET",
+			url: `${HOST}/pelanggan/api/${noPemesan}?modified=yes`,
 			dataType: 'JSON',
-			data: { noPemesan, modified: true },
 			beforeSend: function () {},
 			success: function (response) {
 				if(response.success) {
@@ -171,13 +170,11 @@ $(function () {
 		$('#dataForm form input[name="NoPemesan"]').val(noPemesan)
 
 		$.ajax({
-			type: "POST",
-			url: `${HOST}/customer/apiGetById`,
+			type: "GET",
+			url: `${HOST}/customer/api/${noPemesan}`,
 			dataType: 'JSON',
-			data: { noPemesan },
 			beforeSend: function () {},
 			success: function (response) {
-				console.log(response)
 				if(response.success) {
 					for(const property in response.data) {
 						$(`#dataForm input[name="${property}"], #dataForm textarea[name="${property}"]`).val(response.data[property])
@@ -213,14 +210,15 @@ $(function () {
 	$('#dataForm').on('submit', 'form[name="editData"]', function(e) {
 		e.preventDefault();
 		const formData = new FormData(this);
+		formData.append('_method', 'PUT');
 
 		$.ajax({
 			type: "POST",
-			url: `${HOST}/customer/apiEditProcess`,
+			url: `${HOST}/api/master/customer`,
 			dataType: 'JSON',
 			data: formData,
-			contentType: false,
 			processData: false,
+			contentType: false,
 			beforeSend: function () {
 				$('#dataForm .modal-footer .loading-indicator').html(
 					'<div class="spinner-icon">' +
@@ -289,8 +287,8 @@ $(function () {
 function getAllCustomers(obj)
 {
 	$.ajax({
-		type: "POST",
-		url: `${HOST}/customer/apiGetAll`,
+		type: "GET",
+		url: `${HOST}/pelanggan/api`,
 		beforeSend: obj.beforeSend,
 		success: obj.success,
 		error: obj.error,

@@ -13,19 +13,6 @@ $(function () {
 			"orderable": false,
 			"targets": [0, 10]
 		},
-		// {
-		// 	"width": 60,
-		// 	"targets": 18
-		// },{
-		// 	"targets": 14,
-		// 	render: function ( data, type, row, meta ) {
-		// 		if(type === 'export') {
-		// 			return data;
-		// 		} else {
-		// 			return (data == 'Y') ? 'Ya' : 'Tidak';
-		// 		}
-		// 	}
-		// },
 		{
 			"width": 150,
 			"targets": 2
@@ -46,10 +33,10 @@ $(function () {
 		createdRow: function (row, data, dataIndex) {
 			$(row).find("td:eq(0)").attr("data-label", "No");
 			$(row).find("td:eq(1)").attr("data-label", "Tanggal dibuat");
-			$(row).find("td:eq(2)").attr("data-label", "Jenis Flute");
+			$(row).find("td:eq(2)").attr("data-label", "Proses Finishing");
 			$(row).find("td:eq(3)").attr("data-label", "Harga");
 			$(row).find("td:eq(4)").attr("data-label", "Status Aktif");
-			$(row).find("td:eq(5)").attr("data-label", "&nbsp;");
+			$(row).find("td:eq(5)").attr("data-label", "Action");
 		},
 		initComplete: function () {
 			const dropdown = `<div class="dropdown d-inline mr-2">` +
@@ -71,9 +58,7 @@ $(function () {
 				$('#dataList .dataTables_empty').html('<div class="spinner-icon"><span class="spinner-grow text-info"></span><span class="caption">Fetching data...</span></div>')
 			},
 			success: function (response) {
-				$('#dataList').DataTable().clear();
-				$('#dataList').DataTable().rows.add(response);
-				$('#dataList').DataTable().draw();
+				$('#dataList').DataTable().clear().rows.add(response).draw();
 			},
 			error: function () {
 				$('#dataList .dataTables_empty').html('Data gagal di retrieve.')
@@ -108,7 +93,7 @@ $(function () {
 
 		$.ajax({
 			type: "POST",
-			url: `${HOST}/mfprosesfinishing/apiAddProcess`,
+			url: `${HOST}/api/master/finishing`,
 			dataType: 'JSON',
 			data: formData,
 			contentType: false,
@@ -149,10 +134,9 @@ $(function () {
 		$('#dataDetail').modal('show')
 		const id = $(this).attr('data-id')
 		$.ajax({
-			type: "POST",
-			url: `${HOST}/mfprosesfinishing/apiGetById`,
+			type: "GET",
+			url: `${HOST}/api/master/finishing/${id}?modified=yes`,
 			dataType: 'JSON',
-			data: { id, modified: true },
 			beforeSend: function () {},
 			success: function (response) {
 				if(response.success) {
@@ -166,54 +150,98 @@ $(function () {
 		})
 	})
 
+	let dataListRow = null;
 	$('#dataList').on('click', '.item-edit', function(e) {
 		e.preventDefault();
-		$('#dataForm').modal({
-			show: true,
-			backdrop: 'static'
-		})
-		$('#dataForm .modal-title').html('Edit Data')
-		$('#dataForm form').attr('name', 'editData')
+		const tr = $(this).closest('tr');
+		const row = $("#dataList tr").index(tr);
+		dataListRow = $(`#dataList tr:nth-child(${row+1})`)
+		const objstring = $(this).attr('data-obj')
+		const id = $(this).attr('data-id');
+		const proses = $(this).attr('data-proses');
+		const harga = $(this).attr('data-harga');
+		const create_date = $(this).attr('data-added');
+		const aktif_arr = $(this).attr('data-aktif').split('|')
+		const aktif_opt_arr = aktif_arr[1].split(',');
+		const aktif_opt = []
+		for(let i = 0;i < aktif_opt_arr.length; i++) {
+			aktif_opt.push(`<option${aktif_opt_arr[i] == aktif_arr[0] ? ' selected' : ''} value="${aktif_opt_arr[i]}">${aktif_opt_arr[i]}</option>`)
+		}
+		const aktif = `<select name="aktif" class="form-control">${aktif_opt.join('')}</select>`
+		const btn = `<button type="button" class="btn btn-sm btn-success save-tr-record"><i class="fas fa-check"></i></button> <button type="button" class="btn btn-sm btn-secondary cancel-tr-submit"><i class="fas fa-times"></i></button>`
+		$(`#dataList tbody tr:nth-child(${row})`).css('background-color', '#faecdc')
+		$(`#dataList tr:nth-child(${row}) td:nth-child(2)`).html(`<input type="text" class="form-control" value="${create_date}" readonly />`)
+		$(`#dataList tr:nth-child(${row}) td:nth-child(3)`).html(`<input type="text" class="form-control" placeholder="Nama Proses" value="${proses}" name="proses" />`)
+		$(`#dataList tr:nth-child(${row}) td:nth-child(4)`).html(`<input type="number" class="form-control" placeholder="Harga" value="${parseInt(harga)}" name="harga" /><input type="hidden" value="${id}" name="id" />`)
+		$(`#dataList tr:nth-child(${row}) td:nth-child(5)`).html(`${aktif}`)
+		$(`#dataList tr:nth-child(${row}) td:nth-child(6)`).html(`${btn}`)
 
-		const id = $(this).attr('data-id')
-		$('#dataForm form input[name="id"]').val(id)
-		//alert("cek")
+		$(`#dataList tr:nth-child(${row}`).attr('id', 'selected')
+
+		$('#page').addClass('click-to-close')
+	});
+
+	const reload_tr = function() {
+		const obj = {
+			success: function (response) {
+				$('#dataList').DataTable().clear();
+				$('#dataList').DataTable().rows.add(response);
+				$('#dataList').DataTable().draw();
+			},
+		}
+		getAllData(obj);
+	}
+
+	$('body').on('click', '.click-to-close', reload_tr)
+	$('#dataList').on('click', '.cancel-tr-submit', reload_tr)
+	$('#dataList').on('click', 'tr#selected', function(e) {
+		e.stopPropagation()
+	})
+	$('#dataList').on('click', '.save-tr-record', function() {
+		const data = {
+			id: $('input[name="id"]').val(),
+			proses: $('input[name="proses"]').val(),
+			harga: $('input[name="harga"]').val(),
+			aktif: $('select[name="aktif"] option:selected').val()
+		};
 		$.ajax({
-			type: "POST",
-			url: `${HOST}/mfprosesfinishing/apiGetById`,
+			type: "PUT",
+			url: `${HOST}/api/master/finishing`,
+			headers: {'Content-Type': 'application/x-www-form-urlencoded'},
+			contentType: 'application/x-www-form-urlencoded; charset=utf-8',
 			dataType: 'JSON',
-			data: { id },
+			data: data,
 			beforeSend: function () {},
 			success: function (response) {
-				console.log(response)
+				let msgClass;
 				if(response.success) {
-					for(const property in response.data) {
-						$(`#dataForm input[name="${property}"], #dataForm textarea[name="${property}"]`).val(response.data[property])
-					}
-					$(`#dataForm select[name="aktif"] option`).removeAttr('selected')
-					if(response.data['aktif'] == "Y") {
-						$(`#dataForm select[name="aktif"] option[value="Y"]`).attr('selected', 'selected')
-					} else {
-						$(`#dataForm select[name="aktif"] option[value="T"]`).attr('selected', 'selected')
-					}
-					
+					reload_tr();
+					msgClass = 'success'
+				} else {
+					msgClass = 'danger'
 				}
+				$('.floating-msg').addClass('show').html(`<div class="alert alert-${msgClass}">${response.msg}</div>`)
 			},
 			error: function () {},
-			complete: function () {}
+			complete: function() {
+				setTimeout(() => {
+					$('.floating-msg').removeClass('show').html('');
+				}, 3000);
+			}
 		})
-	});
+	})
+
 	$('#dataForm').on('submit', 'form[name="editData"]', function(e) {
 		e.preventDefault();
 		const formData = new FormData(this);
 
 		$.ajax({
-			type: "POST",
-			url: `${HOST}/mfprosesfinishing/apiEditProcess`,
+			type: "PUT",
+			url: `${HOST}/api/master/finishing`,
+			headers: {'Content-Type': 'application/x-www-form-urlencoded'},
+			contentType: 'application/x-www-form-urlencoded; charset=utf-8',
 			dataType: 'JSON',
 			data: formData,
-			contentType: false,
-			processData: false,
 			beforeSend: function () {
 				$('#dataForm .modal-footer .loading-indicator').html(
 					'<div class="spinner-icon">' +
@@ -272,10 +300,9 @@ $(function () {
 
 function getAllData(obj)
 {
-	
 	$.ajax({
-		type: "POST",
-		url: `${HOST}/mfprosesfinishing/apiGetAll`,
+		type: "GET",
+		url: `${HOST}/prosesfinishing/api`,
 		beforeSend: obj.beforeSend,
 		success: obj.success,
 		error: obj.error,

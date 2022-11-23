@@ -27,6 +27,8 @@ class BaseController extends Controller
      * @var CLIRequest|IncomingRequest
      */
     protected $request;
+    protected $common;
+    protected $menu;
 
     /**
      * An array of helpers to be loaded automatically upon
@@ -35,7 +37,8 @@ class BaseController extends Controller
      *
      * @var array
      */
-    protected $helpers = ['form', 'auth'];
+    protected $helpers = ['form', 'auth', 'text'];
+    protected $views = [];
 
     /**
      * Constructor.
@@ -46,6 +49,8 @@ class BaseController extends Controller
         parent::initController($request, $response, $logger);
 
         $this->breadcrumbs = new \App\Libraries\Breadcrumbs;
+        $this->common = new \App\Libraries\Common();
+        
 
         // Preload any models, libraries, etc, here.
 

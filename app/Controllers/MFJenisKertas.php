@@ -3,6 +3,8 @@
 namespace App\Controllers;
 
 use App\Models\MFJenisKertasModel;
+use CodeIgniter\HTTP\RedirectResponse;
+use CodeIgniter\HTTP\ResponseInterface;
 use CodeIgniter\I18n\Time;
 
 class MFJenisKertas extends BaseController
@@ -14,7 +16,10 @@ class MFJenisKertas extends BaseController
 		$this->model = new MFJenisKertasModel();
 	}
 
-	public function index()
+    /**
+     * @return string
+     */
+    public function index(): string
 	{
 		$this->breadcrumbs->add('Dashbor', '/');
         $this->breadcrumbs->add('Data Jenis Kertas MF', '/mfjeniskertas');
@@ -22,49 +27,40 @@ class MFJenisKertas extends BaseController
 		return view('MFJenisKertas/main', [
 			'page_title' => 'Data Jenis Kertas MF',
             'breadcrumbs' => $this->breadcrumbs->render(),
+            'main_menu' => (new \App\Libraries\Menu())->render()
 		]);
 	}
 
-	public function apiGetAll()
+    /**
+     * @return \CodeIgniter\HTTP\ResponseInterface
+     * @throws \Exception
+     *
+     * Endpoint GET /api/master/kertas
+     */
+    public function apiGetAll(): ResponseInterface
 	{
-		if ($this->request->getMethod() !== 'post') {
-			return redirect()->to('mfjeniskertas');
-		}
-
 		$query = $this->model->getMFJenisKertas();
 
 		$data = [];
 		foreach ($query as $key => $value) {
-			//$detail = '<a href="#" data-id="' . $value->id . '" class=" btn item-detail" title="Detail"><i class="far fa-file-alt"></i></a> ';
-			//$edit = '<a href="#" data-id="' . $value->id . '" class="item-edit" title="Edit"><i class="far fa-edit"></i></a> ';
-			//$hapus = '<a href="' . site_url('mfjeniskertas/delete/' . $value->id) . '" onclick="return confirm(\'Apa Anda yakin menghapus user ini?\')" title="Delete"><i class="fas fa-trash-alt"></i></a>';
 
 			$CreateDate = (Time::parse($value->added))->toDateTimeString();
-
-			$obj = [
-				'CreateDate' => $CreateDate,
-				'nama' => $value->nama,
-				'harga' => $value->harga
-			];
-
-			$objstring = json_encode($obj);
 			 
 			$detail = '<a class="btn btn-primary btn-sm item-detail mr-1" href="#" data-id="' . $value->id . '" title="Detail"><i class="far fa-file-alt"></i></a>';
 			$edit = '<a class="btn btn-success btn-sm item-edit mr-1" href="#" data-id="' . $value->id . '" data-nama="'.$value->nama.'" data-harga="'.$value->harga.'" data-berat="'.$value->berat.'" data-added="'.$CreateDate.'" data-aktif="'.$value->aktif.'|Y,T" title="Edit"><i class="far fa-edit"></i></a>';
 			$hapus = '<a class="btn btn-danger btn-sm" href="' . site_url('mfjeniskertas/delete/' . $value->id) . '" data-id="' . $value->id . '" onclick="return confirm(\'Apa Anda yakin menghapus data ini?\')" title="Hapus"><i class="fas fa-trash-alt"></i></a>';
-	
 		
 			$data[] = [
 				$key + 1,
 				$value->id,
-				$CreateDate,
+                $this->common->dateFormat($CreateDate),
 				$value->nama,
 				(int)$value->berat,
 				number_format($value->harga,2,",","."),
 				$value->aktif,
-				$value->added,
+				$this->common->dateFormat($value->added),
 				$value->added_by,
-				$value->updated,
+                $this->common->dateFormat($value->updated),
 				$value->updated_by,
 				$detail . $edit . $hapus
 			];
@@ -73,13 +69,14 @@ class MFJenisKertas extends BaseController
 		return $this->response->setJSON($data);
 	}
 
-	public function apiGetById()
+    /**
+     * @return \CodeIgniter\HTTP\ResponseInterface
+     * @param $id
+     *
+     * Endpoint GET /api/master/kertas/$1
+     */
+    public function apiGetById($id): ResponseInterface
 	{
-		if ($this->request->getMethod() !== 'post') {
-			return redirect()->to('mfjeniskertas');
-		}
-
-		$id = $this->request->getPost('id');
 		$modified = $this->request->getPost('modified') ?? false;
 
 		$query = $this->model->getById($id);
@@ -114,17 +111,16 @@ class MFJenisKertas extends BaseController
 		return $this->response->setJSON($response);
 	}
 
-	public function apiAddProcess()
+    /**
+     * @return \CodeIgniter\HTTP\ResponseInterface
+     * @throws \Exception
+     *
+     * Endpoint POST /api/master/kertas
+     */
+    public function apiAddProcess(): ResponseInterface
 	{
-		if ($this->request->getMethod() !== 'post') {
-			return redirect()->to('mfjeniskertas');
-		}
-
 		$data = $this->request->getPost();
-		//$data['id'] = $this->model->getMaxId() + 1;
 		$data['added_by'] = current_user()->UserID;
-
-		// return $this->response->setJSON($data);
 
 		if ($this->model->insert($data)) {
 			$msg = 'Data berhasil ditambahkan';
@@ -147,22 +143,37 @@ class MFJenisKertas extends BaseController
 		return $this->response->setJSON($response);
 	}
 
-	public function apiEditProcess()
-	{
-		if ($this->request->getMethod() !== 'post') {
-			return redirect()->to('mfjeniskertas');
-		}
+    /**
+     * @param $raw_input
+     * @return array
+     */
+    public function getPut($raw_input): array
+    {
+        $input_string = $raw_input[array_keys($raw_input)[0]];
 
-		$data = $this->request->getPost();
-		// return $this->response->setJSON($data);
+        preg_match('#\{(.*?)\}#', $input_string, $match);
+
+        $json_string = '{' . $match[1] . '}';
+
+        return (array) json_decode($json_string);
+    }
+
+    /**
+     * @return \CodeIgniter\HTTP\ResponseInterface
+     * @throws \Exception
+     *
+     * Endpoint PUT /api/master/kertas
+     */
+    public function apiEditProcess(): ResponseInterface
+	{
+        $data = $this->request->getRawInput();
 
 		$data['updated_by'] = current_user()->UserID;
 		$id = $data["id"];
 		unset($data["id"]);
-		// return $this->response->setJSON(['id' => $id, 'data' => $data]);
+
 		if ($this->model->updateById($id, $data)) {
 			$msg = 'Data berhasil diupdate';
-			//session()->setFlashData('success', $msg);
 			$response = [
 				'success' => true,
 				'msg' => $msg,
@@ -181,7 +192,11 @@ class MFJenisKertas extends BaseController
 		return $this->response->setJSON($response);
 	}
 
-	public function delete($id)
+    /**
+     * @param $id
+     * @return RedirectResponse
+     */
+    public function delete($id): RedirectResponse
 	{
 		if ($this->model->deleteById($id)) {
 			return redirect()->back()
@@ -191,4 +206,25 @@ class MFJenisKertas extends BaseController
 		return redirect()->back()
 			->with('error', 'Data gagal dihapus');
 	}
+
+    /**
+     * @return ResponseInterface
+     */
+    public function getSelectOptions(): ResponseInterface
+    {
+        $query = $this->model->getMFJenisKertas();
+
+        $data = [];
+        foreach ($query as $row) {
+            $data[] = [
+                'id' => $row->id,
+                'name' => $row->nama
+            ];
+        }
+
+        return $this->response->setJSON([
+            'success' => true,
+            'data' => $data
+        ]);
+    }
 }

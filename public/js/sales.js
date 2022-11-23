@@ -41,11 +41,10 @@ $(function () {
 		order: [[ 1, 'desc' ]],
 		createdRow: function (row, data, dataIndex) {
 			$(row).find("td:eq(0)").attr("data-label", "No");
-			$(row).find("td:eq(1)").attr("data-label", "ID Sales");
-			$(row).find("td:eq(2)").attr("data-label", "Nama Sales");
-			$(row).find("td:eq(3)").attr("data-label", "NIK Sales");
-			$(row).find("td:eq(4)").attr("data-label", "Status Aktif");
-			$(row).find("td:eq(5)").attr("data-label", "&nbsp;");
+			$(row).find("td:eq(1)").attr("data-label", "Nama Sales");
+			$(row).find("td:eq(2)").attr("data-label", "NIK");
+			$(row).find("td:eq(3)").attr("data-label", "Status Aktif");
+			$(row).find("td:eq(4)").attr("data-label", "Action");
 		},
 		initComplete: function () {
 			const dropdown = `<div class="dropdown d-inline mr-2">` +
@@ -105,7 +104,7 @@ $(function () {
 
 		$.ajax({
 			type: "POST",
-			url: `${HOST}/sales/apiAddProcess`,
+			url: `${HOST}/sales/add/api`,
 			dataType: 'JSON',
 			data: formData,
 			contentType: false,
@@ -146,10 +145,9 @@ $(function () {
 		$('#dataDetail').modal('show')
 		const id = $(this).attr('data-id')
 		$.ajax({
-			type: "POST",
-			url: `${HOST}/sales/apiGetById`,
+			type: "GET",
+			url: `${HOST}/sales/api/${id}?modified=yes`,
 			dataType: 'JSON',
-			data: { id, modified: true },
 			beforeSend: function () {},
 			success: function (response) {
 				if(response.success) {
@@ -197,7 +195,7 @@ $(function () {
 		}
 		const aktif = `<select name="aktif" class="form-control">${aktif_opt.join('')}</select>`
 		const btn = `<button type="button" class="btn btn-sm btn-success save-tr-record"><i class="fas fa-check"></i></button> <button type="button" class="btn btn-sm btn-secondary cancel-tr-submit"><i class="fas fa-times"></i></button>`
-		$(`#dataList tr:nth-child(${row})`).css('background-color', '#faecdc')
+		$(`#dataList tbody tr:nth-child(${row})`).css('background-color', '#faecdc')
 		$(`#dataList tr:nth-child(${row}) td:nth-child(2)`).html(`<input type="text" class="form-control" placeholder="Nama Sales" value="${nama}" name="nama" />`)
 		$(`#dataList tr:nth-child(${row}) td:nth-child(3)`).html(`<input type="text" class="form-control" placeholder="NIK" value="${nik}" name="nik" /><input type="hidden" value="${id}" name="id" />`)
 		$(`#dataList tr:nth-child(${row}) td:nth-child(4)`).html(`${aktif}`)
@@ -225,18 +223,19 @@ $(function () {
 		e.stopPropagation()
 	})
 	$('#dataList').on('click', '.save-tr-record', function() {
-		const formData = new FormData();
-		formData.append('SalesID', $('input[name="id"]').val())
-		formData.append('SalesName', $('input[name="nama"]').val())
-		formData.append('NIK', $('input[name="nik"]').val())
-		formData.append('FlagAktif', $('select[name="aktif"] option:selected').val())
+		const data = {
+			SalesID: $('input[name="id"]').val(),
+			SalesName: $('input[name="nama"]').val(),
+			NIK: $('input[name="nik"]').val(),
+			FlagAktif: $('select[name="aktif"] option:selected').val()
+		};
 		$.ajax({
-			type: "POST",
-			url: `${HOST}/sales/apiEditProcess`,
+			type: "PUT",
+			url: `${HOST}/sales/edit/api`,
+			headers: {'Content-Type': 'application/x-www-form-urlencoded'},
+			contentType: 'application/x-www-form-urlencoded; charset=utf-8',
 			dataType: 'JSON',
-			data: formData,
-			contentType: false,
-			processData: false,
+			data: data,
 			beforeSend: function () {},
 			success: function (response) {
 				let msgClass;
@@ -260,14 +259,15 @@ $(function () {
 	$('#dataForm').on('submit', 'form[name="editData"]', function(e) {
 		e.preventDefault();
 		const formData = new FormData(this);
+		formData.append('_method', 'PUT');
 
 		$.ajax({
 			type: "POST",
-			url: `${HOST}/sales/apiEditProcess`,
+			url: `${HOST}/sales/edit/api`,
 			dataType: 'JSON',
 			data: formData,
-			contentType: false,
 			processData: false,
+			contentType: false,
 			beforeSend: function () {
 				$('#dataForm .modal-footer .loading-indicator').html(
 					'<div class="spinner-icon">' +
@@ -326,8 +326,8 @@ $(function () {
 function getAllData(obj)
 {
 	$.ajax({
-		type: "POST",
-		url: `${HOST}/sales/apiGetAll`,
+		type: "GET",
+		url: `${HOST}/sales/api`,
 		beforeSend: obj.beforeSend,
 		success: obj.success,
 		error: obj.error,

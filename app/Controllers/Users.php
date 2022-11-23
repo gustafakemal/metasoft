@@ -21,22 +21,15 @@ class Users extends BaseController
 		if($test->getNumRows()>0)
 			return $test->getResult()[0]->Nama;
 		else {
-				return "test";
+            return "test";
 		}
 
-		// return view('Pengguna/main', [
-        // 	'page_title' => 'Data Pengguna',
-        // ]);
-
     }
-
-    
 
     public function apiGetNamaById()
     {
 		$id = $this->request->getPost('nik');
 		$query = $this->model->getNamaById($id);
-		//dd($query);
     	
 		if(count($query) == 1) {
             $data = $query[0];
@@ -50,6 +43,7 @@ class Users extends BaseController
 	    		'data' => null
 	    	];
 	    }
+
 		return $this->response->setJSON($data);
     }
 }

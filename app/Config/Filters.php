@@ -25,6 +25,7 @@ class Filters extends BaseConfig
         'secureheaders' => SecureHeaders::class,
         'login' => \App\Filters\LoginFilter::class,
         'guest' => \App\Filters\GuestFilter::class,
+        'restricted' => \App\Filters\RestrictedFilter::class,
     ];
 
     /**
@@ -67,6 +68,7 @@ class Filters extends BaseConfig
      * @var array
      */
     public $filters = [
+        'restricted' => [],
         'guest' => [
             'before' => [
                 'login'
@@ -75,17 +77,20 @@ class Filters extends BaseConfig
         'login' => [
             'before' => [
                 '/',
-                'customer',
-                'sales',
-                'mftujuankirim',
-                'mfproduk',
-                'mfjeniskertas',
-                'mfjenistinta',
-                'mfjenisflute',
-                'mfprosesfinishing',
-                'mfprosesmanual',
-                'mfproseskhusus',
+                'logout'
             ]
         ],
     ];
+
+    public function __construct()
+    {
+        if(service('auth')->isLoggedIn()) {
+            $priviledge = new \App\Libraries\Priviledge();
+            $this->filters['login']['before'] = array_merge($this->filters['login']['before'], $priviledge->path());
+            $this->filters['restricted'] = [
+                'before' => $priviledge->resticted()
+            ];
+        }
+    }
+
 }

@@ -37,7 +37,7 @@ $(function () {
 			$(row).find("td:eq(3)").attr("data-label", "Berat");
 			$(row).find("td:eq(4)").attr("data-label", "Harga");
 			$(row).find("td:eq(5)").attr("data-label", "Status Aktif");
-			$(row).find("td:eq(6)").attr("data-label", "&nbsp;");
+			$(row).find("td:eq(6)").attr("data-label", "Action");
 		},
 		initComplete: function () {
 			const dropdown = `<div class="dropdown d-inline mr-2">` +
@@ -58,9 +58,7 @@ $(function () {
 				$('#dataList .dataTables_empty').html('<div class="spinner-icon"><span class="spinner-grow text-info"></span><span class="caption">Fetching data...</span></div>')
 			},
 			success: function (response) {
-				$('#dataList').DataTable().clear();
-				$('#dataList').DataTable().rows.add(response);
-				$('#dataList').DataTable().draw();
+				$('#dataList').DataTable().clear().rows.add(response).draw();
 			},
 			error: function () {
 				$('#dataList .dataTables_empty').html('Data gagal di retrieve.')
@@ -95,7 +93,7 @@ $(function () {
 
 		$.ajax({
 			type: "POST",
-			url: `${HOST}/mfjeniskertas/apiAddProcess`,
+			url: `${HOST}/api/master/kertas`,
 			dataType: 'JSON',
 			data: formData,
 			contentType: false,
@@ -125,21 +123,18 @@ $(function () {
 			}
 		})
 	})
-
-	$('#dataForm').on('hidden.bs.modal', function (event) {
-		$('#dataForm form[name="addData"], #dataForm form[name="editData"]')[0].reset();
-		$('#dataForm .msg').html('')
-	})
+		.on('hidden.bs.modal', function (event) {
+			$('#dataForm form[name="addData"], #dataForm form[name="editData"]')[0].reset();
+			$('#dataForm .msg').html('')
+		})
 
 	$('#dataList').on('click', '.item-detail', function(e) {
 		e.preventDefault();
 		$('#dataDetail').modal('show')
 		const id = $(this).attr('data-id')
 		$.ajax({
-			type: "POST",
-			url: `${HOST}/mfjeniskertas/apiGetById`,
-			dataType: 'JSON',
-			data: { id, modified: true },
+			type: "GET",
+			url: `${HOST}/api/master/kertas/${id}`,
 			beforeSend: function () {},
 			success: function (response) {
 				if(response.success) {
@@ -173,7 +168,7 @@ $(function () {
 		}
 		const aktif = `<select name="aktif" class="form-control">${aktif_opt.join('')}</select>`
 		const btn = `<button type="button" class="btn btn-sm btn-success save-tr-record"><i class="fas fa-check"></i></button> <button type="button" class="btn btn-sm btn-secondary cancel-tr-submit"><i class="fas fa-times"></i></button>`
-		$(`#dataList tr:nth-child(${row})`).css('background-color', '#faecdc')
+		$(`#dataList tbody tr:nth-child(${row})`).css('background-color', '#faecdc')
 		$(`#dataList tr:nth-child(${row}) td:nth-child(2)`).html(`<input type="text" class="form-control" value="${create_date}" readonly />`)
 		$(`#dataList tr:nth-child(${row}) td:nth-child(3)`).html(`<input type="text" class="form-control" placeholder="Jenis kertas" value="${nama}" name="nama" />`)
 		$(`#dataList tr:nth-child(${row}) td:nth-child(4)`).html(`<input type="number" class="form-control" placeholder="Berat" value="${parseInt(berat)}" name="berat" />`)
@@ -189,9 +184,7 @@ $(function () {
 	const reload_tr = function() {
 		const obj = {
 			success: function (response) {
-				$('#dataList').DataTable().clear();
-				$('#dataList').DataTable().rows.add(response);
-				$('#dataList').DataTable().draw();
+				$('#dataList').DataTable().clear().rows.add(response).draw();
 			},
 		}
 		getAllData(obj);
@@ -199,42 +192,43 @@ $(function () {
 
 	$('body').on('click', '.click-to-close', reload_tr)
 	$('#dataList').on('click', '.cancel-tr-submit', reload_tr)
-	$('#dataList').on('click', 'tr#selected', function(e) {
+		.on('click', 'tr#selected', function(e) {
 		e.stopPropagation()
 	})
-	$('#dataList').on('click', '.save-tr-record', function() {
-		const formData = new FormData();
-		formData.append('id', $('input[name="id"]').val())
-		formData.append('nama', $('input[name="nama"]').val())
-		formData.append('harga', $('input[name="harga"]').val())
-		formData.append('aktif', $('select[name="aktif"] option:selected').val())
-		formData.append('berat', $('input[name="berat"]').val())
-		$.ajax({
-			type: "POST",
-			url: `${HOST}/mfjeniskertas/apiEditProcess`,
-			dataType: 'JSON',
-			data: formData,
-			contentType: false,
-			processData: false,
-			beforeSend: function () {},
-			success: function (response) {
-				let msgClass;
-				if(response.success) {
-					reload_tr();
-					msgClass = 'success'
-				} else {
-					msgClass = 'danger'
+		.on('click', '.save-tr-record', function() {
+			const data = {
+				id: $('#dataList input[name="id"]').val(),
+				nama: $('input[name="nama"]').val(),
+				harga: $('input[name="harga"]').val(),
+				aktif: $('select[name="aktif"] option:selected').val(),
+				berat: $('input[name="berat"]').val()
+			};
+			$.ajax({
+				type: "PUT",
+				url: `${HOST}/api/master/kertas`,
+				headers: {'Content-Type': 'application/x-www-form-urlencoded'},
+				contentType: 'application/x-www-form-urlencoded; charset=utf-8',
+				dataType: 'JSON',
+				data: data,
+				beforeSend: function () {},
+				success: function (response) {
+					let msgClass;
+					if(response.success) {
+						reload_tr();
+						msgClass = 'success'
+					} else {
+						msgClass = 'danger'
+					}
+					$('.floating-msg').addClass('show').html(`<div class="alert alert-${msgClass}">${response.msg}</div>`)
+				},
+				error: function () {},
+				complete: function() {
+					setTimeout(() => {
+						$('.floating-msg').removeClass('show').html('');
+					}, 3000);
 				}
-				$('.floating-msg').addClass('show').html(`<div class="alert alert-${msgClass}">${response.msg}</div>`)
-			},
-			error: function () {},
-			complete: function() {
-				setTimeout(() => {
-					$('.floating-msg').removeClass('show').html('');
-				}, 3000);
-			}
+			})
 		})
-	})
 
 	$('#dataForm').on('submit', 'form[name="editData"]', function(e) {
 		e.preventDefault();
@@ -282,14 +276,11 @@ $(function () {
 		e.preventDefault();
 		const obj = {
 			beforeSend: function () {
-				$('#statusList').DataTable().clear();
-				$('#statusList').DataTable().draw();
+				$('#statusList').DataTable().clear().draw();
 				$('#dataList .dataTables_empty').html('<div class="spinner-icon"><span class="spinner-grow text-info"></span><span class="caption">Fetching data...</span></div>')
 			},
 			success: function (response) {
-				$('#dataList').DataTable().clear();
-				$('#dataList').DataTable().rows.add(response);
-				$('#dataList').DataTable().draw();
+				$('#dataList').DataTable().clear().rows.add(response).draw();
 			},
 			error: function () {
 				$('#dataList .dataTables_empty').html('Data gagal di retrieve.')
@@ -305,8 +296,8 @@ $(function () {
 function getAllData(obj)
 {
 	$.ajax({
-		type: "POST",
-		url: `${HOST}/mfjeniskertas/apiGetAll`,
+		type: "GET",
+		url: `${HOST}/jeniskertas/api`,
 		beforeSend: obj.beforeSend,
 		success: obj.success,
 		error: obj.error,

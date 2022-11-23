@@ -3,6 +3,8 @@
 namespace App\Controllers;
 
 use App\Models\CustomerModel;
+use CodeIgniter\HTTP\RedirectResponse;
+use CodeIgniter\HTTP\ResponseInterface;
 use CodeIgniter\I18n\Time;
 
 class Customer extends BaseController
@@ -14,7 +16,10 @@ class Customer extends BaseController
 		$this->model = new CustomerModel();
 	}
 
-    public function index()
+    /**
+     * @return string
+     */
+    public function index(): string
     {
         $this->breadcrumbs->add('Dashbor', '/');
         $this->breadcrumbs->add('Data Pelanggan', '/customer');
@@ -22,36 +27,32 @@ class Customer extends BaseController
         return view('Customer/main', [
         	'page_title' => 'Data Pelanggan',
             'breadcrumbs' => $this->breadcrumbs->render(),
+            'main_menu' => (new \App\Libraries\Menu())->render()
         ]);
     }
 
-    public function apiGetAll()
+    /**
+     * @return \CodeIgniter\HTTP\ResponseInterface
+     * @throws \Exception
+     *
+     * Endpoint GET /api/master/customer
+     */
+    public function apiGetAll(): ResponseInterface
     {
-        if($this->request->getMethod() !== 'post') {
-            return redirect()->to('customer');
-        }
-
     	$query = $this->model->getCustomers();
 
     	$data = [];
     	foreach ($query as $key => $value) {
-    		// $detail = '<a href="#" data-id="'.$value->NoPemesan.'" class="item-detail" title="Detail"><i class="far fa-file-alt"></i></a> ';
-    		// $edit = '<a href="#" data-id="'.$value->NoPemesan.'" class="item-edit" title="Edit"><i class="far fa-edit"></i></a> ';
-            // $hapus = '<a href="'.site_url('customer/delete/'.$value->NoPemesan).'" onclick="return confirm(\'Apa Anda yakin menghapus user ini?\')" title="Delete"><i class="fas fa-trash-alt"></i></a>';
              
 			$detail = '<a class="btn btn-primary btn-sm item-detail mr-1" href="#" data-id="' . $value->NoPemesan . '" title="Detail"><i class="far fa-file-alt"></i></a>';
 			$edit = '<a class="btn btn-success btn-sm item-edit mr-1" href="#" data-id="' . $value->NoPemesan . '" title="Edit"><i class="far fa-edit"></i></a>';
 			$hapus = '<a class="btn btn-danger btn-sm" href="' . site_url('customer/delete/'.$value->NoPemesan) . '" data-id="' . $value->NoPemesan . '" onclick="return confirm(\'Apa Anda yakin menghapus user ini?\')" title="Hapus"><i class="fas fa-trash-alt"></i></a>';
-	
-		
-			
-			
 			
 			$CreateDate = (Time::parse($value->CreateDate))->toDateTimeString();
     		$data[] = [
     			$key + 1,
                 $value->NoPemesan,
-    			$CreateDate,
+                $this->common->dateFormat($CreateDate),
     			$value->NamaPemesan,
                 $value->Alamat,
                 $value->NoFax,
@@ -66,7 +67,7 @@ class Customer extends BaseController
                 $value->FlagAktif,
                 $value->CreateBy,
                 $value->UpdateBy,
-                $value->LastUpdate,
+                $this->common->dateFormat($value->LastUpdate),
     			$detail . $edit . $hapus
     		];
     	}
@@ -74,14 +75,15 @@ class Customer extends BaseController
     	return $this->response->setJSON($data);
     }
 
-    public function apiGetById()
+    /**
+     * @return \CodeIgniter\HTTP\ResponseInterface
+     * @throws \Exception
+     *
+     * Endpoint GET /api/master/customer/$1
+     */
+    public function apiGetById($no_pemesan): ResponseInterface
     {
-        if($this->request->getMethod() !== 'post') {
-            return redirect()->to('customer');
-        }
-
-    	$no_pemesan = $this->request->getPost('noPemesan');
-        $modified = $this->request->getPost('modified') ?? false;
+        $modified = $this->request->getGet('modified') == 'yes';
 
     	$query = $this->model->getById($no_pemesan);
 
@@ -119,12 +121,14 @@ class Customer extends BaseController
 	    return $this->response->setJSON($response);
     }
 
-    public function apiAddProcess()
+    /**
+     * @return \CodeIgniter\HTTP\ResponseInterface
+     * @throws \Exception
+     *
+     * Endpoint POST /api/master/customer
+     */
+    public function apiAddProcess(): ResponseInterface
     {
-        if($this->request->getMethod() !== 'post') {
-            return redirect()->to('customer');
-        }
-
     	$data = $this->request->getPost();
     	$data['NoPemesan'] = $this->model->getMaxNoPemesan() + 1;
         $data['CreateBy'] = current_user()->UserID;
@@ -150,14 +154,17 @@ class Customer extends BaseController
     	return $this->response->setJSON($response);
     }
 
-    public function apiEditProcess()
+    /**
+     * @return \CodeIgniter\HTTP\ResponseInterface
+     * @throws \Exception
+     *
+     * Endpoint PUT /api/master/customer
+     */
+    public function apiEditProcess(): ResponseInterface
     {
-        if($this->request->getMethod() !== 'post') {
-            return redirect()->to('customer');
-        }
-        
-    	$data = $this->request->getPost();
+        $data = $this->request->getPost();
         $data['UpdateBy'] = current_user()->UserID;
+        unset($data['_method']);
 
     	if( $this->model->updateById($data['NoPemesan'], $data) ) {
     		$msg = 'Data berhasil diupdate';
@@ -180,7 +187,11 @@ class Customer extends BaseController
     	return $this->response->setJSON($response);
     }
 
-    public function delete($NoPemesan)
+    /**
+     * @param $NoPemesan
+     * @return RedirectResponse
+     */
+    public function delete($NoPemesan): RedirectResponse
     {
     	if($this->model->deleteById($NoPemesan)) {
     		return redirect()->back()
@@ -189,5 +200,26 @@ class Customer extends BaseController
 
     	return redirect()->back()
     					->with('error', 'Data gagal dihapus');
+    }
+
+    /**
+     * @return ResponseInterface
+     */
+    public function getSelectOptions(): ResponseInterface
+    {
+        $query = $this->model->getCustomers();
+
+        $data = [];
+        foreach ($query as $row) {
+            $data[] = [
+                'id' => $row->NoPemesan,
+                'name' => $row->NamaPemesan
+            ];
+        }
+
+        return $this->response->setJSON([
+            'success' => true,
+            'data' => $data
+        ]);
     }
 }

@@ -49,6 +49,7 @@ class BaseController extends Controller
         $this->breadcrumbs = new \App\Libraries\Breadcrumbs;
         $this->common = new \App\Libraries\Common();
 
+
         // Preload any models, libraries, etc, here.
 
         // E.g.: $this->session = \Config\Services::session();

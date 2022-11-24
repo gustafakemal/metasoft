@@ -19,6 +19,13 @@ class Common
             $this->strPad($time->hour) . ':' . $this->strPad($time->minute);
     }
 
+    public function isExist()
+    {
+        return [
+            (object) ['Valid' => true]
+        ];
+    }
+
     private function strPad($str)
     {
         return str_pad($str, 2, "0", STR_PAD_LEFT);

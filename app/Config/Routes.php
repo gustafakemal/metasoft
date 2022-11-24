@@ -135,6 +135,10 @@ $routes->group('setting', static function ($routes) {
     });
 });
 
+$routes->group('mxprospect', static function ($routes) {
+    $routes->get('/', 'MXProspect::index');
+});
+
 $routes->group('produk', static function ($routes) {
     $routes->get('/', 'MFProduk::index');
 });

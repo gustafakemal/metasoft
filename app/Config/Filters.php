@@ -71,7 +71,7 @@ class Filters extends BaseConfig
         'restricted' => [],
         'guest' => [
             'before' => [
-                'login'
+                'login',
             ]
         ],
         'login' => [

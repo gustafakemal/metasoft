@@ -20,17 +20,29 @@ class MXProspect extends BaseController
         $this->breadcrumbs->add('Dashbor', '/');
         $this->breadcrumbs->add('MXProspect', '/');
 
-        /** Untuk menampilkan SelectBox Pemesan di Form */
         $customers = (new \App\Models\CustomerModel())->getCustomers();
-
-        /** Untuk menampilkan SelectBox Jenis produk di Form */
-
-        /** Untuk menampilkan SelectBox Segmen di Form */
+        $jenisproduk = (new \App\Models\MXJenisProdukModel())->asObject()->findAll();
+        $segmen = (new \App\Models\MXSegmenModel())->asObject()->findAll();
+        $konten = (new \App\Models\MXKontenModel())->asObject()->findAll();
+        $material = (new \App\Models\MXMaterialModel())->asObject()->findAll();
+        $bagmaking = (new \App\Models\MXBagMakingModel())->asObject()->findAll();
+        $bottom = (new \App\Models\MXBottomModel())->asObject()->findAll();
+        $aksesori = (new \App\Models\MXAksesoriModel())->asObject()->findAll();
+        $areakirim = (new \App\Models\MXAreaKirimModel())->asObject()->findAll();
 
         return view('Forms/MXProspect', [
             'page_title' => 'MX Prospect',
             'breadcrumbs' => $this->breadcrumbs->render(),
-            'customers' => $customers
+            'main_menu' => (new \App\Libraries\Menu())->render(),
+            'customers' => $customers,
+            'jenisproduk' => $jenisproduk,
+            'segmen' => $segmen,
+            'konten' => $konten,
+            'material' => $material,
+            'bagmaking' => $bagmaking,
+            'bottom' => $bottom,
+            'aksesori' => $aksesori,
+            'areakirim' => $areakirim,
         ]);
     }
 
@@ -41,13 +53,10 @@ class MXProspect extends BaseController
      */
     public function addProcess()
     {
-        /** Semua inputan dari Form di masukkan ke variable ini dalam Array */
         $data_request = $this->request->getPost();
 
-        /** Un-comment perintah ini untuk debug (melihat inputan) sebelum proses lainnya */
-        //dd($data_request);
+        dd($data_request);
 
-        /** Menambahkan No Prospek yang digenerate system ke array Form */
         $data_request['NoProspek'] = 1234;
 
         /** Insert form isian ke DB */

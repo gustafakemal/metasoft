@@ -66,6 +66,9 @@
                 <div class="col-lg-8 col-sm-12">
                     <select id="jenis_produk" name="jenis_produk" class="form-control">
                         <option value="">Pilih</option>
+                        <?php foreach ($jenisproduk as $key => $jp) : ?>
+                            <option value="<?= $jp->ID;?>"><?= $jp->Nama;?></option>
+                        <?php endforeach;?>
                     </select>
                 </div>
             </div>
@@ -79,7 +82,9 @@
                 <div class="col-lg-8 col-sm-12">
                     <select id="segmen" name="segmen" class="form-control">
                         <option value="">Pilih</option>
-
+                        <?php foreach ($segmen as $key => $segmen) : ?>
+                            <option value="<?= $segmen->ID;?>"><?= $segmen->Nama;?></option>
+                        <?php endforeach;?>
                     </select>
                 </div>
             </div>
@@ -90,7 +95,9 @@
                 <div class="col-lg-8 col-sm-12">
                     <select id="konten" name="konten" class="form-control">
                         <option value="">Pilih</option>
-
+                        <?php foreach ($konten as $key => $kt) : ?>
+                            <option value="<?= $kt->ID;?>"><?= $kt->Nama;?></option>
+                        <?php endforeach;?>
                     </select>
                 </div>
             </div>
@@ -113,33 +120,39 @@
         </div>
     </div>
 
+    <?php
+    $materials = [];
+    foreach ($material as $key => $mat) :
+        $materials[] = '<option value="' . $mat->ID . '">' . $mat->Nama . '</option>';
+    endforeach;?>
+
 	<div class="form-group row">
         <label class="col-lg-2 col-sm-12 col-form-label">Material<span class="text-danger">*</span></label>
         <div class="col-sm-2">
             <select id="material1" name="material1" class="form-control">
                 <option value="">Pilih</option>
-
+                <?= implode('', $materials);?>
             </select>
 			<input type="number" class="form-control" id="tebal_material1" name="tebal_material1" placeholder="Tebal">
         </div>
         <div class="col-sm-2">
             <select id="material2" name="material2" class="form-control">
                 <option value="">Pilih</option>
-
+                <?= implode('', $materials);?>
             </select>
 			<input type="number" class="form-control" id="tebal_material2" name="tebal_material2" placeholder="Tebal">
         </div>
         <div class="col-sm-2">
             <select id="material3" name="material3" class="form-control">
                 <option value="">Pilih</option>
-
+                <?= implode('', $materials);?>
             </select>
 			<input type="number" class="form-control" id="tebal_material3" name="tebal_material3" placeholder="Tebal">
         </div>
         <div class="col-sm-2">
             <select id="material4" name="material4" class="form-control">
                 <option value="">Pilih</option>
-
+                <?= implode('', $materials);?>
             </select>
 			<input type="number" class="form-control" id="tebal_material4" name="tebal_material4" placeholder="Tebal">
         </div>
@@ -218,7 +231,9 @@
                 <div class="col-lg-8 col-sm-12">
                     <select  id="bag_making" name="bag_making" class="form-control">
                         <option value="">Pilih</option>
-
+                        <?php foreach ($bagmaking as $key => $bm) : ?>
+                            <option value="<?= $bm->ID;?>"><?= $bm->Nama;?></option>
+                        <?php endforeach;?>
                     </select>
                 </div>
             </div>
@@ -229,7 +244,9 @@
                 <div class="col-lg-8 col-sm-12">
                     <select id="bottom" name="bottom" class="form-control">
                         <option value="">Pilih</option>
-
+                        <?php foreach ($bottom as $key => $bt) : ?>
+                            <option value="<?= $bt->ID;?>"><?= $bt->Nama;?></option>
+                        <?php endforeach;?>
                     </select>
                 </div>
             </div>
@@ -257,23 +274,25 @@
                         <div class="col-sm">
                             <select  id="aksesoris" name="aksesoris" class="form-control">
                                 <option value="">Pilih</option>
-
+                                <?php foreach ($aksesori as $key => $ak) : ?>
+                                    <option value="<?= $ak->ID;?>"><?= $ak->Nama;?></option>
+                                <?php endforeach;?>
                             </select>
                         </div>
                         <div class="col-sm-auto">
-                            <button type="button" class="btn btn-sm btn-primary add-bs">+</button>
+                            <button type="button" class="btn btn-sm btn-primary add-acc">+</button>
                         </div>
                     </div>
                     
                     <div class="bs-child">
                         <!-- finishing yg sdh dipilih -->
-                        <div class="row mb-1 bscolor-2">
-						    <div class="col-sm col-form-label">ZIPPER</div>
-						    <div class="col-sm-auto">
-							    <button type="button" class="btn-sm btn-danger delbs" id="delbs-2">
-							    <i class="fas fa-trash-alt text-light"></i></button>
-						    </div>
-                        </div>
+<!--                        <div class="row mb-1 bscolor-2">-->
+<!--						    <div class="col-sm col-form-label">ZIPPER</div>-->
+<!--						    <div class="col-sm-auto">-->
+<!--							    <button type="button" class="btn-sm btn-danger delbs" id="delbs-2">-->
+<!--							    <i class="fas fa-trash-alt text-light"></i></button>-->
+<!--						    </div>-->
+<!--                        </div>-->
                     </div>
 
                 </div>
@@ -358,7 +377,9 @@
                 <div class="col-lg-7 col-sm-12">
                     <select  id="area" name="area" class="form-control">
                         <option value="">Pilih</option>
-
+                        <?php foreach ($areakirim as $key => $a_k) : ?>
+                            <option value="<?= $a_k->ID;?>"><?= $a_k->Nama;?></option>
+                        <?php endforeach;?>
                     </select>
                 </div>
             </div>

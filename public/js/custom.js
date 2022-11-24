@@ -36,4 +36,24 @@ $(function () {
     $('body').tooltip({
        selector: '[data-toggle="tooltip"]'
     });
+
+    $('button.add-acc').on('click', function() {
+        const val = $('select[name="aksesoris"] option:selected').val()
+        const label = $('select[name="aksesoris"] option:selected').text()
+
+        const len = $('.bs-child').children().length
+
+        console.log(len)
+
+        const elem = `<div class="row mb-1 bscolor-2">
+                        <div class="col-sm col-form-label">${label}</div>
+                        <div class="col-sm-auto">
+                            <button type="button" class="btn-sm btn-danger delbs" id="delbs-2">
+                                <i class="fas fa-trash-alt text-light"></i>
+                            </button>
+                        </div>
+                        </div>`
+
+        $('.bs-child').append(elem)
+    })
 });

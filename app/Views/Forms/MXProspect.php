@@ -23,9 +23,9 @@
     <div class="row">
         <div class="col-6">
             <div class="form-group row">
-                <label for="no_prospek" class="col-lg-4 col-sm-12 col-form-label">No Prospek</label>
+                <label for="noprospek" class="col-lg-4 col-sm-12 col-form-label">No Prospek</label>
                 <div class="col-lg-8 col-sm-12">
-                    <input type="text" class="form-control" id="no_prospek" name="no_prospek" readonly>
+                    <input type="text" class="form-control" id="noprospek" name="noprospek" readonly>
                 </div>
             </div>
         </div>
@@ -40,9 +40,9 @@
     </div>
 
     <div class="form-group row">
-        <label for="nama_produk" class="col-lg-2 col-sm-12 col-form-label">Nama Produk <span class="text-danger">*</span></label>
+        <label for="namaproduk" class="col-lg-2 col-sm-12 col-form-label">Nama Produk <span class="text-danger">*</span></label>
         <div class="col-lg-10 col-sm-12">
-            <input type="text" class="form-control" id="nama_produk" name="nama_produk" style="text-transform: uppercase">
+            <input type="text" class="form-control" id="namaproduk" name="namaproduk" style="text-transform: uppercase">
         </div>
     </div>
 
@@ -62,9 +62,9 @@
         </div>    
         <div class="col-6">
             <div class="form-group row">
-                <label for="jenis_produk" class="col-lg-4 col-sm-12 col-form-label">Jenis Produk</label>
+                <label for="jenisproduk" class="col-lg-4 col-sm-12 col-form-label">Jenis Produk</label>
                 <div class="col-lg-8 col-sm-12">
-                    <select id="jenis_produk" name="jenis_produk" class="form-control">
+                    <select id="jenisproduk" name="jenisproduk" class="form-control">
                         <option value="">Pilih</option>
                     </select>
                 </div>
@@ -120,28 +120,28 @@
                 <option value="">Pilih</option>
 
             </select>
-			<input type="number" class="form-control" id="tebal_material1" name="tebal_material1" placeholder="Tebal">
+			<input type="number" class="form-control" id="tebalmat1" name="tebalmat1" placeholder="Tebal">
         </div>
         <div class="col-sm-2">
             <select id="material2" name="material2" class="form-control">
                 <option value="">Pilih</option>
 
             </select>
-			<input type="number" class="form-control" id="tebal_material2" name="tebal_material2" placeholder="Tebal">
+			<input type="number" class="form-control" id="tebalmat2" name="tebalmat2" placeholder="Tebal">
         </div>
         <div class="col-sm-2">
             <select id="material3" name="material3" class="form-control">
                 <option value="">Pilih</option>
 
             </select>
-			<input type="number" class="form-control" id="tebal_material3" name="tebal_material3" placeholder="Tebal">
+			<input type="number" class="form-control" id="tebalmat3" name="tebalmat3" placeholder="Tebal">
         </div>
         <div class="col-sm-2">
             <select id="material4" name="material4" class="form-control">
                 <option value="">Pilih</option>
 
             </select>
-			<input type="number" class="form-control" id="tebal_material4" name="tebal_material4" placeholder="Tebal">
+			<input type="number" class="form-control" id="tebalmat4" name="tebalmat4" placeholder="Tebal">
         </div>
     </div>
 				
@@ -169,7 +169,7 @@
             <div class="form-group row">
                 <label for="roll_direction" class="col-lg-4 col-sm-12 col-form-label">Roll Direction</label>
                 <div class="col-lg-8 col-sm-12">
-                    <select id="roll_direction" name="roll_direction" id="roll_direction" class="form-control">
+                    <select id="rolldirection" name="rolldirection" id="rolldirection" class="form-control">
                         <option value="Y">Terbaca</option>
                         <option value="T">Tidak Terbaca</option>
                     </select>
@@ -179,33 +179,30 @@
     </div>
 
 	<div class="form-group row">
-        <label for="info_tambahan" class="col-lg-2 col-sm-12 col-form-label">Informasi Tambahan</label>
+        <label for="catatan" class="col-lg-2 col-sm-12 col-form-label">Catatan Produk</label>
         <div class="col-lg-10 col-sm-12">
-            <input type="text" class="form-control" id="info_tambahan" name="info_tambahan">
+            <input type="text" class="form-control" id="catatan" name="catatan">
         </div>
     </div>
 
 	<div class="form-group row">
-        <label for="nama_produk" class="col-lg-2 col-sm-12 col-form-label"><strong style="font-size: 16px">Finishing </strong> </label>
+        <label  class="col-lg-2 col-sm-12 col-form-label"><strong style="font-size: 16px">Finishing </strong> </label>
     </div>
             
     <div class="row">
         <div class="col-6">
             <div class="row">
-                <label for="max_join" class="col-lg-4 col-sm-12 col-form-label">Maksimal Join </label>
+                <label for="maxjoin" class="col-lg-4 col-sm-12 col-form-label">Maksimal Join </label>
                 <div class="col-lg-8 col-sm-12">
-                    <input type="number" class="form-control" id="max_join" name="max_join">
+                    <input type="number" class="form-control" id="maxjoin" name="maxjoin">
                 </div>
             </div>
         </div>
 		<div class="col-6">
             <div class="form-group row">
-                <label for="warna_tape" class="col-lg-4 col-sm-12 col-form-label">Warna Tape</label>
+                <label for="warnatape" class="col-lg-4 col-sm-12 col-form-label">Warna Tape</label>
                 <div class="col-lg-8 col-sm-12">
-                    <select id="warna_tape" name="warna_tape" class="form-control">
-                        <option value="">Pilih</option>
-
-                    </select>
+                    <input type="text" class="form-control" id="warnatape" name="warnatape">
                 </div>
             </div>
         </div>
@@ -214,9 +211,9 @@
     <div class="row">
         <div class="col-6">
             <div class="form-group row">
-                <label for="bag_making" class="col-lg-4 col-sm-12 col-form-label">Bag Making</label>
+                <label for="bagmaking" class="col-lg-4 col-sm-12 col-form-label">Bag Making</label>
                 <div class="col-lg-8 col-sm-12">
-                    <select  id="bag_making" name="bag_making" class="form-control">
+                    <select  id="bagmaking" name="bagmaking" class="form-control">
                         <option value="">Pilih</option>
 
                     </select>
@@ -266,7 +263,7 @@
                     </div>
                     
                     <div class="bs-child">
-                        <!-- finishing yg sdh dipilih -->
+                        <!-- aksesoris yg sdh dipilih -->
                         <div class="row mb-1 bscolor-2">
 						    <div class="col-sm col-form-label">ZIPPER</div>
 						    <div class="col-sm-auto">
@@ -317,9 +314,9 @@
         </div>
         <div class="col-3">
             <div class="form-group row">
-                <label for="partial" class="col-lg-6 col-sm-12 col-form-label">Partial Qty</label>
+                <label for="parsial" class="col-lg-6 col-sm-12 col-form-label">Partial Qty</label>
                 <div class="col-lg-6 col-sm-12">
-                    <select id="partial" name="partial" class="form-control">
+                    <select id="parsial" name="parsial" class="form-control">
                         <option value="T">Tidak</option>
 						<option value="Y">Ya</option>
                     </select>
@@ -336,7 +333,7 @@
     </div>
 
 	<Div class="form-group row">
-        <label for="nama_produk" class="col-lg-2 col-sm-12 col-form-label"><strong style="font-size: 16px">Pengiriman</strong></label>
+        <label class="col-lg-2 col-sm-12 col-form-label"><strong style="font-size: 16px">Pengiriman</strong></label>
     </div>
 			
     <div class="row">
@@ -370,13 +367,6 @@
                     <input id="kapasitas" name="kapasitas" type="number" class="form-control" placeholder="Ton">
                 </div>
             </div>
-        </div>
-    </div>
-
-	<div class="form-group row">
-        <label for="catatan" class="col-lg-2 col-sm-12 col-form-label">Catatan</label>
-        <div class="col-lg-10 col-sm-12">
-            <input id="catatan" name="catatan" type="text" class="form-control">
         </div>
     </div>
 

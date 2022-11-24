@@ -139,6 +139,12 @@ $routes->group('produk', static function ($routes) {
     $routes->get('/', 'MFProduk::index');
 });
 
+$routes->group('partproduk', static function ($routes) {
+    $routes->get('/', 'MFProduk::index');
+    $routes->get('add', 'MFPartProduk::addPartProduct');
+    $routes->get('edit/(:any)', 'MFPartProduk::editPartProduct/$1');
+});
+
 $routes->add('partproduk/add', 'MFPartProduk::addPartProduct');
 $routes->add('partproduk/edit/(:any)', 'MFPartProduk::editPartProduct/$1');
 $routes->add('partproduk/rev/(:any)/(:any)', 'MFPartProduk::editPartProduct/$1/$2');

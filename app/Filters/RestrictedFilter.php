@@ -14,7 +14,10 @@ class RestrictedFilter implements FilterInterface
         $response->setStatusCode(403);
         $response->setBody('You do not allowed to access this resource.');
 
+        //dd($response);
         return $response;
+
+//        return view('Common/restricted');
 
     }
 

@@ -2,6 +2,8 @@
 
 namespace App\Controllers;
 
+use CodeIgniter\I18n\Time;
+
 class MXProspect extends BaseController
 {
     private $db;
@@ -10,6 +12,7 @@ class MXProspect extends BaseController
     {
         $this->db = new \App\Models\MXProspectModel();
     }
+
     /**
      * Endpoint ini digunakan untuk menampilkan Form / inputan
      *
@@ -34,6 +37,8 @@ class MXProspect extends BaseController
             'page_title' => 'MX Prospect',
             'breadcrumbs' => $this->breadcrumbs->render(),
             'main_menu' => (new \App\Libraries\Menu())->render(),
+            'no_prospek' => $this->db->noProspek(),
+            'alternatif' => $this->db->getAlternatif(),
             'customers' => $customers,
             'jenisproduk' => $jenisproduk,
             'segmen' => $segmen,
@@ -54,13 +59,21 @@ class MXProspect extends BaseController
     public function addProcess()
     {
         $data_request = $this->request->getPost();
-
-        dd($data_request);
-
-        $data_request['NoProspek'] = 1234;
+        $data_request['Tanggal'] = Time::now()->toDateTimeString();
+        $data_request['CreatedBy'] = session()->get('UserID');
+        $data_request['Tebal'] = floatval(str_replace(',', '', trim($data_request['Tebal'])));
+        $data_request['Panjang'] = floatval(str_replace(',', '', trim($data_request['Panjang'])));
+        $data_request['Lebar'] = floatval(str_replace(',', '', trim($data_request['Lebar'])));
+        $data_request['Pitch'] = floatval(str_replace(',', '', trim($data_request['Pitch'])));
+        $data_request['TebalMat1'] = floatval(str_replace(',', '', trim($data_request['TebalMat1'])));
+        $data_request['TebalMat2'] = floatval(str_replace(',', '', trim($data_request['TebalMat2'])));
+        $data_request['TebalMat3'] = floatval(str_replace(',', '', trim($data_request['TebalMat3'])));
+        $data_request['TebalMat4'] = floatval(str_replace(',', '', trim($data_request['TebalMat4'])));
+        $data_request['Toleransi'] = floatval(str_replace(',', '', trim($data_request['Toleransi'])));
+        $data_request['Kapasitas'] = floatval(str_replace(',', '', trim($data_request['Kapasitas'])));
 
         /** Insert form isian ke DB */
-        $insert_data = $this->db->insert($data_request);
+        $insert_data = $this->db->insert($data_request, false);
 
         if ( $insert_data ) {
             return redirect()->back()

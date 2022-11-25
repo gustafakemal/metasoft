@@ -37,23 +37,35 @@ $(function () {
        selector: '[data-toggle="tooltip"]'
     });
 
+    let aksesories = [];
     $('button.add-acc').on('click', function() {
         const val = $('select[name="aksesoris"] option:selected').val()
-        const label = $('select[name="aksesoris"] option:selected').text()
 
-        const len = $('.bs-child').children().length
+        if( val !== '0' && ! aksesories.includes(val) ) {
+            const label = $('select[name="aksesoris"] option:selected').text()
 
-        console.log(len)
-
-        const elem = `<div class="row mb-1 bscolor-2">
+            const elem = `<div class="row mb-1 bscolor" id="bscolor-${val}">
                         <div class="col-sm col-form-label">${label}</div>
                         <div class="col-sm-auto">
-                            <button type="button" class="btn-sm btn-danger delbs" id="delbs-2">
+                            <button type="button" class="btn-sm btn-danger delbs" id="delbs-${val}">
                                 <i class="fas fa-trash-alt text-light"></i>
                             </button>
                         </div>
+                        <input type="hidden" name="aksesori[]" value="${val}" />
                         </div>`
 
-        $('.bs-child').append(elem)
+            $('.bs-child').append(elem)
+            aksesories.push(val)
+        }
+        $(`select[name="aksesoris"] option[value="0"]`).prop('selected', true);
+    })
+
+    $('.bs-child').on('click', '.delbs', function (e) {
+        const split_el = $(this).attr('id').split('-')
+        const idx = aksesories.indexOf(split_el[1]);
+        if (idx !== -1) {
+            aksesories.splice(idx, 1);
+        }
+        $(`.bs-child #bscolor-${split_el[1]}`).remove()
     })
 });

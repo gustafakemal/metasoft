@@ -76,6 +76,18 @@ class MXProspect extends BaseController
         $insert_data = $this->db->insert($data_request, false);
 
         if ( $insert_data ) {
+            if(count($data_request['aksesori']) > 0) {
+                $noprospek = $data_request['NoProspek'];
+                $data_aksesori = array_map(function ($item) use ($noprospek) {
+                    return [
+                        'NoProspek' => $noprospek,
+                        'Aksesori' => $item
+                    ];
+                }, $data_request['aksesori']);
+                $pa_model = new \App\Models\MXProspekAksesoriModel();
+                $pa_model->insertBatch($data_aksesori);
+            }
+
             return redirect()->back()
                             ->with('success', 'Data berhasil ditambahkan');
         } else {

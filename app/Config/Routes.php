@@ -35,7 +35,7 @@ $routes->setAutoRoute(false);
 // route since we don't have to scan directories.
 $routes->get('/', 'Home::index');
 $routes->get('login', 'Auth::login');
-$routes->post('auth/verify', 'Auth::verify');
+$routes->post('auth/verify', 'Auth::verify', ['as' => 'verifikasi']);
 $routes->get('logout', 'Auth::logout');
 
 $routes->group('pelanggan', static function ($routes) {
@@ -142,19 +142,26 @@ $routes->group('mxprospect', static function ($routes) {
 
 $routes->group('produk', static function ($routes) {
     $routes->get('/', 'MFProduk::index');
+    $routes->post('/add', 'MFProduk::apiAddProcess');
 });
 
 $routes->group('partproduk', static function ($routes) {
-    $routes->get('/', 'MFProduk::index');
+    $routes->get('/', 'MFPartProduk::index');
+    $routes->post('/', 'MFPartProduk::partProductSearch');
+    $routes->post('api', 'MFPartProduk::apiAllSisiByPart');
+    $routes->get('rev/(:any)/(:any)', 'MFPartProduk::editPartProduct/$1/$2');
+    $routes->get('detail/(:any)', 'MFPartProduk::detailPartProduct/$1');
     $routes->get('add', 'MFPartProduk::addPartProduct');
+    $routes->post('add', 'MFPartProduk::apiAddProcess');
     $routes->get('edit/(:any)', 'MFPartProduk::editPartProduct/$1');
+    $routes->get('delete/(:any)', 'MFPartProduk::delPartProduk/$1');
 });
 
-$routes->add('partproduk/add', 'MFPartProduk::addPartProduct');
-$routes->add('partproduk/edit/(:any)', 'MFPartProduk::editPartProduct/$1');
-$routes->add('partproduk/rev/(:any)/(:any)', 'MFPartProduk::editPartProduct/$1/$2');
-$routes->add('partproduk/detail/(:any)', 'MFPartProduk::detailPartProduct/$1');
-$routes->add('partproduk/del/(:any)', 'MFPartProduk::delPartProduk/$1');
+//$routes->add('partproduk/add', 'MFPartProduk::addPartProduct');
+//$routes->add('partproduk/edit/(:any)', 'MFPartProduk::editPartProduct/$1');
+//$routes->add('partproduk/rev/(:any)/(:any)', 'MFPartProduk::editPartProduct/$1/$2');
+//$routes->add('partproduk/detail/(:any)', 'MFPartProduk::detailPartProduct/$1');
+//$routes->add('partproduk/del/(:any)', 'MFPartProduk::delPartProduk/$1');
 $routes->add('partproduk/addcopysisi', 'MFPartProduk::addcopysisi');
 
 /*

@@ -38,7 +38,7 @@ $(function () {
 		const keyword = $('input[name="caripartproduk"]').val();
 		$.ajax({
 			type: 'POST',
-			url: `${HOST}/mfpartproduk/partProductSearch`,
+			url: `${HOST}/partproduk`,
 			dataType: 'JSON',
 			data: { keyword },
 			beforeSend: function () {},
@@ -128,7 +128,7 @@ $(function () {
 
 		$.ajax({
 			type: 'POST',
-			url: `${HOST}/mfpartproduk/apiAddProcess`,
+			url: `${HOST}/partproduk/add`,
 			dataType: 'JSON',
 			data: formData,
 			contentType: false,
@@ -585,7 +585,7 @@ function loadDataSisi(id_part)
 {
 	$.ajax({
 		type: "POST",
-		url: `${HOST}/mfpartproduk/apiAllSisiByPart`,
+		url: `${HOST}/partproduk/api`,
 		dataType: 'JSON',
 		data: {id: id_part},
 		beforeSend: function () {},

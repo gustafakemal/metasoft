@@ -7,6 +7,7 @@ use CodeIgniter\HTTP\RedirectResponse;
 use CodeIgniter\HTTP\ResponseInterface;
 use CodeIgniter\I18n\Time;
 use CodeIgniter\Files\File;
+use Config\Services;
 use phpDocumentor\Reflection\Types\Mixed_;
 
 class MFPartProduk extends BaseController
@@ -52,6 +53,7 @@ class MFPartProduk extends BaseController
             'ref' => $this->request->getGet('ref'),
             'id_produk' => $this->request->getGet('id_produk'),
             'breadcrumbs' => $this->breadcrumbs->render(),
+            'main_menu' => (new \App\Libraries\Menu())->render()
 		]);
 	}
 
@@ -75,6 +77,7 @@ class MFPartProduk extends BaseController
             'id_produk' => $this->request->getGet('id_produk'),
             'is_revision' => $is_revision,
             'rev_no' => ($is_revision == 1) ? $this->model->revGenerator($data->fgd) : $data->revisi,
+            'main_menu' => (new \App\Libraries\Menu())->render()
         ]);
     }
 
@@ -550,10 +553,6 @@ class MFPartProduk extends BaseController
      */
     public function apiAllSisiByPart(): ResponseInterface
     {
-		if ($this->request->getMethod() !== 'post') {
-			return redirect()->to('mfpartproduk');
-		}
-
         $id = $this->request->getPost('id');
         $is_revision = $this->request->getPost('is_revision');
 

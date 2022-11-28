@@ -92,10 +92,6 @@
 <script src="<?= site_url('third-party/jquery/jquery.min.js'); ?>"></script>
 <script type="text/javascript" src="<?= site_url('third-party/DataTables/datatables.min.js'); ?>"></script>
 <script type="text/javascript" src="<?= site_url('third-party/DataTables/DataTables-1.11.3/js/dataTables.bootstrap4.min.js'); ?>"></script>
-<script src="https://cdn.datatables.net/buttons/2.2.3/js/dataTables.buttons.min.js"></script>
-<script src="https://cdn.datatables.net/buttons/2.2.3/js/buttons.bootstrap5.min.js"></script>
-<script src="https://cdnjs.cloudflare.com/ajax/libs/jszip/3.1.3/jszip.min.js"></script>
-<script src="https://cdn.datatables.net/buttons/2.2.3/js/buttons.html5.min.js"></script>
 <script src="<?= site_url('third-party/bootstrap/js/popper.min.js'); ?>"></script>
 <script src="<?= site_url('third-party/bootstrap/js/bootstrap.min.js'); ?>"></script>
 <script type="text/javascript">

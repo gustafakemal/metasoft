@@ -91,7 +91,7 @@ class MFProduk extends BaseController
 
 		$data = [];
 		foreach($query as $key => $val) {
-			$edit_btn = '<a data-toggle="tooltip" data-placement="left" title="Edit" href="'. site_url('MFProduk/edit/' . $val->id) .'" class="btn btn-sm btn-success mr-2"><i class="far fa-edit"></i></a>';
+			$edit_btn = '<a data-toggle="tooltip" data-placement="left" title="Edit" href="'. site_url('produk/edit/' . $val->id) .'" class="btn btn-sm btn-success mr-2"><i class="far fa-edit"></i></a>';
 			$del_btn = '<a data-toggle="tooltip" data-placement="left" title="Hapus" href="#" class="btn btn-sm btn-danger del-item-product" data-keyword="'. $keyword .'" data-id="'. $val->id .'"><i class="far fa-trash-alt"></i></a>';
 
             $added = Time::parse($val->added);
@@ -126,7 +126,7 @@ class MFProduk extends BaseController
     public function delItemProduct(): ResponseInterface
     {
         if ($this->request->getMethod() !== 'post') {
-            return redirect()->to('mfproduk');
+            return redirect()->to('produk');
         }
 
         $id = $this->request->getPost('id');
@@ -166,7 +166,7 @@ class MFProduk extends BaseController
 
             $confirm = "'Yakin menghapus?'";
             $edit = '<a href="#" class="edit-produk" data-id="' . $item->id . '"><i class=" far fa-edit"></i></a>';
-            $del = ' <a href="' . site_url('mfproduk/delete/' . $item->id) . '" onclick="return confirm(' . $confirm . ')"><i class=" far fa-trash-alt"></i></a>';
+            $del = ' <a href="' . site_url('produk/delete/' . $item->id) . '" onclick="return confirm(' . $confirm . ')"><i class=" far fa-trash-alt"></i></a>';
             $data[] = [
                 $key + 1,
                 $item->nama_produk,
@@ -251,7 +251,7 @@ class MFProduk extends BaseController
             $response = [
                 'success' => true,
                 'msg' => 'Data berhasil ditambahkan.',
-                'redirect_url' => site_url('MFProduk/edit/' . $id),
+                'redirect_url' => site_url('produk/edit/' . $id),
                 'data' => $data,
             ];
         } else {

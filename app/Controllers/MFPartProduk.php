@@ -879,7 +879,7 @@ class MFPartProduk extends BaseController
                 $row->added_by,
                 ($added->equals($updated)) ? '' : $this->common->dateFormat($row->updated),
                 $row->updated_by,
-                '<a title="Hapus" href="'.site_url('MFProduk/delItemKelProduk/' . $id_produk . '/' . $row->id).'" onclick="return confirm('.$confirm.')" href="#"><i class="far fa-trash-alt"></i></a>'
+                '<a title="Hapus" href="'.site_url('produk/delete/' . $id_produk . '/' . $row->id).'" onclick="return confirm('.$confirm.')" href="#"><i class="far fa-trash-alt"></i></a>'
             ];
         }
 

@@ -76,7 +76,7 @@ $(function () {
 
 	if(checkURLWithParam('edit')) {
 		setTimeout(() => {
-			loadData(`${HOST}/mfpartproduk/apiGetByProduct/${id_produk}`, '#dataPartProduk');
+			loadData(`${HOST}/partproduk/api/${id_produk}`, '#dataPartProduk');
 		}, 50);
 	}
 
@@ -102,7 +102,7 @@ $(function () {
 
 			$.ajax({
 				type: 'POST',
-				url: `${HOST}/MFProduk/delItemProduct`,
+				url: `${HOST}/produk/delete`,
 				dataType: 'JSON',
 				data: {id},
 				beforeSend: function () {},
@@ -141,7 +141,7 @@ $(function () {
 			const keyword = $('input[name="caripartproduk"]').val();
 			$.ajax({
 				type: 'POST',
-				url: `${HOST}/mfpartproduk/partProductSearch`,
+				url: `${HOST}/partproduk`,
 				dataType: 'JSON',
 				data: { keyword, full: false, id_produk },
 				beforeSend: function () {},
@@ -174,7 +174,8 @@ $(function () {
 
 		$.ajax({
 			type: 'POST',
-			url: `${HOST}/MFPartProduk/apiAddToProduct`,
+			//url: `${HOST}/MFPartProduk/apiAddToProduct`,
+			url: `${HOST}/partproduk/add/toproduk`,
 			dataType: 'JSON',
 			data: {id_produk, id_part},
 			beforeSend: function() {
@@ -182,7 +183,7 @@ $(function () {
 			},
 			success: function (response) {
 				if(response.success) {
-					loadData(`${HOST}/mfpartproduk/apiGetByProduct/${id_produk}`, '#dataPartProduk');
+					loadData(`${HOST}/partproduk/api/${id_produk}`, '#dataPartProduk');
 					$('.floating-msg').addClass('show').html(`
 						<div class="alert alert-success">${response.msg}</div>
 						`)
@@ -218,7 +219,7 @@ $(function () {
 				},
 				success: function (response) {
 					if(response.success) {
-						loadData(`${HOST}/mfpartproduk/apiGetByProduct/${id_produk}`, '#dataPartProduk');
+						loadData(`${HOST}/partproduk/api/${id_produk}`, '#dataPartProduk');
 						$('.floating-msg').addClass('show').html(`
 						<div class="alert alert-success">${response.msg}</div>
 						`)
@@ -254,7 +255,7 @@ $(function () {
 
 		$.ajax({
 			type: 'POST',
-			url: `${HOST}/mfproduk/apiAddProcess`,
+			url: `${HOST}/produk/add`,
 			dataType: 'JSON',
 			data: formData,
 			contentType: false,
@@ -283,7 +284,7 @@ $(function () {
 
 		$.ajax({
 			type: 'POST',
-			url: `${HOST}/mfproduk/apieditprocess`,
+			url: `${HOST}/produk/edit`,
 			dataType: 'JSON',
 			data: formData,
 			contentType: false,
@@ -380,7 +381,7 @@ function searchProduct(keyword)
 {
 	$.ajax({
 		type: 'POST',
-		url: `${HOST}/mfproduk/productSearch`,
+		url: `${HOST}/produk`,
 		dataType: 'JSON',
 		data: { keyword },
 		beforeSend: function () {},

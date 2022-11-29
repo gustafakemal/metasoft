@@ -142,15 +142,22 @@ $routes->group('mxprospect', static function ($routes) {
 
 $routes->group('produk', static function ($routes) {
     $routes->get('/', 'MFProduk::index');
-    $routes->post('/add', 'MFProduk::apiAddProcess');
+    $routes->post('/', 'MFProduk::productSearch');
+    $routes->post('add', 'MFProduk::apiAddProcess');
+    $routes->get('edit/(:num)', 'MFProduk::edit/$1');
+    $routes->post('edit', 'MFProduk::apiEditProcess');
+    $routes->get('delete/(:num)/(:any)', 'MFProduk::delItemKelProduk/$1/$2');
+    $routes->post('delete', 'MFProduk::delItemProduct');
 });
 
 $routes->group('partproduk', static function ($routes) {
     $routes->get('/', 'MFPartProduk::index');
     $routes->post('/', 'MFPartProduk::partProductSearch');
+    $routes->get('api/(:num)', 'MFPartProduk::apiGetByProduct/$1');
     $routes->post('api', 'MFPartProduk::apiAllSisiByPart');
     $routes->get('rev/(:any)/(:any)', 'MFPartProduk::editPartProduct/$1/$2');
     $routes->get('detail/(:any)', 'MFPartProduk::detailPartProduct/$1');
+    $routes->post('add/toproduk', 'MFPartProduk::apiAddToProduct');
     $routes->get('add', 'MFPartProduk::addPartProduct');
     $routes->post('add', 'MFPartProduk::apiAddProcess');
     $routes->get('edit/(:any)', 'MFPartProduk::editPartProduct/$1');

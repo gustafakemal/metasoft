@@ -137,6 +137,7 @@ $routes->group('setting', static function ($routes) {
 
 $routes->group('mxprospect', static function ($routes) {
     $routes->get('/', 'MXProspect::index');
+    $routes->post('/', 'MXProspect::apiSearch');
     $routes->get('add', 'MXProspect::add');
     $routes->post('add', 'MXProspect::addProcess');
 });

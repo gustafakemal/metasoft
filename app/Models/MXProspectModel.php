@@ -87,4 +87,16 @@ class MXProspectModel extends Model
         $new_id = $last_id + 1;
         return str_pad($new_id, $length, "0", STR_PAD_LEFT);
     }
+
+    public function getByKeyword($keyword)
+    {
+        return $this->like('NamaProduk', $keyword)
+                    ->get();
+    }
+
+    public function getByNoProspect($NoProspect)
+    {
+        return $this->where('NoProspect', $NoProspect)
+                    ->get();
+    }
 }

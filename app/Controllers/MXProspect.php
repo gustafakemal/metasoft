@@ -6,11 +6,11 @@ use CodeIgniter\I18n\Time;
 
 class MXProspect extends BaseController
 {
-    private $db;
+    private $model;
 
     public function __construct()
     {
-        $this->db = new \App\Models\MXProspectModel();
+        $this->model = new \App\Models\MXProspectModel();
     }
 
     /**
@@ -37,7 +37,7 @@ class MXProspect extends BaseController
             'page_title' => 'MX Prospect',
             'breadcrumbs' => $this->breadcrumbs->render(),
             'main_menu' => (new \App\Libraries\Menu())->render(),
-            'alternatif' => $this->db->getAlternatif(),
+            'alternatif' => $this->model->getAlternatif(),
             'customers' => $customers,
             'jenisproduk' => $jenisproduk,
             'segmen' => $segmen,
@@ -59,7 +59,7 @@ class MXProspect extends BaseController
     {
         $data_request = $this->request->getPost();
 
-        $data_request['NoProspek'] = $this->db->noProspek();
+        $data_request['NoProspek'] = $this->model->noProspek();
         $data_request['Alt'] = 1;
 
         $data_request['NamaProduk'] = strtoupper($data_request['NamaProduk']);
@@ -77,7 +77,7 @@ class MXProspect extends BaseController
         $data_request['Kapasitas'] = floatval(str_replace(',', '', trim($data_request['Kapasitas'])));
 
         /** Insert form isian ke DB */
-        $insert_data = $this->db->insert($data_request, false);
+        $insert_data = $this->model->insert($data_request, false);
 
         if ( $insert_data ) {
             if( array_key_exists('aksesori', $data_request) && count($data_request['aksesori']) > 0) {
@@ -97,7 +97,7 @@ class MXProspect extends BaseController
                             ->with('success', 'Data berhasil ditambahkan');
         } else {
             return redirect()->back()
-                ->with('error', '<p>' . implode('</p><p>', $this->db->errors()) . '</p>');
+                ->with('error', '<p>' . implode('</p><p>', $this->model->errors()) . '</p>');
         }
 
     }
@@ -107,10 +107,80 @@ class MXProspect extends BaseController
         $this->breadcrumbs->add('Dashbor', '/');
         $this->breadcrumbs->add('MXProspect', '/');
 
-        return view('Forms/MXProspect', [
+        return view('Forms/MXProspect_List', [
             'page_title' => 'MX Prospect',
             'breadcrumbs' => $this->breadcrumbs->render(),
             'main_menu' => (new \App\Libraries\Menu())->render(),
         ]);
+    }
+
+    public function apiSearch()
+    {
+        $keyword = $this->request->getPost('keyword');
+
+        $query = $this->model->getByKeyword($keyword);
+
+        $results = [];
+        if($query->getNumRows() > 0) {
+            foreach ($query->getResult() as $key => $row) {
+
+                $alt_confirm = "return confirm('Menambahkan alternatif')";
+
+                $edit = '<a title="" data-toggle="tooltip" data-placement="left" class="btn btn-sm btn-success edit-rev-item mr-2" href="#" title="Edit"><i class="far fa-edit"></i></a> ';
+                $alt = '<a title="" data-toggle="tooltip" data-placement="left" class="btn btn-sm btn-info alt-item" href="#" data-no-prospect="'. $row->NoProspek .'" onclick="' . $alt_confirm . '" title="Alt"><i class="far fa-clone"></i></a> ';
+                $hapus = '<a title="Hapus" data-toggle="tooltip" data-placement="left" class="btn btn-sm btn-danger" href="#" onclick=""><i class="far fa-trash-alt"></i></a>';
+
+                $results[] = [
+                    $key + 1,
+                    $row->NoProspek,
+                    $row->Alt,
+                    $row->NamaProduk,
+                    $row->Pemesan,
+                    $row->Jumlah,
+                    $row->Area,
+                    $row->CreatedBy,
+                    $row->Catatan,
+                    '',
+                    $edit . $alt . $hapus
+                ];
+            }
+        }
+
+        return $this->response->setJSON($results);
+    }
+
+    public function createAlt()
+    {
+        $NoProspek = $this->request->getPost('NoProspek');
+
+        $query = $this->model->getByNoProspect($NoProspek);
+
+        $results = [];
+        if($query->getNumRows() > 0) {
+            foreach ($query->getResult() as $key => $row) {
+
+                $alt_confirm = "return confirm('Menambahkan alternatif')";
+
+                $edit = '<a title="" data-toggle="tooltip" data-placement="left" class="btn btn-sm btn-success edit-rev-item mr-2" href="#" title="Edit"><i class="far fa-edit"></i></a> ';
+                $alt = '<a title="" data-toggle="tooltip" data-placement="left" class="btn btn-sm btn-info alt-item" href="#" data-no-prospect="'. $row->NoProspect .'" onclick="' . $alt_confirm . '" title="Alt"><i class="far fa-clone"></i></a> ';
+                $hapus = '<a title="Hapus" data-toggle="tooltip" data-placement="left" class="btn btn-sm btn-danger" href="#" onclick=""><i class="far fa-trash-alt"></i></a>';
+
+                $results[] = [
+                    $key + 1,
+                    $row->NoProspek,
+                    $row->Alt,
+                    $row->NamaProduk,
+                    $row->Pemesan,
+                    $row->Jumlah,
+                    $row->Area,
+                    $row->CreatedBy,
+                    $row->Catatan,
+                    '',
+                    $edit . $alt . $hapus
+                ];
+            }
+        }
+
+        return $this->response->setJSON($results);
     }
 }

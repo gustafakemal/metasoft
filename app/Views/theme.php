@@ -135,6 +135,9 @@
 <?php if (url_is('setting/*')) : ?>
     <script type="module" src="<?= site_url('js/setting.js'); ?>"></script>
 <?php endif; ?>
+<?php if (url_is('mxprospect*')) : ?>
+    <script type="module" src="<?= site_url('js/mxprospect.js'); ?>"></script>
+<?php endif; ?>
 <script src="<?= site_url('js/custom.js'); ?>"></script>
 <!-- -->
 

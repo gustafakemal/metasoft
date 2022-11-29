@@ -32,8 +32,6 @@
     </div>
 </form>
 
-<div class="dynamic-content">
-
 <div class="tbl-data-listprospek">
 
 <table id="dataList" class="table table-bordered table-striped" style="width: 100%;">
@@ -53,8 +51,6 @@
 		</tr>
 	</thead>
 </table>
-
-</div>
 
 </div>
 

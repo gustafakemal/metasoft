@@ -27,7 +27,6 @@ class MXProspectModel extends Model
     protected $validationMessages = [
         'NamaProduk'        => [
             'required' => 'Field Nama Produk harus diisi.',
-            'greater_than' => 'Field Nama Produk harus diisi.',
         ],
         'Kapasitas'        => [
             'required' => 'Field Kapasitas harus diisi.',
@@ -48,6 +47,13 @@ class MXProspectModel extends Model
         'Pitch'        => [
             'required' => 'Dimensi (Pitch) harus diisi.',
             'greater_than' => 'Dimensi (Pitch) harus diisi.',
+        ],
+        'Material1'        => [
+            'required' => 'Field Material harus diisi.',
+        ],
+        'TebalMat1'        => [
+            'required' => 'Field tebal material harus diisi.',
+            'greater_than' => 'Field tebal material harus diisi.',
         ],
     ];
 

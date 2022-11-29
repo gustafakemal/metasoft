@@ -88,7 +88,7 @@ class Filters extends BaseConfig
             $priviledge = new \App\Libraries\Priviledge();
             $this->filters['login']['before'] = array_merge($this->filters['login']['before'], $priviledge->path());
             $this->filters['restricted'] = [
-                'before' => $priviledge->resticted()
+                'before' => $priviledge->restricted()
             ];
         }
     }

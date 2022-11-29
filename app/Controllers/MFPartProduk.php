@@ -921,7 +921,7 @@ class MFPartProduk extends BaseController
     public function apiAddProcess(): ResponseInterface
 	{
 		if ($this->request->getMethod() !== 'post') {
-			return redirect()->to('mfpartproduk');
+			return redirect()->to('partproduk');
 		}
 
 		$data = $this->request->getPost();
@@ -933,6 +933,8 @@ class MFPartProduk extends BaseController
         $data['aktif'] = 'Y';
 
         $data['nama'] = strtoupper($data['nama']);
+
+        return $this->response->setJSON($data);
 
         $file = $this->request->getFile('file_dokcr');
         $data['file_dokcr'] = $file->getName();

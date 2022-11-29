@@ -20,25 +20,6 @@
 
 <?php echo form_open('mxprospect/add');?>
 
-    <div class="row">
-        <div class="col-6">
-            <div class="form-group row">
-                <label for="noprospek" class="col-lg-4 col-sm-12 col-form-label">No Prospek</label>
-                <div class="col-lg-8 col-sm-12">
-                    <input type="text" class="form-control" id="noprospek" name="NoProspek" value="<?= $no_prospek;?>" readonly>
-                </div>
-            </div>
-        </div>
-        <div class="col-6">
-            <div class="form-group row">
-                <label for="alt" class="col-lg-4 col-sm-12 col-form-label">Alternatif</label>
-                <div class="col-lg-2 col-sm-12">        
-                    <input type="number" class="form-control" value="<?= $alternatif;?>" id="alt" name="Alt" readonly>
-                </div>
-            </div>
-        </div>
-    </div>
-
     <div class="form-group row">
         <label for="namaproduk" class="col-lg-2 col-sm-12 col-form-label">Nama Produk <span class="text-danger">*</span></label>
         <div class="col-lg-10 col-sm-12">
@@ -107,16 +88,16 @@
     <div class="form-group row">
         <label class="col-lg-2 col-sm-12 col-form-label">Dimensi (mm)<span class="text-danger">*</span></label>
         <div class="col-sm-2">
-            <input type="number" class="form-control" id="tebal" name="Tebal" placeholder="Tebal">
+            <input type="number" step="any" class="form-control" id="tebal" name="Tebal" placeholder="Tebal">
         </div>
 		<div class="col-sm-2">
-            <input type="number" class="form-control" id="panjang" name="Panjang" placeholder="Panjang">
+            <input type="number" step="any" class="form-control" id="panjang" name="Panjang" placeholder="Panjang">
         </div>
         <div class="col-sm-2">
-            <input type="number" class="form-control" id="lebar" name="Lebar" placeholder="Lebar">
+            <input type="number" step="any" class="form-control" id="lebar" name="Lebar" placeholder="Lebar">
         </div>
         <div class="col-sm-2">
-            <input type="number" class="form-control" id="pitch" name="Pitch" placeholder="Pitch">
+            <input type="number" step="any" class="form-control" id="pitch" name="Pitch" placeholder="Pitch">
         </div>
     </div>
 
@@ -129,32 +110,32 @@
 	<div class="form-group row">
         <label class="col-lg-2 col-sm-12 col-form-label">Material<span class="text-danger">*</span></label>
         <div class="col-sm-2">
-            <select id="material1" name="Material1" class="form-control">
+            <select id="material1" step="any" name="Material1" class="form-control">
                 <option value="">Pilih</option>
                 <?= implode('', $materials);?>
             </select>
-			<input type="number" class="form-control" id="tebalmat1" name="TebalMat1" placeholder="Tebal">
+			<input type="number" step="any" class="form-control" id="tebalmat1" name="TebalMat1" placeholder="Tebal">
         </div>
         <div class="col-sm-2">
             <select id="material2" name="Material2" class="form-control">
                 <option value="">Pilih</option>
                 <?= implode('', $materials);?>
             </select>
-			<input type="number" class="form-control" id="tebalmat2" name="TebalMat2" placeholder="Tebal">
+			<input type="number" step="any" class="form-control" id="tebalmat2" name="TebalMat2" placeholder="Tebal">
         </div>
         <div class="col-sm-2">
             <select id="material3" name="Material3" class="form-control">
                 <option value="">Pilih</option>
                 <?= implode('', $materials);?>
             </select>
-			<input type="number" class="form-control" id="tebalmat3" name="TebalMat3" placeholder="Tebal">
+			<input type="number" step="any" class="form-control" id="tebalmat3" name="TebalMat3" placeholder="Tebal">
         </div>
         <div class="col-sm-2">
             <select id="material4" name="Material4" class="form-control">
                 <option value="">Pilih</option>
                 <?= implode('', $materials);?>
             </select>
-			<input type="number" class="form-control" id="tebalmat4" name="TebalMat4" placeholder="Tebal">
+			<input type="number" step="any" class="form-control" id="tebalmat4" name="TebalMat4" placeholder="Tebal">
         </div>
     </div>
 				
@@ -239,7 +220,7 @@
             <div class="form-group row">
                 <label for="bottom" class="col-lg-4 col-sm-12 col-form-label">Bottom</label>
                 <div class="col-lg-8 col-sm-12">
-                    <select id="bottom" name="Bottom" class="form-control">
+                    <select id="bottom" name="Bottom" class="form-control" disabled>
                         <option value="">Pilih</option>
                         <?php foreach ($bottom as $key => $bt) : ?>
                             <option value="<?= $bt->ID;?>"><?= $bt->Nama;?></option>
@@ -305,7 +286,7 @@
 		<div class="col-2">
             <div class="form-group row pr-5">
                 <select id="roll_pc" name="Roll_Pcs" class="form-control">
-                    <option value="R">ROLL</option>
+                    <option selected value="R">ROLL</option>
 					<option value="P">PCS</option>
                 </select>
 				<select id="finishing" name="Finishing" class="form-control" disabled>

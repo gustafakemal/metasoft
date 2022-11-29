@@ -18,7 +18,7 @@ class MXProspect extends BaseController
      *
      * @return string
      */
-    public function index()
+    public function add()
     {
         $this->breadcrumbs->add('Dashbor', '/');
         $this->breadcrumbs->add('MXProspect', '/');
@@ -37,7 +37,6 @@ class MXProspect extends BaseController
             'page_title' => 'MX Prospect',
             'breadcrumbs' => $this->breadcrumbs->render(),
             'main_menu' => (new \App\Libraries\Menu())->render(),
-            'no_prospek' => $this->db->noProspek(),
             'alternatif' => $this->db->getAlternatif(),
             'customers' => $customers,
             'jenisproduk' => $jenisproduk,
@@ -59,6 +58,11 @@ class MXProspect extends BaseController
     public function addProcess()
     {
         $data_request = $this->request->getPost();
+
+        $data_request['NoProspek'] = $this->db->noProspek();
+        $data_request['Alt'] = 1;
+
+        $data_request['NamaProduk'] = strtoupper($data_request['NamaProduk']);
         $data_request['Tanggal'] = Time::now()->toDateTimeString();
         $data_request['CreatedBy'] = session()->get('UserID');
         $data_request['Tebal'] = floatval(str_replace(',', '', trim($data_request['Tebal'])));
@@ -76,11 +80,12 @@ class MXProspect extends BaseController
         $insert_data = $this->db->insert($data_request, false);
 
         if ( $insert_data ) {
-            if(count($data_request['aksesori']) > 0) {
+            if( array_key_exists('aksesori', $data_request) && count($data_request['aksesori']) > 0) {
                 $noprospek = $data_request['NoProspek'];
-                $data_aksesori = array_map(function ($item) use ($noprospek) {
+                $data_aksesori = array_map(function ($item) use ($noprospek, $data_request) {
                     return [
                         'NoProspek' => $noprospek,
+                        'Alt' => $data_request['Alt'],
                         'Aksesori' => $item
                     ];
                 }, $data_request['aksesori']);
@@ -95,5 +100,17 @@ class MXProspect extends BaseController
                 ->with('error', '<p>' . implode('</p><p>', $this->db->errors()) . '</p>');
         }
 
+    }
+
+    public function index()
+    {
+        $this->breadcrumbs->add('Dashbor', '/');
+        $this->breadcrumbs->add('MXProspect', '/');
+
+        return view('Forms/MXProspect', [
+            'page_title' => 'MX Prospect',
+            'breadcrumbs' => $this->breadcrumbs->render(),
+            'main_menu' => (new \App\Libraries\Menu())->render(),
+        ]);
     }
 }

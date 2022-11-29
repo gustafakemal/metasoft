@@ -60,6 +60,24 @@ $(function () {
         $(`select[name="aksesoris"] option[value="0"]`).prop('selected', true);
     })
 
+    $('select[name="BagMaking"]').on('change', function () {
+        const val = $(this).val();
+        if(val === '1') {
+            $('select[name="Bottom"]').prop('disabled', false);
+        } else {
+            $('select[name="Bottom"]').prop('disabled', true);
+        }
+    })
+
+    $('select[name="Roll_Pcs"]').on('change', function () {
+        const val = $(this).val();
+        if(val === 'P') {
+            $('select[name="Finishing"]').prop('disabled', false);
+        } else {
+            $('select[name="Finishing"]').prop('disabled', true);
+        }
+    })
+
     $('.bs-child').on('click', '.delbs', function (e) {
         const split_el = $(this).attr('id').split('-')
         const idx = aksesories.indexOf(split_el[1]);

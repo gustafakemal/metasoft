@@ -108,4 +108,12 @@ class MXProspectModel extends Model
                     ->where('NoProspek', $NoProspek)
                     ->get();
     }
+
+    public function updateData($data, $NoProspek, $Alt)
+    {
+        return $this->where('NoProspek', $NoProspek)
+                    ->where('Alt', $Alt)
+                    ->set($data)
+                    ->update();
+    }
 }

@@ -139,11 +139,13 @@ $routes->group('inputprospek', static function ($routes) {
     $routes->get('/', 'MXProspect::add');
     $routes->post('/', 'MXProspect::addProcess');
     $routes->post('api', 'MXProspect::createAlt');
+    $routes->post('edit', 'MXProspect::editProcess');
 });
 
 $routes->group('listprospek', static function ($routes) {
     $routes->get('/', 'MXProspect::index');
     $routes->post('/', 'MXProspect::apiSearch');
+    $routes->get('edit/(:any)', 'MXProspect::edit/$1');
 });
 
 //$routes->group('mxprospect', static function ($routes) {

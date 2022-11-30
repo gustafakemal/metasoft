@@ -18,7 +18,7 @@
     <div class="alert alert-danger"><?=session()->get('error');?></div>
 <?php endif;?>
 
-<?php echo form_open('mxprospect/add');?>
+<?php echo form_open('inputprospek');?>
 
     <div class="form-group row">
         <label for="namaproduk" class="col-lg-2 col-sm-12 col-form-label">Nama Produk <span class="text-danger">*</span></label>

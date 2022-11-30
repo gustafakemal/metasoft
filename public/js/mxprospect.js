@@ -2,6 +2,8 @@ import {Datatable} from './libs/Datatable.js'
 
 $(function () {
 
+    let dt;
+
     $(`form[name="form-cariprospek"]`).on('submit', function (e) {
         e.preventDefault();
         const keyword = $(`input[name="cariprospek"]`).val();
@@ -14,8 +16,8 @@ $(function () {
             },
             createdRow: ['No', 'Prospek', 'Alt', 'Nama Produk', 'Pemesan', 'Jumlah', 'Area', 'Diinput', 'Catatan', 'Status', 'Action'],
         }
-        const datatable = new Datatable('#dataList', config, `${HOST}/listprospek`, 'POST', {keyword})
-        datatable.load()
+        dt = new Datatable('#dataList', config, `${HOST}/listprospek`, 'POST', {keyword})
+        dt.load()
     })
 
     $(`#dataList`).on('click', '.alt-item', function (e) {
@@ -29,7 +31,9 @@ $(function () {
             data: {NoProspek},
             beforeSend: function() {},
             success: function (response) {
-                console.log(response)
+                if(response.success) {
+                    dt.reload()
+                }
             },
 
         })

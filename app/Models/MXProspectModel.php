@@ -90,13 +90,22 @@ class MXProspectModel extends Model
 
     public function getByKeyword($keyword)
     {
-        return $this->like('NamaProduk', $keyword)
+        return $this->select('*')
+                    ->join('CustomerFile', 'MX_Prospek.Pemesan = CustomerFile.NoPemesan')
+                    ->like('MX_Prospek.NamaProduk', $keyword)
                     ->get();
     }
 
     public function getByNoProspect($NoProspek)
     {
         return $this->where('NoProspek', $NoProspek)
+                    ->get();
+    }
+
+    public function getMaxAlt($NoProspek)
+    {
+        return $this->selectMax('Alt')
+                    ->where('NoProspek', $NoProspek)
                     ->get();
     }
 }

@@ -14,26 +14,26 @@ $(function () {
             },
             createdRow: ['No', 'Prospek', 'Alt', 'Nama Produk', 'Pemesan', 'Jumlah', 'Area', 'Diinput', 'Catatan', 'Status', 'Action'],
         }
-        const datatable = new Datatable('#dataList', config, `${HOST}/mxprospect`, 'POST', {keyword})
+        const datatable = new Datatable('#dataList', config, `${HOST}/listprospek`, 'POST', {keyword})
         datatable.load()
     })
 
     $(`#dataList`).on('click', '.alt-item', function (e) {
         e.preventDefault();
-        const NoProspect = $(this).attr('data-no-prospect')
-        console.log(NoProspect)
-    })
+        const NoProspek = $(this).attr('data-no-prospect')
 
-    // const config = {
-    //     columnDefs: {
-    //         falseSearchable: [0],
-    //         falseOrderable: [0],
-    //         width: ['0(30)','1(120)','2(150)','3(90)','4(100)']
-    //     },
-    //     createdRow: ['No', 'Prospek', 'Alt', 'Nama Produk', 'Pemesan', 'Jumlah', 'Area', 'Diinput', 'Catatan', 'Status', 'Action'],
-    // }
-    // const datatable = new Datatable('#dataList', config, `${HOST}/mxprospect/api`, 'GET')
-    // datatable.load()
+        $.ajax({
+            type: 'POST',
+            url: `${HOST}/inputprospek/api`,
+            dataType: 'JSON',
+            data: {NoProspek},
+            beforeSend: function() {},
+            success: function (response) {
+                console.log(response)
+            },
+
+        })
+    })
 
     let aksesories = [];
     $('button.add-acc').on('click', function() {

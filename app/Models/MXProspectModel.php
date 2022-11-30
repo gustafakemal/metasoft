@@ -94,9 +94,9 @@ class MXProspectModel extends Model
                     ->get();
     }
 
-    public function getByNoProspect($NoProspect)
+    public function getByNoProspect($NoProspek)
     {
-        return $this->where('NoProspect', $NoProspect)
+        return $this->where('NoProspek', $NoProspek)
                     ->get();
     }
 }

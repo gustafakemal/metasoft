@@ -135,12 +135,24 @@ $routes->group('setting', static function ($routes) {
     });
 });
 
-$routes->group('mxprospect', static function ($routes) {
+$routes->group('inputprospek', static function ($routes) {
+    $routes->get('/', 'MXProspect::add');
+    $routes->post('/', 'MXProspect::addProcess');
+    $routes->post('api', 'MXProspect::createAlt');
+});
+
+$routes->group('listprospek', static function ($routes) {
     $routes->get('/', 'MXProspect::index');
     $routes->post('/', 'MXProspect::apiSearch');
-    $routes->get('add', 'MXProspect::add');
-    $routes->post('add', 'MXProspect::addProcess');
 });
+
+//$routes->group('mxprospect', static function ($routes) {
+//    $routes->get('/', 'MXProspect::index');
+//    $routes->post('/', 'MXProspect::apiSearch');
+//    $routes->post('api', 'MXProspect::createAlt');
+//    $routes->get('add', 'MXProspect::add');
+//    $routes->post('add', 'MXProspect::addProcess');
+//});
 
 $routes->group('produk', static function ($routes) {
     $routes->get('/', 'MFProduk::index');

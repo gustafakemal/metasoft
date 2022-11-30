@@ -162,7 +162,7 @@ class MXProspect extends BaseController
                 $alt_confirm = "return confirm('Menambahkan alternatif')";
 
                 $edit = '<a title="" data-toggle="tooltip" data-placement="left" class="btn btn-sm btn-success edit-rev-item mr-2" href="#" title="Edit"><i class="far fa-edit"></i></a> ';
-                $alt = '<a title="" data-toggle="tooltip" data-placement="left" class="btn btn-sm btn-info alt-item" href="#" data-no-prospect="'. $row->NoProspect .'" onclick="' . $alt_confirm . '" title="Alt"><i class="far fa-clone"></i></a> ';
+                $alt = '<a title="" data-toggle="tooltip" data-placement="left" class="btn btn-sm btn-info alt-item" href="#" data-no-prospect="'. $row->NoProspek .'" onclick="' . $alt_confirm . '" title="Alt"><i class="far fa-clone"></i></a> ';
                 $hapus = '<a title="Hapus" data-toggle="tooltip" data-placement="left" class="btn btn-sm btn-danger" href="#" onclick=""><i class="far fa-trash-alt"></i></a>';
 
                 $results[] = [
@@ -182,5 +182,36 @@ class MXProspect extends BaseController
         }
 
         return $this->response->setJSON($results);
+    }
+
+    private function apiResponse($query)
+    {
+        $results = [];
+        if($query->getNumRows() > 0) {
+            foreach ($query->getResult() as $key => $row) {
+
+                $alt_confirm = "return confirm('Menambahkan alternatif')";
+
+                $edit = '<a title="" data-toggle="tooltip" data-placement="left" class="btn btn-sm btn-success edit-rev-item mr-2" href="#" title="Edit"><i class="far fa-edit"></i></a> ';
+                $alt = '<a title="" data-toggle="tooltip" data-placement="left" class="btn btn-sm btn-info alt-item" href="#" data-no-prospect="'. $row->NoProspect .'" onclick="' . $alt_confirm . '" title="Alt"><i class="far fa-clone"></i></a> ';
+                $hapus = '<a title="Hapus" data-toggle="tooltip" data-placement="left" class="btn btn-sm btn-danger" href="#" onclick=""><i class="far fa-trash-alt"></i></a>';
+
+                $results[] = [
+                    $key + 1,
+                    $row->NoProspek,
+                    $row->Alt,
+                    $row->NamaProduk,
+                    $row->Pemesan,
+                    $row->Jumlah,
+                    $row->Area,
+                    $row->CreatedBy,
+                    $row->Catatan,
+                    '',
+                    $edit . $alt . $hapus
+                ];
+            }
+        }
+
+        return $results;
     }
 }

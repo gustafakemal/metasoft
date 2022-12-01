@@ -116,4 +116,11 @@ class MXProspectModel extends Model
                     ->set($data)
                     ->update();
     }
+
+    public function deleteProspek($NoProspek, $Alt)
+    {
+        return $this->where('NoProspek', $NoProspek)
+                    ->where('Alt', $Alt)
+                    ->delete();
+    }
 }

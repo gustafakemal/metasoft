@@ -95,11 +95,10 @@ class MXProspect extends BaseController
             foreach ($query->getResult() as $key => $row) {
 
                 $alt_confirm = "return confirm('Menambahkan alternatif')";
-                $del_confirm = "return confirm('Hapus prospek?')";
 
                 $edit = '<a title="Edit" data-toggle="tooltip" data-placement="left" class="btn btn-sm btn-success edit-rev-item mr-2" href="'. site_url('listprospek/edit/' . $row->NoProspek) .'" title="Edit"><i class="far fa-edit"></i></a> ';
                 $alt = '<a title="Tambah Alt" data-toggle="tooltip" data-placement="left" class="btn btn-sm btn-info alt-item" href="#" data-no-prospect="'. $row->NoProspek .'" onclick="' . $alt_confirm . '" title="Alt"><i class="far fa-clone"></i></a> ';
-                $hapus = '<a title="Hapus" data-toggle="tooltip" data-placement="left" class="btn btn-sm btn-danger" href="#" onclick="' . $del_confirm . '"><i class="far fa-trash-alt"></i></a>';
+                $hapus = '<a title="Hapus" data-toggle="tooltip" data-placement="left" class="btn btn-sm btn-danger del-prospek" data-no-prospek="' . $row->NoProspek . '" data-alt="' . $row->Alt . '" href="#"><i class="far fa-trash-alt"></i></a>';
 
                 $results[] = [
                     $key + 1,
@@ -195,9 +194,22 @@ class MXProspect extends BaseController
         }
     }
 
-    public function delete($NoProspek)
+    public function delete()
     {
-        //$query = $this->model->
+        $NoProspek = $this->request->getPost('NoProspek');
+        $Alt = $this->request->getPost('Alt');
+
+        if( $this->model->deleteProspek($NoProspek, $Alt) ) {
+            return $this->response->setJSON([
+                'success' => true,
+                'msg' => 'Data berhasil dihapus'
+            ]);
+        } else {
+            return $this->response->setJSON([
+                'success' => false,
+                'msg' => 'Data gagal dihapus'
+            ]);
+        }
     }
 
     private function transformDataRequest(array $data_request, $updated = false)

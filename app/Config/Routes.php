@@ -146,6 +146,7 @@ $routes->group('listprospek', static function ($routes) {
     $routes->get('/', 'MXProspect::index');
     $routes->post('/', 'MXProspect::apiSearch');
     $routes->get('edit/(:any)', 'MXProspect::edit/$1');
+    $routes->post('delete', 'MXProspect::delete');
 });
 
 //$routes->group('mxprospect', static function ($routes) {

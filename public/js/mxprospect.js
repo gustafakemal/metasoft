@@ -89,5 +89,38 @@ $(function () {
         $(`.bs-child #bscolor-${split_el[1]}`).remove()
     })
 
+    $('#dataList').on('click', '.del-prospek', function (e) {
+        e.preventDefault();
+
+        const confirmation = confirm('Hapus prospek?')
+        if(confirmation) {
+            const NoProspek = $(this).attr('data-no-prospek');
+            const Alt = $(this).attr('data-alt');
+
+            $.ajax({
+                type: 'POST',
+                url: `${HOST}/listprospek/delete`,
+                dataType: 'JSON',
+                data: {NoProspek, Alt},
+                beforeSend: function () {
+                },
+                success: function (response) {
+                    let msgClass;
+                    if (response.success) {
+                        dt.reload()
+                        msgClass = 'success'
+                    } else {
+                        msgClass = 'danger'
+                    }
+                    $('.floating-msg').addClass('show').html(`<div class="alert alert-${msgClass}">${response.msg}</div>`)
+                },
+                complete: function () {
+                    setTimeout(() => {
+                        $('.floating-msg').removeClass('show').html('');
+                    }, 3000);
+                }
+            })
+        }
+    })
 
 })

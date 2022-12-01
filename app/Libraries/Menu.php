@@ -5,12 +5,10 @@ namespace App\Libraries;
 class Menu
 {
     private $modul;
-    private $db;
 
     public function __construct()
     {
         $this->modul = session()->get('priv');
-        $this->db = \Config\Database::connect();
     }
 
     public function get()
@@ -95,22 +93,14 @@ class Menu
             '</li>';
     }
 
-    private function allRouteDropdown($group_menu)
-    {
-        $routes = [];
-        $query = $this->db->query("select route from MF_Modul where group_menu='" . $group_menu . "'");
-        if($query->getNumRows() > 0) {
-            foreach ($query->getResult() as $item) {
-                $routes[] = $item->route;
-            }
-        }
-
-        return $routes;
-    }
-
     private function urlInsideDropdown($group_menu)
     {
-        return in_array(uri_string(true), $this->allRouteDropdown($group_menu));
+        $current_url = uri_string(true);
+        $filtered = array_filter($this->modul, function ($item) use ($group_menu, $current_url) {
+            return $item->group_menu === $group_menu && $item->route === $current_url;
+        });
+
+        return count($filtered) > 0;
     }
 
     public function child($group_menu)
@@ -128,20 +118,13 @@ class Menu
 
     private function getGrupMenuIcon($grup_menu)
     {
-        $icon = null;
-        $query = $this->db->query("select icon from MF_Modul where group_menu='" . $grup_menu . "'");
-        foreach ($query->getResult() as $row) {
-            if( $row->icon != null || $row->icon != '') {
-                $icon = $row->icon;
-                break;
-            }
-        }
+        $filtered = array_values( array_filter($this->modul, function ($item) use ($grup_menu) {
+            return $item->group_menu === $grup_menu && $item->icon !== null;
+        }) );
 
-        if($icon == null) {
-            $icon = 'fas fa-home';
-        }
+        if(count($filtered) == 0) return 'fas fa-home';
 
-        return $icon;
+        return $filtered[0]->icon;
     }
 
     public function render()

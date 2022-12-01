@@ -30,7 +30,10 @@ class AccessDefinition
 //        $this->access_level = $access_level;
 //    }
 
-    public function get()
+    /**
+     * @return array
+     */
+    public function get(): array
     {
         return $this->formula();
     }

@@ -2,6 +2,8 @@
 
 namespace App\Controllers;
 
+use CodeIgniter\HTTP\RedirectResponse;
+use CodeIgniter\HTTP\ResponseInterface;
 use CodeIgniter\I18n\Time;
 
 class MXProspect extends BaseController
@@ -14,11 +16,26 @@ class MXProspect extends BaseController
     }
 
     /**
+     * @return string
+     */
+    public function index(): string
+    {
+        $this->breadcrumbs->add('Dashbor', '/');
+        $this->breadcrumbs->add('MXProspect', '/');
+
+        return view('Forms/MXProspect_List', [
+            'page_title' => 'MX Prospect',
+            'breadcrumbs' => $this->breadcrumbs->render(),
+            'main_menu' => (new \App\Libraries\Menu())->render(),
+        ]);
+    }
+
+    /**
      * Endpoint ini digunakan untuk menampilkan Form / inputan
      *
      * @return string
      */
-    public function add()
+    public function add(): string
     {
         $this->breadcrumbs->add('Dashbor', '/');
         $this->breadcrumbs->add('MXProspect', '/');
@@ -38,9 +55,10 @@ class MXProspect extends BaseController
     /**
      * Endpoint ini digunakan untuk memproses inputan
      *
-     * @return void
+     * @return \CodeIgniter\HTTP\RedirectResponse
+     * @throws \ReflectionException
      */
-    public function addProcess()
+    public function addProcess(): RedirectResponse
     {
         $data = $this->request->getPost();
 
@@ -72,19 +90,10 @@ class MXProspect extends BaseController
 
     }
 
-    public function index()
-    {
-        $this->breadcrumbs->add('Dashbor', '/');
-        $this->breadcrumbs->add('MXProspect', '/');
-
-        return view('Forms/MXProspect_List', [
-            'page_title' => 'MX Prospect',
-            'breadcrumbs' => $this->breadcrumbs->render(),
-            'main_menu' => (new \App\Libraries\Menu())->render(),
-        ]);
-    }
-
-    public function apiSearch()
+    /**
+     * @return \CodeIgniter\HTTP\ResponseInterface
+     */
+    public function apiSearch(): ResponseInterface
     {
         $keyword = $this->request->getPost('keyword');
 
@@ -119,7 +128,11 @@ class MXProspect extends BaseController
         return $this->response->setJSON($results);
     }
 
-    public function createAlt()
+    /**
+     * @return ResponseInterface
+     * @throws \ReflectionException
+     */
+    public function createAlt(): ResponseInterface
     {
         $NoProspek = $this->request->getPost('NoProspek');
 
@@ -143,7 +156,11 @@ class MXProspect extends BaseController
         }
     }
 
-    public function edit($NoProspek)
+    /**
+     * @param $NoProspek
+     * @return string
+     */
+    public function edit($NoProspek): string
     {
         $this->breadcrumbs->add('Dashbor', '/');
         $this->breadcrumbs->add('MXProspect', '/');
@@ -165,7 +182,11 @@ class MXProspect extends BaseController
         return view('Forms/MXProspect_edit', $views);
     }
 
-    public function editProcess()
+    /**
+     * @return RedirectResponse
+     * @throws \ReflectionException
+     */
+    public function editProcess(): RedirectResponse
     {
         $data = $this->request->getPost();
 
@@ -194,7 +215,10 @@ class MXProspect extends BaseController
         }
     }
 
-    public function delete()
+    /**
+     * @return ResponseInterface
+     */
+    public function delete(): ResponseInterface
     {
         $NoProspek = $this->request->getPost('NoProspek');
         $Alt = $this->request->getPost('Alt');
@@ -212,7 +236,13 @@ class MXProspect extends BaseController
         }
     }
 
-    private function transformDataRequest(array $data_request, $updated = false)
+    /**
+     * @param array $data_request
+     * @param $updated
+     * @return array
+     * @throws \Exception
+     */
+    private function transformDataRequest(array $data_request, $updated = false): array
     {
         $newarr = [];
         foreach ($data_request as $key => $row) {
@@ -251,7 +281,10 @@ class MXProspect extends BaseController
         return $newarr;
     }
 
-    private function requiredFields()
+    /**
+     * @return array
+     */
+    private function requiredFields(): array
     {
         return [
             'customers' => (new \App\Models\CustomerModel())->getCustomers(),

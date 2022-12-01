@@ -11,11 +11,17 @@ class Menu
         $this->modul = session()->get('priv');
     }
 
+    /**
+     * @return array|mixed|null
+     */
     public function get()
     {
         return $this->modul;
     }
 
+    /**
+     * @return array
+     */
     public function rootLevel()
     {
         $root = [];
@@ -37,6 +43,9 @@ class Menu
         return $root;
     }
 
+    /**
+     * @return string
+     */
     public function items()
     {
         $items = [];
@@ -52,7 +61,13 @@ class Menu
         return implode('', $items);
     }
 
-    private function listItem($route, $icon, $modul_name)
+    /**
+     * @param $route
+     * @param $icon
+     * @param $modul_name
+     * @return string
+     */
+    private function listItem($route, $icon, $modul_name): string
     {
         $active_class = $route && url_is($route) ? 'active' : '';
         return '<li class="' . $active_class . '">' .
@@ -63,7 +78,14 @@ class Menu
             '</li>';
     }
 
-    private function listItemDropdown($group_menu, $route, $icon, $modul_name)
+    /**
+     * @param $group_menu
+     * @param $route
+     * @param $icon
+     * @param $modul_name
+     * @return string
+     */
+    private function listItemDropdown($group_menu, $route, $icon, $modul_name): string
     {
         $collapsed = $this->urlInsideDropdown($group_menu) ? '' : 'collapsed';
         $aria_expanded = $this->urlInsideDropdown($group_menu) ? 'true' : 'false';
@@ -77,7 +99,7 @@ class Menu
             $children[] = $this->childItem($item->route, $namamodul);
         }
 
-        $grup_icon = $this->getGrupMenuIcon($group_menu);
+        $grup_icon = $this->getGroupMenuIcon($group_menu);
 
         return '<li>' .
             '<a class="' . $collapsed . '" href="#" data-toggle="collapse" data-target="#' . $data_target . '"
@@ -93,7 +115,11 @@ class Menu
             '</li>';
     }
 
-    private function urlInsideDropdown($group_menu)
+    /**
+     * @param $group_menu
+     * @return bool
+     */
+    private function urlInsideDropdown($group_menu): bool
     {
         $current_url = uri_string(true);
         $filtered = array_filter($this->modul, function ($item) use ($group_menu, $current_url) {
@@ -103,6 +129,10 @@ class Menu
         return count($filtered) > 0;
     }
 
+    /**
+     * @param $group_menu
+     * @return array|mixed|null
+     */
     public function child($group_menu)
     {
         return array_filter($this->modul, function ($item) use ($group_menu) {
@@ -116,7 +146,11 @@ class Menu
         return '<li class="' . $active_class .'"><a href="' . site_url($route ?? '/') . '">' . $modul_name . '</a></li>';
     }
 
-    private function getGrupMenuIcon($grup_menu)
+    /**
+     * @param $grup_menu
+     * @return string
+     */
+    private function getGroupMenuIcon($grup_menu): string
     {
         $filtered = array_values( array_filter($this->modul, function ($item) use ($grup_menu) {
             return $item->group_menu === $grup_menu && $item->icon !== null;
@@ -127,7 +161,10 @@ class Menu
         return $filtered[0]->icon;
     }
 
-    public function render()
+    /**
+     * @return string
+     */
+    public function render(): string
     {
         $body = '<ul class="main-menu accordion" id="mainmenu">';
 
@@ -138,12 +175,11 @@ class Menu
             '</ul>';
     }
 
-    public function body()
-    {
-        $body = '<ul class="main-menu accordion" id="mainmenu">';
-    }
-
-    private function icon($icon = null)
+    /**
+     * @param $icon
+     * @return string
+     */
+    private function icon($icon = null): string
     {
         if( ! $icon ) {
             return '<div class="icon"><i class="fas fa-home"></i></div>';
@@ -152,28 +188,19 @@ class Menu
         return '<div class="icon"><i class="' . $icon . '"></i></div>';
     }
 
-    private function caption($caption)
+    /**
+     * @param $caption
+     * @return string
+     */
+    private function caption($caption): string
     {
         return '<div class="caption">' . $caption . '</div>';
     }
 
-//    private function parent()
-//    {
-//        return array_filter($this->priviledges, function ($item) {
-//            return $item->parent == 0;
-//        });
-//    }
-
-    private function isNested($id_prop)
-    {
-        $priv_mapped = array_map(function ($item) {
-            return $item->parent;
-        }, $this->modul);
-
-        return in_array($id_prop, $priv_mapped);
-    }
-
-    private function dashboard()
+    /**
+     * @return string
+     */
+    private function dashboard(): string
     {
         $active_class = (url_is(base_url()) || url_is('home') || url_is('')) ? 'active' : '';
         return '<li class="' . $active_class . '">' .
@@ -184,7 +211,10 @@ class Menu
             '</li>';
     }
 
-    private function logout()
+    /**
+     * @return string
+     */
+    private function logout(): string
     {
         return '<li>' .
             '<a href="' . site_url('logout') . '" onclick="return confirm(\'Anda yakin untuk Logout?\')">' .

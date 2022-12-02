@@ -12,13 +12,9 @@ class RestrictedFilter implements FilterInterface
     {
         $response = service('response');
         $response->setStatusCode(403);
-        $response->setBody('You do not allowed to access this resource.');
+        $response->setBody(view('Common/restricted'));
 
-        //dd($response);
         return $response;
-
-//        return view('Common/restricted');
-
     }
 
     public function after(RequestInterface $request, ResponseInterface $response, $arguments = null)

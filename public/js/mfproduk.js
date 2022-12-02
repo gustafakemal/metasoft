@@ -119,6 +119,13 @@ $(function () {
 							`)
 					}
 				},
+				error: function (response) {
+					if(response.status == 403) {
+						$('.floating-msg').addClass('show').html(`
+								<div class="alert alert-danger">${response.responseJSON.msg}</div>
+								`)
+					}
+				},
 				complete: function () {
 					setTimeout(() => {
 						$('.floating-msg').removeClass('show').html('');
@@ -191,6 +198,13 @@ $(function () {
 					$('.floating-msg').addClass('show').html(`
 						<div class="alert alert-success">${response.msg}</div>
 						`)
+				}
+			},
+			error: function (response) {
+				if(response.status == 403) {
+					$('.floating-msg').addClass('show').html(`
+								<div class="alert alert-danger">${response.responseJSON.msg}</div>
+								`)
 				}
 			},
 			complete: function () {
@@ -270,9 +284,18 @@ $(function () {
 					$('.csc-form .msg').html(`<div class="alert alert-danger">${response.msg}</div>`);
 				}
 			},
-			error: function () {},
+			error: function (response) {
+				if(response.status == 403) {
+					$('.floating-msg').addClass('show').html(`
+								<div class="alert alert-danger">${response.responseJSON.msg}</div>
+								`)
+				}
+			},
 			complete: function() {
 				$('.add-new-fgd input, .add-new-fgd select, .add-new-fgd button').attr('disabled', false)
+				setTimeout(() => {
+					$('.floating-msg').removeClass('show').html('');
+				}, 3000)
 			}
 		})
 	})
@@ -297,6 +320,13 @@ $(function () {
 					location.reload();
 				} else {
 					$('.csc-form .msg').html(`<div class="alert alert-danger">${response.msg}</div>`);
+				}
+			},
+			error: function (response) {
+				if(response.status == 403) {
+					$('.floating-msg').addClass('show').html(`
+								<div class="alert alert-danger">${response.responseJSON.msg}</div>
+								`)
 				}
 			},
 			complete: function () {

@@ -100,7 +100,7 @@ $(function () {
 
 		$.ajax({
 			type: "POST",
-			url: `${HOST}/api/master/customer`,
+			url: `${HOST}/pelanggan/add/api`,
 			dataType: 'JSON',
 			data: formData,
 			contentType: false,
@@ -171,7 +171,7 @@ $(function () {
 
 		$.ajax({
 			type: "GET",
-			url: `${HOST}/customer/api/${noPemesan}`,
+			url: `${HOST}/pelanggan/api/${noPemesan}`,
 			dataType: 'JSON',
 			beforeSend: function () {},
 			success: function (response) {

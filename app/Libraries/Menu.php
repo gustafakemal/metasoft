@@ -142,6 +142,10 @@ class Menu
 
     private function childItem($route, $modul_name)
     {
+        if($route == null) {
+            return;
+        }
+
         $active_class = (url_is($route)) ? 'active' : '';
         return '<li class="' . $active_class .'"><a href="' . site_url($route ?? '/') . '">' . $modul_name . '</a></li>';
     }

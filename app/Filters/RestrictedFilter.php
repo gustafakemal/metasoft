@@ -12,7 +12,12 @@ class RestrictedFilter implements FilterInterface
     {
         $response = service('response');
         $response->setStatusCode(403);
-        $response->setBody(view('Common/restricted'));
+
+        if( $request->isAJAX() ) {
+            $response->setJSON(['success' => false, 'msg' => 'Anda tidak memiliki akses']);
+        } else {
+            $response->setBody(view('Common/restricted'));
+        }
 
         return $response;
     }

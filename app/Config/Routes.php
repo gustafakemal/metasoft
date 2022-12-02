@@ -149,6 +149,11 @@ $routes->group('listprospek', static function ($routes) {
     $routes->post('delete', 'MXProspect::delete');
 });
 
+$routes->group('mxsegmen', static function ($routes) {
+    $routes->get('/', 'MXSegmen::index');
+    $routes->post('add', 'MXSegmen::add');
+});
+
 //$routes->group('mxprospect', static function ($routes) {
 //    $routes->get('/', 'MXProspect::index');
 //    $routes->post('/', 'MXProspect::apiSearch');

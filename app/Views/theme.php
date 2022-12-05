@@ -112,22 +112,22 @@
     <script src="<?= site_url('js/sales.js'); ?>"></script>
 <?php endif; ?>
 <?php if (url_is('jeniskertas*')) : ?>
-    <script src="<?= site_url('js/mfjeniskertas.js'); ?>"></script>
+    <script type="module" src="<?= site_url('js/mfjeniskertas.js'); ?>"></script>
 <?php endif; ?>
 <?php if (url_is('jenistinta*')) : ?>
-    <script src="<?= site_url('js/mfjenistinta.js'); ?>"></script>
+    <script type="module" src="<?= site_url('js/mfjenistinta.js'); ?>"></script>
 <?php endif; ?>
 <?php if (url_is('jenisflute*')) : ?>
-    <script src="<?= site_url('js/mfjenisflute.js'); ?>"></script>
+    <script type="module" src="<?= site_url('js/mfjenisflute.js'); ?>"></script>
 <?php endif; ?>
 <?php if (url_is('prosesfinishing*')) : ?>
-    <script src="<?= site_url('js/mfprosesfinishing.js'); ?>"></script>
+    <script type="module" src="<?= site_url('js/mfprosesfinishing.js'); ?>"></script>
 <?php endif; ?>
 <?php if (url_is('prosesmanual*')) : ?>
-    <script src="<?= site_url('js/mfprosesmanual.js'); ?>"></script>
+    <script type="module" src="<?= site_url('js/mfprosesmanual.js'); ?>"></script>
 <?php endif; ?>
 <?php if (url_is('proseskhusus*')) : ?>
-    <script src="<?= site_url('js/mfproseskhusus.js'); ?>"></script>
+    <script type="module" src="<?= site_url('js/mfproseskhusus.js'); ?>"></script>
 <?php endif; ?>
 <?php if (url_is('tujuankirim*')) : ?>
     <script src="<?= site_url('js/mftujuankirim.js'); ?>"></script>

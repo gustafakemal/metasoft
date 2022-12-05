@@ -134,6 +134,12 @@ export class Datatable {
 			if (this.config.columnDefs.hasOwnProperty('falseOrderable')) {
 				mainSettings[1].targets = this.config.columnDefs.falseOrderable;
 			}
+			if (this.config.columnDefs.hasOwnProperty('className')) {
+				mainSettings.push({
+					className: 'dt-body-wrap',
+					targets: this.config.columnDefs.className
+				})
+			}
 			if (this.config.columnDefs.hasOwnProperty('width')) {
 				let widths = [];
 				for (const property in this.config.columnDefs.width) {

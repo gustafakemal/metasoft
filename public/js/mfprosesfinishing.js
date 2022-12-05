@@ -1,80 +1,106 @@
+import {Datatable} from './libs/Datatable.js'
+
 $(function () {
 
-	let mfProsesFinishingData;
-
-	$("#dataList").DataTable({
-		data: mfProsesFinishingData,
-        buttons: [{
-                extend: 'excelHtml5',
-                exportOptions: { orthogonal: 'export' }
-            }],
-		columnDefs: [{
-			"searchable": false,
-			"orderable": false,
-			"targets": [0, 10]
+	const config = {
+		columnDefs: {
+			falseSearchable: [0, 10],
+			falseOrderable: [0, 10],
+			falseVisibility: [1,6,7,8,9],
+			width: ['2(150)','10(120)'],
+			className: 10
 		},
-		{
-			"width": 150,
-			"targets": 2
-		},
-		{
-			"width": 100,
-			"targets": 5
-		},
-		{
-			className: 'dt-body-nowrap',
-			"targets": 10
-		},
-		{
-			 "visible": false,
-			 "targets": [1,6,7,8,9]
-		}],
-		order: [[ 1, 'desc' ]],
-		createdRow: function (row, data, dataIndex) {
-			$(row).find("td:eq(0)").attr("data-label", "No");
-			$(row).find("td:eq(1)").attr("data-label", "Tanggal dibuat");
-			$(row).find("td:eq(2)").attr("data-label", "Proses Finishing");
-			$(row).find("td:eq(3)").attr("data-label", "Harga");
-			$(row).find("td:eq(4)").attr("data-label", "Status Aktif");
-			$(row).find("td:eq(5)").attr("data-label", "Action");
-		},
+		createdRow: ['No', 'Tanggal dibuat', 'Proses Finishing', 'Berat', 'Harga', 'Status Aktif', 'Action'],
 		initComplete: function () {
 			const dropdown = `<div class="dropdown d-inline mr-2">` +
-								`<button class="btn btn-primary dropdown-toggle" type="button" id="customersDropdown" data-toggle="dropdown" aria-expanded="false"><i class="fas fa-cog"></i></button>` +
-								`<div class="dropdown-menu" aria-labelledby="customersDropdown">` +
-								`<a class="dropdown-item data-reload" href="#">Reload data</a>` +
-								`<a class="dropdown-item data-to-csv" href="#">Export to excel</a>` +
-							`</div>` +
-						`</div>`
+				`<button class="btn btn-primary dropdown-toggle" type="button" id="customersDropdown" data-toggle="dropdown" aria-expanded="false"><i class="fas fa-cog"></i></button>` +
+				`<div class="dropdown-menu" aria-labelledby="customersDropdown">` +
+				`<a class="dropdown-item data-reload" href="#">Reload data</a>` +
+				`<a class="dropdown-item data-to-csv" href="#">Export to excel</a>` +
+				`</div>` +
+				`</div>`
 			const add_btn = `<a href="#" class="btn btn-primary btn-add mr-2 add-data_btn">Tambah data</a>`;
 			$("#dataList_wrapper .dataTables_length").prepend(dropdown + add_btn);
-		},
-	});
-
-	setTimeout(() => {
-		const obj = {
-			beforeSend: function () {
-				
-				$('#dataList .dataTables_empty').html('<div class="spinner-icon"><span class="spinner-grow text-info"></span><span class="caption">Fetching data...</span></div>')
-			},
-			success: function (response) {
-				$('#dataList').DataTable().clear().rows.add(response).draw();
-			},
-			error: function () {
-				$('#dataList .dataTables_empty').html('Data gagal di retrieve.')
-			},
-			complete: function() {}
 		}
-		
-		getAllData(obj);
-	}, 50)
+	}
+	const datatable = new Datatable('#dataList', config, `${HOST}/prosesfinishing/api`, 'GET')
+	datatable.load()
 
-	$('#dataList').DataTable().on( 'order.dt search.dt', function () {
-		let i = 1;
-		$('#dataList').DataTable().cells(null, 0, {search:'applied', order:'applied'}).every( function (cell) {
-			this.data(i++);
-		});
-	}).draw();
+	// let mfProsesFinishingData;
+	//
+	// $("#dataList").DataTable({
+	// 	data: mfProsesFinishingData,
+    //     buttons: [{
+    //             extend: 'excelHtml5',
+    //             exportOptions: { orthogonal: 'export' }
+    //         }],
+	// 	columnDefs: [{
+	// 		"searchable": false,
+	// 		"orderable": false,
+	// 		"targets": [0, 10]
+	// 	},
+	// 	{
+	// 		"width": 150,
+	// 		"targets": 2
+	// 	},
+	// 	{
+	// 		"width": 100,
+	// 		"targets": 5
+	// 	},
+	// 	{
+	// 		className: 'dt-body-nowrap',
+	// 		"targets": 10
+	// 	},
+	// 	{
+	// 		 "visible": false,
+	// 		 "targets": [1,6,7,8,9]
+	// 	}],
+	// 	order: [[ 1, 'desc' ]],
+	// 	createdRow: function (row, data, dataIndex) {
+	// 		$(row).find("td:eq(0)").attr("data-label", "No");
+	// 		$(row).find("td:eq(1)").attr("data-label", "Tanggal dibuat");
+	// 		$(row).find("td:eq(2)").attr("data-label", "Proses Finishing");
+	// 		$(row).find("td:eq(3)").attr("data-label", "Harga");
+	// 		$(row).find("td:eq(4)").attr("data-label", "Status Aktif");
+	// 		$(row).find("td:eq(5)").attr("data-label", "Action");
+	// 	},
+	// 	initComplete: function () {
+	// 		const dropdown = `<div class="dropdown d-inline mr-2">` +
+	// 							`<button class="btn btn-primary dropdown-toggle" type="button" id="customersDropdown" data-toggle="dropdown" aria-expanded="false"><i class="fas fa-cog"></i></button>` +
+	// 							`<div class="dropdown-menu" aria-labelledby="customersDropdown">` +
+	// 							`<a class="dropdown-item data-reload" href="#">Reload data</a>` +
+	// 							`<a class="dropdown-item data-to-csv" href="#">Export to excel</a>` +
+	// 						`</div>` +
+	// 					`</div>`
+	// 		const add_btn = `<a href="#" class="btn btn-primary btn-add mr-2 add-data_btn">Tambah data</a>`;
+	// 		$("#dataList_wrapper .dataTables_length").prepend(dropdown + add_btn);
+	// 	},
+	// });
+	//
+	// setTimeout(() => {
+	// 	const obj = {
+	// 		beforeSend: function () {
+	//
+	// 			$('#dataList .dataTables_empty').html('<div class="spinner-icon"><span class="spinner-grow text-info"></span><span class="caption">Fetching data...</span></div>')
+	// 		},
+	// 		success: function (response) {
+	// 			$('#dataList').DataTable().clear().rows.add(response).draw();
+	// 		},
+	// 		error: function () {
+	// 			$('#dataList .dataTables_empty').html('Data gagal di retrieve.')
+	// 		},
+	// 		complete: function() {}
+	// 	}
+	//
+	// 	getAllData(obj);
+	// }, 50)
+	//
+	// $('#dataList').DataTable().on( 'order.dt search.dt', function () {
+	// 	let i = 1;
+	// 	$('#dataList').DataTable().cells(null, 0, {search:'applied', order:'applied'}).every( function (cell) {
+	// 		this.data(i++);
+	// 	});
+	// }).draw();
 
 	$('.add-data_btn').on('click', function(e) {
 		e.preventDefault();

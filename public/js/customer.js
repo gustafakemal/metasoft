@@ -214,7 +214,7 @@ $(function () {
 
 		$.ajax({
 			type: "POST",
-			url: `${HOST}/api/master/customer`,
+			url: `${HOST}/pelanggan/edit/api`,
 			dataType: 'JSON',
 			data: formData,
 			processData: false,
@@ -228,7 +228,6 @@ $(function () {
 				$('form[name="editData"] input, form[name="editData"] textarea, form[name="editData"] button').attr('disabled', true)
 			},
 			success: function (response) {
-				console.log(response)
 				if(response.success) {
 					location.reload();
 				} else {

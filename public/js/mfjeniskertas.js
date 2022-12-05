@@ -93,7 +93,7 @@ $(function () {
 
 		$.ajax({
 			type: "POST",
-			url: `${HOST}/api/master/kertas`,
+			url: `${HOST}/jeniskertas/add/api`,
 			dataType: 'JSON',
 			data: formData,
 			contentType: false,
@@ -116,7 +116,14 @@ $(function () {
 					}, 500);
 				}
 			},
-			error: function () {},
+			error: function (response) {
+				if(response.status == 403) {
+					$('#dataForm .msg').html(`<div class="alert alert-danger">${response.responseJSON.msg}</div>`)
+					$('#dataForm, html, body').animate({
+						scrollTop: 0
+					}, 500);
+				}
+			},
 			complete: function () {
 				$('#dataForm .modal-footer .loading-indicator').html('');
 				$('form[name="addData"] input, form[name="addData"] textarea, form[name="addData"] button').attr('disabled', false)
@@ -156,7 +163,7 @@ $(function () {
 		dataListRow = $(`#dataList tr:nth-child(${row+1})`)
 		const objstring = $(this).attr('data-obj')
 		const id = $(this).attr('data-id');
-		const berat = $(this).attr('data-berat');
+		const berat = (!$(this).attr('data-berat') || Number.isNaN(parseInt($(this).attr('data-berat')))) ? 0 : $(this).attr('data-berat');
 		const nama = $(this).attr('data-nama');
 		const harga = $(this).attr('data-harga');
 		const create_date = $(this).attr('data-added');
@@ -205,7 +212,7 @@ $(function () {
 			};
 			$.ajax({
 				type: "PUT",
-				url: `${HOST}/api/master/kertas`,
+				url: `${HOST}/jeniskertas/edit/api`,
 				headers: {'Content-Type': 'application/x-www-form-urlencoded'},
 				contentType: 'application/x-www-form-urlencoded; charset=utf-8',
 				dataType: 'JSON',
@@ -221,7 +228,13 @@ $(function () {
 					}
 					$('.floating-msg').addClass('show').html(`<div class="alert alert-${msgClass}">${response.msg}</div>`)
 				},
-				error: function () {},
+				error: function (response) {
+					if(response.status == 403) {
+						$('.floating-msg').addClass('show').html(`
+								<div class="alert alert-danger">${response.responseJSON.msg}</div>
+								`)
+					}
+				},
 				complete: function() {
 					setTimeout(() => {
 						$('.floating-msg').removeClass('show').html('');

@@ -92,7 +92,7 @@ $(function () {
 
 		$.ajax({
 			type: "POST",
-			url: `${HOST}/api/master/khusus`,
+			url: `${HOST}/proseskhusus/add/api`,
 			dataType: 'JSON',
 			data: formData,
 			contentType: false,
@@ -115,7 +115,14 @@ $(function () {
 					}, 500);
 				}
 			},
-			error: function () {},
+			error: function (response) {
+				if(response.status == 403) {
+					$('#dataForm .msg').html(`<div class="alert alert-danger">${response.responseJSON.msg}</div>`)
+					$('#dataForm, html, body').animate({
+						scrollTop: 0
+					}, 500);
+				}
+			},
 			complete: function () {
 				$('#dataForm .modal-footer .loading-indicator').html('');
 				$('form[name="addData"] input, form[name="addData"] textarea, form[name="addData"] button').attr('disabled', false)
@@ -203,7 +210,7 @@ $(function () {
 		};
 		$.ajax({
 			type: "PUT",
-			url: `${HOST}/api/master/khusus`,
+			url: `${HOST}/proseskhusus/edit/api`,
 			headers: {'Content-Type': 'application/x-www-form-urlencoded'},
 			contentType: 'application/x-www-form-urlencoded; charset=utf-8',
 			dataType: 'JSON',
@@ -219,7 +226,13 @@ $(function () {
 						`)
 				}
 			},
-			error: function () {},
+			error: function (response) {
+				if(response.status == 403) {
+					$('.floating-msg').addClass('show').html(`
+								<div class="alert alert-danger">${response.responseJSON.msg}</div>
+								`)
+				}
+			},
 			complete: function() {
 				setTimeout(() => {
 					$('.floating-msg').removeClass('show').html('');

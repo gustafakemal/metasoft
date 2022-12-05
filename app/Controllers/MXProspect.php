@@ -23,7 +23,7 @@ class MXProspect extends BaseController
         $this->breadcrumbs->add('Dashbor', '/');
         $this->breadcrumbs->add('MXProspect', '/');
 
-        return view('Forms/MXProspect_List', [
+        return view('MXProspect/MXProspect_List', [
             'page_title' => 'MX Prospect',
             'breadcrumbs' => $this->breadcrumbs->render(),
             'main_menu' => (new \App\Libraries\Menu())->render(),
@@ -49,7 +49,7 @@ class MXProspect extends BaseController
 
         $views = array_merge($views, $this->requiredFields());
 
-        return view('Forms/MXProspect', $views);
+        return view('MXProspect/MXProspect', $views);
     }
 
     /**
@@ -179,7 +179,7 @@ class MXProspect extends BaseController
 
         $views = array_merge($views, $this->requiredFields());
 
-        return view('Forms/MXProspect_edit', $views);
+        return view('MXProspect/MXProspect_edit', $views);
     }
 
     /**

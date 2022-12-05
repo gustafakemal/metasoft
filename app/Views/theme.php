@@ -106,10 +106,10 @@
     <script src="<?= site_url('js/mfproduk.js'); ?>"></script>
 <?php endif; ?>
 <?php if (url_is('pelanggan*')) : ?>
-    <script src="<?= site_url('js/customer.js'); ?>"></script>
+    <script type="module" src="<?= site_url('js/customer.js'); ?>"></script>
 <?php endif; ?>
 <?php if (url_is('sales*')) : ?>
-    <script src="<?= site_url('js/sales.js'); ?>"></script>
+    <script type="module" src="<?= site_url('js/sales.js'); ?>"></script>
 <?php endif; ?>
 <?php if (url_is('jeniskertas*')) : ?>
     <script type="module" src="<?= site_url('js/mfjeniskertas.js'); ?>"></script>

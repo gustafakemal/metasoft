@@ -22,7 +22,7 @@ class Menu
     /**
      * @return array
      */
-    public function rootLevel()
+    public function rootLevel(): array
     {
         $root = [];
         $trackers = [];
@@ -46,7 +46,7 @@ class Menu
     /**
      * @return string
      */
-    public function items()
+    public function items(): string
     {
         $items = [];
         foreach ($this->rootLevel() as $menu) {
@@ -133,7 +133,7 @@ class Menu
      * @param $group_menu
      * @return array|mixed|null
      */
-    public function child($group_menu)
+    public function child($group_menu): array
     {
         return array_filter($this->modul, function ($item) use ($group_menu) {
             return $item->group_menu == $group_menu;
@@ -160,7 +160,7 @@ class Menu
             return $item->group_menu === $grup_menu && $item->icon !== null;
         }) );
 
-        if(count($filtered) == 0) return 'fas fa-home';
+        if(count($filtered) == 0) return 'fas fa-chevron-circle-right';
 
         return $filtered[0]->icon;
     }

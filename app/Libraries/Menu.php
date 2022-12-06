@@ -69,7 +69,7 @@ class Menu
      */
     private function listItem($route, $icon, $modul_name): string
     {
-        $active_class = $route && url_is($route) ? 'active' : '';
+        $active_class = $route && url_is($route . '*') ? 'active' : '';
         return '<li class="' . $active_class . '">' .
             '<a href="' . site_url($route ?? '/') . '">' .
             $this->icon($icon) .
@@ -123,7 +123,7 @@ class Menu
     {
         $current_url = uri_string(true);
         $filtered = array_filter($this->modul, function ($item) use ($group_menu, $current_url) {
-            return $item->group_menu === $group_menu && $item->route === $current_url;
+            return $item->group_menu === $group_menu && url_is($item->route . '*');
         });
 
         return count($filtered) > 0;
@@ -146,7 +146,7 @@ class Menu
             return;
         }
 
-        $active_class = (url_is($route)) ? 'active' : '';
+        $active_class = (url_is($route . '*')) ? 'active' : '';
         return '<li class="' . $active_class .'"><a href="' . site_url($route ?? '/') . '">' . $modul_name . '</a></li>';
     }
 

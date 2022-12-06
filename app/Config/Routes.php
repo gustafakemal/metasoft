@@ -145,7 +145,9 @@ $routes->group('inputprospek', static function ($routes) {
 $routes->group('listprospek', static function ($routes) {
     $routes->get('/', 'MXProspect::index');
     $routes->post('/', 'MXProspect::apiSearch');
-    $routes->get('edit/(:any)', 'MXProspect::edit/$1');
+    $routes->get('add/(:any)/(:num)', 'MXProspect::alt/$1/$2');
+    $routes->post('add', 'MXProspect::altProcess');
+    $routes->get('edit/(:any)/(:num)', 'MXProspect::edit/$1/$2');
     $routes->post('delete', 'MXProspect::delete');
 });
 
@@ -153,14 +155,6 @@ $routes->group('mxsegmen', static function ($routes) {
     $routes->get('/', 'MXSegmen::index');
     $routes->post('add', 'MXSegmen::add');
 });
-
-//$routes->group('mxprospect', static function ($routes) {
-//    $routes->get('/', 'MXProspect::index');
-//    $routes->post('/', 'MXProspect::apiSearch');
-//    $routes->post('api', 'MXProspect::createAlt');
-//    $routes->get('add', 'MXProspect::add');
-//    $routes->post('add', 'MXProspect::addProcess');
-//});
 
 $routes->group('produk', static function ($routes) {
     $routes->get('/', 'MFProduk::index');
@@ -186,11 +180,6 @@ $routes->group('partproduk', static function ($routes) {
     $routes->get('delete/(:any)', 'MFPartProduk::delPartProduk/$1');
 });
 
-//$routes->add('partproduk/add', 'MFPartProduk::addPartProduct');
-//$routes->add('partproduk/edit/(:any)', 'MFPartProduk::editPartProduct/$1');
-//$routes->add('partproduk/rev/(:any)/(:any)', 'MFPartProduk::editPartProduct/$1/$2');
-//$routes->add('partproduk/detail/(:any)', 'MFPartProduk::detailPartProduct/$1');
-//$routes->add('partproduk/del/(:any)', 'MFPartProduk::delPartProduk/$1');
 $routes->add('partproduk/addcopysisi', 'MFPartProduk::addcopysisi');
 
 /*

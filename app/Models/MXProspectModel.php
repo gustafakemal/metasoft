@@ -97,9 +97,10 @@ class MXProspectModel extends Model
                     ->get();
     }
 
-    public function getByNoProspect($NoProspek)
+    public function getByNoProspectAndAlt($NoProspek, $Alt)
     {
         return $this->where('NoProspek', $NoProspek)
+                    ->where('Alt', $Alt)
                     ->get();
     }
 

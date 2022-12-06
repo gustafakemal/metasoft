@@ -21,10 +21,11 @@ class MXProspect extends BaseController
     public function index(): string
     {
         $this->breadcrumbs->add('Dashbor', '/');
-        $this->breadcrumbs->add('MXProspect', '/');
+        $this->breadcrumbs->add('Prospek Metaflex', '/');
+        $this->breadcrumbs->add('List Prospek', '/');
 
         return view('MXProspect/MXProspect_List', [
-            'page_title' => 'MX Prospect',
+            'page_title' => 'List Prospek',
             'breadcrumbs' => $this->breadcrumbs->render(),
             'main_menu' => (new \App\Libraries\Menu())->render(),
         ]);
@@ -38,10 +39,11 @@ class MXProspect extends BaseController
     public function add(): string
     {
         $this->breadcrumbs->add('Dashbor', '/');
-        $this->breadcrumbs->add('MXProspect', '/');
+        $this->breadcrumbs->add('Prospek Metaflex', '/');
+        $this->breadcrumbs->add('Input Prospek', '/');
 
         $views = [
-            'page_title' => 'MX Prospect',
+            'page_title' => 'Input Prospek',
             'breadcrumbs' => $this->breadcrumbs->render(),
             'main_menu' => (new \App\Libraries\Menu())->render(),
             'alternatif' => $this->model->getAlternatif(),
@@ -55,14 +57,16 @@ class MXProspect extends BaseController
     /**
      * Endpoint ini digunakan untuk memproses inputan
      *
-     * @return \CodeIgniter\HTTP\RedirectResponse
+     * @return RedirectResponse
      * @throws \ReflectionException
      */
     public function addProcess(): RedirectResponse
     {
         $data = $this->request->getPost();
 
-        $data_request = $this->transformDataRequest($data);
+        $type = ( $this->request->getGet('alt') !== null && $this->request->getGet('alt') == '1' ) ? 'alt' : 'add';
+
+        $data_request = $this->transformDataRequest($data, $type);
 
         /** Insert form isian ke DB */
         $insert_data = $this->model->insert($data_request, false);
@@ -79,6 +83,11 @@ class MXProspect extends BaseController
                 }, $data_request['aksesori']);
                 $pa_model = new \App\Models\MXProspekAksesoriModel();
                 $pa_model->insertBatch($data_aksesori);
+            }
+
+            if($type == 'alt') {
+                return redirect()->to('listprospek/edit/' . $data_request['NoProspek'] . '/' . $data_request['Alt'])
+                    ->with('success', 'Alternatif berhasil ditambahkan');
             }
 
             return redirect()->back()
@@ -103,8 +112,8 @@ class MXProspect extends BaseController
         if($query->getNumRows() > 0) {
             foreach ($query->getResult() as $key => $row) {
 
-                $edit = '<a title="Edit" data-toggle="tooltip" data-placement="left" class="btn btn-sm btn-success edit-rev-item mr-2" href="'. site_url('listprospek/edit/' . $row->NoProspek) .'" title="Edit"><i class="far fa-edit"></i></a> ';
-                $alt = '<a title="Tambah Alt" data-toggle="tooltip" data-placement="left" class="btn btn-sm btn-info alt-item" href="#" data-no-prospect="'. $row->NoProspek .'" title="Alt"><i class="far fa-clone"></i></a> ';
+                $edit = '<a title="Edit" data-toggle="tooltip" data-placement="left" class="btn btn-sm btn-success edit-rev-item mr-2" href="'. site_url('listprospek/edit/' . $row->NoProspek . '/' . $row->Alt) .'" title="Edit"><i class="far fa-edit"></i></a> ';
+                $alt = '<a title="Tambah Alt" data-toggle="tooltip" data-placement="left" class="btn btn-sm btn-info alt-item" href="'. site_url('listprospek/add/' . $row->NoProspek . '/' . $row->Alt) .'" title="Alt"><i class="far fa-clone"></i></a> ';
                 $hapus = '<a title="Hapus" data-toggle="tooltip" data-placement="left" class="btn btn-sm btn-danger del-prospek" data-no-prospek="' . $row->NoProspek . '" data-alt="' . $row->Alt . '" href="#"><i class="far fa-trash-alt"></i></a>';
 
                 $results[] = [
@@ -154,20 +163,50 @@ class MXProspect extends BaseController
         }
     }
 
+    public function alt($NoProspek, $Alt)
+    {
+        $this->breadcrumbs->add('Dashbor', '/');
+        $this->breadcrumbs->add('Prospek Metaflex', '/');
+        $this->breadcrumbs->add('Alternatif Prospek', '/');
+
+        $query = $this->model->getByNoProspectAndAlt($NoProspek, $Alt);
+        $qq = (new \App\Models\MXProspekAksesoriModel())->getByProspekAlt($NoProspek, $query->getResult()[0]->Alt);
+
+        $views = [
+            'page_title' => 'Alternatif Prospek',
+            'breadcrumbs' => $this->breadcrumbs->render(),
+            'main_menu' => (new \App\Libraries\Menu())->render(),
+            'alternatif' => $this->model->getAlternatif(),
+            'data' => $query->getResult()[0],
+            'prospek_aksesori' => $qq->getResult()
+        ];
+
+        $views = array_merge($views, $this->requiredFields());
+
+        return view('MXProspect/MXProspect_alt', $views);
+    }
+
+    public function altProcess()
+    {
+        $request = $this->request->getPost();
+        dd($request);
+    }
+
     /**
      * @param $NoProspek
      * @return string
      */
-    public function edit($NoProspek): string
+    public function edit($NoProspek, $Alt): string
     {
         $this->breadcrumbs->add('Dashbor', '/');
-        $this->breadcrumbs->add('MXProspect', '/');
+        $this->breadcrumbs->add('Prospek Metaflex', '/');
+        $this->breadcrumbs->add('Edit Prospek', '/');
 
-        $query = $this->model->getByNoProspect($NoProspek);
+        $query = $this->model->getByNoProspectAndAlt($NoProspek, $Alt);
         $qq = (new \App\Models\MXProspekAksesoriModel())->getByProspekAlt($NoProspek, $query->getResult()[0]->Alt);
 
         $views = [
-            'page_title' => 'MX Prospect',
+            'page_title' => 'Edit Prospek',
             'breadcrumbs' => $this->breadcrumbs->render(),
             'main_menu' => (new \App\Libraries\Menu())->render(),
             'alternatif' => $this->model->getAlternatif(),
@@ -236,11 +275,11 @@ class MXProspect extends BaseController
 
     /**
      * @param array $data_request
-     * @param $updated
+     * @param string $type
      * @return array
      * @throws \Exception
      */
-    private function transformDataRequest(array $data_request, $updated = false): array
+    private function transformDataRequest(array $data_request, string $type = 'add'): array
     {
         $newarr = [];
         foreach ($data_request as $key => $row) {
@@ -266,14 +305,24 @@ class MXProspect extends BaseController
             }
         }
 
-        if( $updated ) {
+        if( $type == 'update' ) {
             $newarr['Updated'] = Time::now()->toDateTimeString();
             $newarr['UpdatedBy'] = session()->get('UserID');
-        } else {
+        }
+
+        if($type == 'add') {
             $newarr['Tanggal'] = Time::now()->toDateTimeString();
             $newarr['CreatedBy'] = session()->get('UserID');
             $newarr['NoProspek'] = $this->model->noProspek();
             $newarr['Alt'] = 1;
+        }
+
+        if( $type == 'alt' ) {
+            $max_alt = $this->model->getMaxAlt($newarr['NoProspek'])->getResult();
+            $newarr['Alt'] = $max_alt[0]->Alt + 1;
+            $newarr['Tanggal'] = Time::now()->toDateTimeString();
+            $newarr['Created'] = Time::now()->toDateTimeString();
+            $newarr['CreatedBy'] = session()->get('UserID');
         }
 
         return $newarr;

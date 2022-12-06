@@ -24,28 +24,28 @@ $(function () {
         }
     })
 
-    $(`#dataList`).on('click', '.alt-item', function (e) {
-        e.preventDefault();
-        const confirmation = confirm('Menambahkan Alternatif?')
-        if(confirmation) {
-            const NoProspek = $(this).attr('data-no-prospect')
-
-            $.ajax({
-                type: 'POST',
-                url: `${HOST}/inputprospek/api`,
-                dataType: 'JSON',
-                data: {NoProspek},
-                beforeSend: function () {
-                },
-                success: function (response) {
-                    if (response.success) {
-                        dt.reload()
-                    }
-                },
-
-            })
-        }
-    })
+    // $(`#dataList`).on('click', '.alt-item', function (e) {
+    //     e.preventDefault();
+    //     const confirmation = confirm('Menambahkan Alternatif?')
+    //     if(confirmation) {
+    //         const NoProspek = $(this).attr('data-no-prospect')
+    //
+    //         $.ajax({
+    //             type: 'POST',
+    //             url: `${HOST}/inputprospek/api`,
+    //             dataType: 'JSON',
+    //             data: {NoProspek},
+    //             beforeSend: function () {
+    //             },
+    //             success: function (response) {
+    //                 if (response.success) {
+    //                     dt.reload()
+    //                 }
+    //             },
+    //
+    //         })
+    //     }
+    // })
 
     let aksesories = [];
     $('button.add-acc').on('click', function() {

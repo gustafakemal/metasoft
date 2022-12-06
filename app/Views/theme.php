@@ -130,7 +130,7 @@
     <script type="module" src="<?= site_url('js/mfproseskhusus.js'); ?>"></script>
 <?php endif; ?>
 <?php if (url_is('tujuankirim*')) : ?>
-    <script src="<?= site_url('js/mftujuankirim.js'); ?>"></script>
+    <script type="module" src="<?= site_url('js/mftujuankirim.js'); ?>"></script>
 <?php endif; ?>
 <?php if (url_is('setting/*')) : ?>
     <script type="module" src="<?= site_url('js/setting.js'); ?>"></script>

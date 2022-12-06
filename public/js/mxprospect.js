@@ -10,33 +10,41 @@ $(function () {
 
         const config = {
             columnDefs: {
-                falseSearchable: [0],
-                falseOrderable: [0],
-                width: ['0(30)','1(120)','2(150)','3(90)','4(100)']
+                falseSearchable: [0, 10],
+                falseOrderable: [0, 10],
+                width: ['0(30)','1(100)','2(90)','3(120)','4(120)', '10(120)']
             },
             createdRow: ['No', 'Prospek', 'Alt', 'Nama Produk', 'Pemesan', 'Jumlah', 'Area', 'Diinput', 'Catatan', 'Status', 'Action'],
         }
         dt = new Datatable('#dataList', config, `${HOST}/listprospek`, 'POST', {keyword})
-        dt.load()
+        if(dt == undefined) {
+            dt.load()
+        } else {
+            dt.reload();
+        }
     })
 
     $(`#dataList`).on('click', '.alt-item', function (e) {
         e.preventDefault();
-        const NoProspek = $(this).attr('data-no-prospect')
+        const confirmation = confirm('Menambahkan Alternatif?')
+        if(confirmation) {
+            const NoProspek = $(this).attr('data-no-prospect')
 
-        $.ajax({
-            type: 'POST',
-            url: `${HOST}/inputprospek/api`,
-            dataType: 'JSON',
-            data: {NoProspek},
-            beforeSend: function() {},
-            success: function (response) {
-                if(response.success) {
-                    dt.reload()
-                }
-            },
+            $.ajax({
+                type: 'POST',
+                url: `${HOST}/inputprospek/api`,
+                dataType: 'JSON',
+                data: {NoProspek},
+                beforeSend: function () {
+                },
+                success: function (response) {
+                    if (response.success) {
+                        dt.reload()
+                    }
+                },
 
-        })
+            })
+        }
     })
 
     let aksesories = [];

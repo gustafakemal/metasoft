@@ -93,6 +93,7 @@ class MXProspectModel extends Model
         return $this->select('*')
                     ->join('CustomerFile', 'MX_Prospek.Pemesan = CustomerFile.NoPemesan')
                     ->like('MX_Prospek.NamaProduk', $keyword)
+                    ->orLike('MX_Prospek.NoProspek', $keyword)
                     ->get();
     }
 

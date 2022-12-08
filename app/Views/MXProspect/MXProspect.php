@@ -104,7 +104,7 @@
     <?php
     $materials = [];
     foreach ($material as $key => $mat) :
-        $materials[] = '<option value="' . $mat->ID . '">' . $mat->Nama . '</option>';
+        $materials[] = '<option value="' . $mat->id . '">' . $mat->nama . '</option>';
     endforeach;?>
 
 	<div class="form-group row">
@@ -289,11 +289,11 @@
                     <option selected value="R">ROLL</option>
 					<option value="P">PCS</option>
                 </select>
-				<select id="finishing" name="Finishing" class="form-control" disabled>
-                    <option value="CS">CS</option>
-					<option value="CSG">CS GUSET</option>
-                    <option value="4SS">4SS</option>
-                </select>
+<!--				<select id="finishing" name="Finishing" class="form-control" disabled>-->
+<!--                    <option value="CS">CS</option>-->
+<!--					<option value="CSG">CS GUSET</option>-->
+<!--                    <option value="4SS">4SS</option>-->
+<!--                </select>-->
             </div>
         </div>
         <div class="col-3">

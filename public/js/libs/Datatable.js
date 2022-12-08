@@ -101,6 +101,10 @@ export class Datatable {
 			obj.initComplete = this.config.initComplete
 		}
 
+		if (this.config.hasOwnProperty('scrollX')) {
+			obj.scrollX = this.config.scrollX
+		}
+
 		return obj;
 	}
 

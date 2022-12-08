@@ -4,24 +4,24 @@ $(function () {
 
     let dt;
 
+    const config = {
+        columnDefs: {
+            falseSearchable: [0, 10],
+            falseOrderable: [0, 10],
+            width: ['0(30)','1(100)','2(90)','3(120)','4(120)', '10(120)']
+        },
+        createdRow: ['No', 'Prospek', 'Alt', 'Nama Produk', 'Pemesan', 'Jumlah', 'Area', 'Diinput', 'Catatan', 'Status', 'Action'],
+        scrollX: true
+    }
+    dt = new Datatable('#dataList', config, `${HOST}/listprospek`, 'POST', {})
+    dt.init();
+
     $(`form[name="form-cariprospek"]`).on('submit', function (e) {
         e.preventDefault();
         const keyword = $(`input[name="cariprospek"]`).val();
 
-        const config = {
-            columnDefs: {
-                falseSearchable: [0, 10],
-                falseOrderable: [0, 10],
-                width: ['0(30)','1(100)','2(90)','3(120)','4(120)', '10(120)']
-            },
-            createdRow: ['No', 'Prospek', 'Alt', 'Nama Produk', 'Pemesan', 'Jumlah', 'Area', 'Diinput', 'Catatan', 'Status', 'Action'],
-        }
-        dt = new Datatable('#dataList', config, `${HOST}/listprospek`, 'POST', {keyword})
-        if(dt == undefined) {
-            dt.load()
-        } else {
-            dt.reload();
-        }
+        dt.timeout({keyword})
+        dt.stickNumbers()
     })
 
     // $(`#dataList`).on('click', '.alt-item', function (e) {
@@ -104,12 +104,13 @@ $(function () {
         if(confirmation) {
             const NoProspek = $(this).attr('data-no-prospek');
             const Alt = $(this).attr('data-alt');
+            const Status = $(this).attr('data-status');
 
             $.ajax({
                 type: 'POST',
                 url: `${HOST}/listprospek/delete`,
                 dataType: 'JSON',
-                data: {NoProspek, Alt},
+                data: {NoProspek, Alt, Status},
                 beforeSend: function () {
                 },
                 success: function (response) {

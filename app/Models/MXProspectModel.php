@@ -11,7 +11,7 @@ class MXProspectModel extends Model
     protected $useTimestamps = true;
     protected $createdField = 'Created';
     protected $updatedField = 'Updated';
-    protected $allowedFields = ['NoProspek', 'Alt', 'Tanggal', 'NamaProduk', 'Pemesan', 'Segmen', 'Konten', 'JenisProduk', 'Tebal', 'Panjang', 'Lebar', 'Pitch', 'Material1', 'TebalMat1', 'Material2', 'TebalMat2', 'Material3', 'TebalMat3', 'Material4', 'TebalMat4', 'Warna', 'Eyemark', 'RollDirection', 'Catatan', 'MaxJoin', 'WarnaTape', 'BagMaking', 'Bottom', 'OpenForFilling', 'Jumlah', 'Roll_Pcs', 'Finishing', 'Toleransi', 'Parsial', 'Keterangan', 'Area', 'Jalur', 'Kapasitas', 'Created', 'CreatedBy', 'Updated', 'UpdatedBy'];
+    protected $allowedFields = ['NoProspek', 'Alt', 'Tanggal', 'NamaProduk', 'Pemesan', 'Segmen', 'Konten', 'JenisProduk', 'Tebal', 'Panjang', 'Lebar', 'Pitch', 'Material1', 'TebalMat1', 'Material2', 'TebalMat2', 'Material3', 'TebalMat3', 'Material4', 'TebalMat4', 'Warna', 'Eyemark', 'RollDirection', 'Catatan', 'MaxJoin', 'WarnaTape', 'BagMaking', 'Bottom', 'OpenForFilling', 'Jumlah', 'Roll_Pcs', 'Finishing', 'Toleransi', 'Parsial', 'Keterangan', 'Area', 'Jalur', 'Kapasitas', 'Created', 'CreatedBy', 'Updated', 'UpdatedBy', 'Status'];
 
     protected $validationRules = [
         'NamaProduk' => 'required',
@@ -90,10 +90,12 @@ class MXProspectModel extends Model
 
     public function getByKeyword($keyword)
     {
+        $keyword_upper = strtoupper($keyword);
+        $where = "MX_Prospek.Status > 0 AND (MX_Prospek.NamaProduk like '%".$keyword."%' OR MX_Prospek.NamaProduk like '%" . $keyword_upper . "%' OR MX_Prospek.NoProspek like '%".$keyword."%')";
         return $this->select('*')
                     ->join('CustomerFile', 'MX_Prospek.Pemesan = CustomerFile.NoPemesan')
-                    ->like('MX_Prospek.NamaProduk', $keyword)
-                    ->orLike('MX_Prospek.NoProspek', $keyword)
+                    ->join('MX_AreaKirim', 'MX_Prospek.Area = MX_AreaKirim.ID')
+                    ->where($where)
                     ->get();
     }
 

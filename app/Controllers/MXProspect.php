@@ -9,6 +9,12 @@ use CodeIgniter\I18n\Time;
 class MXProspect extends BaseController
 {
     private $model;
+    private $status = [
+        0 => 'BATAL',
+        10 => 'INPUT',
+        20 => 'ESTIMASI',
+        30 => 'ORDER'
+    ];
 
     public function __construct()
     {
@@ -112,9 +118,9 @@ class MXProspect extends BaseController
         if($query->getNumRows() > 0) {
             foreach ($query->getResult() as $key => $row) {
 
-                $edit = '<a title="Edit" data-toggle="tooltip" data-placement="left" class="btn btn-sm btn-success edit-rev-item mr-2" href="'. site_url('listprospek/edit/' . $row->NoProspek . '/' . $row->Alt) .'" title="Edit"><i class="far fa-edit"></i></a> ';
-                $alt = '<a title="Tambah Alt" data-toggle="tooltip" data-placement="left" class="btn btn-sm btn-info alt-item" href="'. site_url('listprospek/add/' . $row->NoProspek . '/' . $row->Alt) .'" title="Alt"><i class="far fa-clone"></i></a> ';
-                $hapus = '<a title="Hapus" data-toggle="tooltip" data-placement="left" class="btn btn-sm btn-danger del-prospek" data-no-prospek="' . $row->NoProspek . '" data-alt="' . $row->Alt . '" href="#"><i class="far fa-trash-alt"></i></a>';
+                $edit = '<a title="Edit" data-toggle="tooltip" data-placement="top" class="btn btn-sm btn-success edit-rev-item" href="'. site_url('listprospek/edit/' . $row->NoProspek . '/' . $row->Alt) .'" title="Edit"><i class="far fa-edit"></i></a>';
+                $alt = '<a title="Tambah Alt" data-toggle="tooltip" data-placement="top" class="btn btn-sm btn-info alt-item" href="'. site_url('listprospek/add/' . $row->NoProspek . '/' . $row->Alt) .'" title="Alt"><i class="far fa-clone"></i></a>';
+                $hapus = '<a title="Hapus" data-toggle="tooltip" data-placement="top" class="btn btn-sm btn-danger del-prospek" data-no-prospek="' . $row->NoProspek . '" data-alt="' . $row->Alt . '" data-status="' . $row->Status . '" href="#"><i class="far fa-trash-alt"></i></a>';
 
                 $results[] = [
                     $key + 1,
@@ -123,11 +129,11 @@ class MXProspect extends BaseController
                     $row->NamaProduk,
                     $row->NamaPemesan,
                     $row->Jumlah,
-                    $row->Area,
-                    $row->CreatedBy,
+                    $row->Nama,
+                    $this->common->dateFormat($row->Created),
                     $row->Catatan,
-                    '',
-                    $edit . $alt . $hapus
+                    $this->status[$row->Status],
+                    '<div class="btn-group" role="group" aria-label="Basic example">' . $edit . $alt . $hapus . '</div>'
                 ];
             }
         }
@@ -259,18 +265,26 @@ class MXProspect extends BaseController
     {
         $NoProspek = $this->request->getPost('NoProspek');
         $Alt = $this->request->getPost('Alt');
+        $Status = (int)$this->request->getPost('Status');
 
-        if( $this->model->deleteProspek($NoProspek, $Alt) ) {
-            return $this->response->setJSON([
-                'success' => true,
-                'msg' => 'Data berhasil dihapus'
-            ]);
+//        return $this->response->setJSON(['noprospek' => $NoProspek, 'alt' => $Alt, 'status' => $Status]);
+
+        if($Status >= 20) {
+            $newdata = ['Status' => 0];
+            if($this->model->updateData($newdata, $NoProspek, $Alt)) {
+                $response = ['success' => true, 'msg' => 'Data berhasil diupdate'];
+            } else {
+                $response = ['success' => false, 'msg' => 'Data gagal diupdate'];
+            }
         } else {
-            return $this->response->setJSON([
-                'success' => false,
-                'msg' => 'Data gagal dihapus'
-            ]);
+            if( $this->model->deleteProspek($NoProspek, $Alt) ) {
+                $response = ['success' => true, 'msg' => 'Data berhasil dihapus'];
+            } else {
+                $response = ['success' => false, 'msg' => 'Data gagal dihapus'];
+            }
         }
+
+        return $this->response->setJSON($response);
     }
 
     /**

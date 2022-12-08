@@ -10,8 +10,7 @@ $(function () {
             falseOrderable: [0, 10],
             width: ['0(30)','1(100)','2(90)','3(120)','4(120)', '10(120)']
         },
-        createdRow: ['No', 'Prospek', 'Alt', 'Nama Produk', 'Pemesan', 'Jumlah', 'Area', 'Diinput', 'Catatan', 'Status', 'Action'],
-        scrollX: true
+        createdRow: ['No', 'Prospek', 'Alt', 'Nama Produk', 'Pemesan', 'Jumlah', 'Area', 'Diinput', 'Catatan', 'Status', 'Action']
     }
     dt = new Datatable('#dataList', config, `${HOST}/listprospek`, 'POST', {})
     dt.init();

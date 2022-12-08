@@ -126,7 +126,7 @@
             <select id="material1" step="any" name="Material1" class="form-control">
                 <option value="">Pilih</option>
                 <?php foreach ($material as $key => $mt) : ?>
-                    <option<?= ($mt->ID == $data->Material1) ? ' selected' : '';?> value="<?= $mt->ID;?>"><?= $mt->Nama;?></option>
+                    <option<?= ($mt->id == $data->Material1) ? ' selected' : '';?> value="<?= $mt->id;?>"><?= $mt->nama;?></option>
                 <?php endforeach;?>
             </select>
 			<input value="<?= ((int)$data->TebalMat1 == 0) ? '0'.$data->TebalMat1 : $data->TebalMat1;?>" type="number" step="any" class="form-control" id="tebalmat1" name="TebalMat1" placeholder="Tebal">
@@ -135,7 +135,7 @@
             <select id="material2" name="Material2" class="form-control">
                 <option value="">Pilih</option>
                 <?php foreach ($material as $key => $mt) : ?>
-                    <option<?= ($mt->ID == $data->Material2) ? ' selected' : '';?> value="<?= $mt->ID;?>"><?= $mt->Nama;?></option>
+                    <option<?= ($mt->id == $data->Material2) ? ' selected' : '';?> value="<?= $mt->id;?>"><?= $mt->nama;?></option>
                 <?php endforeach;?>
             </select>
 			<input value="<?= ((int)$data->TebalMat2 == 0) ? '0'.$data->TebalMat2 : $data->TebalMat2;?>" type="number" step="any" class="form-control" id="tebalmat2" name="TebalMat2" placeholder="Tebal">
@@ -144,7 +144,7 @@
             <select id="material3" name="Material3" class="form-control">
                 <option value="">Pilih</option>
                 <?php foreach ($material as $key => $mt) : ?>
-                    <option<?= ($mt->ID == $data->Material3) ? ' selected' : '';?> value="<?= $mt->ID;?>"><?= $mt->Nama;?></option>
+                    <option<?= ($mt->id == $data->Material3) ? ' selected' : '';?> value="<?= $mt->id;?>"><?= $mt->nama;?></option>
                 <?php endforeach;?>
             </select>
 			<input value="<?= ((int)$data->TebalMat3 == 0) ? '0'.$data->TebalMat3 : $data->TebalMat3;?>" type="number" step="any" class="form-control" id="tebalmat3" name="TebalMat3" placeholder="Tebal">
@@ -153,7 +153,7 @@
             <select id="material4" name="Material4" class="form-control">
                 <option value="">Pilih</option>
                 <?php foreach ($material as $key => $mt) : ?>
-                    <option<?= ($mt->ID == $data->Material4) ? ' selected' : '';?> value="<?= $mt->ID;?>"><?= $mt->Nama;?></option>
+                    <option<?= ($mt->id == $data->Material4) ? ' selected' : '';?> value="<?= $mt->id;?>"><?= $mt->nama;?></option>
                 <?php endforeach;?>
             </select>
 			<input value="<?= ((int)$data->TebalMat4 == 0) ? '0'.$data->TebalMat4 : $data->TebalMat4;?>" type="number" step="any" class="form-control" id="tebalmat4" name="TebalMat4" placeholder="Tebal">

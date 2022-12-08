@@ -323,11 +323,7 @@
                     <option<?= ($data->Roll_Pcs == 'R') ? ' selected' : '';?> value="R">ROLL</option>
 					<option<?= ($data->Roll_Pcs == 'P') ? ' selected' : '';?> value="P">PCS</option>
                 </select>
-				<select id="finishing" name="Finishing" class="form-control" disabled>
-                    <option<?= ($data->Finishing == 'CS') ? ' selected' : '';?> value="CS">CS</option>
-					<option<?= ($data->Finishing == 'CSG') ? ' selected' : '';?> value="CSG">CS GUSET</option>
-                    <option<?= ($data->Finishing == '4SS') ? ' selected' : '';?> value="4SS">4SS</option>
-                </select>
+				
             </div>
         </div>
         <div class="col-3">

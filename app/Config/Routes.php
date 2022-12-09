@@ -20,7 +20,7 @@ $routes->setDefaultNamespace('App\Controllers');
 $routes->setDefaultController('Home');
 $routes->setDefaultMethod('index');
 $routes->setTranslateURIDashes(false);
-$routes->set404Override(function() {
+$routes->set404Override(function () {
     return view('Common/404_error');
 });
 $routes->setAutoRoute(false);
@@ -81,6 +81,15 @@ $routes->group('jenistinta', static function ($routes) {
     $routes->post('add/api', 'MFJenisTinta::apiAddProcess');
     $routes->put('edit/api', 'MFJenisTinta::apiEditProcess');
     $routes->get('delete/(:num)', 'MFJenisTinta::delete/$1');
+});
+
+$routes->group('mxjenistinta', static function ($routes) {
+    $routes->get('/', 'MXJenisTinta::index');
+    $routes->get('api', 'MXJenisTinta::apiGetAll');
+    $routes->get('api/(:num)', 'MXJenisTinta::apiGetById/$1');
+    $routes->post('add/api', 'MXJenisTinta::apiAddProcess');
+    $routes->put('edit/api', 'MXJenisTinta::apiEditProcess');
+    $routes->get('delete/(:num)', 'MXJenisTinta::delete/$1');
 });
 
 $routes->group('jenisflute', static function ($routes) {

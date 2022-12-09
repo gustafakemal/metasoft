@@ -323,7 +323,7 @@
                     <option<?= ($data->Roll_Pcs == 'R') ? ' selected' : '';?> value="R">ROLL</option>
 					<option<?= ($data->Roll_Pcs == 'P') ? ' selected' : '';?> value="P">PCS</option>
                 </select>
-				
+
             </div>
         </div>
         <div class="col-3">

@@ -34,7 +34,7 @@
 
 <div class="tbl-data-listprospek">
 
-<table id="dataList" class="table table-bordered table-striped">
+<table id="dataList" class="table table-bordered table-striped" style="width: 100%">
 	<thead>
 		<tr>
             <th>No</th>
@@ -47,6 +47,7 @@
             <th>Diinput</th>
             <th>Catatan</th>
             <th>Status</th>
+            <th>Proses</th>
             <th>Action</th>
 		</tr>
 	</thead>

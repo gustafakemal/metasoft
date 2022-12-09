@@ -519,6 +519,83 @@ body {
   margin: 0 0 15px 0;
 }
 
+.switch-nav {
+  text-align: right;
+  display: flex;
+  justify-content: right;
+}
+.switch-nav.show .dropdown-toggle {
+  background-color: #ddd;
+  border: 1px solid #ddd;
+  color: #222;
+  border-radius: 0;
+  border-top-right-radius: 3px;
+  border-top-left-radius: 3px;
+}
+.switch-nav.show .dropdown-toggle:hover {
+  border: 1px solid #ddd;
+}
+.switch-nav.show .dropdown-menu {
+  border-radius: 0;
+  border: 0;
+  border: 1px solid transparent;
+  background-color: #f9f9f9;
+  box-shadow: 5px 5px 5px 0px rgba(0,0,0,0.75);
+  -webkit-box-shadow: 5px 5px 5px 0px rgba(0,0,0,0.25);
+  -moz-box-shadow: 5px 5px 5px 0px rgba(0,0,0,0.25);
+  font-size: inherit;
+  background-clip: inherit;
+}
+.switch-nav.show .dropdown-menu.show {
+  top: -2px !important;
+  left: 1px !important;
+}
+.switch-nav .dropdown-toggle {
+  border: 1px solid rgba(0,0,0,.15);
+  background-color: transparent;
+  display: flex;
+  padding: 4px 10px;
+  border-radius: 3px;
+  color: #222;
+}
+.switch-nav .dropdown-toggle:after {
+  margin-top: 10px;
+  margin-left: 10px;
+}
+.switch-nav .dropdown-toggle:hover {
+  border: 1px solid rgba(0,0,0,.2);
+}
+.switch-nav .dropdown-toggle .icon {
+  margin: 0 10px 0 0;
+}
+.switch-nav .dropdown-toggle .fungsi {
+  font-weight: 700;
+}
+.switch-nav .dropdown-toggle .dropdown-menu.show .dropdown-item {
+  transition: all .5s ease;
+}
+.switch-nav .dropdown-toggle .dropdown-menu.show .dropdown-item.active {
+  background-color: transparent;
+  color: inherit;
+  font-weight: 700;
+  padding-left: 25px;
+  position: relative;
+}
+.switch-nav .dropdown-toggle .dropdown-menu.show .dropdown-item.active:before {
+  font-family: "Font Awesome 5 Free";
+  position: absolute;
+  font-weight: 900;
+  left: 7px;
+  top: 8px;
+  font-size: 80%;
+  color: rgba(0,0,0,.5);
+  content: "\f08d";
+}
+.switch-nav .dropdown-toggle .dropdown-menu.show .dropdown-item:hover {
+  background-color: #eee;
+  color: rgba(0,0,0,.5);
+}
+
 @media only screen and (max-width: 1120px) {
   .sidebar {
     left: -240px;

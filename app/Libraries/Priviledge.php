@@ -8,6 +8,9 @@ class Priviledge
 
     private $accessDefinition;
 
+    /**
+     * Routes default
+     */
     private const WILDCARD_PATH = [
         'BaseController(.*)',
         '(.*)/initController',
@@ -24,14 +27,16 @@ class Priviledge
         $this->accessDefinition = new AccessDefinition();
     }
 
-    public function path()
+    /**
+     * @return array
+     */
+    public function path(): array
     {
         $path = [];
 
         $routes = $this->parseFromAccessDefinition();
 
         for($i = 0;$i < count($routes);$i++) {
-
             foreach ($routes[$i] as $key => $val) {
                 $path[] = $key;
             }
@@ -40,7 +45,12 @@ class Priviledge
         return $path;
     }
 
-    public function resticted()
+    /**
+     * Ambil route mana aja yang ngga boleh diakses
+     *
+     * @return array
+     */
+    public function restricted(): array
     {
         $availableRoutes = $this->accessDefinition->availableRoutes();
 
@@ -55,7 +65,13 @@ class Priviledge
         return $restricted;
     }
 
-    public function parseFromAccessDefinition()
+    /**
+     * Ambil routes mana saja yang bisa diakses dari class
+     * AccessDefinition berdasar access level dari user
+     *
+     * @return array
+     */
+    public function parseFromAccessDefinition(): array
     {
         $accessRoutes = $this->accessRoutes();
 
@@ -70,7 +86,12 @@ class Priviledge
         return $arrayRoutes;
     }
 
-    public function accessRoutes()
+    /**
+     * Ambil masing-masing access untuk tiap-tiap modul
+     *
+     * @return array
+     */
+    public function accessRoutes(): array
     {
         $newobj = [];
         for($i = 0;$i < count($this->modul);$i++) {

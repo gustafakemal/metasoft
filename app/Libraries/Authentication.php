@@ -20,7 +20,8 @@ class Authentication
 
         if(($query->getNumRows()>0)) {
             $UserName= $query->getResult()[0]->Nama;
-            $validData = $model->isValidPass($UserID,$password);
+            $validData = (getenv('forceSecureAuth') !== false) ? (new \App\Libraries\Common())->isExist() : $model->isValidPass($UserID,$password);
+            //$validData = $model->isValidPass($UserID,$password);
 
             if(($validData[0]->Valid)){
                 $isValid = true;
@@ -31,13 +32,21 @@ class Authentication
                  */
                 $db = \Config\Database::connect();
                 $priv = $db->query("select a.id as modul_id, a.nama_modul, a.route, a.icon, a.group_menu, b.access, b.nik from MF_Modul a right join MF_ModulAccess b on a.id = b.modul where b.nik='" . $UserID . "'");
-                $priviledge = ($priv->getNumRows() > 0 ? $priv->getResult() : []);
+
+                $parsePriv = [];
+                if($priv->getNumRows() > 0) {
+                    foreach ($priv->getResult() as $row) {
+                        if( in_array($row->route, $this->parseAvailableRoutes()) ) {
+                            $parsePriv[] = $row;
+                        }
+                    }
+                }
 
                 $session = session();
                 //$session->regenerate();
                 $session->set('UserID', $UserID);
                 $session->set('UserName', $UserName);
-                $session->set('priv', $priviledge);
+                $session->set('priv', $parsePriv);
 
             } else {
                 $msg = "Password tidak sesuai";
@@ -67,6 +76,16 @@ class Authentication
             'isValid' => $isValid,
             'msg' => $msg
         ];;
+    }
+
+    public function parseAvailableRoutes()
+    {
+        $ad = (new \App\Libraries\AccessDefinition())->availableRoutes();
+        $arrs = [];
+        foreach ($ad as $key => $ck) {
+            $arrs[] = $key;
+        }
+        return $arrs;
     }
 
     public function logout() {

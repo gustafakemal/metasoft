@@ -1,88 +1,42 @@
+import {Datatable} from "./libs/Datatable.js";
+
 $(function () {
 
-	let customerData;
-
-	$("#dataList").DataTable({
-		data: customerData,
-        buttons: [{
-                extend: 'excelHtml5',
-                exportOptions: { orthogonal: 'export' }
-            }],
-		columnDefs: [{
-			"searchable": false,
-			"orderable": false,
-			"targets": [0, 18]
-		},{
-			"width": 60,
-			"targets": 18
-		},{
-			"targets": 14,
-			render: function ( data, type, row, meta ) {
-				if(type === 'export') {
-					return data;
-				} else {
-					return (data == 'A') ? 'Ya' : 'Tidak';
+	const config = {
+		columnDefs: {
+			falseSearchable: [0, 18],
+			falseOrderable: [0, 18],
+			falseVisibility: [1,4, 5, 6, 8, 9, 10, 11, 12, 13, 15, 16, 17],
+			width: ['2(150)','18(120)'],
+			className: 5,
+			custom: [
+				{
+					"targets": 14,
+					render: function ( data, type, row, meta ) {
+						if(type === 'export') {
+							return data;
+						} else {
+							return (data == 'A') ? 'Ya' : 'Tidak';
+						}
+					}
 				}
-			}
-		},{
-			"width": 150,
-			"targets": 2
+			]
 		},
-		{
-			className: 'dt-body-nowrap',
-			"targets": 18
-		},
-		{
-			"visible": false,
-			"targets": [1,4, 5, 6, 8, 9, 10, 11, 12, 13, 15, 16, 17]
-		}],
-		order: [[ 1, 'desc' ]],
-		createdRow: function (row, data, dataIndex) {
-			$(row).find("td:eq(0)").attr("data-label", "No");
-			$(row).find("td:eq(1)").attr("data-label", "Tanggal dibuat");
-			$(row).find("td:eq(2)").attr("data-label", "Nama Pemesan");
-			$(row).find("td:eq(3)").attr("data-label", "Contact person");
-			$(row).find("td:eq(4)").attr("data-label", "Status Aktif");
-			$(row).find("td:eq(5)").attr("data-label", "Action");
-		},
+		createdRow: ['No', 'Tanggal dibuat', 'Nama Pemesan', 'Contact Person', 'Status Aktif', 'Action'],
 		initComplete: function () {
 			const dropdown = `<div class="dropdown d-inline mr-2">` +
-								`<button class="btn btn-primary dropdown-toggle" type="button" id="dataTableDropdown" data-toggle="dropdown" aria-expanded="false"><i class="fas fa-cog"></i></button>` +
-								`<div class="dropdown-menu" aria-labelledby="dataTableDropdown">` +
-								`<a class="dropdown-item customers-reload" href="#">Reload data</a>` +
-								`<a class="dropdown-item customers-to-csv" href="#">Export to excel</a>` +
-							`</div>` +
-						`</div>`
-			const add_btn = `<a href="#" class="btn btn-primary btn-add mr-2 add-customer-btn">Tambah data</a>`;
+				`<button class="btn btn-primary dropdown-toggle" type="button" id="customersDropdown" data-toggle="dropdown" aria-expanded="false"><i class="fas fa-cog"></i></button>` +
+				`<div class="dropdown-menu" aria-labelledby="customersDropdown">` +
+				`<a class="dropdown-item data-reload" href="#">Reload data</a>` +
+				`<a class="dropdown-item data-to-csv" href="#">Export to excel</a>` +
+				`</div>` +
+				`</div>`
+			const add_btn = `<a href="#" class="btn btn-primary btn-add mr-2 add-data_btn">Tambah data</a>`;
 			$("#dataList_wrapper .dataTables_length").prepend(dropdown + add_btn);
-		},
-	});
-
-	setTimeout(() => {
-		const obj = {
-			beforeSend: function () {
-				$('#dataList .dataTables_empty').html('<div class="spinner-icon"><span class="spinner-grow text-info"></span><span class="caption">Fetching data...</span></div>')
-			},
-			success: function (response) {
-				$('#dataList').DataTable().clear();
-				$('#dataList').DataTable().rows.add(response);
-				$('#dataList').DataTable().draw();
-			},
-			error: function () {
-				$('#dataList .dataTables_empty').html('Data gagal di retrieve.')
-			},
-			complete: function() {}
 		}
-
-		getAllCustomers(obj);
-	}, 50)
-
-	$('#dataList').DataTable().on( 'order.dt search.dt', function () {
-		let i = 1;
-		$('#dataList').DataTable().cells(null, 0, {search:'applied', order:'applied'}).every( function (cell) {
-			this.data(i++);
-		});
-	}).draw();
+	}
+	const datatable = new Datatable('#dataList', config, `${HOST}/pelanggan/api`, 'GET')
+	datatable.load()
 
 	$('.add-customer-btn').on('click', function(e) {
 		e.preventDefault();
@@ -100,7 +54,7 @@ $(function () {
 
 		$.ajax({
 			type: "POST",
-			url: `${HOST}/api/master/customer`,
+			url: `${HOST}/pelanggan/add/api`,
 			dataType: 'JSON',
 			data: formData,
 			contentType: false,
@@ -123,7 +77,14 @@ $(function () {
 					}, 500);
 				}
 			},
-			error: function () {},
+			error: function (response) {
+				if(response.status == 403) {
+					$('#dataForm .msg').html(`<div class="alert alert-danger">${response.responseJSON.msg}</div>`)
+					$('#dataForm, html, body').animate({
+						scrollTop: 0
+					}, 500);
+				}
+			},
 			complete: function () {
 				$('#dataForm .modal-footer .loading-indicator').html('');
 				$('form[name="addData"] input, form[name="addData"] textarea, form[name="addData"] button').attr('disabled', false)
@@ -171,7 +132,7 @@ $(function () {
 
 		$.ajax({
 			type: "GET",
-			url: `${HOST}/customer/api/${noPemesan}`,
+			url: `${HOST}/pelanggan/api/${noPemesan}`,
 			dataType: 'JSON',
 			beforeSend: function () {},
 			success: function (response) {
@@ -214,7 +175,7 @@ $(function () {
 
 		$.ajax({
 			type: "POST",
-			url: `${HOST}/api/master/customer`,
+			url: `${HOST}/pelanggan/edit/api`,
 			dataType: 'JSON',
 			data: formData,
 			processData: false,
@@ -228,7 +189,6 @@ $(function () {
 				$('form[name="editData"] input, form[name="editData"] textarea, form[name="editData"] button').attr('disabled', true)
 			},
 			success: function (response) {
-				console.log(response)
 				if(response.success) {
 					location.reload();
 				} else {
@@ -238,7 +198,13 @@ $(function () {
 					}, 500);
 				}
 			},
-			error: function () {},
+			error: function (response) {
+				if(response.status == 403) {
+					$('.floating-msg').addClass('show').html(`
+								<div class="alert alert-danger">${response.responseJSON.msg}</div>
+								`)
+				}
+			},
 			complete: function () {
 				$('#dataForm .modal-footer .loading-indicator').html('');
 				$('form[name="editData"] input, form[name="editData"] textarea, form[name="editData"] button').attr('disabled', false)

@@ -20,7 +20,7 @@ $routes->setDefaultNamespace('App\Controllers');
 $routes->setDefaultController('Home');
 $routes->setDefaultMethod('index');
 $routes->setTranslateURIDashes(false);
-$routes->set404Override(function() {
+$routes->set404Override(function () {
     return view('Common/404_error');
 });
 $routes->setAutoRoute(false);
@@ -35,7 +35,7 @@ $routes->setAutoRoute(false);
 // route since we don't have to scan directories.
 $routes->get('/', 'Home::index');
 $routes->get('login', 'Auth::login');
-$routes->post('auth/verify', 'Auth::verify');
+$routes->post('auth/verify', 'Auth::verify', ['as' => 'verifikasi']);
 $routes->get('logout', 'Auth::logout');
 
 $routes->group('pelanggan', static function ($routes) {
@@ -81,6 +81,15 @@ $routes->group('jenistinta', static function ($routes) {
     $routes->post('add/api', 'MFJenisTinta::apiAddProcess');
     $routes->put('edit/api', 'MFJenisTinta::apiEditProcess');
     $routes->get('delete/(:num)', 'MFJenisTinta::delete/$1');
+});
+
+$routes->group('mxjenistinta', static function ($routes) {
+    $routes->get('/', 'MXJenisTinta::index');
+    $routes->get('api', 'MXJenisTinta::apiGetAll');
+    $routes->get('api/(:num)', 'MXJenisTinta::apiGetById/$1');
+    $routes->post('add/api', 'MXJenisTinta::apiAddProcess');
+    $routes->put('edit/api', 'MXJenisTinta::apiEditProcess');
+    $routes->get('delete/(:num)', 'MXJenisTinta::delete/$1');
 });
 
 $routes->group('jenisflute', static function ($routes) {
@@ -135,15 +144,51 @@ $routes->group('setting', static function ($routes) {
     });
 });
 
-$routes->group('produk', static function ($routes) {
-    $routes->get('/', 'MFProduk::index');
+$routes->group('inputprospek', static function ($routes) {
+    $routes->get('/', 'MXProspect::add');
+    $routes->post('/', 'MXProspect::addProcess');
+    $routes->post('api', 'MXProspect::createAlt');
+    $routes->post('edit', 'MXProspect::editProcess');
 });
 
-$routes->add('partproduk/add', 'MFPartProduk::addPartProduct');
-$routes->add('partproduk/edit/(:any)', 'MFPartProduk::editPartProduct/$1');
-$routes->add('partproduk/rev/(:any)/(:any)', 'MFPartProduk::editPartProduct/$1/$2');
-$routes->add('partproduk/detail/(:any)', 'MFPartProduk::detailPartProduct/$1');
-$routes->add('partproduk/del/(:any)', 'MFPartProduk::delPartProduk/$1');
+$routes->group('listprospek', static function ($routes) {
+    $routes->get('/', 'MXProspect::index');
+    $routes->post('/', 'MXProspect::apiSearch');
+    $routes->get('add/(:any)/(:num)', 'MXProspect::alt/$1/$2');
+    $routes->post('add', 'MXProspect::altProcess');
+    $routes->get('edit/(:any)/(:num)', 'MXProspect::edit/$1/$2');
+    $routes->post('delete', 'MXProspect::delete');
+});
+
+$routes->group('mxsegmen', static function ($routes) {
+    $routes->get('/', 'MXSegmen::index');
+    $routes->post('add', 'MXSegmen::add');
+});
+
+$routes->group('produk', static function ($routes) {
+    $routes->get('/', 'MFProduk::index');
+    $routes->post('/', 'MFProduk::productSearch');
+    $routes->post('add', 'MFProduk::apiAddProcess');
+    $routes->get('edit/(:num)', 'MFProduk::edit/$1');
+    $routes->post('edit', 'MFProduk::apiEditProcess');
+    $routes->get('delete/(:num)/(:any)', 'MFProduk::delItemKelProduk/$1/$2');
+    $routes->post('delete', 'MFProduk::delItemProduct');
+});
+
+$routes->group('partproduk', static function ($routes) {
+    $routes->get('/', 'MFPartProduk::index');
+    $routes->post('/', 'MFPartProduk::partProductSearch');
+    $routes->get('api/(:num)', 'MFPartProduk::apiGetByProduct/$1');
+    $routes->post('api', 'MFPartProduk::apiAllSisiByPart');
+    $routes->get('rev/(:any)/(:any)', 'MFPartProduk::editPartProduct/$1/$2');
+    $routes->get('detail/(:any)', 'MFPartProduk::detailPartProduct/$1');
+    $routes->post('add/toproduk', 'MFPartProduk::apiAddToProduct');
+    $routes->get('add', 'MFPartProduk::addPartProduct');
+    $routes->post('add', 'MFPartProduk::apiAddProcess');
+    $routes->get('edit/(:any)', 'MFPartProduk::editPartProduct/$1');
+    $routes->get('delete/(:any)', 'MFPartProduk::delPartProduk/$1');
+});
+
 $routes->add('partproduk/addcopysisi', 'MFPartProduk::addcopysisi');
 
 /*

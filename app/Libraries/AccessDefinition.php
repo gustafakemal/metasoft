@@ -12,7 +12,7 @@ class AccessDefinition
     /**
      * READ access pattern
      */
-    private const READ = '/(^%s$|^%s\/api)/';
+    private const READ = '/(^%s$|^%s\/api|^%s\/rev|^%s\/detail)/';
 
     /**
      * WRITE access pattern
@@ -30,12 +30,20 @@ class AccessDefinition
 //        $this->access_level = $access_level;
 //    }
 
-    public function get()
+    /**
+     * @return array
+     */
+    public function get(): array
     {
         return $this->formula();
     }
 
-    public function availableRoutes()
+    /**
+     * Listing existing routes in the app
+     *
+     * @return array
+     */
+    public function availableRoutes(): array
     {
         $routes = Services::Routes();
         $post = $routes->getRoutes('post');
@@ -46,31 +54,51 @@ class AccessDefinition
         return array_merge($post, $get, $put, $delete);
     }
 
-    public function modulRoutes()
+    public function modulRoutes(): array
     {
         $pattern = '/^' . $this->route . '/';
         return $this->filter($pattern);
     }
 
-    public function read()
+    /**
+     * Get all routes within READ access
+     *
+     * @return array
+     */
+    public function read(): array
     {
-        $pattern = sprintf(self::READ, $this->route, $this->route);
+        $pattern = sprintf(self::READ, $this->route, $this->route, $this->route, $this->route);
         return $this->filter($pattern);
     }
 
-    public function write()
+    /**
+     * Get all routes within WRITE access
+     *
+     * @return array
+     */
+    public function write(): array
     {
         $pattern = sprintf(self::WRITE, $this->route, $this->route);
         return $this->filter($pattern);
     }
 
-    public function delete()
+    /**
+     * Get all routes within DELETE access
+     *
+     * @return array
+     */
+    public function delete(): array
     {
         $pattern = sprintf(self::DELETE, $this->route);
         return $this->filter($pattern);
     }
 
-    private function formula()
+    /**
+     * Level akses beserta otorisasinya
+     *
+     * @return array
+     */
+    private function formula(): array
     {
         switch ($this->access_level) {
             case 1:
@@ -90,7 +118,13 @@ class AccessDefinition
         return $user_access;
     }
 
-    private function filter($pattern)
+    /**
+     * Ambil dan parsing key dari array routes
+     *
+     * @param $pattern
+     * @return array
+     */
+    private function filter($pattern): array
     {
         return array_filter($this->availableRoutes(), function ($item) use ($pattern) {
             return preg_match($pattern, $item);

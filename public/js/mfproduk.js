@@ -1,71 +1,5 @@
 $(function () {
 
-	let customerData;
-	let partProduk;
-
-	$("#dataList").DataTable({
-		data: customerData,
-		paging: false,
-		searching: false,
-        buttons: [{
-                extend: 'excelHtml5',
-                exportOptions: { orthogonal: 'export' }
-            }],
-		columnDefs: [],
-		order: [[ 2, 'desc' ]],
-		createdRow: function (row, data, dataIndex) {
-			$(row).find("td:eq(0)").attr("data-label", "No");
-			$(row).find("td:eq(1)").attr("data-label", "Action");
-			$(row).find("td:eq(2)").attr("data-label", "Nama Produk");
-			$(row).find("td:eq(3)").attr("data-label", "Segmen");
-			$(row).find("td:eq(4)").attr("data-label", "Pemesan");
-			$(row).find("td:eq(5)").attr("data-label", "Sales");
-			$(row).find("td:eq(6)").attr("data-label", "Dibuat");
-			$(row).find("td:eq(7)").attr("data-label", "Dibuat oleh");
-			$(row).find("td:eq(8)").attr("data-label", "Update");
-			$(row).find("td:eq(9)").attr("data-label", "Diupdate oleh");
-		},
-		initComplete: function () {},
-	});
-
-	$("#dataPartProduk").DataTable({
-		data: partProduk,
-		paging: false,
-		searching: false,
-		buttons: [{
-			extend: 'excelHtml5',
-			exportOptions: { orthogonal: 'export' }
-		}],
-		columnDefs: [],
-		order: [[ 1, 'desc' ]],
-		createdRow: function (row, data, dataIndex) {
-			$(row).find("td:eq(0)").attr("data-label", "No");
-			$(row).find("td:eq(1)").attr("data-label", "FGD");
-			$(row).find("td:eq(2)").attr("data-label", "Revisi");
-			$(row).find("td:eq(3)").attr("data-label", "Nama Part Produk");
-			$(row).find("td:eq(4)").attr("data-label", "Kertas");
-			$(row).find("td:eq(5)").attr("data-label", "Flute");
-			$(row).find("td:eq(6)").attr("data-label", "Metalize");
-			$(row).find("td:eq(7)").attr("data-label", "Ukuran");
-			$(row).find("td:eq(8)").attr("data-label", "Dibuat");
-			$(row).find("td:eq(9)").attr("data-label", "Dibuat oleh");
-			$(row).find("td:eq(8)").attr("data-label", "Update");
-			$(row).find("td:eq(9)").attr("data-label", "Diupdate oleh");
-			$(row).find("td:eq(9)").attr("data-label", "Action");
-		},
-		scrollX: true,
-		initComplete: function () {},
-	});
-
-	$("#dataPartHasilCari").DataTable({
-		data: customerData,
-		paging: false,
-		searching: false,
-		columnDefs: [],
-		order: [[ 2, 'desc' ]],
-		initComplete: function () {},
-	});
-
 	const id_produk_arr = location.pathname.split('/');
 	let id_produk;
 	if(id_produk_arr[id_produk_arr.length - 1] === '') {
@@ -76,7 +10,7 @@ $(function () {
 
 	if(checkURLWithParam('edit')) {
 		setTimeout(() => {
-			loadData(`${HOST}/mfpartproduk/apiGetByProduct/${id_produk}`, '#dataPartProduk');
+			loadData(`${HOST}/partproduk/api/${id_produk}`, '#dataPartProduk');
 		}, 50);
 	}
 
@@ -102,7 +36,7 @@ $(function () {
 
 			$.ajax({
 				type: 'POST',
-				url: `${HOST}/MFProduk/delItemProduct`,
+				url: `${HOST}/produk/delete`,
 				dataType: 'JSON',
 				data: {id},
 				beforeSend: function () {},
@@ -117,6 +51,13 @@ $(function () {
 						$('.floating-msg').addClass('show').html(`
 							<div class="alert alert-danger">${response.msg}</div>
 							`)
+					}
+				},
+				error: function (response) {
+					if(response.status == 403) {
+						$('.floating-msg').addClass('show').html(`
+								<div class="alert alert-danger">${response.responseJSON.msg}</div>
+								`)
 					}
 				},
 				complete: function () {
@@ -141,7 +82,7 @@ $(function () {
 			const keyword = $('input[name="caripartproduk"]').val();
 			$.ajax({
 				type: 'POST',
-				url: `${HOST}/mfpartproduk/partProductSearch`,
+				url: `${HOST}/partproduk`,
 				dataType: 'JSON',
 				data: { keyword, full: false, id_produk },
 				beforeSend: function () {},
@@ -174,7 +115,8 @@ $(function () {
 
 		$.ajax({
 			type: 'POST',
-			url: `${HOST}/MFPartProduk/apiAddToProduct`,
+			//url: `${HOST}/MFPartProduk/apiAddToProduct`,
+			url: `${HOST}/partproduk/add/toproduk`,
 			dataType: 'JSON',
 			data: {id_produk, id_part},
 			beforeSend: function() {
@@ -182,7 +124,7 @@ $(function () {
 			},
 			success: function (response) {
 				if(response.success) {
-					loadData(`${HOST}/mfpartproduk/apiGetByProduct/${id_produk}`, '#dataPartProduk');
+					loadData(`${HOST}/partproduk/api/${id_produk}`, '#dataPartProduk');
 					$('.floating-msg').addClass('show').html(`
 						<div class="alert alert-success">${response.msg}</div>
 						`)
@@ -190,6 +132,13 @@ $(function () {
 					$('.floating-msg').addClass('show').html(`
 						<div class="alert alert-success">${response.msg}</div>
 						`)
+				}
+			},
+			error: function (response) {
+				if(response.status == 403) {
+					$('.floating-msg').addClass('show').html(`
+								<div class="alert alert-danger">${response.responseJSON.msg}</div>
+								`)
 				}
 			},
 			complete: function () {
@@ -218,7 +167,7 @@ $(function () {
 				},
 				success: function (response) {
 					if(response.success) {
-						loadData(`${HOST}/mfpartproduk/apiGetByProduct/${id_produk}`, '#dataPartProduk');
+						loadData(`${HOST}/partproduk/api/${id_produk}`, '#dataPartProduk');
 						$('.floating-msg').addClass('show').html(`
 						<div class="alert alert-success">${response.msg}</div>
 						`)
@@ -254,7 +203,7 @@ $(function () {
 
 		$.ajax({
 			type: 'POST',
-			url: `${HOST}/mfproduk/apiAddProcess`,
+			url: `${HOST}/produk/add`,
 			dataType: 'JSON',
 			data: formData,
 			contentType: false,
@@ -269,9 +218,18 @@ $(function () {
 					$('.csc-form .msg').html(`<div class="alert alert-danger">${response.msg}</div>`);
 				}
 			},
-			error: function () {},
+			error: function (response) {
+				if(response.status == 403) {
+					$('.floating-msg').addClass('show').html(`
+								<div class="alert alert-danger">${response.responseJSON.msg}</div>
+								`)
+				}
+			},
 			complete: function() {
 				$('.add-new-fgd input, .add-new-fgd select, .add-new-fgd button').attr('disabled', false)
+				setTimeout(() => {
+					$('.floating-msg').removeClass('show').html('');
+				}, 3000)
 			}
 		})
 	})
@@ -283,7 +241,7 @@ $(function () {
 
 		$.ajax({
 			type: 'POST',
-			url: `${HOST}/mfproduk/apieditprocess`,
+			url: `${HOST}/produk/edit`,
 			dataType: 'JSON',
 			data: formData,
 			contentType: false,
@@ -296,6 +254,13 @@ $(function () {
 					location.reload();
 				} else {
 					$('.csc-form .msg').html(`<div class="alert alert-danger">${response.msg}</div>`);
+				}
+			},
+			error: function (response) {
+				if(response.status == 403) {
+					$('.floating-msg').addClass('show').html(`
+								<div class="alert alert-danger">${response.responseJSON.msg}</div>
+								`)
 				}
 			},
 			complete: function () {
@@ -372,15 +337,11 @@ $(function () {
 
 });
 
-function selectionAddedBox(id, name) {
-
-}
-
 function searchProduct(keyword)
 {
 	$.ajax({
 		type: 'POST',
-		url: `${HOST}/mfproduk/productSearch`,
+		url: `${HOST}/produk`,
 		dataType: 'JSON',
 		data: { keyword },
 		beforeSend: function () {},

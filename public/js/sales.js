@@ -1,91 +1,40 @@
+import {Datatable} from "./libs/Datatable.js";
+
 $(function () {
 
-	let salesData;
-	$("#dataList").DataTable({
-		data: salesData,
-        buttons: [{
-                extend: 'excelHtml5',
-                exportOptions: { orthogonal: 'export' }
-            }],
-		columnDefs: [{
-			"searchable": false,
-			"orderable": false,
-			"targets": [0,5]
-		},
-		{
-			"width": 250,
-			"targets": 2
-		},
-		{
-			"width": 100,
-			"targets": 3
-		},{
-			"targets": 4,
-			render: function ( data, type, row, meta ) {
-				if(type === 'export') {
-					return data;
-				} else {
-					return (data == 'A') ? 'Ya' : 'Tidak';
+	const config = {
+		columnDefs: {
+			falseSearchable: [0, 5],
+			falseOrderable: [0, 5],
+			falseVisibility: [1],
+			width: ['4(120)','3(120)','5(120)'],
+			className: 5,
+			custom: [{
+				"targets": 4,
+				render: function ( data, type, row, meta ) {
+					if(type === 'export') {
+						return data;
+					} else {
+						return (data == 'A') ? 'Ya' : 'Tidak';
+					}
 				}
-			}
+			}]
 		},
-		{
-			className: 'dt-body-nowrap',
-			"targets": 5
-		},
-		{
-			 "visible": false,
-			 "targets": 1
-		},
-		],
-		order: [[ 1, 'desc' ]],
-		createdRow: function (row, data, dataIndex) {
-			$(row).find("td:eq(0)").attr("data-label", "No");
-			$(row).find("td:eq(1)").attr("data-label", "Nama Sales");
-			$(row).find("td:eq(2)").attr("data-label", "NIK");
-			$(row).find("td:eq(3)").attr("data-label", "Status Aktif");
-			$(row).find("td:eq(4)").attr("data-label", "Action");
-		},
+		createdRow: ['No', 'Nama Sales', 'NIK', 'Status Aktif', 'Action'],
 		initComplete: function () {
 			const dropdown = `<div class="dropdown d-inline mr-2">` +
-								`<button class="btn btn-primary dropdown-toggle" type="button" id="dataTableDropdown" data-toggle="dropdown" aria-expanded="false"><i class="fas fa-cog"></i></button>` +
-								`<div class="dropdown-menu" aria-labelledby="dataTableDropdown">` +
-								`<a class="dropdown-item data-reload" href="#">Reload data</a>` +
-								`<a class="dropdown-item data-to-csv" href="#">Export to excel</a>` +
-							`</div>` +
-						`</div>`
+				`<button class="btn btn-primary dropdown-toggle" type="button" id="customersDropdown" data-toggle="dropdown" aria-expanded="false"><i class="fas fa-cog"></i></button>` +
+				`<div class="dropdown-menu" aria-labelledby="customersDropdown">` +
+				`<a class="dropdown-item data-reload" href="#">Reload data</a>` +
+				`<a class="dropdown-item data-to-csv" href="#">Export to excel</a>` +
+				`</div>` +
+				`</div>`
 			const add_btn = `<a href="#" class="btn btn-primary btn-add mr-2 add-data_btn">Tambah data</a>`;
 			$("#dataList_wrapper .dataTables_length").prepend(dropdown + add_btn);
-		},
-	});
-
-	setTimeout(() => {
-		const obj = {
-			beforeSend: function () {
-				
-				$('#dataList .dataTables_empty').html('<div class="spinner-icon"><span class="spinner-grow text-info"></span><span class="caption">Fetching data...</span></div>')
-			},
-			success: function (response) {
-				$('#dataList').DataTable().clear();
-				$('#dataList').DataTable().rows.add(response);
-				$('#dataList').DataTable().draw();
-				
-			},
-			error: function () {
-				$('#dataList .dataTables_empty').html('Data gagal di retrieve.')
-			},
-			complete: function() {}
 		}
-		getAllData(obj);
-		
-	}, 50)
-
-	$('#dataList').DataTable().on( 'order.dt search.dt', function () {
-		let i = 1;
-		$('#dataList').DataTable().cells(null, 0, {search:'applied', order:'applied'}).every( function (cell) {
-			this.data(i++);
-		});
-	}).draw();
+	}
+	const datatable = new Datatable('#dataList', config, `${HOST}/sales/api`, 'GET')
+	datatable.load()
 
 	$('.add-data_btn').on('click', function(e) {
 		e.preventDefault();
@@ -127,7 +76,14 @@ $(function () {
 					}, 500);
 				}
 			},
-			error: function () {},
+			error: function (response) {
+				if(response.status == 403) {
+					$('#dataForm .msg').html(`<div class="alert alert-danger">${response.responseJSON.msg}</div>`)
+					$('#dataForm, html, body').animate({
+						scrollTop: 0
+					}, 500);
+				}
+			},
 			complete: function () {
 				$('#dataForm .modal-footer .loading-indicator').html('');
 				$('form[name="addData"] input, form[name="addData"] textarea, form[name="addData"] button').attr('disabled', false)
@@ -247,7 +203,13 @@ $(function () {
 				}
 				$('.floating-msg').addClass('show').html(`<div class="alert alert-${msgClass}">${response.msg}</div>`)
 			},
-			error: function () {},
+			error: function (response) {
+				if(response.status == 403) {
+					$('.floating-msg').addClass('show').html(`
+								<div class="alert alert-danger">${response.responseJSON.msg}</div>
+								`)
+				}
+			},
 			complete: function() {
 				setTimeout(() => {
 					$('.floating-msg').removeClass('show').html('');
@@ -286,7 +248,13 @@ $(function () {
 					}, 500);
 				}
 			},
-			error: function () {},
+			error: function (response) {
+				if(response.status == 403) {
+					$('.floating-msg').addClass('show').html(`
+								<div class="alert alert-danger">${response.responseJSON.msg}</div>
+								`)
+				}
+			},
 			complete: function () {
 				$('#dataForm .modal-footer .loading-indicator').html('');
 				$('form[name="editData"] input, form[name="editData"] textarea, form[name="editData"] button').attr('disabled', false)

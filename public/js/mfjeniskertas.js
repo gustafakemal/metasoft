@@ -1,80 +1,30 @@
+import {Datatable} from './libs/Datatable.js'
+
 $(function () {
 
-	let mfJenisKertasData;
-
-	$("#dataList").DataTable({
-		data: mfJenisKertasData,
-        buttons: [{
-                extend: 'excelHtml5',
-                exportOptions: { orthogonal: 'export' }
-            }],
-		columnDefs: [{
-			"searchable": false,
-			"orderable": false,
-			"targets": [0, 11]
+	const config = {
+		columnDefs: {
+			falseSearchable: [0, 11],
+			falseOrderable: [0, 11],
+			falseVisibility: [1,7,8,9,10],
+			width: ['2(150)','11(120)'],
+			className: 11
 		},
-		{
-			"width": 150,
-			"targets": 2
-		},
-		{
-			"width": 100,
-			"targets": 6
-		},
-		{
-			className: 'dt-body-nowrap',
-			"targets": 11
-		},
-		{
-			 "visible": false,
-			 "targets": [1,7,8,9,10]
-		}],
-		order: [[ 1, 'desc' ]],
-		createdRow: function (row, data, dataIndex) {
-			$(row).find("td:eq(0)").attr("data-label", "No");
-			$(row).find("td:eq(1)").attr("data-label", "Tanggal dibuat");
-			$(row).find("td:eq(2)").attr("data-label", "Jenis Kertas");
-			$(row).find("td:eq(3)").attr("data-label", "Berat");
-			$(row).find("td:eq(4)").attr("data-label", "Harga");
-			$(row).find("td:eq(5)").attr("data-label", "Status Aktif");
-			$(row).find("td:eq(6)").attr("data-label", "Action");
-		},
+		createdRow: ['No', 'Tanggal dibuat', 'Jenis kertas', 'Berat', 'Harga', 'Status Aktif', 'Action'],
 		initComplete: function () {
 			const dropdown = `<div class="dropdown d-inline mr-2">` +
-								`<button class="btn btn-primary dropdown-toggle" type="button" id="customersDropdown" data-toggle="dropdown" aria-expanded="false"><i class="fas fa-cog"></i></button>` +
-								`<div class="dropdown-menu" aria-labelledby="customersDropdown">` +
-								`<a class="dropdown-item data-reload" href="#">Reload data</a>` +
-								`<a class="dropdown-item data-to-csv" href="#">Export to excel</a>` +
-							`</div>` +
-						`</div>`
-			const add_btn = `<a href="#" class="btn btn-primary btn-add mr-2 add-data_btn">Tambah data</a>`;
-			$("#dataList_wrapper .dataTables_length").prepend(dropdown + add_btn);
-		},
-	});
-
-	setTimeout(() => {
-		const obj = {
-			beforeSend: function () {
-				$('#dataList .dataTables_empty').html('<div class="spinner-icon"><span class="spinner-grow text-info"></span><span class="caption">Fetching data...</span></div>')
-			},
-			success: function (response) {
-				$('#dataList').DataTable().clear().rows.add(response).draw();
-			},
-			error: function () {
-				$('#dataList .dataTables_empty').html('Data gagal di retrieve.')
-			},
-			complete: function() {}
+										`<button class="btn btn-primary dropdown-toggle" type="button" id="customersDropdown" data-toggle="dropdown" aria-expanded="false"><i class="fas fa-cog"></i></button>` +
+										`<div class="dropdown-menu" aria-labelledby="customersDropdown">` +
+										`<a class="dropdown-item data-reload" href="#">Reload data</a>` +
+										`<a class="dropdown-item data-to-csv" href="#">Export to excel</a>` +
+									`</div>` +
+								`</div>`
+					const add_btn = `<a href="#" class="btn btn-primary btn-add mr-2 add-data_btn">Tambah data</a>`;
+					$("#dataList_wrapper .dataTables_length").prepend(dropdown + add_btn);
 		}
-
-		getAllData(obj);
-	}, 50)
-
-	$('#dataList').DataTable().on( 'order.dt search.dt', function () {
-		let i = 1;
-		$('#dataList').DataTable().cells(null, 0, {search:'applied', order:'applied'}).every( function (cell) {
-			this.data(i++);
-		});
-	}).draw();
+	}
+	const datatable = new Datatable('#dataList', config, `${HOST}/jeniskertas/api`, 'GET')
+	datatable.load()
 
 	$('.add-data_btn').on('click', function(e) {
 		e.preventDefault();
@@ -93,7 +43,7 @@ $(function () {
 
 		$.ajax({
 			type: "POST",
-			url: `${HOST}/api/master/kertas`,
+			url: `${HOST}/jeniskertas/add/api`,
 			dataType: 'JSON',
 			data: formData,
 			contentType: false,
@@ -116,7 +66,14 @@ $(function () {
 					}, 500);
 				}
 			},
-			error: function () {},
+			error: function (response) {
+				if(response.status == 403) {
+					$('#dataForm .msg').html(`<div class="alert alert-danger">${response.responseJSON.msg}</div>`)
+					$('#dataForm, html, body').animate({
+						scrollTop: 0
+					}, 500);
+				}
+			},
 			complete: function () {
 				$('#dataForm .modal-footer .loading-indicator').html('');
 				$('form[name="addData"] input, form[name="addData"] textarea, form[name="addData"] button').attr('disabled', false)
@@ -156,7 +113,7 @@ $(function () {
 		dataListRow = $(`#dataList tr:nth-child(${row+1})`)
 		const objstring = $(this).attr('data-obj')
 		const id = $(this).attr('data-id');
-		const berat = $(this).attr('data-berat');
+		const berat = (!$(this).attr('data-berat') || Number.isNaN(parseInt($(this).attr('data-berat')))) ? 0 : $(this).attr('data-berat');
 		const nama = $(this).attr('data-nama');
 		const harga = $(this).attr('data-harga');
 		const create_date = $(this).attr('data-added');
@@ -205,7 +162,7 @@ $(function () {
 			};
 			$.ajax({
 				type: "PUT",
-				url: `${HOST}/api/master/kertas`,
+				url: `${HOST}/jeniskertas/edit/api`,
 				headers: {'Content-Type': 'application/x-www-form-urlencoded'},
 				contentType: 'application/x-www-form-urlencoded; charset=utf-8',
 				dataType: 'JSON',
@@ -221,7 +178,13 @@ $(function () {
 					}
 					$('.floating-msg').addClass('show').html(`<div class="alert alert-${msgClass}">${response.msg}</div>`)
 				},
-				error: function () {},
+				error: function (response) {
+					if(response.status == 403) {
+						$('.floating-msg').addClass('show').html(`
+								<div class="alert alert-danger">${response.responseJSON.msg}</div>
+								`)
+					}
+				},
 				complete: function() {
 					setTimeout(() => {
 						$('.floating-msg').removeClass('show').html('');

@@ -7,6 +7,7 @@ use CodeIgniter\HTTP\RedirectResponse;
 use CodeIgniter\HTTP\ResponseInterface;
 use CodeIgniter\I18n\Time;
 use CodeIgniter\Files\File;
+use Config\Services;
 use phpDocumentor\Reflection\Types\Mixed_;
 
 class MFPartProduk extends BaseController
@@ -52,6 +53,7 @@ class MFPartProduk extends BaseController
             'ref' => $this->request->getGet('ref'),
             'id_produk' => $this->request->getGet('id_produk'),
             'breadcrumbs' => $this->breadcrumbs->render(),
+            'main_menu' => (new \App\Libraries\Menu())->render()
 		]);
 	}
 
@@ -75,6 +77,7 @@ class MFPartProduk extends BaseController
             'id_produk' => $this->request->getGet('id_produk'),
             'is_revision' => $is_revision,
             'rev_no' => ($is_revision == 1) ? $this->model->revGenerator($data->fgd) : $data->revisi,
+            'main_menu' => (new \App\Libraries\Menu())->render()
         ]);
     }
 
@@ -550,10 +553,6 @@ class MFPartProduk extends BaseController
      */
     public function apiAllSisiByPart(): ResponseInterface
     {
-		if ($this->request->getMethod() !== 'post') {
-			return redirect()->to('mfpartproduk');
-		}
-
         $id = $this->request->getPost('id');
         $is_revision = $this->request->getPost('is_revision');
 
@@ -880,7 +879,7 @@ class MFPartProduk extends BaseController
                 $row->added_by,
                 ($added->equals($updated)) ? '' : $this->common->dateFormat($row->updated),
                 $row->updated_by,
-                '<a title="Hapus" href="'.site_url('MFProduk/delItemKelProduk/' . $id_produk . '/' . $row->id).'" onclick="return confirm('.$confirm.')" href="#"><i class="far fa-trash-alt"></i></a>'
+                '<a title="Hapus" href="'.site_url('produk/delete/' . $id_produk . '/' . $row->id).'" onclick="return confirm('.$confirm.')" href="#"><i class="far fa-trash-alt"></i></a>'
             ];
         }
 
@@ -922,7 +921,7 @@ class MFPartProduk extends BaseController
     public function apiAddProcess(): ResponseInterface
 	{
 		if ($this->request->getMethod() !== 'post') {
-			return redirect()->to('mfpartproduk');
+			return redirect()->to('partproduk');
 		}
 
 		$data = $this->request->getPost();
@@ -934,6 +933,8 @@ class MFPartProduk extends BaseController
         $data['aktif'] = 'Y';
 
         $data['nama'] = strtoupper($data['nama']);
+
+        return $this->response->setJSON($data);
 
         $file = $this->request->getFile('file_dokcr');
         $data['file_dokcr'] = $file->getName();

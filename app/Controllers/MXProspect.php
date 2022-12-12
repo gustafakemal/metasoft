@@ -108,6 +108,55 @@ class MXProspect extends BaseController
     /**
      * @return \CodeIgniter\HTTP\ResponseInterface
      */
+    public function apiGetAll(): ResponseInterface
+    {
+        $query = $this->model->getAll();
+
+        $results = [];
+        if($query->getNumRows() > 0) {
+            foreach ($query->getResult() as $key => $row) {
+
+                $edit = '<a title="Edit" data-toggle="tooltip" data-placement="top" class="btn btn-sm btn-success edit-rev-item" href="'. site_url('listprospek/edit/' . $row->NoProspek . '/' . $row->Alt) .'" title="Edit"><i class="far fa-edit"></i></a>';
+                $alt = '<a title="Tambah Alt" data-toggle="tooltip" data-placement="top" class="btn btn-sm btn-info alt-item" href="'. site_url('listprospek/add/' . $row->NoProspek . '/' . $row->Alt) .'" title="Alt"><i class="far fa-clone"></i></a>';
+                $hapus = '<a title="Hapus" data-toggle="tooltip" data-placement="top" class="btn btn-sm btn-danger del-prospek" data-no-prospek="' . $row->NoProspek . '" data-alt="' . $row->Alt . '" data-status="' . $row->Status . '" href="#"><i class="far fa-trash-alt"></i></a>';
+
+                $minta = '<div class="switch-nav dropdown">
+                            <button type="button" class="dropdown-toggle" data-toggle="dropdown">
+                                <div class="fungsi">
+                                    ---
+                                </div>
+                                <div class="dropdown-menu dropdown-menu-right">
+                                    <a href="#" class="dropdown-item">Estimasi</a>
+                                    <a href="#" class="dropdown-item">Sample</a>
+                                    <a href="#" class="dropdown-item">Batal</a>
+                                </div>
+                            </button>
+                        </div>';
+
+                $results[] = [
+                    $key + 1,
+                    $row->NoProspek,
+                    $row->Alt,
+                    $row->NamaProduk,
+                    $row->NamaPemesan,
+                    $row->Jumlah,
+                    $row->Nama,
+                    $this->common->dateFormat($row->Created),
+                    $row->Catatan,
+                    $this->status[$row->Status],
+                    $minta,
+                    '<input type="checkbox" data-size="xs" class="chbx">',
+                    '<div class="btn-group" role="group" aria-label="Basic example">' . $edit . $alt . $hapus . '</div>'
+                ];
+            }
+        }
+
+        return $this->response->setJSON($results);
+    }
+
+    /**
+     * @return \CodeIgniter\HTTP\ResponseInterface
+     */
     public function apiSearch(): ResponseInterface
     {
         $keyword = $this->request->getPost('keyword');

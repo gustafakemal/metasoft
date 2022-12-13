@@ -1,20 +1,19 @@
-import {Datatable} from './libs/Datatable.js'
+import {Datatable} from "./libs/Datatable.js";
 
 $(function () {
-
 	const config = {
 		columnDefs: {
 			falseSearchable: [0, 10],
 			falseOrderable: [0, 10],
 			falseVisibility: [1,6,7,8,9],
 			width: ['2(150)','10(120)'],
-			className: 10
+			className: 10,
 		},
-		createdRow: ['No', 'Tanggal dibuat', 'Proses Finishing', 'Berat', 'Harga', 'Status Aktif', 'Action'],
+		createdRow: ['No', 'Tanggal dibuat', 'Aksesori', 'Harga', 'Status Aktif', 'Action'],
 		initComplete: function () {
 			const dropdown = `<div class="dropdown d-inline mr-2">` +
 				`<button class="btn btn-primary dropdown-toggle" type="button" id="customersDropdown" data-toggle="dropdown" aria-expanded="false"><i class="fas fa-cog"></i></button>` +
-				`<div class="dropdown-menu" aria-labelledby="customersDropdown">` +
+				`<div class="dropdown-menu" aria-labelledby="opsiDropdown">` +
 				`<a class="dropdown-item data-reload" href="#">Reload data</a>` +
 				`<a class="dropdown-item data-to-csv" href="#">Export to excel</a>` +
 				`</div>` +
@@ -23,84 +22,8 @@ $(function () {
 			$("#dataList_wrapper .dataTables_length").prepend(dropdown + add_btn);
 		}
 	}
-	const datatable = new Datatable('#dataList', config, `${HOST}/prosesfinishing/api`, 'GET')
+	const datatable = new Datatable('#dataList', config, `${HOST}/mxaksesori/api`, 'GET')
 	datatable.load()
-
-	// let mfProsesFinishingData;
-	//
-	// $("#dataList").DataTable({
-	// 	data: mfProsesFinishingData,
-    //     buttons: [{
-    //             extend: 'excelHtml5',
-    //             exportOptions: { orthogonal: 'export' }
-    //         }],
-	// 	columnDefs: [{
-	// 		"searchable": false,
-	// 		"orderable": false,
-	// 		"targets": [0, 10]
-	// 	},
-	// 	{
-	// 		"width": 150,
-	// 		"targets": 2
-	// 	},
-	// 	{
-	// 		"width": 100,
-	// 		"targets": 5
-	// 	},
-	// 	{
-	// 		className: 'dt-body-nowrap',
-	// 		"targets": 10
-	// 	},
-	// 	{
-	// 		 "visible": false,
-	// 		 "targets": [1,6,7,8,9]
-	// 	}],
-	// 	order: [[ 1, 'desc' ]],
-	// 	createdRow: function (row, data, dataIndex) {
-	// 		$(row).find("td:eq(0)").attr("data-label", "No");
-	// 		$(row).find("td:eq(1)").attr("data-label", "Tanggal dibuat");
-	// 		$(row).find("td:eq(2)").attr("data-label", "Proses Finishing");
-	// 		$(row).find("td:eq(3)").attr("data-label", "Harga");
-	// 		$(row).find("td:eq(4)").attr("data-label", "Status Aktif");
-	// 		$(row).find("td:eq(5)").attr("data-label", "Action");
-	// 	},
-	// 	initComplete: function () {
-	// 		const dropdown = `<div class="dropdown d-inline mr-2">` +
-	// 							`<button class="btn btn-primary dropdown-toggle" type="button" id="customersDropdown" data-toggle="dropdown" aria-expanded="false"><i class="fas fa-cog"></i></button>` +
-	// 							`<div class="dropdown-menu" aria-labelledby="customersDropdown">` +
-	// 							`<a class="dropdown-item data-reload" href="#">Reload data</a>` +
-	// 							`<a class="dropdown-item data-to-csv" href="#">Export to excel</a>` +
-	// 						`</div>` +
-	// 					`</div>`
-	// 		const add_btn = `<a href="#" class="btn btn-primary btn-add mr-2 add-data_btn">Tambah data</a>`;
-	// 		$("#dataList_wrapper .dataTables_length").prepend(dropdown + add_btn);
-	// 	},
-	// });
-	//
-	// setTimeout(() => {
-	// 	const obj = {
-	// 		beforeSend: function () {
-	//
-	// 			$('#dataList .dataTables_empty').html('<div class="spinner-icon"><span class="spinner-grow text-info"></span><span class="caption">Fetching data...</span></div>')
-	// 		},
-	// 		success: function (response) {
-	// 			$('#dataList').DataTable().clear().rows.add(response).draw();
-	// 		},
-	// 		error: function () {
-	// 			$('#dataList .dataTables_empty').html('Data gagal di retrieve.')
-	// 		},
-	// 		complete: function() {}
-	// 	}
-	//
-	// 	getAllData(obj);
-	// }, 50)
-	//
-	// $('#dataList').DataTable().on( 'order.dt search.dt', function () {
-	// 	let i = 1;
-	// 	$('#dataList').DataTable().cells(null, 0, {search:'applied', order:'applied'}).every( function (cell) {
-	// 		this.data(i++);
-	// 	});
-	// }).draw();
 
 	$('.add-data_btn').on('click', function(e) {
 		e.preventDefault();
@@ -119,7 +42,7 @@ $(function () {
 
 		$.ajax({
 			type: "POST",
-			url: `${HOST}/prosesfinishing/add/api`,
+			url: `${HOST}/mxaksesori/add/api`,
 			dataType: 'JSON',
 			data: formData,
 			contentType: false,
@@ -168,7 +91,7 @@ $(function () {
 		const id = $(this).attr('data-id')
 		$.ajax({
 			type: "GET",
-			url: `${HOST}/prosesfinishing/api/${id}`,
+			url: `${HOST}/mxaksesori/api/${id}`,
 			dataType: 'JSON',
 			beforeSend: function () {},
 			success: function (response) {
@@ -191,8 +114,8 @@ $(function () {
 		dataListRow = $(`#dataList tr:nth-child(${row+1})`)
 		const objstring = $(this).attr('data-obj')
 		const id = $(this).attr('data-id');
-		const proses = $(this).attr('data-proses');
-		const harga = $(this).attr('data-harga');
+		const nama = $(this).attr('data-nama');
+		const harga = (!$(this).attr('data-harga') || Number.isNaN(parseInt($(this).attr('data-harga')))) ? 0 : $(this).attr('data-harga');
 		const create_date = $(this).attr('data-added');
 		const aktif_arr = $(this).attr('data-aktif').split('|')
 		const aktif_opt_arr = aktif_arr[1].split(',');
@@ -204,7 +127,7 @@ $(function () {
 		const btn = `<button type="button" class="btn btn-sm btn-success save-tr-record"><i class="fas fa-check"></i></button> <button type="button" class="btn btn-sm btn-secondary cancel-tr-submit"><i class="fas fa-times"></i></button>`
 		$(`#dataList tbody tr:nth-child(${row})`).css('background-color', '#faecdc')
 		$(`#dataList tr:nth-child(${row}) td:nth-child(2)`).html(`<input type="text" class="form-control" value="${create_date}" readonly />`)
-		$(`#dataList tr:nth-child(${row}) td:nth-child(3)`).html(`<input type="text" class="form-control" placeholder="Nama Proses" value="${proses}" name="proses" />`)
+		$(`#dataList tr:nth-child(${row}) td:nth-child(3)`).html(`<input type="text" class="form-control" placeholder="Aksesori" value="${nama}" name="nama" />`)
 		$(`#dataList tr:nth-child(${row}) td:nth-child(4)`).html(`<input type="number" class="form-control" placeholder="Harga" value="${parseInt(harga)}" name="harga" /><input type="hidden" value="${id}" name="id" />`)
 		$(`#dataList tr:nth-child(${row}) td:nth-child(5)`).html(`${aktif}`)
 		$(`#dataList tr:nth-child(${row}) td:nth-child(6)`).html(`${btn}`)
@@ -233,13 +156,13 @@ $(function () {
 	$('#dataList').on('click', '.save-tr-record', function() {
 		const data = {
 			id: $('input[name="id"]').val(),
-			proses: $('input[name="proses"]').val(),
+			nama: $('input[name="nama"]').val(),
 			harga: $('input[name="harga"]').val(),
 			aktif: $('select[name="aktif"] option:selected').val()
-		};
+		}
 		$.ajax({
 			type: "PUT",
-			url: `${HOST}/prosesfinishing/edit/api`,
+			url: `${HOST}/mxaksesori/edit/api`,
 			headers: {'Content-Type': 'application/x-www-form-urlencoded'},
 			contentType: 'application/x-www-form-urlencoded; charset=utf-8',
 			dataType: 'JSON',
@@ -275,12 +198,12 @@ $(function () {
 		const formData = new FormData(this);
 
 		$.ajax({
-			type: "PUT",
-			url: `${HOST}/api/master/finishing`,
-			headers: {'Content-Type': 'application/x-www-form-urlencoded'},
-			contentType: 'application/x-www-form-urlencoded; charset=utf-8',
+			type: "POST",
+			url: `${HOST}/mxaksesori/apiEditProcess`,
 			dataType: 'JSON',
 			data: formData,
+			contentType: false,
+			processData: false,
 			beforeSend: function () {
 				$('#dataForm .modal-footer .loading-indicator').html(
 					'<div class="spinner-icon">' +
@@ -341,7 +264,7 @@ function getAllData(obj)
 {
 	$.ajax({
 		type: "GET",
-		url: `${HOST}/prosesfinishing/api`,
+		url: `${HOST}/mxaksesori/api`,
 		beforeSend: obj.beforeSend,
 		success: obj.success,
 		error: obj.error,

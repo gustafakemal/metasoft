@@ -4,9 +4,9 @@ namespace App\Models;
 
 use CodeIgniter\Model;
 
-class MXAksesoriModel extends Model
+class MXSolventTintaModel extends Model
 {
-    protected $table = 'MX_Aksesori';
+    protected $table = 'MX_SolventTinta';
     protected $useTimestamps = true;
     protected $createdField = 'added';
     protected $updatedField = 'updated';
@@ -17,7 +17,7 @@ class MXAksesoriModel extends Model
     ];
     protected $validationMessages = [
         'nama' => [
-            'required' => 'Field Aksesori harus diisi.',
+            'required' => 'Field Tinta Solvent harus diisi.',
         ],
         'harga' => [
             'required' => 'Field Harga harus diisi.',
@@ -42,7 +42,7 @@ class MXAksesoriModel extends Model
     /**
      * @return array
      */
-    public function getMXAksesori(): array
+    public function getMXSolventTinta(): array
     {
         return $this->orderBy('nama', 'desc')
             ->asObject()

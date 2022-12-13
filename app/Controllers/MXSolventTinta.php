@@ -2,18 +2,18 @@
 
 namespace App\Controllers;
 
-use App\Models\MFTujuanKirimModel;
+use App\Models\MXSolventTintaModel;
 use CodeIgniter\HTTP\RedirectResponse;
 use CodeIgniter\HTTP\ResponseInterface;
 use CodeIgniter\I18n\Time;
 
-class MFTujuanKirim extends BaseController
+class MXSolventTinta extends BaseController
 {
     private $model;
 
     public function __construct()
     {
-        $this->model = new MFTujuanKirimModel();
+        $this->model = new MXSolventTintaModel();
     }
 
     /**
@@ -22,10 +22,10 @@ class MFTujuanKirim extends BaseController
     public function index(): string
     {
         $this->breadcrumbs->add('Dashbor', '/');
-        $this->breadcrumbs->add('Data Tujuan Kirim', '/mftujuankirim');
+        $this->breadcrumbs->add('Data Solvent Tinta', '/mxsolventtinta');
 
-        return view('MFTujuanKirim/main', [
-            'page_title' => 'Data Tujuan Kirim',
+        return view('MXSolventTinta/main', [
+            'page_title' => 'Data Solvent Tinta',
             'breadcrumbs' => $this->breadcrumbs->render(),
             'main_menu' => (new \App\Libraries\Menu())->render(),
         ]);
@@ -39,22 +39,22 @@ class MFTujuanKirim extends BaseController
      */
     public function apiGetAll(): ResponseInterface
     {
-        $query = $this->model->getMFTujuanKirim();
+        $query = $this->model->getMXSolventTinta();
 
         $data = [];
         foreach ($query as $key => $value) {
             $CreateDate = (Time::parse($value->added))->toDateTimeString();
 
             $detail = '<a class="btn btn-primary btn-sm item-detail mr-1" href="#" data-id="' . $value->id . '" title="Detail"><i class="far fa-file-alt"></i></a>';
-            $edit = '<a class="btn btn-success btn-sm item-edit mr-1" href="#" data-id="' . $value->id . '" data-tujuan="' . $value->tujuan . '" data-harga="' . $value->harga . '" data-added="' . $CreateDate . '" data-aktif="' . $value->aktif . '|Y,T" title="Edit"><i class="far fa-edit"></i></a>';
-            $hapus = '<a class="btn btn-danger btn-sm" href="' . site_url('mftujuankirim/delete/' . $value->id) . '" data-id="' . $value->id . '" onclick="return confirm(\'Apa Anda yakin menghapus data ini?\')" title="Hapus"><i class="fas fa-trash-alt"></i></a>';
+            $edit = '<a class="btn btn-success btn-sm item-edit mr-1" href="#" data-id="' . $value->id . '" data-nama="' . $value->nama . '" data-harga="' . $value->harga . '" data-added="' . $CreateDate . '" data-aktif="' . $value->aktif . '|Y,T" title="Edit"><i class="far fa-edit"></i></a>';
+            $hapus = '<a class="btn btn-danger btn-sm" href="' . site_url('mxsolventtinta/delete/' . $value->id) . '" data-id="' . $value->id . '" onclick="return confirm(\'Apa Anda yakin menghapus data ini?\')" title="Hapus"><i class="fas fa-trash-alt"></i></a>';
 
             $CreateDate = (Time::parse($value->added))->toDateTimeString();
             $data[] = [
                 $key + 1,
                 $value->id,
                 $this->common->dateFormat($CreateDate),
-                $value->tujuan,
+                $value->nama,
                 number_format($value->harga, 2, ",", "."),
                 $value->aktif,
                 $this->common->dateFormat($value->added),
@@ -196,13 +196,13 @@ class MFTujuanKirim extends BaseController
      */
     public function getSelectOptions(): ResponseInterface
     {
-        $query = $this->model->getMFTujuanKirim();
+        $query = $this->model->getMXSolventTinta();
 
         $data = [];
         foreach ($query as $row) {
             $data[] = [
                 'id' => $row->id,
-                'nama' => $row->tujuan,
+                'nama' => $row->nama,
             ];
         }
 

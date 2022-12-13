@@ -112,6 +112,10 @@ class MXProspect extends BaseController
     {
         $query = $this->model->getAll();
 
+        $sess_access = array_values( array_filter(session()->get('priv'), function ($item) {
+            return $item->modul_id == 21;
+        }) );
+
         $results = [];
         if($query->getNumRows() > 0) {
             foreach ($query->getResult() as $key => $row) {
@@ -133,6 +137,12 @@ class MXProspect extends BaseController
                             </button>
                         </div>';
 
+                if($sess_access[0]->access == 3) {
+                    $action = '<div class="btn-group" role="group" aria-label="Basic example">' . $edit . $alt . $hapus . '</div>';
+                } else {
+                    $action = '<a title="Detail" data-toggle="tooltip" data-placement="top" class="btn btn-sm btn-success" href="'. site_url('listprospek/detail/' . $row->NoProspek . '/' . $row->Alt) .'"><i class="far fa-file-alt"></i></a>';
+                }
+
                 $results[] = [
                     $key + 1,
                     $row->NoProspek,
@@ -146,7 +156,7 @@ class MXProspect extends BaseController
                     $this->status[$row->Status],
                     $minta,
                     '<input type="checkbox" data-size="xs" class="chbx">',
-                    '<div class="btn-group" role="group" aria-label="Basic example">' . $edit . $alt . $hapus . '</div>'
+                    $action
                 ];
             }
         }
@@ -286,6 +296,37 @@ class MXProspect extends BaseController
         $views = array_merge($views, $this->requiredFields());
 
         return view('MXProspect/MXProspect_edit', $views);
+    }
+
+    /**
+     * @param $NoProspek
+     * @return string
+     */
+    public function detail($NoProspek, $Alt): string
+    {
+        $this->breadcrumbs->add('Dashbor', '/');
+        $this->breadcrumbs->add('Prospek Metaflex', '/');
+        $this->breadcrumbs->add('Detail Prospek', '/');
+
+        $query = $this->model->getDetailByNoProspectAndAlt($NoProspek, $Alt);
+        $qq = (new \App\Models\MXProspekAksesoriModel())->getByProspekAlt($NoProspek, $query->getResult()[0]->Alt);
+
+        $id_materials = [$query->getResult()[0]->Material1, $query->getResult()[0]->Material2, $query->getResult()[0]->Material3, $query->getResult()[0]->Material4];
+        $materials = (new \App\Models\MXMaterialModel())->asObject()->find($id_materials);
+
+        $views = [
+            'page_title' => 'Prospek',
+            'breadcrumbs' => $this->breadcrumbs->render(),
+            'main_menu' => (new \App\Libraries\Menu())->render(),
+            'alternatif' => $this->model->getAlternatif(),
+            'data' => $query->getResult()[0],
+            'materials' => $materials,
+            'prospek_aksesori' => $qq->getResult()
+        ];
+
+        $views = array_merge($views, []);
+
+        return view('MXProspect/MXProspect_view', $views);
     }
 
     /**

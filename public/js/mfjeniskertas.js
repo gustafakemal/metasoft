@@ -91,7 +91,7 @@ $(function () {
 		const id = $(this).attr('data-id')
 		$.ajax({
 			type: "GET",
-			url: `${HOST}/api/master/kertas/${id}`,
+			url: `${HOST}/jeniskertas/api/${id}`,
 			beforeSend: function () {},
 			success: function (response) {
 				if(response.success) {

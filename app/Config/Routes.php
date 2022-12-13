@@ -65,6 +65,24 @@ $routes->group('tujuankirim', static function ($routes) {
     $routes->get('delete/(:num)', 'MFTujuanKirim::delete/$1');
 });
 
+$routes->group('mxsolventtinta', static function ($routes) {
+    $routes->get('/', 'MXSolventTinta::index');
+    $routes->get('api', 'MXSolventTinta::apiGetAll');
+    $routes->get('api/(:num)', 'MXSolventTinta::apiGetById/$1');
+    $routes->post('add/api', 'MXSolventTinta::apiAddProcess');
+    $routes->put('edit/api', 'MXSolventTinta::apiEditProcess');
+    $routes->get('delete/(:num)', 'MXSolventTinta::delete/$1');
+});
+
+$routes->group('mxaksesori', static function ($routes) {
+    $routes->get('/', 'MXAksesori::index');
+    $routes->get('api', 'MXAksesori::apiGetAll');
+    $routes->get('api/(:num)', 'MXAksesori::apiGetById/$1');
+    $routes->post('add/api', 'MXAksesori::apiAddProcess');
+    $routes->put('edit/api', 'MXAksesori::apiEditProcess');
+    $routes->get('delete/(:num)', 'MXAksesori::delete/$1');
+});
+
 $routes->group('jeniskertas', static function ($routes) {
     $routes->get('/', 'MFJenisKertas::index');
     $routes->get('api', 'MFJenisKertas::apiGetAll');

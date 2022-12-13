@@ -92,7 +92,7 @@ $(function () {
 		const id = $(this).attr('data-id')
 		$.ajax({
 			type: "GET",
-			url: `${HOST}/api/master/destination/${id}?modified=yes`,
+			url: `${HOST}/tujuankirim/api/${id}`,
 			dataType: 'JSON',
 			beforeSend: function () {},
 			success: function (response) {

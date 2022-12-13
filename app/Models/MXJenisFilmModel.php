@@ -4,17 +4,17 @@ namespace App\Models;
 
 use CodeIgniter\Model;
 
-class MXJenisTintaModel extends Model
+class MXJenisFilmModel extends Model
 {
-    protected $table = 'MX_JenisTinta';
+    protected $table = 'MX_JenisFilm';
     protected $useTimestamps = true;
     protected $createdField = 'added';
     protected $updatedField = 'updated';
-    protected $allowedFields = ['id', 'nama', 'harga', 'aktif', "added", 'added_by', 'updated', 'updated_by', 'merk'];
+    protected $allowedFields = ['id', 'nama', 'harga', 'berat_jenis', 'aktif', "added", 'added_by', 'updated', 'updated_by'];
     protected $validationRules = [
         'nama' => 'required',
         'harga' => 'required',
-        'merk' => 'required',
+        'berat_jenis' => 'required',
     ];
     protected $validationMessages = [
         'nama' => [
@@ -23,8 +23,8 @@ class MXJenisTintaModel extends Model
         'harga' => [
             'required' => 'Field Harga harus diisi.',
         ],
-        'merk' => [
-            'required' => 'Field Merk harus diisi.',
+        'berat_jenis' => [
+            'required' => 'Field Berat Jenis harus diisi.',
         ],
     ];
 
@@ -46,7 +46,7 @@ class MXJenisTintaModel extends Model
     /**
      * @return array
      */
-    public function getMXJenisTinta(): array
+    public function getMXJenisFilm(): array
     {
         return $this->orderBy('nama', 'desc')
             ->asObject()

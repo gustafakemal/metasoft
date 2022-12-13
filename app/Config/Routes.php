@@ -92,6 +92,15 @@ $routes->group('mxjenistinta', static function ($routes) {
     $routes->get('delete/(:num)', 'MXJenisTinta::delete/$1');
 });
 
+$routes->group('mxjenisfilm', static function ($routes) {
+    $routes->get('/', 'MXJenisFilm::index');
+    $routes->get('api', 'MXJenisFilm::apiGetAll');
+    $routes->get('api/(:num)', 'MXJenisFilm::apiGetById/$1');
+    $routes->post('add/api', 'MXJenisFilm::apiAddProcess');
+    $routes->put('edit/api', 'MXJenisFilm::apiEditProcess');
+    $routes->get('delete/(:num)', 'MXJenisFilm::delete/$1');
+});
+
 $routes->group('jenisflute', static function ($routes) {
     $routes->get('/', 'MFJenisFlute::index');
     $routes->get('api', 'MFJenisFlute::apiGetAll');

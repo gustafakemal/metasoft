@@ -83,6 +83,15 @@ $routes->group('mxaksesori', static function ($routes) {
     $routes->get('delete/(:num)', 'MXAksesori::delete/$1');
 });
 
+$routes->group('mxadhesive', static function ($routes) {
+    $routes->get('/', 'MXAdhesive::index');
+    $routes->get('api', 'MXAdhesive::apiGetAll');
+    $routes->get('api/(:num)', 'MXAdhesive::apiGetById/$1');
+    $routes->post('add/api', 'MXAdhesive::apiAddProcess');
+    $routes->put('edit/api', 'MXAdhesive::apiEditProcess');
+    $routes->get('delete/(:num)', 'MXAdhesive::delete/$1');
+});
+
 $routes->group('jeniskertas', static function ($routes) {
     $routes->get('/', 'MFJenisKertas::index');
     $routes->get('api', 'MFJenisKertas::apiGetAll');

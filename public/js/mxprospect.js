@@ -3,48 +3,25 @@ import {Datatable} from './libs/Datatable.js'
 $(function () {
 
     let dt;
-
     const config = {
         columnDefs: {
-            falseSearchable: [0, 10],
-            falseOrderable: [0, 10],
-            width: ['0(30)','1(100)','2(90)','3(120)','4(120)', '10(120)']
+            falseSearchable: [0, 10, 11, 12],
+            falseOrderable: [0, 10, 11, 12],
+            width: ['0(30)','1(100)','2(90)','3(120)','4(120)', '10(120)'],
         },
-        createdRow: ['No', 'Prospek', 'Alt', 'Nama Produk', 'Pemesan', 'Jumlah', 'Area', 'Diinput', 'Catatan', 'Status', 'Action']
+        createdRow: ['No', 'Prospek', 'Alt', 'Nama Produk', 'Pemesan', 'Jumlah', 'Area', 'Diinput', 'Catatan', 'Status', 'Proses', 'Prioritas', 'Action'],
+        initComplete: function () {
+            setTimeout(() => {
+                $('.chbx').bootstrapToggle({
+                    on: 'Ya',
+                    off: 'Tidak'
+                })
+            }, 1000)
+        },
     }
-    dt = new Datatable('#dataList', config, `${HOST}/listprospek`, 'POST', {})
-    dt.init();
 
-    $(`form[name="form-cariprospek"]`).on('submit', function (e) {
-        e.preventDefault();
-        const keyword = $(`input[name="cariprospek"]`).val();
-
-        dt.timeout({keyword})
-        dt.stickNumbers()
-    })
-
-    // $(`#dataList`).on('click', '.alt-item', function (e) {
-    //     e.preventDefault();
-    //     const confirmation = confirm('Menambahkan Alternatif?')
-    //     if(confirmation) {
-    //         const NoProspek = $(this).attr('data-no-prospect')
-    //
-    //         $.ajax({
-    //             type: 'POST',
-    //             url: `${HOST}/inputprospek/api`,
-    //             dataType: 'JSON',
-    //             data: {NoProspek},
-    //             beforeSend: function () {
-    //             },
-    //             success: function (response) {
-    //                 if (response.success) {
-    //                     dt.reload()
-    //                 }
-    //             },
-    //
-    //         })
-    //     }
-    // })
+    dt = new Datatable('#dataList', config, `${HOST}/listprospek/api`, 'GET')
+    dt.load();
 
     let aksesories = [];
     $('button.add-acc').on('click', function() {

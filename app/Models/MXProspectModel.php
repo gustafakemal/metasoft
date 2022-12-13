@@ -88,6 +88,15 @@ class MXProspectModel extends Model
         return str_pad($new_id, $length, "0", STR_PAD_LEFT);
     }
 
+    public function getAll()
+    {
+        return $this->select('*')
+            ->join('CustomerFile', 'MX_Prospek.Pemesan = CustomerFile.NoPemesan')
+            ->join('MX_AreaKirim', 'MX_Prospek.Area = MX_AreaKirim.ID')
+            ->orderBy('MX_Prospek.Created', 'desc')
+            ->get();
+    }
+
     public function getByKeyword($keyword)
     {
         $keyword_upper = strtoupper($keyword);

@@ -162,6 +162,7 @@ $routes->group('inputprospek', static function ($routes) {
 
 $routes->group('listprospek', static function ($routes) {
     $routes->get('/', 'MXProspect::index');
+    $routes->get('api', 'MXProspect::apiGetAll');
     $routes->post('/', 'MXProspect::apiSearch');
     $routes->get('add/(:any)/(:num)', 'MXProspect::alt/$1/$2');
     $routes->post('add', 'MXProspect::altProcess');

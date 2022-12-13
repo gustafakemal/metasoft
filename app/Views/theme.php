@@ -9,7 +9,8 @@
     <link rel="shortcut icon" type="image/png" href="<?=site_url('favicon.ico');?>" />
     <link rel="stylesheet" href="<?=site_url('third-party/fontawesome/css/all.min.css');?>" />
 
-    <link rel="stylesheet" href="<?=site_url('third-party/bootstrap/css/bootstrap.min.css');?>" />
+    <link rel="stylesheet" href="<?= site_url('third-party/bootstrap/css/bootstrap.min.css'); ?>" />
+    <link rel="stylesheet" href="<?= site_url('third-party/bootstrap/css/bootstrap4-toggle.min.css'); ?>" />
 
     <link rel="stylesheet" type="text/css" href="<?=site_url('third-party/DataTables/datatables.min.css');?>" />
 
@@ -97,6 +98,7 @@
 <script type="text/javascript">
     const HOST = "<?=base_url();?>"
 </script>
+
 <?php if (url_is('mfpartproduk') || url_is('mfpartproduk/*') || url_is('partproduk') || url_is('partproduk/*')): ?>
     <script src="<?=site_url('js/bs-custom-file-input.min.js');?>"></script>
     <script src="<?=site_url('js/mfpartproduk.js');?>"></script>
@@ -141,10 +143,12 @@
 <?php if (url_is('setting/*')): ?>
     <script type="module" src="<?=site_url('js/setting.js');?>"></script>
 <?php endif;?>
-<?php if (url_is('inputprospek*') || url_is('listprospek*')): ?>
-    <script type="module" src="<?=site_url('js/mxprospect.js');?>"></script>
-<?php endif;?>
+<?php if (url_is('inputprospek*') || url_is('listprospek*')) : ?>
+    <script type="module" src="<?= site_url('js/mxprospect.js'); ?>"></script>
+    <script src="<?= site_url('third-party/bootstrap/js/bootstrap4-toggle.min.js'); ?>"></script>
+<?php endif; ?>
 <script src="<?=site_url('js/custom.js');?>"></script>
+
 <!-- -->
 
 </body>

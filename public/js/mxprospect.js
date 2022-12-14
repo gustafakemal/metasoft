@@ -23,6 +23,49 @@ $(function () {
     dt = new Datatable('#dataList', config, `${HOST}/listprospek/api`, 'GET')
     dt.load();
 
+    $('#dataList').on('page.dt', function () {
+        setTimeout(() => {
+            $('.chbx').bootstrapToggle({
+                on: 'Ya',
+                off: 'Tidak'
+            })
+        }, 100)
+    })
+
+    $('#dataList').on('change', 'input.chbx', function (e) {
+        const confirmation = confirm('Yakin mengubah ?')
+        if(confirmation) {
+            const priority = $(this).is(':checked')
+            const NoProspek = $(this).attr('data-no-prospek')
+            $.ajax({
+                type: 'POST',
+                url: `${HOST}/listprospek/set/priority`,
+                dataType: 'JSON',
+                data: {NoProspek, priority},
+                beforeSend: function () {
+                },
+                success: function (response) {
+                    if(response.success) {
+                        dt.reload();
+                    }
+                },
+                complete: function (response) {
+                    if(response.responseJSON.success) {
+                        setTimeout(() => {
+                            $('.chbx').bootstrapToggle({
+                                on: 'Ya',
+                                off: 'Tidak'
+                            })
+                        }, 1000)
+                    }
+                }
+            })
+        } else {
+            $(this).bootstrapToggle('off', true)
+            // $(this).prop('checked', !$(this).is(':checked'))
+        }
+    })
+
     let aksesories = [];
     $('button.add-acc').on('click', function() {
         const val = $('select[name="aksesoris"] option:selected').val()

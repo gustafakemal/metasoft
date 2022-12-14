@@ -150,6 +150,7 @@ $routes->group('listprospek', static function ($routes) {
     $routes->get('add/(:any)/(:num)', 'MXProspect::alt/$1/$2');
     $routes->post('add', 'MXProspect::altProcess');
     $routes->get('edit/(:any)/(:num)', 'MXProspect::edit/$1/$2');
+    $routes->post('set/priority', 'MXProspect::setPriority');
     $routes->post('delete', 'MXProspect::delete');
 });
 

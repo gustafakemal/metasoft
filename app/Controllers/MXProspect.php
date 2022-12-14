@@ -143,6 +143,8 @@ class MXProspect extends BaseController
                     $action = '<a title="Detail" data-toggle="tooltip" data-placement="top" class="btn btn-sm btn-success" href="'. site_url('listprospek/detail/' . $row->NoProspek . '/' . $row->Alt) .'"><i class="far fa-file-alt"></i></a>';
                 }
 
+                $is_checked = ($row->Prioritas) ? ' checked' : '';
+
                 $results[] = [
                     $key + 1,
                     $row->NoProspek,
@@ -155,7 +157,7 @@ class MXProspect extends BaseController
                     $row->Catatan,
                     $this->status[$row->Status],
                     $minta,
-                    '<input type="checkbox" data-size="xs" class="chbx">',
+                    '<input' . $is_checked . ' type="checkbox" data-size="xs" class="chbx" data-no-prospek="' . $row->NoProspek . '" data-no-prospek="' . $row->Alt . '">',
                     $action
                 ];
             }
@@ -389,6 +391,33 @@ class MXProspect extends BaseController
         }
 
         return $this->response->setJSON($response);
+    }
+
+    public function setPriority()
+    {
+        $NoProspek = $this->request->getPost('NoProspek');
+//        $Alt = $this->request->getPost('Alt');
+        $priority = (bool)$this->request->getPost('priority');
+
+        if( $this->model->setPriority($NoProspek, $priority) ) {
+            $response = [
+                'success' => true
+            ];
+            if($priority) {
+                $this->setRestUnpriority($NoProspek);
+            }
+        } else {
+            $response = [
+                'success' => false
+            ];
+        }
+
+        return $this->response->setJSON($response);
+    }
+
+    private function setRestUnpriority($NoProspek)
+    {
+        return $this->model->setRestUnpriority($NoProspek);
     }
 
     /**

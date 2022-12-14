@@ -65,6 +65,42 @@ $routes->group('tujuankirim', static function ($routes) {
     $routes->get('delete/(:num)', 'MFTujuanKirim::delete/$1');
 });
 
+$routes->group('mxsolventtinta', static function ($routes) {
+    $routes->get('/', 'MXSolventTinta::index');
+    $routes->get('api', 'MXSolventTinta::apiGetAll');
+    $routes->get('api/(:num)', 'MXSolventTinta::apiGetById/$1');
+    $routes->post('add/api', 'MXSolventTinta::apiAddProcess');
+    $routes->put('edit/api', 'MXSolventTinta::apiEditProcess');
+    $routes->get('delete/(:num)', 'MXSolventTinta::delete/$1');
+});
+
+$routes->group('mxaksesori', static function ($routes) {
+    $routes->get('/', 'MXAksesori::index');
+    $routes->get('api', 'MXAksesori::apiGetAll');
+    $routes->get('api/(:num)', 'MXAksesori::apiGetById/$1');
+    $routes->post('add/api', 'MXAksesori::apiAddProcess');
+    $routes->put('edit/api', 'MXAksesori::apiEditProcess');
+    $routes->get('delete/(:num)', 'MXAksesori::delete/$1');
+});
+
+$routes->group('mxadhesive', static function ($routes) {
+    $routes->get('/', 'MXAdhesive::index');
+    $routes->get('api', 'MXAdhesive::apiGetAll');
+    $routes->get('api/(:num)', 'MXAdhesive::apiGetById/$1');
+    $routes->post('add/api', 'MXAdhesive::apiAddProcess');
+    $routes->put('edit/api', 'MXAdhesive::apiEditProcess');
+    $routes->get('delete/(:num)', 'MXAdhesive::delete/$1');
+});
+
+$routes->group('mxkonstanta', static function ($routes) {
+    $routes->get('/', 'MXKonstanta::index');
+    $routes->get('api', 'MXKonstanta::apiGetAll');
+    $routes->get('api/(:num)', 'MXKonstanta::apiGetById/$1');
+    $routes->post('add/api', 'MXKonstanta::apiAddProcess');
+    $routes->put('edit/api', 'MXKonstanta::apiEditProcess');
+    $routes->get('delete/(:num)', 'MXKonstanta::delete/$1');
+});
+
 $routes->group('jeniskertas', static function ($routes) {
     $routes->get('/', 'MFJenisKertas::index');
     $routes->get('api', 'MFJenisKertas::apiGetAll');

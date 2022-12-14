@@ -9,8 +9,8 @@
     <link rel="shortcut icon" type="image/png" href="<?=site_url('favicon.ico');?>" />
     <link rel="stylesheet" href="<?=site_url('third-party/fontawesome/css/all.min.css');?>" />
 
-    <link rel="stylesheet" href="<?= site_url('third-party/bootstrap/css/bootstrap.min.css'); ?>" />
-    <link rel="stylesheet" href="<?= site_url('third-party/bootstrap/css/bootstrap4-toggle.min.css'); ?>" />
+    <link rel="stylesheet" href="<?=site_url('third-party/bootstrap/css/bootstrap.min.css');?>" />
+    <link rel="stylesheet" href="<?=site_url('third-party/bootstrap/css/bootstrap4-toggle.min.css');?>" />
 
     <link rel="stylesheet" type="text/css" href="<?=site_url('third-party/DataTables/datatables.min.css');?>" />
 
@@ -127,6 +127,17 @@
 <?php endif;?>
 <?php if (url_is('mxjeniskonten*')): ?>
     <script type="module" src="<?=site_url('js/mxjeniskonten.js');?>"></script>
+<?php if (url_is('mxsolventtinta*')): ?>
+    <script type="module" src="<?=site_url('js/mxsolventtinta.js');?>"></script>
+<?php endif;?>
+<?php if (url_is('mxaksesori*')): ?>
+    <script type="module" src="<?=site_url('js/mxaksesori.js');?>"></script>
+<?php endif;?>
+<?php if (url_is('mxadhesive*')): ?>
+    <script type="module" src="<?=site_url('js/mxadhesive.js');?>"></script>
+<?php endif;?>
+<?php if (url_is('mxkonstanta*')): ?>
+    <script type="module" src="<?=site_url('js/mxkonstanta.js');?>"></script>
 <?php endif;?>
 <?php if (url_is('jenisflute*')): ?>
     <script type="module" src="<?=site_url('js/mfjenisflute.js');?>"></script>
@@ -146,10 +157,10 @@
 <?php if (url_is('setting/*')): ?>
     <script type="module" src="<?=site_url('js/setting.js');?>"></script>
 <?php endif;?>
-<?php if (url_is('inputprospek*') || url_is('listprospek*')) : ?>
-    <script type="module" src="<?= site_url('js/mxprospect.js'); ?>"></script>
-    <script src="<?= site_url('third-party/bootstrap/js/bootstrap4-toggle.min.js'); ?>"></script>
-<?php endif; ?>
+<?php if (url_is('inputprospek*') || url_is('listprospek*')): ?>
+    <script type="module" src="<?=site_url('js/mxprospect.js');?>"></script>
+    <script src="<?=site_url('third-party/bootstrap/js/bootstrap4-toggle.min.js');?>"></script>
+<?php endif;?>
 <script src="<?=site_url('js/custom.js');?>"></script>
 
 <!-- -->

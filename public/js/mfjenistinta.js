@@ -92,7 +92,7 @@ $(function () {
 		const id = $(this).attr('data-id')
 		$.ajax({
 			type: "GET",
-			url: `${HOST}/api/master/tinta/${id}?modified=yes`,
+			url: `${HOST}/jenistinta/api/${id}`,
 			dataType: 'JSON',
 			// data: { id, modified: true },
 			beforeSend: function () {},

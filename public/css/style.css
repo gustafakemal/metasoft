@@ -596,6 +596,25 @@ body {
   color: rgba(0,0,0,.5);
 }
 
+.prospek-view {}
+.prospek-view .label {
+  font-weight: 700;
+  padding-top: 2px;
+  text-transform: uppercase;
+  color: rgba(0,0,0,.45);
+  font-size: 12px;
+}
+.prospek-view .val {
+  position: relative;
+  padding-left: 10px;
+}
+.prospek-view .val:before {
+  position: absolute;
+  left: 0;
+  top: 0;
+  content: ': ';
+}
+
 @media only screen and (max-width: 1120px) {
   .sidebar {
     left: -240px;

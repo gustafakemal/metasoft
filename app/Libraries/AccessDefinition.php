@@ -17,7 +17,7 @@ class AccessDefinition
     /**
      * WRITE access pattern
      */
-    private const WRITE = '/(^%1$s\/add|^%2$s\/edit)/';
+    private const WRITE = '/(^%1$s\/add|^%2$s\/edit|^%2$s\/set)/';
 
     /**
      * DELETE access pattern

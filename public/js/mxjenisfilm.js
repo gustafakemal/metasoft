@@ -4,11 +4,11 @@ $(function () {
 
 	const config = {
 		columnDefs: {
-			falseSearchable: [0, 10],
-			falseOrderable: [0, 10],
+			falseSearchable: [0, 11],
+			falseOrderable: [0, 11],
 			falseVisibility: [1,7,8,9,10],
 			width: ['2(120)','3(150)','4(100)','5(100)','6(80)'],
-			className: 10
+			//className: 10
 		},
 		createdRow: ['No', 'Tanggal dibuat', 'Jenis Film', 'Berat Jenis', 'Harga', 'Status Aktif', 'Action'],
 		initComplete: function () {

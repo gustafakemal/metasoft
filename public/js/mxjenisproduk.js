@@ -3,13 +3,13 @@ import {Datatable} from "./libs/Datatable.js";
 $(function () {
 	const config = {
 		columnDefs: {
-			falseSearchable: [0, 10],
-			falseOrderable: [0, 10],
-			falseVisibility: [1,6,7,8,9],
-			width: ['2(150)','10(120)'],
-			//className: 10,
+			falseSearchable: [0,9],
+			falseOrderable: [0,9],
+			falseVisibility: [1,5,6,7,8],
+			width: ['2(100)','3(150)','4(100)'],
+			//className: 1,
 		},
-		createdRow: ['No', 'Tanggal dibuat', 'Aksesori', 'Harga', 'Status Aktif', 'Action'],
+		createdRow: ['No', 'Tanggal dibuat', 'Jenis Produk', 'Status Aktif', 'Action'],
 		initComplete: function () {
 			const dropdown = `<div class="dropdown d-inline mr-2">` +
 				`<button class="btn btn-primary dropdown-toggle" type="button" id="customersDropdown" data-toggle="dropdown" aria-expanded="false"><i class="fas fa-cog"></i></button>` +
@@ -22,7 +22,7 @@ $(function () {
 			$("#dataList_wrapper .dataTables_length").prepend(dropdown + add_btn);
 		}
 	}
-	const datatable = new Datatable('#dataList', config, `${HOST}/mxaksesori/api`, 'GET')
+	const datatable = new Datatable('#dataList', config, `${HOST}/mxjenisproduk/api`, 'GET')
 	datatable.load()
 
 	$('.add-data_btn').on('click', function(e) {
@@ -42,7 +42,7 @@ $(function () {
 
 		$.ajax({
 			type: "POST",
-			url: `${HOST}/mxaksesori/add/api`,
+			url: `${HOST}/mxjenisproduk/add/api`,
 			dataType: 'JSON',
 			data: formData,
 			contentType: false,
@@ -91,7 +91,7 @@ $(function () {
 		const id = $(this).attr('data-id')
 		$.ajax({
 			type: "GET",
-			url: `${HOST}/mxaksesori/api/${id}`,
+			url: `${HOST}/mxjenisproduk/api/${id}`,
 			dataType: 'JSON',
 			beforeSend: function () {},
 			success: function (response) {
@@ -115,7 +115,6 @@ $(function () {
 		const objstring = $(this).attr('data-obj')
 		const id = $(this).attr('data-id');
 		const nama = $(this).attr('data-nama');
-		const harga = (!$(this).attr('data-harga') || Number.isNaN(parseInt($(this).attr('data-harga')))) ? 0 : $(this).attr('data-harga');
 		const create_date = $(this).attr('data-added');
 		const aktif_arr = $(this).attr('data-aktif').split('|')
 		const aktif_opt_arr = aktif_arr[1].split(',');
@@ -127,10 +126,9 @@ $(function () {
 		const btn = `<button type="button" class="btn btn-sm btn-success save-tr-record"><i class="fas fa-check"></i></button> <button type="button" class="btn btn-sm btn-secondary cancel-tr-submit"><i class="fas fa-times"></i></button>`
 		$(`#dataList tbody tr:nth-child(${row})`).css('background-color', '#faecdc')
 		$(`#dataList tr:nth-child(${row}) td:nth-child(2)`).html(`<input type="text" class="form-control" value="${create_date}" readonly />`)
-		$(`#dataList tr:nth-child(${row}) td:nth-child(3)`).html(`<input type="text" class="form-control" placeholder="Aksesori" value="${nama}" name="nama" />`)
-		$(`#dataList tr:nth-child(${row}) td:nth-child(4)`).html(`<input type="number" class="form-control" placeholder="Harga" value="${parseInt(harga)}" name="harga" /><input type="hidden" value="${id}" name="id" />`)
-		$(`#dataList tr:nth-child(${row}) td:nth-child(5)`).html(`${aktif}`)
-		$(`#dataList tr:nth-child(${row}) td:nth-child(6)`).html(`${btn}`)
+		$(`#dataList tr:nth-child(${row}) td:nth-child(3)`).html(`<input type="text" class="form-control" placeholder="Jenis Produk" value="${nama}" name="nama" /><input type="hidden" value="${id}" name="id" />`)
+		$(`#dataList tr:nth-child(${row}) td:nth-child(4)`).html(`${aktif}`)
+		$(`#dataList tr:nth-child(${row}) td:nth-child(5)`).html(`${btn}`)
 
 		$(`#dataList tr:nth-child(${row}`).attr('id', 'selected')
 
@@ -157,12 +155,11 @@ $(function () {
 		const data = {
 			id: $('input[name="id"]').val(),
 			nama: $('input[name="nama"]').val(),
-			harga: $('input[name="harga"]').val(),
 			aktif: $('select[name="aktif"] option:selected').val()
 		}
 		$.ajax({
 			type: "PUT",
-			url: `${HOST}/mxaksesori/edit/api`,
+			url: `${HOST}/mxjenisproduk/edit/api`,
 			headers: {'Content-Type': 'application/x-www-form-urlencoded'},
 			contentType: 'application/x-www-form-urlencoded; charset=utf-8',
 			dataType: 'JSON',
@@ -199,7 +196,7 @@ $(function () {
 
 		$.ajax({
 			type: "POST",
-			url: `${HOST}/mxaksesori/apiEditProcess`,
+			url: `${HOST}/mxjenisproduk/apiEditProcess`,
 			dataType: 'JSON',
 			data: formData,
 			contentType: false,
@@ -264,7 +261,7 @@ function getAllData(obj)
 {
 	$.ajax({
 		type: "GET",
-		url: `${HOST}/mxaksesori/api`,
+		url: `${HOST}/mxjenisproduk/api`,
 		beforeSend: obj.beforeSend,
 		success: obj.success,
 		error: obj.error,

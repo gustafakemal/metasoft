@@ -101,6 +101,15 @@ $routes->group('mxkonstanta', static function ($routes) {
     $routes->get('delete/(:num)', 'MXKonstanta::delete/$1');
 });
 
+$routes->group('mxjenisproduk', static function ($routes) {
+    $routes->get('/', 'MXJenisProduk::index');
+    $routes->get('api', 'MXJenisProduk::apiGetAll');
+    $routes->get('api/(:num)', 'MXJenisProduk::apiGetById/$1');
+    $routes->post('add/api', 'MXJenisProduk::apiAddProcess');
+    $routes->put('edit/api', 'MXJenisProduk::apiEditProcess');
+    $routes->get('delete/(:num)', 'MXJenisProduk::delete/$1');
+});
+
 $routes->group('jeniskertas', static function ($routes) {
     $routes->get('/', 'MFJenisKertas::index');
     $routes->get('api', 'MFJenisKertas::apiGetAll');

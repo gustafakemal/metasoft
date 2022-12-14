@@ -92,6 +92,15 @@ $routes->group('mxadhesive', static function ($routes) {
     $routes->get('delete/(:num)', 'MXAdhesive::delete/$1');
 });
 
+$routes->group('mxkonstanta', static function ($routes) {
+    $routes->get('/', 'MXKonstanta::index');
+    $routes->get('api', 'MXKonstanta::apiGetAll');
+    $routes->get('api/(:num)', 'MXKonstanta::apiGetById/$1');
+    $routes->post('add/api', 'MXKonstanta::apiAddProcess');
+    $routes->put('edit/api', 'MXKonstanta::apiEditProcess');
+    $routes->get('delete/(:num)', 'MXKonstanta::delete/$1');
+});
+
 $routes->group('jeniskertas', static function ($routes) {
     $routes->get('/', 'MFJenisKertas::index');
     $routes->get('api', 'MFJenisKertas::apiGetAll');

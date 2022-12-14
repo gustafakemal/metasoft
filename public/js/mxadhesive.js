@@ -3,11 +3,11 @@ import {Datatable} from "./libs/Datatable.js";
 $(function () {
 	const config = {
 		columnDefs: {
-			falseSearchable: [0, 11],
-			falseOrderable: [0, 11],
+			falseSearchable: [0, 12],
+			falseOrderable: [0, 12],
 			falseVisibility: [1,8,9,10,11],
 			width: ['2(150)','10(120)'],
-			className: 10,
+			//className: 10,
 		},
 		createdRow: ['No', 'Tanggal dibuat', 'Adhesive', 'Harga Adhesive', 'Harga Solvent', 'Status Aktif', 'Action'],
 		initComplete: function () {

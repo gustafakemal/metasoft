@@ -137,6 +137,9 @@
 <?php if (url_is('mxkonstanta*')): ?>
     <script type="module" src="<?=site_url('js/mxkonstanta.js');?>"></script>
 <?php endif;?>
+<?php if (url_is('mxjenisproduk*')): ?>
+    <script type="module" src="<?=site_url('js/mxjenisproduk.js');?>"></script>
+<?php endif;?>
 <?php if (url_is('jenisflute*')): ?>
     <script type="module" src="<?=site_url('js/mfjenisflute.js');?>"></script>
 <?php endif;?>

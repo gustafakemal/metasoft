@@ -125,6 +125,9 @@
 <?php if (url_is('mxjenisfilm*')): ?>
     <script type="module" src="<?=site_url('js/mxjenisfilm.js');?>"></script>
 <?php endif;?>
+<?php if (url_is('mxjeniskonten*')): ?>
+    <script type="module" src="<?=site_url('js/mxjeniskonten.js');?>"></script>
+<?php endif;?>
 <?php if (url_is('jenisflute*')): ?>
     <script type="module" src="<?=site_url('js/mfjenisflute.js');?>"></script>
 <?php endif;?>

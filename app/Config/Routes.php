@@ -101,6 +101,16 @@ $routes->group('mxjenisfilm', static function ($routes) {
     $routes->get('delete/(:num)', 'MXJenisFilm::delete/$1');
 });
 
+$routes->group('mxjeniskonten', static function ($routes) {
+    $routes->get('/', 'MXJenisKonten::index');
+    $routes->get('api', 'MXJenisKonten::apiGetAll');
+    $routes->get('api/(:num)', 'MXJenisKonten::apiGetById/$1');
+    $routes->post('add/api', 'MXJenisKonten::apiAddProcess');
+    $routes->put('edit/api', 'MXJenisKonten::apiEditProcess');
+    $routes->get('delete/(:num)', 'MXJenisKonten::delete/$1');
+});
+
+
 $routes->group('jenisflute', static function ($routes) {
     $routes->get('/', 'MFJenisFlute::index');
     $routes->get('api', 'MFJenisFlute::apiGetAll');

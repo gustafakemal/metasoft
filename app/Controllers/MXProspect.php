@@ -73,6 +73,7 @@ class MXProspect extends BaseController
         $type = ( $this->request->getGet('alt') !== null && $this->request->getGet('alt') == '1' ) ? 'alt' : 'add';
 
         $data_request = $this->transformDataRequest($data, $type);
+        $data_request['Status'] = 10;
 
         /** Insert form isian ke DB */
         $insert_data = $this->model->insert($data_request, false);
@@ -97,7 +98,7 @@ class MXProspect extends BaseController
             }
 
             return redirect()->back()
-                            ->with('success', (new \App\Libraries\Constant())::SUBMIT_SUCCESS);
+                            ->with('success', 'Data berhasil ditambahkan');
         } else {
             return redirect()->back()
                 ->with('error', '<p>' . implode('</p><p>', $this->model->errors()) . '</p>');

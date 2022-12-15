@@ -38,6 +38,12 @@ $routes->get('login', 'Auth::login');
 $routes->post('auth/verify', 'Auth::verify', ['as' => 'verifikasi']);
 $routes->get('logout', 'Auth::logout');
 
+// Whitelist
+$routes->group('api', static function ($routes) {
+    $routes->get('common/addButton', 'CommonAPI::addButton');
+    $routes->get('common/reloadExportButton', 'CommonAPI::reloadExportButton');
+});
+
 $routes->group('pelanggan', static function ($routes) {
     $routes->get('/', 'Customer::index');
     $routes->get('api', 'Customer::apiGetAll');

@@ -46,11 +46,17 @@ class Sales extends BaseController
 		$data = [];
 		foreach ($query as $key => $value) {
 
-            $detail = $navigation->button('detail', ['data-id' => $value->SalesID]);
-            $edit = $navigation->button('edit', ['data-id' => $value->SalesID, 'data-nama' => $value->SalesName, 'data-nik' => $value->NIK, 'data-aktif' => $value->FlagAktif.'|A,N']);
-            $hapus = $navigation->button('delete', [
+            $detail = $navigation->button('detail', [
                 'data-id' => $value->SalesID,
-                'href' => site_url('sales/delete/' . $value->SalesID)
+            ]);
+            $edit = $navigation->button('edit', [
+               'data-nama' => $value->SalesName,
+               'data-nik' => $value->NIK,
+               'data-id' => $value->SalesID,
+               'data-aktif' => $value->FlagAktif . '|A,N',
+            ]);
+            $hapus = $navigation->button('delete', [
+                'data-href' => site_url('sales/delete/' . $value->SalesID),
             ]);
 		
 			$data[] = [

@@ -77,7 +77,8 @@ class Filters extends BaseConfig
         'login' => [
             'before' => [
                 '/',
-                'logout'
+                'logout',
+                'api'
             ]
         ],
     ];

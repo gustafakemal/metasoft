@@ -16,6 +16,8 @@ class Priviledge
         '(.*)/initController',
         '/',
         'login',
+        'api/common/addButton',
+        'api/common/reloadExportButton',
         'logout',
         'auth/verify'
     ];

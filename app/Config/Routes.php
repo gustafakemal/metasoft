@@ -155,6 +155,15 @@ $routes->group('mxjeniskonten', static function ($routes) {
     $routes->get('delete/(:num)', 'MXJenisKonten::delete/$1');
 });
 
+$routes->group('mxsegmen', static function ($routes) {
+    $routes->get('/', 'MXSegmen::index');
+    $routes->get('api', 'MXSegmen::apiGetAll');
+    $routes->get('api/(:num)', 'MXSegmen::apiGetById/$1');
+    $routes->post('add/api', 'MXSegmen::apiAddProcess');
+    $routes->put('edit/api', 'MXSegmen::apiEditProcess');
+    $routes->get('delete/(:num)', 'MXSegmen::delete/$1');
+});
+
 
 $routes->group('jenisflute', static function ($routes) {
     $routes->get('/', 'MFJenisFlute::index');
@@ -227,10 +236,6 @@ $routes->group('listprospek', static function ($routes) {
     $routes->post('delete', 'MXProspect::delete');
 });
 
-$routes->group('mxsegmen', static function ($routes) {
-    $routes->get('/', 'MXSegmen::index');
-    $routes->post('add', 'MXSegmen::add');
-});
 
 $routes->group('produk', static function ($routes) {
     $routes->get('/', 'MFProduk::index');

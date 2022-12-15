@@ -69,8 +69,25 @@ class MXProspect extends BaseController
     public function addProcess(): RedirectResponse
     {
         $data = $this->request->getPost();
+        $alt_get = $this->request->getGet('alt');
+        $copyprospek_get = $this->request->getGet('copyprospek');
 
-        $type = ( $this->request->getGet('alt') !== null && $this->request->getGet('alt') == '1' ) ? 'alt' : 'add';
+        $type = 'add';
+        if( $alt_get !== null && $copyprospek_get !== null) {
+            if($alt_get == '1' && $copyprospek_get == '1') {
+                $type = 'copyprospek';
+            } else {
+                $type = 'alt';
+            }
+        } elseif( $alt_get !== null && $copyprospek_get == null ) {
+            if($alt_get == '1') {
+                $type = 'alt';
+            }
+        } else {
+            $type = 'add';
+        }
+
+//        $type = ( $this->request->getGet('alt') !== null && $this->request->getGet('alt') == '1' ) ? 'alt' : 'add';
 
         $data_request = $this->transformDataRequest($data, $type);
         $data_request['Status'] = 10;
@@ -92,7 +109,7 @@ class MXProspect extends BaseController
                 $pa_model->insertBatch($data_aksesori);
             }
 
-            if($type == 'alt') {
+            if($type == 'alt' || $type == 'copyprospek') {
                 return redirect()->to('listprospek/edit/' . $data_request['NoProspek'] . '/' . $data_request['Alt'])
                     ->with('success', 'Alternatif berhasil ditambahkan');
             }
@@ -122,7 +139,8 @@ class MXProspect extends BaseController
             foreach ($query->getResult() as $key => $row) {
 
                 $edit = '<a title="Edit" data-toggle="tooltip" data-placement="top" class="btn btn-sm btn-success edit-rev-item" href="'. site_url('listprospek/edit/' . $row->NoProspek . '/' . $row->Alt) .'" title="Edit"><i class="far fa-edit"></i></a>';
-                $alt = '<a title="Tambah Alt" data-toggle="tooltip" data-placement="top" class="btn btn-sm btn-info alt-item" href="'. site_url('listprospek/add/' . $row->NoProspek . '/' . $row->Alt) .'" title="Alt"><i class="far fa-clone"></i></a>';
+//                $alt = '<a title="Tambah Alt" data-toggle="tooltip" data-placement="top" class="btn btn-sm btn-info alt-item" href="'. site_url('listprospek/add/' . $row->NoProspek . '/' . $row->Alt) .'" title="Alt"><i class="far fa-clone"></i></a>';
+                $alt = '<a title="Tambah Alt" data-toggle="tooltip" data-placement="top" class="btn btn-sm btn-info alt-item" data-no-prospek="' . $row->NoProspek . '" data-alt="' . $row->Alt . '" href="#" title="Alt"><i class="far fa-clone"></i></a>';
                 $hapus = '<a title="Hapus" data-toggle="tooltip" data-placement="top" class="btn btn-sm btn-danger del-prospek" data-no-prospek="' . $row->NoProspek . '" data-alt="' . $row->Alt . '" data-status="' . $row->Status . '" href="#"><i class="far fa-trash-alt"></i></a>';
 
                 $minta = '<div class="switch-nav dropdown">
@@ -159,7 +177,8 @@ class MXProspect extends BaseController
                     $this->status[$row->Status],
                     $minta,
                     '<input' . $is_checked . ' type="checkbox" data-size="xs" class="chbx" data-no-prospek="' . $row->NoProspek . '" data-no-prospek="' . $row->Alt . '">',
-                    $action
+                    $action,
+                    $row->Prioritas
                 ];
             }
         }
@@ -254,11 +273,14 @@ class MXProspect extends BaseController
         $query = $this->model->getByNoProspectAndAlt($NoProspek, $Alt);
         $qq = (new \App\Models\MXProspekAksesoriModel())->getByProspekAlt($NoProspek, $query->getResult()[0]->Alt);
 
+        $copyprospek = ($this->request->getGet('copyprospek') != null && $this->request->getGet('copyprospek') == '1') ? 1 : 0;
+
         $views = [
-            'page_title' => 'Alternatif Prospek',
+            'page_title' => 'Copy Prospek',
             'breadcrumbs' => $this->breadcrumbs->render(),
             'main_menu' => (new \App\Libraries\Menu())->render(),
             'alternatif' => $this->model->getAlternatif(),
+            'copyprospek' => $copyprospek,
             'data' => $query->getResult()[0],
             'prospek_aksesori' => $qq->getResult()
         ];
@@ -398,7 +420,7 @@ class MXProspect extends BaseController
     {
         $NoProspek = $this->request->getPost('NoProspek');
 //        $Alt = $this->request->getPost('Alt');
-        $priority = (bool)$this->request->getPost('priority');
+        $priority = (int)$this->request->getPost('priority');
 
         if( $this->model->setPriority($NoProspek, $priority) ) {
             $response = [
@@ -468,6 +490,14 @@ class MXProspect extends BaseController
         if( $type == 'alt' ) {
             $max_alt = $this->model->getMaxAlt($newarr['NoProspek'])->getResult();
             $newarr['Alt'] = $max_alt[0]->Alt + 1;
+            $newarr['Tanggal'] = Time::now()->toDateTimeString();
+            $newarr['Created'] = Time::now()->toDateTimeString();
+            $newarr['CreatedBy'] = session()->get('UserID');
+        }
+
+        if( $type == 'copyprospek' ) {
+            $newarr['NoProspek'] = $this->model->noProspek();
+            $newarr['Alt'] = 1;
             $newarr['Tanggal'] = Time::now()->toDateTimeString();
             $newarr['Created'] = Time::now()->toDateTimeString();
             $newarr['CreatedBy'] = session()->get('UserID');

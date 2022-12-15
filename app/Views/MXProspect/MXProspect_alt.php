@@ -18,14 +18,16 @@
     <div class="alert alert-danger"><?=session()->get('error');?></div>
 <?php endif;?>
 
-<?php echo form_open('inputprospek?alt=1');?>
+<?php
+$form_action = "inputprospek?copyprospek=".$copyprospek."&alt=1";
+echo form_open($form_action);?>
 
     <div class="row">
         <div class="col-6">
             <div class="form-group row">
                 <label for="no_prospek" class="col-lg-4 col-sm-12 col-form-label">No Prospek</label>
                 <div class="col-lg-8 col-sm-12">
-                    <input type="text" class="form-control" id="no_prospek" value="<?= $data->NoProspek;?>" name="NoProspek" readonly>
+                    <input type="text" class="form-control" id="no_prospek" value="<?= ($copyprospek == 1) ? '' : $data->NoProspek;?>" name="NoProspek" readonly>
                 </div>
             </div>
         </div>
@@ -33,7 +35,7 @@
             <div class="form-group row">
                 <label for="alt" class="col-lg-4 col-sm-12 col-form-label">Alternatif</label>
                 <div class="col-lg-2 col-sm-12">
-                    <input type="number" class="form-control" id="alt" name="Alt" readonly>
+                    <input type="number" class="form-control" id="alt" name="Alt" readonly value="<?= ($copyprospek == 1) ? 1 : '';?>">
                 </div>
             </div>
         </div>

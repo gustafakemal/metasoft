@@ -44,4 +44,33 @@
 
 </div>
 
+    <!-- Modal -->
+    <div class="modal" id="altChoice" tabindex="-1" aria-labelledby="altChoiceLabel" aria-hidden="true">
+        <div class="modal-dialog">
+            <div class="modal-content">
+                <div class="modal-header">
+                    <h5 class="modal-title" id="altChoiceLabel">Copy Prospek</h5>
+                    <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+                        <span aria-hidden="true">&times;</span>
+                    </button>
+                </div>
+                <div class="modal-body">
+                    <div class="row">
+                        <div class="col-4">No Prospek</div>
+                        <div class="col-8"><strong><span class="no-prospek"></span></strong></div>
+                    </div>
+                    <div class="row mb-4">
+                        <div class="col-4">Alt</div>
+                        <div class="col-8"><strong><span class="alt"></span></strong></div>
+                    </div>
+                    <hr />
+                    <div class="text-center">
+                        <a href="#" class="btn btn-info copy-prospek" style="font-size: 14px!important">Copy/Tambah Prospek</a>
+                        <a href="#" class="btn btn-primary copy-alt" style="font-size: 14px!important">Copy/Tambah Alternatif</a>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+
 <?= $this->endSection() ?>

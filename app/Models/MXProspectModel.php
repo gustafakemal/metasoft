@@ -151,7 +151,7 @@ class MXProspectModel extends Model
                     ->delete();
     }
 
-    public function setPriority($NoProspek, $priority = true)
+    public function setPriority($NoProspek, $priority = 1)
     {
         return $this->where('NoProspek', $NoProspek)
                     ->set(['Prioritas' => $priority])

@@ -253,7 +253,7 @@
                             <select  id="aksesoris" name="aksesoris" class="form-control">
                                 <option value="0">Pilih</option>
                                 <?php foreach ($aksesori as $key => $ak) : ?>
-                                    <option value="<?= $ak->ID;?>"><?= $ak->Nama;?></option>
+                                    <option value="<?= $ak->id;?>"><?= $ak->nama;?></option>
                                 <?php endforeach;?>
                             </select>
                         </div>

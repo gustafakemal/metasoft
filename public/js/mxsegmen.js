@@ -23,7 +23,7 @@ $(function () {
 			$("#dataList_wrapper .dataTables_length").prepend(dropdown + add_btn);
 		}
 	}
-	const datatable = new Datatable('#dataList', config, `${HOST}/mxjeniskonten/api`, 'GET')
+	const datatable = new Datatable('#dataList', config, `${HOST}/mxsegmen/api`, 'GET')
 	datatable.load()
 
 	$('.add-data_btn').on('click', function(e) {
@@ -44,7 +44,7 @@ $(function () {
 
 		$.ajax({
 			type: "POST",
-			url: `${HOST}/mxjeniskonten/add/api`,
+			url: `${HOST}/mxsegmen/add/api`,
 			dataType: 'JSON',
 			data: formData,
 			contentType: false,
@@ -93,7 +93,7 @@ $(function () {
 		const ID = $(this).attr('data-ID')
 		$.ajax({
 			type: "GET",
-			url: `${HOST}/mxjeniskonten/api/${ID}`,
+			url: `${HOST}/mxsegmen/api/${ID}`,
 			dataType: 'JSON',
 			// data: { id, modified: true },
 			beforeSend: function () {},
@@ -129,7 +129,7 @@ $(function () {
 		const Aktif = `<select name="Aktif" class="form-control">${aktif_opt.join('')}</select>`
 		const btn = `<button type="button" class="btn btn-sm btn-success save-tr-record"><i class="fas fa-check"></i></button> <button type="button" class="btn btn-sm btn-secondary cancel-tr-submit"><i class="fas fa-times"></i></button>`
 		$(`#dataList tbody tr:nth-child(${row})`).css('background-color', '#faecdc')
-		$(`#dataList tr:nth-child(${row}) td:nth-child(2)`).html(`<input type="text"  class="form-control" placeholder="Jenis konten" value="${Nama}" name="Nama" /><input type="hidden" value="${ID}" name="ID" />`)
+		$(`#dataList tr:nth-child(${row}) td:nth-child(2)`).html(`<input type="text"  class="form-control" placeholder="Segmen" value="${Nama}" name="Nama" /><input type="hidden" value="${ID}" name="ID" />`)
 		$(`#dataList tr:nth-child(${row}) td:nth-child(3)`).html(`${Aktif}`)
 		$(`#dataList tr:nth-child(${row}) td:nth-child(4)`).html(`${btn}`)
 		$(`#dataList tr:nth-child(${row}`).attr('ID', 'selected')
@@ -160,7 +160,7 @@ $(function () {
 			//console.log(data);
 			$.ajax({
 				type: "PUT",
-				url: `${HOST}/mxjeniskonten/edit/api`,
+				url: `${HOST}/mxsegmen/edit/api`,
 				headers: {'Content-Type': 'application/x-www-form-urlencoded'},
 				contentType: 'application/x-www-form-urlencoded; charset=utf-8',
 				dataType: 'JSON',
@@ -198,7 +198,7 @@ $(function () {
 
 		$.ajax({
 			type: "PUT",
-			url: `${HOST}/mxjeniskonten/edit/api`,
+			url: `${HOST}/mxsegmen/edit/api`,
 			headers: {'Content-Type': 'application/x-www-form-urlencoded'},
 			contentType: 'application/x-www-form-urlencoded; charset=utf-8',
 			dataType: 'JSON',
@@ -260,7 +260,7 @@ function getAllData(obj)
 
 	$.ajax({
 		type: "GET",
-		url: `${HOST}/mxjeniskonten/api`,
+		url: `${HOST}/mxsegmen/api`,
 		beforeSend: obj.beforeSend,
 		success: obj.success,
 		error: obj.error,

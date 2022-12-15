@@ -2,18 +2,18 @@
 
 namespace App\Controllers;
 
-use App\Models\MXJenisKontenModel;
+use App\Models\MXSegmenModel;
 use CodeIgniter\HTTP\RedirectResponse;
 use CodeIgniter\HTTP\ResponseInterface;
 use CodeIgniter\I18n\Time;
 
-class MXJenisKonten extends BaseController
+class MXSegmen extends BaseController
 {
     private $model;
 
     public function __construct()
     {
-        $this->model = new MXJenisKontenModel();
+        $this->model = new MXSegmenModel();
     }
 
     /**
@@ -22,11 +22,11 @@ class MXJenisKonten extends BaseController
     public function index(): string
     {
         $this->breadcrumbs->add('Dashbor', '/');
-        $this->breadcrumbs->add('Jenis Konten Metaflex', '/MXJenisKonten');
+        $this->breadcrumbs->add('Segmen Metaflex', '/MXSegmen');
 
        
-        return view('MXJenisKonten/main', [
-            'page_title' => 'Jenis Konten Metaflex',
+        return view('MXSegmen/main', [
+            'page_title' => 'Segmen Metaflex',
             'breadcrumbs' => $this->breadcrumbs->render(),
             'main_menu' => (new \App\Libraries\Menu())->render(),
         ]);
@@ -41,7 +41,7 @@ class MXJenisKonten extends BaseController
      */
     public function apiGetAll(): ResponseInterface
     {
-        $query = $this->model->getMXJenisKonten();  
+        $query = $this->model->getMXSegmen();  
         $data = [];
         foreach ($query as $key => $value) {
 
@@ -49,7 +49,7 @@ class MXJenisKonten extends BaseController
 
             $detail = '<a class="btn btn-primary btn-sm item-detail mr-1" href="#" data-ID="' . $value->ID . '" title="Detail"><i class="far fa-file-alt"></i></a>';
             $edit = '<a class="btn btn-success btn-sm item-edit mr-1" href="#" data-ID="' . $value->ID . '" data-Nama="' . $value->Nama . '" data-Aktif="' . $value->Aktif . '|Y,T" title="Edit"><i class="far fa-edit"></i></a>';
-            $hapus = '<a class="btn btn-danger btn-sm" href="' . site_url('mxjeniskonten/delete/' . $value->ID) . '" data-ID="' . $value->ID . '" onclick="return confirm(\'Apa Anda yakin menghapus data ini?\')" title="Hapus"><i class="fas fa-trash-alt"></i></a>';
+            $hapus = '<a class="btn btn-danger btn-sm" href="' . site_url('mxsegmen/delete/' . $value->ID) . '" data-ID="' . $value->ID . '" onclick="return confirm(\'Apa Anda yakin menghapus data ini?\')" title="Hapus"><i class="fas fa-trash-alt"></i></a>';
 
             $data[] = [
                 $key + 1,

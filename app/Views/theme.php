@@ -128,6 +128,9 @@
 <?php if (url_is('mxjeniskonten*')): ?>
     <script type="module" src="<?=site_url('js/mxjeniskonten.js');?>"></script>
 <?php endif;?>
+<?php if (url_is('mxsegmen*')): ?>
+    <script type="module" src="<?=site_url('js/mxsegmen.js');?>"></script>
+<?php endif;?>
 <?php if (url_is('mxsolventtinta*')): ?>
     <script type="module" src="<?=site_url('js/mxsolventtinta.js');?>"></script>
 <?php endif;?>

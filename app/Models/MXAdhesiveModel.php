@@ -4,23 +4,31 @@ namespace App\Models;
 
 use CodeIgniter\Model;
 
-class MXAksesoriModel extends Model
+class MXAdhesiveModel extends Model
 {
-    protected $table = 'MX_Aksesori';
+    protected $table = 'MX_Adhesive';
     protected $useTimestamps = true;
     protected $createdField = 'added';
     protected $updatedField = 'updated';
-    protected $allowedFields = ['id', 'nama', 'harga', 'aktif', "added", 'added_by', 'updated', 'updated_by'];
+    protected $allowedFields = ['id', 'nama', 'konstanta', 'hargaadhesive', 'hargasolvent', 'aktif', "added", 'added_by', 'updated', 'updated_by'];
     protected $validationRules = [
         'nama' => 'required',
-        'harga' => 'required',
+        'konstanta' => 'required',
+        'hargaadhesive' => 'required',
+        'hargasolvent' => 'required',
     ];
     protected $validationMessages = [
         'nama' => [
-            'required' => 'Field Aksesori harus diisi.',
+            'required' => 'Field Adhesive harus diisi.',
         ],
-        'harga' => [
-            'required' => 'Field Harga harus diisi.',
+        'konstanta' => [
+            'required' => 'Field Konstanta harus diisi.',
+        ],
+        'hargaadhesive' => [
+            'required' => 'Field Harga Adhesive harus diisi.',
+        ],
+        'hargasolvent' => [
+            'required' => 'Field Harga Solvent harus diisi.',
         ],
     ];
 
@@ -42,7 +50,7 @@ class MXAksesoriModel extends Model
     /**
      * @return array
      */
-    public function getMXAksesori(): array
+    public function getMXAdhesive(): array
     {
         return $this->orderBy('nama', 'desc')
             ->asObject()
@@ -91,4 +99,3 @@ class MXAksesoriModel extends Model
             ->delete();
     }
 }
-

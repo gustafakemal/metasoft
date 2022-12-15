@@ -4,9 +4,9 @@ namespace App\Models;
 
 use CodeIgniter\Model;
 
-class MXSegmenModel extends Model
+class MXJenisKontenModel extends Model
 {
-    protected $table = 'MX_Segmen';
+    protected $table = 'MX_Konten';
     //protected $useTimestamps = true;
     //protected $createdField = 'added';
     //protected $updatedField = 'updated';
@@ -16,7 +16,7 @@ class MXSegmenModel extends Model
     ];
     protected $validationMessages = [
         'Nama' => [
-            'required' => 'Field Nama Segmen harus diisi.',
+            'required' => 'Field Jenis Konten harus diisi.',
         ],
     ];
 
@@ -38,7 +38,7 @@ class MXSegmenModel extends Model
     /**
      * @return array
      */
-    public function getMXSegmen(): array
+    public function getMXJenisKonten(): array
     {
         return $this->orderBy('Nama', 'asc')
             ->asObject()

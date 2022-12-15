@@ -485,7 +485,7 @@ class MXProspect extends BaseController
             'customers' => (new \App\Models\CustomerModel())->getCustomers(),
             'jenisproduk' => (new \App\Models\MXJenisProdukModel())->asObject()->findAll(),
             'segmen' => (new \App\Models\MXSegmenModel())->asObject()->findAll(),
-            'konten' => (new \App\Models\MXKontenModel())->asObject()->findAll(),
+            'konten' => (new \App\Models\MXJenisKontenModel())->asObject()->findAll(),
             'material' => (new \App\Models\MXMaterialModel())->asObject()->findAll(),
             'bagmaking' => (new \App\Models\MXBagMakingModel())->asObject()->findAll(),
             'bottom' => (new \App\Models\MXBottomModel())->asObject()->findAll(),

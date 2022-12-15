@@ -4,23 +4,18 @@ namespace App\Models;
 
 use CodeIgniter\Model;
 
-class MXAksesoriModel extends Model
+class MXKonstantaModel extends Model
 {
-    protected $table = 'MX_Aksesori';
+    protected $table = 'MX_Konstanta';
     protected $useTimestamps = true;
-    protected $createdField = 'added';
     protected $updatedField = 'updated';
-    protected $allowedFields = ['id', 'nama', 'harga', 'aktif', "added", 'added_by', 'updated', 'updated_by'];
+    protected $allowedFields = ['id', 'kategori', 'nama', 'nilai', 'aktif', 'updated', 'updated_by'];
     protected $validationRules = [
-        'nama' => 'required',
-        'harga' => 'required',
+        'nilai' => 'required',
     ];
     protected $validationMessages = [
-        'nama' => [
-            'required' => 'Field Aksesori harus diisi.',
-        ],
-        'harga' => [
-            'required' => 'Field Harga harus diisi.',
+        'nilai' => [
+            'required' => 'Field Nilai harus diisi.',
         ],
     ];
 
@@ -42,7 +37,7 @@ class MXAksesoriModel extends Model
     /**
      * @return array
      */
-    public function getMXAksesori(): array
+    public function getMXKonstanta(): array
     {
         return $this->orderBy('nama', 'desc')
             ->asObject()
@@ -59,13 +54,12 @@ class MXAksesoriModel extends Model
     }
 
     /**
-     * @return int
+     * @param $kategori
+     * @return array
      */
-    public function getMaxId(): int
+    public function getByKategori($kategori): array
     {
-        $query = $this->selectMax('id')->get();
-
-        return (int) $query->getResult()[0]->id;
+        return $this->where('kategori', $kategori)->findAll();
     }
 
     /**
@@ -91,4 +85,3 @@ class MXAksesoriModel extends Model
             ->delete();
     }
 }
-

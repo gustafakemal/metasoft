@@ -16,21 +16,39 @@
 	<thead>
 		<tr>
 			<th style="width: 25px;">No</th>
-			<th>Nama</th>
-			<th style="width: 100px;">Status Aktif</th>
+			<th>ID</th>
+			<th>Tanggal dibuat</th>
+			<th>Jenis Produk</th>
+			<th>Status Aktif</th>
+			<th>Dibuat</th>
+			<th>Dibuat oleh</th>
+			<th>Update terakhir</th>
+			<th>Diupdate oleh</th>
 			<th>&nbsp;</th>
 		</tr>
 	</thead>
 </table>
 
+<!-- <form name="dummyform">
+<div class="form-check">
+									<input class="form-check-input" checked="checked" type="radio" name="aktif" id="msJenisFluteAktif" value="Y">
+									<label class="form-check-label" for="msJenisFluteAktif">Aktif</label>
+								</div>
+								<div class="form-check">
+									<input class="form-check-input" type="radio" name="aktif" id="msJenisFluteNonaktif" value="T">
+									<label class="form-check-label" for="msJenisFluteNonaktif">Nonaktif</label>
+								</div>
+<button type="submit" name="submit" class="btn btn-primary">Save</button>
+							</form> -->
+
 <!-- Modal -->
-<div class="modal fade" id="dataForm" tabindex="-1" aria-labelledby="dataFormLabel" aria-hidden="true">
+<div class="modal fade" id="dataForm" tabindex="-1" aria-labelledby=dataFormLabel" aria-hidden="true">
 	<div class="modal-dialog modal-lg">
 		<form>
-			<input type="hidden" name="ID" value="" />
+			<input type="hidden" name="id" value="" />
 			<div class="modal-content">
 				<div class="modal-header">
-					<h5 class="modal-title" id="dataFormLabel"></h5>
+					<h5 class="modal-title" id=dataFormLabel"></h5>
 					<button type="button" class="close" data-dismiss="modal" aria-label="Close">
 						<span aria-hidden="true">&times;</span>
 					</button>
@@ -40,16 +58,17 @@
 					<div class="row">
 						<div class="col">
 							<div class="form-group">
-								<label for="Nama">Segmen<span class="text-danger">*</span></label>
-								<input name="Nama" type="text" class="form-control" id="Nama" style="text-transform:uppercase;">
+								<label for="nama">Jenis Produk <span class="text-danger">*</span></label>
+								<input name="nama" type="text" class="form-control" id="nama">
 							</div>
 							<div class="form-group">
-								<label for="Aktif">Status</label>
-								<select name="Aktif" class="form-control" id="Aktif">
+								<label for="aktif">Status</label>
+								<select name="aktif" class="form-control" id="aktif">
 									<option value="Y">Aktif</option>
 									<option value="T">Nonaktif</option>
 								</select>
 							</div>
+
 						</div>
 					</div>
 				</div>
@@ -79,12 +98,28 @@
 				<div class="row">
 					<div class="col">
 						<div class="item">
-							<label>Segmen</label>
-							<div class="dataDet Nama"></div>
+							<label>Jenis Produk</label>
+							<div class="custDet nama"></div>
 						</div>
 						<div class="item">
 							<label>Status</label>
-							<div class="dataDet Aktif"></div>
+							<div class="custDet aktif"></div>
+						</div>
+						<div class="item">
+							<label>Dibuat pada</label>
+							<div class="custDet added"></div>
+						</div>
+						<div class="item">
+							<label>Dibuat oleh</label>
+							<div class="custDet added_by"></div>
+						</div>
+						<div class="item">
+							<label>Diupdate pada</label>
+							<div class="custDet updated"></div>
+						</div>
+						<div class="item">
+							<label>Diupdate oleh</label>
+							<div class="custDet updated_by"></div>
 						</div>
 					</div>
 				</div>

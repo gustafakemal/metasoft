@@ -286,14 +286,14 @@
                     <div class="bs-child">
                         <?php if(count($prospek_aksesori) > 0) {
                               foreach($prospek_aksesori as $pa) :?>
-                                  <div class="row mb-1 bscolor" id="bscolor-<?= $pa->ID;?>">
-                                      <div class="col-sm col-form-label"><?= $pa->Nama;?></div>
+                                  <div class="row mb-1 bscolor" id="bscolor-<?= $pa->id;?>">
+                                      <div class="col-sm col-form-label"><?= $pa->nama;?></div>
                                       <div class="col-sm-auto">
-                                          <button type="button" class="btn-sm btn-danger delbs" id="delbs-<?= $pa->ID;?>">
+                                          <button type="button" class="btn-sm btn-danger delbs" id="delbs-<?= $pa->id;?>">
                                               <i class="fas fa-trash-alt text-light"></i>
                                           </button>
                                       </div>
-                                      <input type="hidden" name="aksesori[]" value="<?= $pa->ID;?>">
+                                      <input type="hidden" name="aksesori[]" value="<?= $pa->id;?>">
                                   </div>
                               <?php endforeach;
                         } ?>

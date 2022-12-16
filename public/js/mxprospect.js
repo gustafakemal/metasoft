@@ -7,7 +7,18 @@ $(function () {
         columnDefs: {
             falseSearchable: [0, 10, 11, 12],
             falseOrderable: [0, 10, 11, 12],
+            falseVisibility: [13],
             width: ['0(30)','1(100)','2(90)','3(120)','4(120)', '10(120)'],
+            custom: [
+                {
+                    "targets": [0,1,2,3,4,5, 6, 7, 8, 9],
+                    "createdCell": function (td, cellData, rowData, row, col) {
+                        if ( rowData[13] === 1 ) {
+                            $(td).css('font-weight', 700).css('font-style', 'italic')
+                        }
+                    },
+                }
+            ]
         },
         createdRow: ['No', 'Prospek', 'Alt', 'Nama Produk', 'Pemesan', 'Jumlah', 'Area', 'Diinput', 'Catatan', 'Status', 'Proses', 'Prioritas', 'Action'],
         initComplete: function () {
@@ -22,6 +33,49 @@ $(function () {
 
     dt = new Datatable('#dataList', config, `${HOST}/listprospek/api`, 'GET')
     dt.load();
+
+    $('#dataList').on('page.dt', function () {
+        setTimeout(() => {
+            $('.chbx').bootstrapToggle({
+                on: 'Ya',
+                off: 'Tidak'
+            })
+        }, 100)
+    })
+
+    $('#dataList').on('change', 'input.chbx', function (e) {
+        const confirmation = confirm('Yakin mengubah ?')
+        if(confirmation) {
+            const priority = ($(this).is(':checked')) ? 1 : 0;
+            const NoProspek = $(this).attr('data-no-prospek')
+            $.ajax({
+                type: 'POST',
+                url: `${HOST}/listprospek/set/priority`,
+                dataType: 'JSON',
+                data: {NoProspek, priority},
+                beforeSend: function () {
+                },
+                success: function (response) {
+                    if(response.success) {
+                        dt.reload();
+                    }
+                },
+                complete: function (response) {
+                    if(response.responseJSON.success) {
+                        setTimeout(() => {
+                            $('.chbx').bootstrapToggle({
+                                on: 'Ya',
+                                off: 'Tidak'
+                            })
+                        }, 1000)
+                    }
+                }
+            })
+        } else {
+            $(this).bootstrapToggle('off', true)
+            // $(this).prop('checked', !$(this).is(':checked'))
+        }
+    })
 
     let aksesories = [];
     $('button.add-acc').on('click', function() {
@@ -106,6 +160,22 @@ $(function () {
                 }
             })
         }
+    })
+
+    $('#dataList').on('click', '.alt-item', function (e) {
+        e.preventDefault();
+        const NoProspek = $(this).attr('data-no-prospek')
+        const Alt = $(this).attr('data-alt')
+
+        $('#altChoice .no-prospek').html(NoProspek)
+        $('#altChoice .alt').html(Alt)
+        $('#altChoice a.copy-prospek').attr('href', `${HOST}/listprospek/add/${NoProspek}/${Alt}?copyprospek=1`)
+        $('#altChoice a.copy-alt').attr('href', `${HOST}/listprospek/add/${NoProspek}/${Alt}`)
+
+        $('#altChoice').modal({
+            show: true,
+            backdrop: 'static'
+        })
     })
 
 })

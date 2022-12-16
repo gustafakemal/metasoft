@@ -16,21 +16,29 @@
 	<thead>
 		<tr>
 			<th style="width: 25px;">No</th>
-			<th>Nama</th>
-			<th style="width: 100px;">Status Aktif</th>
+			<th>ID</th>
+			<th>Tanggal dibuat</th>
+			<th>Jenis Film</th>
+			<th>Berat Jenis</th>
+			<th>Harga</th>
+			<th>Status Aktif</th>
+			<th>Dibuat</th>
+			<th>Dibuat oleh</th>
+			<th>Update terakhir</th>
+			<th>Diupdate oleh</th>
 			<th>&nbsp;</th>
 		</tr>
 	</thead>
 </table>
 
 <!-- Modal -->
-<div class="modal fade" id="dataForm" tabindex="-1" aria-labelledby="dataFormLabel" aria-hidden="true">
+<div class="modal fade" id="dataForm" tabindex="-1" aria-labelledby=dataFormLabel" aria-hidden="true">
 	<div class="modal-dialog modal-lg">
 		<form>
-			<input type="hidden" name="ID" value="" />
+			<input type="hidden" name="id" value="" />
 			<div class="modal-content">
 				<div class="modal-header">
-					<h5 class="modal-title" id="dataFormLabel"></h5>
+					<h5 class="modal-title" id=dataFormLabel"></h5>
 					<button type="button" class="close" data-dismiss="modal" aria-label="Close">
 						<span aria-hidden="true">&times;</span>
 					</button>
@@ -40,16 +48,27 @@
 					<div class="row">
 						<div class="col">
 							<div class="form-group">
-								<label for="Nama">Segmen<span class="text-danger">*</span></label>
-								<input name="Nama" type="text" class="form-control" id="Nama" style="text-transform:uppercase;">
+								<label for="nama">Jenis Film <span class="text-danger">*</span></label>
+								<input name="nama" type="text" class="form-control" id="nama" style="text-transform:uppercase;">
 							</div>
 							<div class="form-group">
-								<label for="Aktif">Status</label>
-								<select name="Aktif" class="form-control" id="Aktif">
-									<option value="Y">Aktif</option>
-									<option value="T">Nonaktif</option>
-								</select>
+								<label for="berat_jenis">Berat Jenis <span class="text-danger">*</span></label>
+								<input name="berat_jenis" type="number" class="form-control" id="berat_jenis" value="0">
 							</div>
+							<div class="form-group">
+								<label for="harga">Harga <span class="text-danger">*</span></label>
+								<input name="harga" type="number" class="form-control" id="harga" value="0">
+							</div>
+
+							<div class="form-group">
+								<label for="aktif">Status</label>
+								<select name="aktif" class="form-control" id="aktif">
+										<option value="Y">Aktif</option>
+										<option value="T">Nonaktif</option>
+								</select>
+
+							</div>
+
 						</div>
 					</div>
 				</div>
@@ -79,12 +98,36 @@
 				<div class="row">
 					<div class="col">
 						<div class="item">
-							<label>Segmen</label>
-							<div class="dataDet Nama"></div>
+							<label>Jenis Tinta</label>
+							<div class="dataDet nama"></div>
+						</div>
+						<div class="item">
+							<label>Berat Jenis</label>
+							<div class="dataDet berat_jenis"></div>
+						</div>
+						<div class="item">
+							<label>Harga</label>
+							<div class="dataDet harga"></div>
 						</div>
 						<div class="item">
 							<label>Status</label>
-							<div class="dataDet Aktif"></div>
+							<div class="dataDet aktif"></div>
+						</div>
+						<div class="item">
+							<label>Dibuat pada</label>
+							<div class="dataDet added"></div>
+						</div>
+						<div class="item">
+							<label>Dibuat oleh</label>
+							<div class="dataDet added_by"></div>
+						</div>
+						<div class="item">
+							<label>Diupdate pada</label>
+							<div class="dataDet updated"></div>
+						</div>
+						<div class="item">
+							<label>Diupdate oleh</label>
+							<div class="dataDet updated_by"></div>
 						</div>
 					</div>
 				</div>

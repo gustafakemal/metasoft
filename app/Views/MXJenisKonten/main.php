@@ -40,7 +40,7 @@
 					<div class="row">
 						<div class="col">
 							<div class="form-group">
-								<label for="Nama">Segmen<span class="text-danger">*</span></label>
+								<label for="Nama">Jenis Konten <span class="text-danger">*</span></label>
 								<input name="Nama" type="text" class="form-control" id="Nama" style="text-transform:uppercase;">
 							</div>
 							<div class="form-group">
@@ -79,7 +79,7 @@
 				<div class="row">
 					<div class="col">
 						<div class="item">
-							<label>Segmen</label>
+							<label>Jenis Konten</label>
 							<div class="dataDet Nama"></div>
 						</div>
 						<div class="item">

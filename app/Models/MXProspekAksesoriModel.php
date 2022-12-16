@@ -10,7 +10,7 @@ class MXProspekAksesoriModel extends \CodeIgniter\Model
     public function getByProspekAlt($NoProspek, $Alt)
     {
         return $this->select('*')
-                    ->join('MX_Aksesori', 'MX_Prospek_Aksesori.Aksesori = MX_Aksesori.ID')
+                    ->join('MX_Aksesori', 'MX_Prospek_Aksesori.Aksesori = MX_Aksesori.id')
                     ->where('MX_Prospek_Aksesori.NoProspek', $NoProspek)
                     ->where('MX_Prospek_Aksesori.Alt', $Alt)
                     ->get();

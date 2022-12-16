@@ -20,7 +20,7 @@ $routes->setDefaultNamespace('App\Controllers');
 $routes->setDefaultController('Home');
 $routes->setDefaultMethod('index');
 $routes->setTranslateURIDashes(false);
-$routes->set404Override(function() {
+$routes->set404Override(function () {
     return view('Common/404_error');
 });
 $routes->setAutoRoute(false);
@@ -71,6 +71,51 @@ $routes->group('tujuankirim', static function ($routes) {
     $routes->get('delete/(:num)', 'MFTujuanKirim::delete/$1');
 });
 
+$routes->group('mxsolventtinta', static function ($routes) {
+    $routes->get('/', 'MXSolventTinta::index');
+    $routes->get('api', 'MXSolventTinta::apiGetAll');
+    $routes->get('api/(:num)', 'MXSolventTinta::apiGetById/$1');
+    $routes->post('add/api', 'MXSolventTinta::apiAddProcess');
+    $routes->put('edit/api', 'MXSolventTinta::apiEditProcess');
+    $routes->get('delete/(:num)', 'MXSolventTinta::delete/$1');
+});
+
+$routes->group('mxaksesori', static function ($routes) {
+    $routes->get('/', 'MXAksesori::index');
+    $routes->get('api', 'MXAksesori::apiGetAll');
+    $routes->get('api/(:num)', 'MXAksesori::apiGetById/$1');
+    $routes->post('add/api', 'MXAksesori::apiAddProcess');
+    $routes->put('edit/api', 'MXAksesori::apiEditProcess');
+    $routes->get('delete/(:num)', 'MXAksesori::delete/$1');
+});
+
+$routes->group('mxadhesive', static function ($routes) {
+    $routes->get('/', 'MXAdhesive::index');
+    $routes->get('api', 'MXAdhesive::apiGetAll');
+    $routes->get('api/(:num)', 'MXAdhesive::apiGetById/$1');
+    $routes->post('add/api', 'MXAdhesive::apiAddProcess');
+    $routes->put('edit/api', 'MXAdhesive::apiEditProcess');
+    $routes->get('delete/(:num)', 'MXAdhesive::delete/$1');
+});
+
+$routes->group('mxkonstanta', static function ($routes) {
+    $routes->get('/', 'MXKonstanta::index');
+    $routes->get('api', 'MXKonstanta::apiGetAll');
+    $routes->get('api/(:num)', 'MXKonstanta::apiGetById/$1');
+    $routes->post('add/api', 'MXKonstanta::apiAddProcess');
+    $routes->put('edit/api', 'MXKonstanta::apiEditProcess');
+    $routes->get('delete/(:num)', 'MXKonstanta::delete/$1');
+});
+
+$routes->group('mxjenisproduk', static function ($routes) {
+    $routes->get('/', 'MXJenisProduk::index');
+    $routes->get('api', 'MXJenisProduk::apiGetAll');
+    $routes->get('api/(:num)', 'MXJenisProduk::apiGetById/$1');
+    $routes->post('add/api', 'MXJenisProduk::apiAddProcess');
+    $routes->put('edit/api', 'MXJenisProduk::apiEditProcess');
+    $routes->get('delete/(:num)', 'MXJenisProduk::delete/$1');
+});
+
 $routes->group('jeniskertas', static function ($routes) {
     $routes->get('/', 'MFJenisKertas::index');
     $routes->get('api', 'MFJenisKertas::apiGetAll');
@@ -88,6 +133,43 @@ $routes->group('jenistinta', static function ($routes) {
     $routes->put('edit/api', 'MFJenisTinta::apiEditProcess');
     $routes->get('delete/(:num)', 'MFJenisTinta::delete/$1');
 });
+
+$routes->group('mxjenistinta', static function ($routes) {
+    $routes->get('/', 'MXJenisTinta::index');
+    $routes->get('api', 'MXJenisTinta::apiGetAll');
+    $routes->get('api/(:num)', 'MXJenisTinta::apiGetById/$1');
+    $routes->post('add/api', 'MXJenisTinta::apiAddProcess');
+    $routes->put('edit/api', 'MXJenisTinta::apiEditProcess');
+    $routes->get('delete/(:num)', 'MXJenisTinta::delete/$1');
+});
+
+$routes->group('mxjenisfilm', static function ($routes) {
+    $routes->get('/', 'MXJenisFilm::index');
+    $routes->get('api', 'MXJenisFilm::apiGetAll');
+    $routes->get('api/(:num)', 'MXJenisFilm::apiGetById/$1');
+    $routes->post('add/api', 'MXJenisFilm::apiAddProcess');
+    $routes->put('edit/api', 'MXJenisFilm::apiEditProcess');
+    $routes->get('delete/(:num)', 'MXJenisFilm::delete/$1');
+});
+
+$routes->group('mxjeniskonten', static function ($routes) {
+    $routes->get('/', 'MXJenisKonten::index');
+    $routes->get('api', 'MXJenisKonten::apiGetAll');
+    $routes->get('api/(:num)', 'MXJenisKonten::apiGetById/$1');
+    $routes->post('add/api', 'MXJenisKonten::apiAddProcess');
+    $routes->put('edit/api', 'MXJenisKonten::apiEditProcess');
+    $routes->get('delete/(:num)', 'MXJenisKonten::delete/$1');
+});
+
+$routes->group('mxsegmen', static function ($routes) {
+    $routes->get('/', 'MXSegmen::index');
+    $routes->get('api', 'MXSegmen::apiGetAll');
+    $routes->get('api/(:num)', 'MXSegmen::apiGetById/$1');
+    $routes->post('add/api', 'MXSegmen::apiAddProcess');
+    $routes->put('edit/api', 'MXSegmen::apiEditProcess');
+    $routes->get('delete/(:num)', 'MXSegmen::delete/$1');
+});
+
 
 $routes->group('jenisflute', static function ($routes) {
     $routes->get('/', 'MFJenisFlute::index');
@@ -150,18 +232,16 @@ $routes->group('inputprospek', static function ($routes) {
 
 $routes->group('listprospek', static function ($routes) {
     $routes->get('/', 'MXProspect::index');
+    $routes->get('detail/(:any)/(:num)', 'MXProspect::detail/$1/$2');
     $routes->get('api', 'MXProspect::apiGetAll');
     $routes->post('/', 'MXProspect::apiSearch');
     $routes->get('add/(:any)/(:num)', 'MXProspect::alt/$1/$2');
     $routes->post('add', 'MXProspect::altProcess');
     $routes->get('edit/(:any)/(:num)', 'MXProspect::edit/$1/$2');
+    $routes->post('set/priority', 'MXProspect::setPriority');
     $routes->post('delete', 'MXProspect::delete');
 });
 
-$routes->group('mxsegmen', static function ($routes) {
-    $routes->get('/', 'MXSegmen::index');
-    $routes->post('add', 'MXSegmen::add');
-});
 
 $routes->group('produk', static function ($routes) {
     $routes->get('/', 'MFProduk::index');

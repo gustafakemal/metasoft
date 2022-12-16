@@ -4,23 +4,27 @@ namespace App\Models;
 
 use CodeIgniter\Model;
 
-class MXAksesoriModel extends Model
+class MXJenisFilmModel extends Model
 {
-    protected $table = 'MX_Aksesori';
+    protected $table = 'MX_JenisFilm';
     protected $useTimestamps = true;
     protected $createdField = 'added';
     protected $updatedField = 'updated';
-    protected $allowedFields = ['id', 'nama', 'harga', 'aktif', "added", 'added_by', 'updated', 'updated_by'];
+    protected $allowedFields = ['id', 'nama', 'harga', 'berat_jenis', 'aktif', "added", 'added_by', 'updated', 'updated_by'];
     protected $validationRules = [
         'nama' => 'required',
         'harga' => 'required',
+        'berat_jenis' => 'required',
     ];
     protected $validationMessages = [
         'nama' => [
-            'required' => 'Field Aksesori harus diisi.',
+            'required' => 'Field Jenis Tinta harus diisi.',
         ],
         'harga' => [
             'required' => 'Field Harga harus diisi.',
+        ],
+        'berat_jenis' => [
+            'required' => 'Field Berat Jenis harus diisi.',
         ],
     ];
 
@@ -42,7 +46,7 @@ class MXAksesoriModel extends Model
     /**
      * @return array
      */
-    public function getMXAksesori(): array
+    public function getMXJenisFilm(): array
     {
         return $this->orderBy('nama', 'desc')
             ->asObject()
@@ -91,4 +95,3 @@ class MXAksesoriModel extends Model
             ->delete();
     }
 }
-

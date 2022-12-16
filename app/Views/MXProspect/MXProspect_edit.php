@@ -67,7 +67,7 @@
                     <select id="jenisproduk" name="JenisProduk" class="form-control">
                         <option value="">Pilih</option>
                         <?php foreach ($jenisproduk as $key => $jp) : ?>
-                            <option<?= ($jp->ID == $data->JenisProduk) ? ' selected' : '';?> value="<?= $jp->ID;?>"><?= $jp->Nama;?></option>
+                            <option<?= ($jp->id == $data->JenisProduk) ? ' selected' : '';?> value="<?= $jp->id;?>"><?= $jp->nama;?></option>
                         <?php endforeach;?>
                     </select>
                 </div>
@@ -274,7 +274,7 @@
                             <select  id="aksesoris" name="aksesoris" class="form-control">
                                 <option value="0">Pilih</option>
                                 <?php foreach ($aksesori as $key => $ak) : ?>
-                                    <option value="<?= $ak->ID;?>"><?= $ak->Nama;?></option>
+                                    <option value="<?= $ak->id;?>"><?= $ak->nama;?></option>
                                 <?php endforeach;?>
                             </select>
                         </div>
@@ -286,14 +286,14 @@
                     <div class="bs-child">
                         <?php if(count($prospek_aksesori) > 0) {
                               foreach($prospek_aksesori as $pa) :?>
-                                  <div class="row mb-1 bscolor" id="bscolor-<?= $pa->ID;?>">
-                                      <div class="col-sm col-form-label"><?= $pa->Nama;?></div>
+                                  <div class="row mb-1 bscolor" id="bscolor-<?= $pa->id;?>">
+                                      <div class="col-sm col-form-label"><?= $pa->nama;?></div>
                                       <div class="col-sm-auto">
-                                          <button type="button" class="btn-sm btn-danger delbs" id="delbs-<?= $pa->ID;?>">
+                                          <button type="button" class="btn-sm btn-danger delbs" id="delbs-<?= $pa->id;?>">
                                               <i class="fas fa-trash-alt text-light"></i>
                                           </button>
                                       </div>
-                                      <input type="hidden" name="aksesori[]" value="<?= $pa->ID;?>">
+                                      <input type="hidden" name="aksesori[]" value="<?= $pa->id;?>">
                                   </div>
                               <?php endforeach;
                         } ?>

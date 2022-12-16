@@ -48,7 +48,7 @@
                     <select id="jenisproduk" name="JenisProduk" class="form-control">
                         <option value="">Pilih</option>
                         <?php foreach ($jenisproduk as $key => $jp) : ?>
-                            <option value="<?= $jp->ID;?>"><?= $jp->Nama;?></option>
+                            <option value="<?= $jp->id;?>"><?= $jp->nama;?></option>
                         <?php endforeach;?>
                     </select>
                 </div>
@@ -253,7 +253,7 @@
                             <select  id="aksesoris" name="aksesoris" class="form-control">
                                 <option value="0">Pilih</option>
                                 <?php foreach ($aksesori as $key => $ak) : ?>
-                                    <option value="<?= $ak->ID;?>"><?= $ak->Nama;?></option>
+                                    <option value="<?= $ak->id;?>"><?= $ak->nama;?></option>
                                 <?php endforeach;?>
                             </select>
                         </div>

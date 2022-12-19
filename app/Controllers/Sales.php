@@ -39,7 +39,9 @@ class Sales extends BaseController
      */
     public function apiGetAll(): ResponseInterface
 	{
+        $access = $this->common->getAccess(uri_string(true));
         $navigation = new \App\Libraries\Navigation();
+        $navigation->setAccess($access);
 
         $query = $this->model->getSales();
 

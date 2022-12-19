@@ -2,9 +2,7 @@
 
 namespace App\Controllers;
 
-use CodeIgniter\RESTful\ResourceController;
-
-class CommonAPI extends ResourceController
+class CommonAPI extends BaseController
 {
     private $navigation;
 
@@ -15,6 +13,9 @@ class CommonAPI extends ResourceController
 
     public function addButton()
     {
+        $uri = $this->request->getGet('url');
+        $access = $this->common->getAccess($uri);
+        $this->navigation->setAccess($access);
         return $this->response->setJSON([
             'success' => true,
             'data' => $this->navigation->button('add'),
@@ -23,6 +24,9 @@ class CommonAPI extends ResourceController
 
     public function reloadExportButton()
     {
+        $uri = $this->request->getGet('url');
+        $access = $this->common->getAccess($uri);
+        $this->navigation->setAccess($access);
         return $this->response->setJSON([
             'success' => true,
             'data' => $this->navigation->reloadExportButton()

@@ -17,6 +17,11 @@ class Navigation
         $this->access = (count($filtered) > 0) ? $filtered[0]->access : 3;
     }
 
+    public function setAccess($access)
+    {
+        $this->access = $access;
+    }
+
     public function button($btnType, $attrs = [])
     {
         switch ($btnType) {

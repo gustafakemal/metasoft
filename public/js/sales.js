@@ -22,21 +22,13 @@ $(function () {
 		},
 		createdRow: ['No', 'Nama Sales', 'NIK', 'Status Aktif', 'Action'],
 		initComplete: function () {
-			// const dropdown = `<div class="dropdown d-inline mr-2">` +
-			// 	`<button class="btn btn-primary dropdown-toggle" type="button" id="customersDropdown" data-toggle="dropdown" aria-expanded="false"><i class="fas fa-cog"></i></button>` +
-			// 	`<div class="dropdown-menu" aria-labelledby="customersDropdown">` +
-			// 	`<a class="dropdown-item data-reload" href="#">Reload data</a>` +
-			// 	`<a class="dropdown-item data-to-csv" href="#">Export to excel</a>` +
-			// 	`</div>` +
-			// 	`</div>`
-			// const add_btn = `<a href="#" class="btn btn-primary btn-add mr-2 add-data_btn">Tambah data</a>`;
-			// $("#dataList_wrapper .dataTables_length").prepend(dropdown + add_btn);
-			$.get(`${HOST}/api/common/addButton`, function (response) {
+			const url = window.location.pathname.replace(/\//,'')
+			$.get(`${HOST}/api/common/addButton?url=${url}`, function (response) {
 				if(response.success) {
 					$("#dataList_wrapper .dataTables_length").prepend(response.data);
 				}
 			})
-			$.get(`${HOST}/api/common/reloadExportButton`, function (response) {
+			$.get(`${HOST}/api/common/reloadExportButton?url=${url}`, function (response) {
 				if(response.success) {
 					$("#dataList_wrapper .dataTables_length").prepend(response.data);
 				}

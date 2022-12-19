@@ -35,4 +35,40 @@ class Common
     {
         return (int)$number;
     }
+
+    public function pathAccess()
+    {
+        $modul_access = session()->get('priv');
+        $mapped = array_map(function ($item) {
+            return $item->path;
+        }, $modul_access);
+
+        return $mapped;
+    }
+
+    function url_is(string $path, string $comparePath): bool
+    {
+        $path        = '/' . trim(str_replace('*', '(\S)*', $path), '/ ');
+        $currentPath = '/' . trim($comparePath, '/ ');
+
+        return (bool) preg_match("|^{$path}$|", $currentPath, $matches);
+    }
+
+    public function getAccess($path = null)
+    {
+        if($path == null) {
+            $path = uri_string(true);
+        }
+
+        $modul_access = session()->get('priv');
+        $filtered = array_values( array_filter($modul_access, function ($item) use($path) {
+            return $this->url_is($item->route . '*', $path);
+        }) );
+
+        if(count($filtered) == 0) {
+            return null;
+        }
+
+        return $filtered[0]->access;
+    }
 }

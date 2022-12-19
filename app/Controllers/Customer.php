@@ -39,14 +39,24 @@ class Customer extends BaseController
      */
     public function apiGetAll(): ResponseInterface
     {
+        $access = $this->common->getAccess(uri_string(true));
+        $navigation = new \App\Libraries\Navigation();
+        $navigation->setAccess($access);
+
     	$query = $this->model->getCustomers();
 
     	$data = [];
     	foreach ($query as $key => $value) {
-             
-			$detail = '<a class="btn btn-primary btn-sm item-detail mr-1" href="#" data-id="' . $value->NoPemesan . '" title="Detail"><i class="far fa-file-alt"></i></a>';
-			$edit = '<a class="btn btn-success btn-sm item-edit mr-1" href="#" data-id="' . $value->NoPemesan . '" title="Edit"><i class="far fa-edit"></i></a>';
-			$hapus = '<a class="btn btn-danger btn-sm" href="' . site_url('customer/delete/'.$value->NoPemesan) . '" data-id="' . $value->NoPemesan . '" onclick="return confirm(\'Apa Anda yakin menghapus user ini?\')" title="Hapus"><i class="fas fa-trash-alt"></i></a>';
+
+            $detail = $navigation->button('detail', [
+                'data-id' => $value->NoPemesan,
+            ]);
+            $edit = $navigation->button('edit', [
+                'data-id' => $value->NoPemesan,
+            ]);
+            $hapus = $navigation->button('delete', [
+                'data-href' => site_url('customer/delete/' . $value->NoPemesan),
+            ]);
 			
 			$CreateDate = (Time::parse($value->CreateDate))->toDateTimeString();
     		$data[] = [

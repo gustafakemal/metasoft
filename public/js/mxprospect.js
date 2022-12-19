@@ -21,14 +21,14 @@ $(function () {
             ]
         },
         createdRow: ['No', 'Prospek', 'Alt', 'Nama Produk', 'Pemesan', 'Jumlah', 'Area', 'Diinput', 'Catatan', 'Status', 'Proses', 'Prioritas', 'Action'],
-        initComplete: function () {
+        ajaxComplete: function () {
             setTimeout(() => {
                 $('.chbx').bootstrapToggle({
                     on: 'Ya',
                     off: 'Tidak'
                 })
-            }, 1000)
-        },
+            }, 100)
+        }
     }
 
     dt = new Datatable('#dataList', config, `${HOST}/listprospek/api`, 'GET')

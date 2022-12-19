@@ -69,6 +69,10 @@ export class Datatable {
 				ajaxObj.success = ajaxCustomSuccess;
 			}
 
+			if (this.config.hasOwnProperty('ajaxComplete')) {
+				ajaxObj.complete = this.config.ajaxComplete
+			}
+
 			$.ajax(ajaxObj);
 
 		}, 50);
@@ -103,6 +107,10 @@ export class Datatable {
 
 		if (this.config.hasOwnProperty('scrollX')) {
 			obj.scrollX = this.config.scrollX
+		}
+
+		if (this.config.hasOwnProperty('ajaxComplete')) {
+			obj.ajaxComplete = this.config.ajaxComplete
 		}
 
 		return obj;

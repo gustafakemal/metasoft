@@ -44,7 +44,7 @@ echo form_open($form_action);?>
     <div class="form-group row">
         <label for="namaproduk" class="col-lg-2 col-sm-12 col-form-label">Nama Produk <span class="text-danger">*</span></label>
         <div class="col-lg-10 col-sm-12">
-            <input type="text" class="form-control" id="namaproduk" value="<?= $data->NamaProduk;?>" name="NamaProduk" style="text-transform: uppercase">
+            <input<?= ($copyprospek == 1) ? '' : ' readonly';?> type="text" class="form-control" id="namaproduk" value="<?= $data->NamaProduk;?>" name="NamaProduk" style="text-transform: uppercase">
         </div>
     </div>
 
@@ -53,7 +53,7 @@ echo form_open($form_action);?>
             <div class="form-group row">
                 <label for="pemesan" class="col-lg-4 col-sm-12 col-form-label">Pemesan</label>
                 <div class="col-lg-8 col-sm-12">
-                    <select id="pemesan" name="Pemesan" class="form-control">
+                    <select<?= ($copyprospek == 1) ? '' : ' readonly';?> id="pemesan" name="Pemesan" class="form-control">
                         <option value="">Pilih</option>
                         <?php foreach ($customers as $key => $customer) : ?>
                             <option<?= ($customer->NoPemesan == $data->Pemesan) ? ' selected' : '';?> value="<?= $customer->NoPemesan;?>"><?= $customer->NamaPemesan;?></option>
@@ -66,7 +66,7 @@ echo form_open($form_action);?>
             <div class="form-group row">
                 <label for="jenisproduk" class="col-lg-4 col-sm-12 col-form-label">Jenis Produk</label>
                 <div class="col-lg-8 col-sm-12">
-                    <select id="jenisproduk" name="JenisProduk" class="form-control">
+                    <select<?= ($copyprospek == 1) ? '' : ' readonly';?> id="jenisproduk" name="JenisProduk" class="form-control">
                         <option value="">Pilih</option>
                         <?php foreach ($jenisproduk as $key => $jp) : ?>
                             <option<?= ($jp->id == $data->JenisProduk) ? ' selected' : '';?> value="<?= $jp->id;?>"><?= $jp->nama;?></option>
@@ -82,7 +82,7 @@ echo form_open($form_action);?>
             <div class="form-group row">
                 <label for="segmen" class="col-lg-4 col-sm-12 col-form-label">Segmen</label>
                 <div class="col-lg-8 col-sm-12">
-                    <select id="segmen" name="Segmen" class="form-control">
+                    <select<?= ($copyprospek == 1) ? '' : ' readonly';?> id="segmen" name="Segmen" class="form-control">
                         <option value="">Pilih</option>
                         <?php foreach ($segmen as $key => $segmen) : ?>
                             <option<?= ($segmen->ID == $data->Segmen) ? ' selected' : '';?> value="<?= $segmen->ID;?>"><?= $segmen->Nama;?></option>
@@ -95,7 +95,7 @@ echo form_open($form_action);?>
             <div class="form-group row">
                 <label for="konten" class="col-lg-4 col-sm-12 col-form-label">Konten</label>
                 <div class="col-lg-8 col-sm-12">
-                    <select id="konten" name="Konten" class="form-control">
+                    <select<?= ($copyprospek == 1) ? '' : ' readonly';?> id="konten" name="Konten" class="form-control">
                         <option value="">Pilih</option>
                         <?php foreach ($konten as $key => $kt) : ?>
                             <option<?= ($kt->ID == $data->Konten) ? ' selected' : '';?> value="<?= $kt->ID;?>"><?= $kt->Nama;?></option>

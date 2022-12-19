@@ -12,21 +12,23 @@ $(function () {
 		},
 		createdRow: ['No', 'Nama','Status Aktif', 'Action'],
 		initComplete: function () {
-			const dropdown = `<div class="dropdown d-inline mr-2">` +
-				`<button class="btn btn-primary dropdown-toggle" type="button" id="customersDropdown" data-toggle="dropdown" aria-expanded="false"><i class="fas fa-cog"></i></button>` +
-				`<div class="dropdown-menu" aria-labelledby="opsiDropdown">` +
-				`<a class="dropdown-item data-reload" href="#">Reload data</a>` +
-				`<a class="dropdown-item data-to-csv" href="#">Export to excel</a>` +
-				`</div>` +
-				`</div>`
-			const add_btn = `<a href="#" class="btn btn-primary btn-add mr-2 add-data_btn">Tambah data</a>`;
-			$("#dataList_wrapper .dataTables_length").prepend(dropdown + add_btn);
+			const url = window.location.pathname.replace(/\//,'')
+			$.get(`${HOST}/api/common/addButton?url=${url}`, function (response) {
+				if(response.success) {
+					$("#dataList_wrapper .dataTables_length").prepend(response.data);
+				}
+			})
+			$.get(`${HOST}/api/common/reloadExportButton?url=${url}`, function (response) {
+				if(response.success) {
+					$("#dataList_wrapper .dataTables_length").prepend(response.data);
+				}
+			})
 		}
 	}
 	const datatable = new Datatable('#dataList', config, `${HOST}/mxjeniskonten/api`, 'GET')
 	datatable.load()
 
-	$('.add-data_btn').on('click', function(e) {
+	$('#dataList_wrapper').on('click', '.add-data_btn', function(e) {
 		e.preventDefault();
 		$('#dataForm').modal({
 			show: true,

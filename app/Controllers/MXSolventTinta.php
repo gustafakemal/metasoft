@@ -39,17 +39,30 @@ class MXSolventTinta extends BaseController
      */
     public function apiGetAll(): ResponseInterface
     {
+        $access = $this->common->getAccess(uri_string(true));
+        $navigation = new \App\Libraries\Navigation();
+        $navigation->setAccess($access);
+
         $query = $this->model->getMXSolventTinta();
 
         $data = [];
         foreach ($query as $key => $value) {
             $CreateDate = (Time::parse($value->added))->toDateTimeString();
 
-            $detail = '<a class="btn btn-primary btn-sm item-detail mr-1" href="#" data-id="' . $value->id . '" title="Detail"><i class="far fa-file-alt"></i></a>';
-            $edit = '<a class="btn btn-success btn-sm item-edit mr-1" href="#" data-id="' . $value->id . '" data-nama="' . $value->nama . '" data-harga="' . $value->harga . '" data-added="' . $CreateDate . '" data-aktif="' . $value->aktif . '|Y,T" title="Edit"><i class="far fa-edit"></i></a>';
-            $hapus = '<a class="btn btn-danger btn-sm" href="' . site_url('mxsolventtinta/delete/' . $value->id) . '" data-id="' . $value->id . '" onclick="return confirm(\'Apa Anda yakin menghapus data ini?\')" title="Hapus"><i class="fas fa-trash-alt"></i></a>';
+            $detail = $navigation->button('detail', [
+                'data-id' => $value->id,
+            ]);
+            $edit = $navigation->button('edit', [
+                'data-id' => $value->id,
+                'data-nama' => $value->nama,
+                'data-harga' => $value->harga,
+                'data-added' => $CreateDate,
+                'data-aktif' => $value->aktif . '|Y,T',
+            ]);
+            $hapus = $navigation->button('delete', [
+                'data-href' => site_url('mxsolventtinta/delete/' . $value->id),
+            ]);
 
-            $CreateDate = (Time::parse($value->added))->toDateTimeString();
             $data[] = [
                 $key + 1,
                 $value->id,

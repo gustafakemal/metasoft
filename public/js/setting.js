@@ -4,9 +4,23 @@ $(function () {
 
     const config = {
         columnDefs: {
-            falseSearchable: [0],
-            falseOrderable: [0],
-            width: ['0(30)','4(120)','2(150)','3(90)','5(100)']
+            falseSearchable: [0,5],
+            falseOrderable: [0,5],
+            width: ['0(30)','4(150)','2(150)','3(140)','5(120)'],
+            custom: [
+                {
+                    "targets": 3,
+                    render: function ( data, type, row, meta ) {
+                        console.log(data)
+                        if(data !== null || data !== '' || data !== 'null' || !empty(data)) {
+                            const icon = `<i class="${data} fa-lg"></i>`
+                            return `${icon}<br /><span class="small">${data}</span>`;
+                        } else {
+                            return data;
+                        }
+                    }
+                }
+            ]
         },
         createdRow: ['No', 'Nama Modul', 'Route', 'Icon', 'Parent/Group', 'Action'],
         initComplete: function () {
@@ -29,9 +43,48 @@ $(function () {
         .on('click', '.item-edit', function (e) {
             e.preventDefault();
             const id = $(this).attr('data-id');
+            $('#dataForm').modal({
+                show: true,
+                backdrop: true
+            })
+            $('#dataForm form').attr('name', 'editModul');
+            $('#dataForm .modal-title').html('Edit modul');
 
-            $.get(`${HOST}/setting/modul/${id}`, function (data) {
-                console.log(data)
+            $.ajax({
+                type: 'GET',
+                url: `${HOST}/setting/modul/api/${id}`,
+                beforeSend: function () {
+                    $(`form[name="editModul"] input, form[name="editModul"] button`).prop('disabled', true)
+                },
+                success: function (response) {
+                    if(response.success) {
+                        for(const property in response.data) {
+                            $(`#dataForm input[name="${property}"]`).val(response.data[property])
+                        }
+                    }
+                },
+                complete: function () {
+                    $(`form[name="editModul"] input, form[name="editModul"] button`).prop('disabled', false)
+                }
+            })
+        })
+        .on('click', '.item-detail', function(e) {
+            e.preventDefault();
+            $('#dataDetail').modal('show')
+            const id = $(this).attr('data-id')
+            $.ajax({
+                type: "GET",
+                url: `${HOST}/setting/modul/api/${id}`,
+                beforeSend: function () {},
+                success: function (response) {
+                    if(response.success) {
+                        for(const property in response.data) {
+                            $(`#dataDetail .${property}`).html(response.data[property])
+                        }
+                    }
+                },
+                error: function () {},
+                complete: function () {}
             })
         })
 
@@ -64,6 +117,36 @@ $(function () {
             }
         })
     })
+        .on('submit', 'form[name="editModul"]', function (e) {
+            e.preventDefault();
+            const formData = new FormData(this)
+
+            $.ajax({
+                type: 'POST',
+                url: `${HOST}/setting/modul/edit/api`,
+                dataType: 'JSON',
+                data: formData,
+                contentType: false,
+                processData: false,
+                beforeSend: function () {
+                    $('form[name="editModul"] input, form[name="editModul"] button').prop('disabled', true)
+                },
+                success: function (response) {
+                    if(response.success) {
+                        location.reload();
+                    } else {
+                        $('#dataForm .msg').html(`<div class="alert alert-danger">${response.msg}</div>`)
+                        $('#dataForm, html, body').animate({
+                            scrollTop: 0
+                        }, 500);
+                    }
+                },
+                complete: function () {
+                    $('#dataForm .modal-footer .loading-indicator').html('');
+                    $('form[name="editModul"] input, form[name="editModul"] button').prop('disabled', false)
+                }
+            })
+        })
 
     $('#dataForm').on('hidden.bs.modal', function (event) {
         $('#dataForm form[name="addModul"], #dataForm form[name="editModul"]')[0].reset();

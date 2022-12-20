@@ -213,6 +213,8 @@ $routes->group('setting', static function ($routes) {
         $routes->get('api', 'Setting::apiGetModul');
         $routes->get('api/(:num)', 'Setting::apiGetModulById/$1');
         $routes->post('add/api', 'Setting::apiAddModul');
+        $routes->post('edit/api', 'Setting::apiEditModul');
+        $routes->get('delete/(:num)', 'Setting::apiDeleteModul/$1');
     });
     $routes->group('hakakses', static function ($routes) {
         $routes->get('/', 'Setting::accessright');

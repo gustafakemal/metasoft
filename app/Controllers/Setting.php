@@ -26,14 +26,28 @@ class Setting extends BaseController
 
     public function apiGetModul()
     {
+        $access = $this->common->getAccess(uri_string(true));
+        $navigation = new \App\Libraries\Navigation();
+        $navigation->setAccess($access);
+
         $query = $this->model->getModul();
 
         $data = [];
         foreach ($query->getResult() as $key => $value) {
 
-            $detail = '<a class="btn btn-primary btn-sm item-detail mr-1" href="#" data-id="" title="Detail"><i class="far fa-file-alt"></i></a>';
-            $edit = '<a data-id="' . $value->id . '" class="btn btn-success btn-sm item-edit mr-1" href="#" title="Edit"><i class="far fa-edit"></i></a>';
-            $hapus = '<a class="btn btn-danger btn-sm" href="' . site_url('mfjenisflute/delete/' . $value->id) . '" data-id="' . $value->id . '" onclick="return confirm(\'Apa Anda yakin menghapus data ini?\')" title="Hapus"><i class="fas fa-trash-alt"></i></a>';
+            $detail = $navigation->button('detail', [
+                'data-id' => $value->id,
+            ]);
+            $edit = $navigation->button('edit', [
+                'data-id' => $value->id,
+            ]);
+            $hapus = $navigation->button('delete', [
+                'href' => site_url('setting/modul/delete/' . $value->id),
+            ]);
+
+//            $detail = '<a class="btn btn-primary btn-sm item-detail mr-1" href="#" data-id="" title="Detail"><i class="far fa-file-alt"></i></a>';
+//            $edit = '<a data-id="' . $value->id . '" class="btn btn-success btn-sm item-edit mr-1" href="#" title="Edit"><i class="far fa-edit"></i></a>';
+//            $hapus = '<a class="btn btn-danger btn-sm" href="' . site_url('mfjenisflute/delete/' . $value->id) . '" data-id="' . $value->id . '" onclick="return confirm(\'Apa Anda yakin menghapus data ini?\')" title="Hapus"><i class="fas fa-trash-alt"></i></a>';
 
             $data[] = [
                 $key + 1,
@@ -48,7 +62,35 @@ class Setting extends BaseController
         return $this->response->setJSON($data);
     }
 
-    public function apiGetModulById() {}
+    public function apiGetModulById($id)
+    {
+        $query = $this->model->getModulById($id);
+
+        if($query->getNumRows() > 0) {
+            $response = [
+                'success' => true,
+                'data' => $query->getResult()[0]
+            ];
+        } else {
+            $response = [
+                'success' => false,
+                'data' => []
+            ];
+        }
+
+        return $this->response->setJSON($response);
+    }
+
+    public function apiDeleteModul($id)
+    {
+        if ($this->model->deleteModulById($id)) {
+            return redirect()->back()
+                ->with('success', 'Data berhasil dihapus');
+        }
+
+        return redirect()->back()
+            ->with('error', 'Data gagal dihapus');
+    }
 
     public function apiAddModul()
     {
@@ -78,6 +120,46 @@ class Setting extends BaseController
             $response = [
                 'success' => true,
                 'msg' => 'Modul ' . $request['nama_modul'] . ' berhasil ditambahkan.'
+            ];
+        } else {
+            $response = [
+                'success' => false,
+                'msg' => '<p>' . implode('</p><p>', $this->model->errors()) . '</p>'
+            ];
+        }
+
+        return $this->response->setJSON($response);
+    }
+
+    public function apiEditModul()
+    {
+        $request = $this->request->getPost();
+
+        $id = (int)$request['id'];
+        unset($request['id']);
+
+        $this->model->setTable('MF_Modul');
+        $this->model->setAllowedFields(['nama_modul', 'route', 'icon', 'group_menu']);
+
+        $rules = [
+            'nama_modul' => 'required',
+            'route' => 'required'
+        ];
+        $this->model->setValidationRules($rules);
+        $messages = [
+            'nama_modul' => [
+                'required' => 'Nama modul wajib diisi'
+            ],
+            'route' => [
+                'required' => 'Route wajib diisi'
+            ]
+        ];
+        $this->model->setValidationMessages($messages);
+
+        if($this->model->update($id, $request)) {
+            $response = [
+                'success' => true,
+                'msg' => 'Modul ' . $request['nama_modul'] . ' berhasil diupdate.'
             ];
         } else {
             $response = [

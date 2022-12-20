@@ -17,6 +17,13 @@ class UsersModel extends Model
         return $this->asObject()->findAll();
     }
 
+    public function getUsersAndAccess($mod_id)
+    {
+        return $this->select('UserPass.*, MF_ModulAccess.nik, MF_ModulAccess.modul, MF_ModulAccess.access')
+                        ->join('MF_ModulAccess', 'MF_ModulAccess.nik = UserPass.UserID', 'inner')
+                        ->get();
+    }
+
     /**
      * @param $UserID
      * @return \CodeIgniter\Database\ResultInterface|false|string

@@ -38,6 +38,11 @@ class Setting extends BaseController
             $detail = $navigation->button('detail', [
                 'data-id' => $value->id,
             ]);
+            $set_access = $navigation->customButton('<i class="fas fa-lock"></i>', [
+                'class' => 'btn btn-info btn-sm set-user-access mr-1',
+                'title' => 'Set Akses',
+                'data-id' => $value->id,
+            ]);
             $edit = $navigation->button('edit', [
                 'data-id' => $value->id,
             ]);
@@ -45,17 +50,13 @@ class Setting extends BaseController
                 'href' => site_url('setting/modul/delete/' . $value->id),
             ]);
 
-//            $detail = '<a class="btn btn-primary btn-sm item-detail mr-1" href="#" data-id="" title="Detail"><i class="far fa-file-alt"></i></a>';
-//            $edit = '<a data-id="' . $value->id . '" class="btn btn-success btn-sm item-edit mr-1" href="#" title="Edit"><i class="far fa-edit"></i></a>';
-//            $hapus = '<a class="btn btn-danger btn-sm" href="' . site_url('mfjenisflute/delete/' . $value->id) . '" data-id="' . $value->id . '" onclick="return confirm(\'Apa Anda yakin menghapus data ini?\')" title="Hapus"><i class="fas fa-trash-alt"></i></a>';
-
             $data[] = [
                 $key + 1,
                 $value->nama_modul,
                 $value->route,
                 $value->icon,
                 $value->group_menu,
-                $detail . $edit . $hapus
+                $detail . $set_access . $edit . $hapus
             ];
         }
 
@@ -90,6 +91,56 @@ class Setting extends BaseController
 
         return redirect()->back()
             ->with('error', 'Data gagal dihapus');
+    }
+
+    public function apiGetUsers($mod_id)
+    {
+        $query = (new \App\Models\UsersModel())->getAll();
+        $query2 = (new \App\Models\UsersModel())->getUsersAndAccess($mod_id);
+        $query_access = $this->model->getAccessByModul($mod_id);
+
+        if($query_access->getNumRows() > 0) {
+            $users_access = array_map(function ($item) {
+                unset($item->id);
+                unset($item->modul);
+                return $item;
+            }, $query_access->getResult());
+        } else {
+            $users_access = [];
+        }
+
+        $data = [];
+        foreach ($query as $key => $value) {
+
+            if($query_access->getNumRows() > 0) {
+                $access = array_values( array_filter($query_access->getResult(), function ($item) use ($value) {
+                    return $item->nik == $value->UserID;
+                }) );
+                if(count($access) > 0) {
+                    $access = $access[0]->access;
+                } else {
+                    $access = 0;
+                }
+            } else {
+                $access = 0;
+            }
+
+            $detail = '<select name="access" class="custom-select custom-select-sm">' .
+                '<option value=""' . (($access == 0) ? " selected" : "") . '>-No Access-</option>' .
+                '<option value="1"' . (($access == 1) ? " selected" : "") . '>R (Read)</option>' .
+                '<option value="2"' . (($access == 2) ? " selected" : "") . '>R/W (Read/Write)</option>' .
+                '<option value="3"' . (($access == 3) ? " selected" : "") . '>R/W/D (Read/Write/Delete)</option>';
+
+            $data[] = [
+                $key + 1,
+                $value->UserID,
+                $value->Nama,
+                $value->NIK,
+                $detail,
+            ];
+        }
+
+        return $this->response->setJSON($data);
     }
 
     public function apiAddModul()

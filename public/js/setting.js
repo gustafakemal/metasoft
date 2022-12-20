@@ -6,12 +6,11 @@ $(function () {
         columnDefs: {
             falseSearchable: [0,5],
             falseOrderable: [0,5],
-            width: ['0(30)','4(150)','2(150)','3(140)','5(120)'],
+            width: ['0(30)','4(150)','2(150)','3(120)','5(150)'],
             custom: [
                 {
                     "targets": 3,
                     render: function ( data, type, row, meta ) {
-                        console.log(data)
                         if(data !== null || data !== '' || data !== 'null' || !empty(data)) {
                             const icon = `<i class="${data} fa-lg"></i>`
                             return `${icon}<br /><span class="small">${data}</span>`;
@@ -24,8 +23,12 @@ $(function () {
         },
         createdRow: ['No', 'Nama Modul', 'Route', 'Icon', 'Parent/Group', 'Action'],
         initComplete: function () {
-            const add_btn = `<a href="#" class="btn btn-primary btn-add mr-2 add-data_btn">Tambah data</a>`;
-            $("#dataList_wrapper .dataTables_length").prepend(add_btn);
+            const url = window.location.pathname.replace(/\//,'')
+            $.get(`${HOST}/api/common/addButton?url=${url}`, function (response) {
+                if(response.success) {
+                    $("#dataList_wrapper .dataTables_length").prepend(response.data);
+                }
+            })
         },
     }
     const datatable = new Datatable('#dataList', config, `${HOST}/setting/modul/api`, 'GET')
@@ -87,6 +90,39 @@ $(function () {
                 complete: function () {}
             })
         })
+        .on('click', '.set-user-access', function (e) {
+            e.preventDefault();
+            $('#usersModal').modal({
+                show: true,
+                backdrop: 'static'
+            })
+
+            const mod_id = $(this).attr('data-id')
+            const mod_name = $(this).attr('data-name')
+
+            const user_config = {
+                columnDefs: {
+                    falseSearchable: [0,4],
+                    falseOrderable: [0,4],
+                    width: ['0(30)','4(150)','2(150)','3(120)'],
+                },
+                createdRow: ['No', 'UserID', 'Nama', 'NIK', 'Akses'],
+                initComplete: function () {}
+            }
+
+            let dt_users;
+
+            dt_users = new Datatable('#dataUsers', user_config, `${HOST}/setting/modul/api/users/${mod_id}`, 'GET')
+            if( dt_users == null ) {
+                dt_users.load()
+            } else {
+                dt_users.reload()
+            }
+        })
+
+    $('#usersModal').on('hidden.bs.modal', function (event) {
+        $('#dataUsers').DataTable().clear().draw();
+    })
 
     $('#dataForm').on('submit', 'form[name="addModul"]', function (e) {
         e.preventDefault();

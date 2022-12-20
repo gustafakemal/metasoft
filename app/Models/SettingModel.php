@@ -44,6 +44,13 @@ class SettingModel extends Model
         return null;
     }
 
+    public function getAccessByModul($mod_id)
+    {
+        $table = $this->db->table('MF_ModulAccess');
+        return $table->where('modul', $mod_id)
+            ->get();
+    }
+
     public function getAccess($uid, $modul)
     {
         $table = $this->db->table('MF_ModulAccess');

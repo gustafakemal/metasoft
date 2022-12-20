@@ -117,4 +117,41 @@
         </div>
     </div>
 
+    <!-- Modal -->
+    <div class="modal fade" id="usersModal" tabindex="-1" aria-labelledby="usersModalLabel" aria-hidden="true">
+        <div class="modal-dialog modal-lg">
+            <div class="modal-content">
+                <div class="modal-header">
+                    <h5 class="modal-title" id="usersModalLabel">Set Akses</h5>
+                    <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+                        <span aria-hidden="true">&times;</span>
+                    </button>
+                </div>
+                <div class="modal-body">
+
+                    <div class="row">
+                        <div class="col-2">Nama modul</div>
+                        <div class="col-10">-</div>
+                    </div>
+                    <div class="row mb-2">
+                        <div class="col-2">ID modul</div>
+                        <div class="col-10">-</div>
+                    </div>
+
+                    <table id="dataUsers" class="table table-bordered table-striped" style="width: 100%">
+                        <thead>
+                        <tr>
+                            <th>No</th>
+                            <th>UserID</th>
+                            <th>Nama</th>
+                            <th>NIK</th>
+                            <th>Akses</th>
+                        </tr>
+                        </thead>
+                    </table>
+                </div>
+            </div>
+        </div>
+    </div>
+
 <?= $this->endSection();?>

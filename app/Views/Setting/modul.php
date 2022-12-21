@@ -131,11 +131,15 @@
 
                     <div class="row">
                         <div class="col-2">Nama modul</div>
-                        <div class="col-10">-</div>
+                        <div class="col-10">: <strong><span class="nama_modul"></span></strong></div>
                     </div>
-                    <div class="row mb-2">
+                    <div class="row">
                         <div class="col-2">ID modul</div>
-                        <div class="col-10">-</div>
+                        <div class="col-10">: <strong><span class="id_modul"></span></strong></div>
+                    </div>
+                    <div class="row mb-4">
+                        <div class="col-2">Route</div>
+                        <div class="col-10">: <code><span class="route code"></span></code></div>
                     </div>
 
                     <table id="dataUsers" class="table table-bordered table-striped" style="width: 100%">

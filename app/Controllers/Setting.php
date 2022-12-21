@@ -42,6 +42,8 @@ class Setting extends BaseController
                 'class' => 'btn btn-info btn-sm set-user-access mr-1',
                 'title' => 'Set Akses',
                 'data-id' => $value->id,
+                'data-nama' => $value->nama_modul,
+                'data-route' => $value->route,
             ]);
             $edit = $navigation->button('edit', [
                 'data-id' => $value->id,
@@ -125,11 +127,7 @@ class Setting extends BaseController
                 $access = 0;
             }
 
-            $detail = '<select name="access" class="custom-select custom-select-sm">' .
-                '<option value=""' . (($access == 0) ? " selected" : "") . '>-No Access-</option>' .
-                '<option value="1"' . (($access == 1) ? " selected" : "") . '>R (Read)</option>' .
-                '<option value="2"' . (($access == 2) ? " selected" : "") . '>R/W (Read/Write)</option>' .
-                '<option value="3"' . (($access == 3) ? " selected" : "") . '>R/W/D (Read/Write/Delete)</option>';
+            $detail = $this->setAccessSelectbox($access, $value->UserID, $mod_id);
 
             $data[] = [
                 $key + 1,
@@ -141,6 +139,58 @@ class Setting extends BaseController
         }
 
         return $this->response->setJSON($data);
+    }
+
+    private function setAccessSelectbox($access, $uid, $mod_id)
+    {
+        $level = [
+            '-No Access-',
+            'R (Read)',
+            'R/W (Read/Write)',
+            'R/W/D (Read/Write/Delete)'
+        ];
+
+        $access_string = [];
+        for($i = 0;$i < count($level);$i++) {
+            $active = ($access == $i) ? ' active' : '';
+            $access_string[] = '<a href="#" data-access="' . $i . '" data-nik="' . $uid . '" data-modul="' . $mod_id  .'" class="dropdown-item' . $active . ' opsi-level">' . $level[$i] . '</a>';
+        }
+
+        return '<div class="account-nav dropdown">' .
+                '<button type="button" class="dropdown-toggle" data-toggle="dropdown">' .
+                    $level[$access] .
+                '</button>' .
+                '<div class="dropdown-menu">' .
+                        implode('', $access_string) .
+                '</div>' .
+            '</div>';
+    }
+
+    public function apiSetAccess()
+    {
+        sleep(5);
+        $request = $this->request->getPost();
+
+        $q_existing = $this->model->getAccess($request['nik'], $request['modul']);
+
+        if($q_existing->getNumRows() > 0) {
+            $data = ['access' => $request['access']];
+            $success = $this->model->updateAccess($request['nik'], $request['modul'], $data);
+        } else {
+            $data = [
+                'nik' => $request['nik'],
+                'modul' => $request['modul'],
+                'access' => $request['access']
+            ];
+            $success = $this->model->insertAccess($data);
+        }
+
+        $response = [
+            'success' => $success,
+            'msg' => ($success) ? 'Akses berhasil diset' : 'Terjadi kesalahan'
+        ];
+
+        return $this->response->setJSON($response);
     }
 
     public function apiAddModul()

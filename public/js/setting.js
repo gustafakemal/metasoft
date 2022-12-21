@@ -34,6 +34,7 @@ $(function () {
     const datatable = new Datatable('#dataList', config, `${HOST}/setting/modul/api`, 'GET')
     datatable.load()
 
+    let dt_users;
     $('#dataList_wrapper').on('click', '.add-data_btn', function (e) {
         e.preventDefault();
         $('#dataForm').modal({
@@ -98,22 +99,23 @@ $(function () {
             })
 
             const mod_id = $(this).attr('data-id')
-            const mod_name = $(this).attr('data-name')
+
+            $('#usersModal span.nama_modul').html($(this).attr('data-nama'))
+            $('#usersModal span.id_modul').html(mod_id)
+            $('#usersModal span.route').html($(this).attr('data-route'))
 
             const user_config = {
                 columnDefs: {
                     falseSearchable: [0,4],
                     falseOrderable: [0,4],
-                    width: ['0(30)','4(150)','2(150)','3(120)'],
+                    width: ['0(30)','4(150)','2(150)','3(100)'],
                 },
                 createdRow: ['No', 'UserID', 'Nama', 'NIK', 'Akses'],
                 initComplete: function () {}
             }
 
-            let dt_users;
-
             dt_users = new Datatable('#dataUsers', user_config, `${HOST}/setting/modul/api/users/${mod_id}`, 'GET')
-            if( dt_users == null ) {
+            if( ! $.fn.DataTable.isDataTable( '#dataUsers' ) ) {
                 dt_users.load()
             } else {
                 dt_users.reload()
@@ -123,6 +125,32 @@ $(function () {
     $('#usersModal').on('hidden.bs.modal', function (event) {
         $('#dataUsers').DataTable().clear().draw();
     })
+        .on('click', '.opsi-level', function (e) {
+            e.preventDefault();
+            const access = $(this).attr('data-access')
+            const nik = $(this).attr('data-nik')
+            const modul = $(this).attr('data-modul')
+
+            console.log(nik, access, modul)
+
+            $.ajax({
+                type: 'POST',
+                url: `${HOST}/setting/modul/set/access`,
+                dataType: 'JSON',
+                data: {access, nik, modul},
+                beforeSend: function () {
+                    $('#dataUsers').css('opacity', '.5');
+                },
+                success: function (response) {
+                    if(response.success) {
+                        dt_users.reload();
+                    }
+                },
+                complete: function () {
+                    $('#dataUsers').css('opacity', '1');
+                }
+            })
+        })
 
     $('#dataForm').on('submit', 'form[name="addModul"]', function (e) {
         e.preventDefault();

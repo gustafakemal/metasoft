@@ -21,13 +21,9 @@ class MXSegmen extends BaseController
      */
     public function index(): string
     {
-        $this->breadcrumbs->add('Dashbor', '/');
-        $this->breadcrumbs->add('Segmen Metaflex', '/MXSegmen');
-
-       
         return view('MXSegmen/main', [
             'page_title' => 'Segmen Metaflex',
-            'breadcrumbs' => $this->breadcrumbs->render(),
+            'breadcrumbs' => $this->common->breadcrumbs(uri_string(true)),
             'main_menu' => (new \App\Libraries\Menu())->render(),
         ]);
     

@@ -21,12 +21,9 @@ class MFJenisKertas extends BaseController
      */
     public function index(): string
 	{
-		$this->breadcrumbs->add('Dashbor', '/');
-        $this->breadcrumbs->add('Data Jenis Kertas MF', '/mfjeniskertas');
-
 		return view('MFJenisKertas/main', [
 			'page_title' => 'Data Jenis Kertas MF',
-            'breadcrumbs' => $this->breadcrumbs->render(),
+            'breadcrumbs' => $this->common->breadcrumbs(uri_string(true)),
             'main_menu' => (new \App\Libraries\Menu())->render()
 		]);
 	}

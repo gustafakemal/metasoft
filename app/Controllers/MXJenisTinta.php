@@ -24,12 +24,9 @@ class MXJenisTinta extends BaseController
      */
     public function index(): string
     {
-        $this->breadcrumbs->add('Dashbor', '/');
-        $this->breadcrumbs->add('Data Jenis Tinta MX', '/mxjenistinta');
-
         return view('MXJenisTinta/main', [
             'page_title' => 'Data Jenis Tinta MX',
-            'breadcrumbs' => $this->breadcrumbs->render(),
+            'breadcrumbs' => $this->common->breadcrumbs(uri_string(true)),
             'main_menu' => (new \App\Libraries\Menu())->render(),
             'merk_tinta' => $this->merktintamodel->getAll(),
         ]);

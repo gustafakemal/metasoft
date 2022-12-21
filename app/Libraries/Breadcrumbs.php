@@ -49,7 +49,7 @@ class Breadcrumbs
                 $output .= $this->tags['liclose'];
             } else {
                 $output .= $this->tags['liopen'];
-                $output .= '<a href="' . base_url() . $breadcrumb['href'] . '">';
+                $output .= '<a href="' . site_url($breadcrumb['href']) . '">';
                 $output .= $breadcrumb['crumb'];
                 $output .= '</a>';
                 $output .= $this->tags['liclose'];

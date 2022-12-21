@@ -21,12 +21,9 @@ class MXJenisProduk extends BaseController
      */
     public function index(): string
     {
-        $this->breadcrumbs->add('Dashbor', '/');
-        $this->breadcrumbs->add('Data Jenis Produk', '/mxjenisproduk');
-
         return view('MXJenisProduk/main', [
             'page_title' => 'Data Jenis Produk',
-            'breadcrumbs' => $this->breadcrumbs->render(),
+            'breadcrumbs' => $this->common->breadcrumbs(uri_string(true)),
             'main_menu' => (new \App\Libraries\Menu())->render(),
         ]);
     }

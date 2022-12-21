@@ -15,11 +15,9 @@ class Setting extends BaseController
 
     public function modul()
     {
-        $this->breadcrumbs->add('Dashbor', '/');
-
         return view('Setting/modul', [
             'page_title' => 'Modul',
-            'breadcrumbs' => $this->breadcrumbs->render(),
+            'breadcrumbs' => $this->common->breadcrumbs(uri_string(true)),
             'main_menu' => (new \App\Libraries\Menu())->render()
         ]);
     }
@@ -274,11 +272,9 @@ class Setting extends BaseController
 
     public function accessRight()
     {
-        $this->breadcrumbs->add('Dashbor', '/');
-
         return view('Setting/accessright', [
             'page_title' => 'Hak Akses',
-            'breadcrumbs' => $this->breadcrumbs->render(),
+            'breadcrumbs' => $this->common->breadcrumbs(uri_string(true)),
             'main_menu' => (new \App\Libraries\Menu())->render()
         ]);
     }

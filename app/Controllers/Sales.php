@@ -21,12 +21,9 @@ class Sales extends BaseController
      */
     public function index(): string
 	{
-		$this->breadcrumbs->add('Dashbor', '/');
-        $this->breadcrumbs->add('Data Sales', '/sales');
-
 		return view('Sales/main', [
 			'page_title' => 'Data Sales',
-			'breadcrumbs' => $this->breadcrumbs->render(),
+			'breadcrumbs' => $this->common->breadcrumbs(uri_string(true)),
             'main_menu' => (new \App\Libraries\Menu())->render()
 		]);
 	}
@@ -58,7 +55,7 @@ class Sales extends BaseController
                'data-aktif' => $value->FlagAktif . '|A,N',
             ]);
             $hapus = $navigation->button('delete', [
-                'data-href' => site_url('sales/delete/' . $value->SalesID),
+                'href' => site_url('sales/delete/' . $value->SalesID),
             ]);
 		
 			$data[] = [

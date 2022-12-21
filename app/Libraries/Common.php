@@ -71,4 +71,26 @@ class Common
 
         return $filtered[0]->access;
     }
+
+    public function breadcrumbs($current_path)
+    {
+        $bc = new \App\Libraries\Breadcrumbs();
+
+        $bc->add('Dashboard', '/');
+
+        $modul_access = session()->get('priv');
+        $filtered = array_values( array_filter($modul_access, function ($item) use ($current_path) {
+            return $this->url_is($item->route.'*', $current_path);
+        }) );
+
+        if( count($filtered) > 0 ) {
+            if( $filtered[0]->group_menu != null ) {
+                $bc->add($filtered[0]->group_menu, 'pelanggan');
+            }
+
+            $bc->add($filtered[0]->nama_modul, 'pelanggan');
+        }
+
+        return $bc->render();
+    }
 }

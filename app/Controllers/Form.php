@@ -14,11 +14,9 @@ class Form extends BaseController
 
     public function index()
     {
-        $this->breadcrumbs->add('Dashbor', '/');
-
         return view('Forms/MXProspect', [
             'page_title' => 'Forms',
-            'breadcrumbs' => $this->breadcrumbs->render(),
+            'breadcrumbs' => $this->common->breadcrumbs(uri_string(true)),
         ]);
     }
 

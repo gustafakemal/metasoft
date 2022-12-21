@@ -74,4 +74,88 @@
         </div>
     </div>
 
+    <!-- Modal -->
+    <div class="modal fade" id="dataDetail" tabindex="-1" aria-labelledby="dataDetailLabel" aria-hidden="true">
+        <div class="modal-dialog modal-lg">
+            <div class="modal-content">
+                <div class="modal-header">
+                    <h5 class="modal-title" id="dataDetailLabel">Data Detail</h5>
+                    <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+                        <span aria-hidden="true">&times;</span>
+                    </button>
+                </div>
+                <div class="modal-body">
+                    <div class="row">
+                        <div class="col-sm-3">Nama Modul </div>
+                        <div class="col-sm-8">
+                            : <span class="nama_modul"></span>
+                        </div>
+                    </div>
+                    <div class="row">
+                        <div class="col-sm-3">Route </div>
+                        <div class="col-sm-8">
+                            : <span class="route"></span>
+                        </div>
+                    </div>
+                    <div class="row">
+                        <div class="col-sm-3">Icon Menu</div>
+                        <div class="col-sm-8">
+                            : <span class="icon"></span>
+                        </div>
+                    </div>
+                    <div class="form-group row">
+                        <div class="col-sm-3">Group/Parent</div>
+                        <div class="col-sm-8">
+                            : <span class="group_menu"></span>
+                        </div>
+                    </div>
+                </div>
+                <div class="modal-footer">
+                    <button name="cancel" type="button" class="btn btn-outline-secondary" data-dismiss="modal">Close</button>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <!-- Modal -->
+    <div class="modal fade" id="usersModal" tabindex="-1" aria-labelledby="usersModalLabel" aria-hidden="true">
+        <div class="modal-dialog modal-lg">
+            <div class="modal-content">
+                <div class="modal-header">
+                    <h5 class="modal-title" id="usersModalLabel">Set Akses</h5>
+                    <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+                        <span aria-hidden="true">&times;</span>
+                    </button>
+                </div>
+                <div class="modal-body">
+
+                    <div class="row">
+                        <div class="col-2">Nama modul</div>
+                        <div class="col-10">: <strong><span class="nama_modul"></span></strong></div>
+                    </div>
+                    <div class="row">
+                        <div class="col-2">ID modul</div>
+                        <div class="col-10">: <strong><span class="id_modul"></span></strong></div>
+                    </div>
+                    <div class="row mb-4">
+                        <div class="col-2">Route</div>
+                        <div class="col-10">: <code><span class="route code"></span></code></div>
+                    </div>
+
+                    <table id="dataUsers" class="table table-bordered table-striped" style="width: 100%">
+                        <thead>
+                        <tr>
+                            <th>No</th>
+                            <th>UserID</th>
+                            <th>Nama</th>
+                            <th>NIK</th>
+                            <th>Akses</th>
+                        </tr>
+                        </thead>
+                    </table>
+                </div>
+            </div>
+        </div>
+    </div>
+
 <?= $this->endSection();?>

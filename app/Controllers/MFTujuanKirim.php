@@ -21,12 +21,9 @@ class MFTujuanKirim extends BaseController
      */
     public function index(): string
     {
-        $this->breadcrumbs->add('Dashbor', '/');
-        $this->breadcrumbs->add('Data Tujuan Kirim', '/mftujuankirim');
-
         return view('MFTujuanKirim/main', [
             'page_title' => 'Data Tujuan Kirim',
-            'breadcrumbs' => $this->breadcrumbs->render(),
+            'breadcrumbs' => $this->common->breadcrumbs(uri_string(true)),
             'main_menu' => (new \App\Libraries\Menu())->render(),
         ]);
     }
@@ -60,7 +57,7 @@ class MFTujuanKirim extends BaseController
                 'data-aktif' => $value->aktif . '|Y,T',
             ]);
             $hapus = $navigation->button('delete', [
-                'data-href' => site_url('tujuankirim/delete/' . $value->id),
+                'href' => site_url('tujuankirim/delete/' . $value->id),
             ]);
 
             $data[] = [

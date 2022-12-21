@@ -81,7 +81,8 @@ class SalesModel extends Model
     public function deleteById($id)
     {
         return $this->where('SalesID', $id)
-            ->delete();
+            ->set('FlagAktif', 'N')
+            ->update();
     }
 
     /**

@@ -21,12 +21,9 @@ class MFJenisFlute extends BaseController
      */
     public function index(): string
 	{
-		$this->breadcrumbs->add('Dashbor', '/');
-        $this->breadcrumbs->add('Data Jenis Flute MF', '/mfjenisflute');
-
 		return view('MFJenisFlute/main', [
 			'page_title' => 'Data Jenis Flute MF',
-            'breadcrumbs' => $this->breadcrumbs->render(),
+            'breadcrumbs' => $this->common->breadcrumbs(uri_string(true)),
             'main_menu' => (new \App\Libraries\Menu())->render()
 		]);
 	}
@@ -61,7 +58,7 @@ class MFJenisFlute extends BaseController
                 'data-aktif' => $value->aktif . '|Y,T',
             ]);
             $hapus = $navigation->button('delete', [
-                'data-href' => site_url('jenisflute/delete/' . $value->id),
+                'href' => site_url('jenisflute/delete/' . $value->id),
             ]);
 		
 			$data[] = [

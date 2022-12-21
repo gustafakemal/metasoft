@@ -21,12 +21,9 @@ class Customer extends BaseController
      */
     public function index(): string
     {
-        $this->breadcrumbs->add('Dashbor', '/');
-        $this->breadcrumbs->add('Data Pelanggan', '/customer');
-
         return view('Customer/main', [
         	'page_title' => 'Data Pelanggan',
-            'breadcrumbs' => $this->breadcrumbs->render(),
+            'breadcrumbs' => $this->common->breadcrumbs(uri_string(true)),
             'main_menu' => (new \App\Libraries\Menu())->render()
         ]);
     }
@@ -55,7 +52,7 @@ class Customer extends BaseController
                 'data-id' => $value->NoPemesan,
             ]);
             $hapus = $navigation->button('delete', [
-                'data-href' => site_url('customer/delete/' . $value->NoPemesan),
+                'href' => site_url('pelanggan/delete/' . $value->NoPemesan),
             ]);
 			
 			$CreateDate = (Time::parse($value->CreateDate))->toDateTimeString();

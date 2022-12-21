@@ -29,12 +29,9 @@ class MFPartProduk extends BaseController
      */
     public function index(): string
 	{
-        $this->breadcrumbs->add('Dashbor', '/');
-        $this->breadcrumbs->add('Data Part Produk MF', '/mfproduk');
-
 		return view('MFPartProduk/cari', [
 			'page_title' => 'Data Part Produk MF',
-            'breadcrumbs' => $this->breadcrumbs->render(),
+            'breadcrumbs' => $this->common->breadcrumbs(uri_string(true)),
             'main_menu' => (new \App\Libraries\Menu())->render()
 		]);
 	}
@@ -44,15 +41,11 @@ class MFPartProduk extends BaseController
      */
     public function addPartProduct(): string
 	{
-        $this->breadcrumbs->add('Dashbor', '/');
-        $this->breadcrumbs->add('Part Produk', '/mfpartproduk');
-        $this->breadcrumbs->add('Input Part Produk MF', '/mfproduk');
-
 		return view('MFPartProduk/input', [
 			'page_title' => 'Input Part Produk MF',
             'ref' => $this->request->getGet('ref'),
             'id_produk' => $this->request->getGet('id_produk'),
-            'breadcrumbs' => $this->breadcrumbs->render(),
+            'breadcrumbs' => $this->common->breadcrumbs(uri_string(true)),
             'main_menu' => (new \App\Libraries\Menu())->render()
 		]);
 	}
@@ -64,15 +57,11 @@ class MFPartProduk extends BaseController
      */
     public function editPartProduct($id, $is_revision = 0): string
     {
-        $this->breadcrumbs->add('Dashbor', '/');
-        $this->breadcrumbs->add('Part Produk', '/mfpartproduk');
-        $this->breadcrumbs->add(($is_revision == 0) ? 'Edit Part Produk MF' : 'Revisi Part Produk MF', '/mfproduk');
-
         $data = $this->model->getEditingData($id)[0];
 
         return view('MFPartProduk/edit', [
             'page_title' => ($is_revision == 0) ? 'Edit Part Produk MF' : 'Revisi Part Produk MF',
-            'breadcrumbs' => $this->breadcrumbs->render(),
+            'breadcrumbs' => $this->common->breadcrumbs(uri_string(true)),
             'data' => $data,
             'id_produk' => $this->request->getGet('id_produk'),
             'is_revision' => $is_revision,

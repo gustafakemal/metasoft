@@ -21,13 +21,9 @@ class MXJenisKonten extends BaseController
      */
     public function index(): string
     {
-        $this->breadcrumbs->add('Dashbor', '/');
-        $this->breadcrumbs->add('Jenis Konten Metaflex', '/MXJenisKonten');
-
-       
         return view('MXJenisKonten/main', [
             'page_title' => 'Jenis Konten Metaflex',
-            'breadcrumbs' => $this->breadcrumbs->render(),
+            'breadcrumbs' => $this->common->breadcrumbs(uri_string(true)),
             'main_menu' => (new \App\Libraries\Menu())->render(),
         ]);
     
@@ -60,7 +56,7 @@ class MXJenisKonten extends BaseController
                 'data-aktif' => $value->Aktif . '|Y,T',
             ]);
             $hapus = $navigation->button('delete', [
-                'data-href' => site_url('mxjeniskonten/delete/' . $value->ID),
+                'href' => site_url('mxjeniskonten/delete/' . $value->ID),
             ]);
 
             $data[] = [

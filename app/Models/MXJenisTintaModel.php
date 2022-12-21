@@ -92,6 +92,7 @@ class MXJenisTintaModel extends Model
     public function deleteById($id)
     {
         return $this->where('id', $id)
-            ->delete();
+            ->set(['aktif' => 'T'])
+            ->update();
     }
 }

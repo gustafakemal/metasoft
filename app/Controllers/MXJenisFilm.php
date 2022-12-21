@@ -21,12 +21,9 @@ class MXJenisFilm extends BaseController
      */
     public function index(): string
     {
-        $this->breadcrumbs->add('Dashbor', '/');
-        $this->breadcrumbs->add('Data Jenis Film MX', '/MXJenisFilm');
-
         return view('MXJenisFilm/main', [
             'page_title' => 'Data Jenis Film MX',
-            'breadcrumbs' => $this->breadcrumbs->render(),
+            'breadcrumbs' => $this->common->breadcrumbs(uri_string(true)),
             'main_menu' => (new \App\Libraries\Menu())->render(),
         ]);
     }
@@ -60,7 +57,7 @@ class MXJenisFilm extends BaseController
                 'data-aktif' => $value->aktif . '|Y,T',
             ]);
             $hapus = $navigation->button('delete', [
-                'data-href' => site_url('mxjenisfilm/delete/' . $value->id),
+                'href' => site_url('mxjenisfilm/delete/' . $value->id),
             ]);
 
             $data[] = [

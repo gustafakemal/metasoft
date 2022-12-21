@@ -17,6 +17,18 @@ class SettingModel extends Model
                     ->get();
     }
 
+    public function getModulById($id)
+    {
+        return $this->setModulTbl()->where('id', $id)
+            ->get();
+    }
+
+    public function deleteModulById($id)
+    {
+        return $this->setModulTbl()->where('id', $id)
+            ->delete();
+    }
+
     public function modulAccess($modul_id, $nik)
     {
         $table = $this->db->table('MF_ModulAccess');
@@ -30,6 +42,13 @@ class SettingModel extends Model
         }
 
         return null;
+    }
+
+    public function getAccessByModul($mod_id)
+    {
+        $table = $this->db->table('MF_ModulAccess');
+        return $table->where('modul', $mod_id)
+            ->get();
     }
 
     public function getAccess($uid, $modul)

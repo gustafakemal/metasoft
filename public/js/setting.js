@@ -4,19 +4,37 @@ $(function () {
 
     const config = {
         columnDefs: {
-            falseSearchable: [0],
-            falseOrderable: [0],
-            width: ['0(30)','4(120)','2(150)','3(90)','5(100)']
+            falseSearchable: [0,5],
+            falseOrderable: [0,5],
+            width: ['0(30)','4(150)','2(150)','3(120)','5(150)'],
+            custom: [
+                {
+                    "targets": 3,
+                    render: function ( data, type, row, meta ) {
+                        if(data !== null || data !== '' || data !== 'null' || !empty(data)) {
+                            const icon = `<i class="${data} fa-lg"></i>`
+                            return `${icon}<br /><span class="small">${data}</span>`;
+                        } else {
+                            return data;
+                        }
+                    }
+                }
+            ]
         },
         createdRow: ['No', 'Nama Modul', 'Route', 'Icon', 'Parent/Group', 'Action'],
         initComplete: function () {
-            const add_btn = `<a href="#" class="btn btn-primary btn-add mr-2 add-data_btn">Tambah data</a>`;
-            $("#dataList_wrapper .dataTables_length").prepend(add_btn);
+            const url = window.location.pathname.replace(/\//,'')
+            $.get(`${HOST}/api/common/addButton?url=${url}`, function (response) {
+                if(response.success) {
+                    $("#dataList_wrapper .dataTables_length").prepend(response.data);
+                }
+            })
         },
     }
     const datatable = new Datatable('#dataList', config, `${HOST}/setting/modul/api`, 'GET')
     datatable.load()
 
+    let dt_users;
     $('#dataList_wrapper').on('click', '.add-data_btn', function (e) {
         e.preventDefault();
         $('#dataForm').modal({
@@ -29,9 +47,106 @@ $(function () {
         .on('click', '.item-edit', function (e) {
             e.preventDefault();
             const id = $(this).attr('data-id');
+            $('#dataForm').modal({
+                show: true,
+                backdrop: true
+            })
+            $('#dataForm form').attr('name', 'editModul');
+            $('#dataForm .modal-title').html('Edit modul');
 
-            $.get(`${HOST}/setting/modul/${id}`, function (data) {
-                console.log(data)
+            $.ajax({
+                type: 'GET',
+                url: `${HOST}/setting/modul/api/${id}`,
+                beforeSend: function () {
+                    $(`form[name="editModul"] input, form[name="editModul"] button`).prop('disabled', true)
+                },
+                success: function (response) {
+                    if(response.success) {
+                        for(const property in response.data) {
+                            $(`#dataForm input[name="${property}"]`).val(response.data[property])
+                        }
+                    }
+                },
+                complete: function () {
+                    $(`form[name="editModul"] input, form[name="editModul"] button`).prop('disabled', false)
+                }
+            })
+        })
+        .on('click', '.item-detail', function(e) {
+            e.preventDefault();
+            $('#dataDetail').modal('show')
+            const id = $(this).attr('data-id')
+            $.ajax({
+                type: "GET",
+                url: `${HOST}/setting/modul/api/${id}`,
+                beforeSend: function () {},
+                success: function (response) {
+                    if(response.success) {
+                        for(const property in response.data) {
+                            $(`#dataDetail .${property}`).html(response.data[property])
+                        }
+                    }
+                },
+                error: function () {},
+                complete: function () {}
+            })
+        })
+        .on('click', '.set-user-access', function (e) {
+            e.preventDefault();
+            $('#usersModal').modal({
+                show: true,
+                backdrop: 'static'
+            })
+
+            const mod_id = $(this).attr('data-id')
+
+            $('#usersModal span.nama_modul').html($(this).attr('data-nama'))
+            $('#usersModal span.id_modul').html(mod_id)
+            $('#usersModal span.route').html($(this).attr('data-route'))
+
+            const user_config = {
+                columnDefs: {
+                    falseSearchable: [0,4],
+                    falseOrderable: [0,4],
+                    width: ['0(30)','4(150)','2(150)','3(100)'],
+                },
+                createdRow: ['No', 'UserID', 'Nama', 'NIK', 'Akses'],
+                initComplete: function () {}
+            }
+
+            dt_users = new Datatable('#dataUsers', user_config, `${HOST}/setting/modul/api/users/${mod_id}`, 'GET')
+            if( ! $.fn.DataTable.isDataTable( '#dataUsers' ) ) {
+                dt_users.load()
+            } else {
+                dt_users.reload()
+            }
+        })
+
+    $('#usersModal').on('hidden.bs.modal', function (event) {
+        $('#dataUsers').DataTable().clear().draw();
+    })
+        .on('click', '.opsi-level', function (e) {
+            e.preventDefault();
+            const access = $(this).attr('data-access')
+            const nik = $(this).attr('data-nik')
+            const modul = $(this).attr('data-modul')
+
+            $.ajax({
+                type: 'POST',
+                url: `${HOST}/setting/modul/set/access`,
+                dataType: 'JSON',
+                data: {access, nik, modul},
+                beforeSend: function () {
+                    $('#dataUsers').css('opacity', '.5');
+                },
+                success: function (response) {
+                    if(response.success) {
+                        dt_users.reload();
+                    }
+                },
+                complete: function () {
+                    $('#dataUsers').css('opacity', '1');
+                }
             })
         })
 
@@ -64,6 +179,36 @@ $(function () {
             }
         })
     })
+        .on('submit', 'form[name="editModul"]', function (e) {
+            e.preventDefault();
+            const formData = new FormData(this)
+
+            $.ajax({
+                type: 'POST',
+                url: `${HOST}/setting/modul/edit/api`,
+                dataType: 'JSON',
+                data: formData,
+                contentType: false,
+                processData: false,
+                beforeSend: function () {
+                    $('form[name="editModul"] input, form[name="editModul"] button').prop('disabled', true)
+                },
+                success: function (response) {
+                    if(response.success) {
+                        location.reload();
+                    } else {
+                        $('#dataForm .msg').html(`<div class="alert alert-danger">${response.msg}</div>`)
+                        $('#dataForm, html, body').animate({
+                            scrollTop: 0
+                        }, 500);
+                    }
+                },
+                complete: function () {
+                    $('#dataForm .modal-footer .loading-indicator').html('');
+                    $('form[name="editModul"] input, form[name="editModul"] button').prop('disabled', false)
+                }
+            })
+        })
 
     $('#dataForm').on('hidden.bs.modal', function (event) {
         $('#dataForm form[name="addModul"], #dataForm form[name="editModul"]')[0].reset();

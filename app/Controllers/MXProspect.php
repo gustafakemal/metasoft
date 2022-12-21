@@ -26,13 +26,9 @@ class MXProspect extends BaseController
      */
     public function index(): string
     {
-        $this->breadcrumbs->add('Dashbor', '/');
-        $this->breadcrumbs->add('Prospek Metaflex', '/');
-        $this->breadcrumbs->add('List Prospek', '/');
-
         return view('MXProspect/MXProspect_List', [
             'page_title' => 'List Prospek',
-            'breadcrumbs' => $this->breadcrumbs->render(),
+            'breadcrumbs' => $this->common->breadcrumbs(uri_string(true)),
             'main_menu' => (new \App\Libraries\Menu())->render(),
         ]);
     }
@@ -44,13 +40,9 @@ class MXProspect extends BaseController
      */
     public function add(): string
     {
-        $this->breadcrumbs->add('Dashbor', '/');
-        $this->breadcrumbs->add('Prospek Metaflex', '/');
-        $this->breadcrumbs->add('Input Prospek', '/');
-
         $views = [
             'page_title' => 'Input Prospek',
-            'breadcrumbs' => $this->breadcrumbs->render(),
+            'breadcrumbs' => $this->common->breadcrumbs(uri_string(true)),
             'main_menu' => (new \App\Libraries\Menu())->render(),
             'alternatif' => $this->model->getAlternatif(),
         ];
@@ -266,10 +258,6 @@ class MXProspect extends BaseController
 
     public function alt($NoProspek, $Alt)
     {
-        $this->breadcrumbs->add('Dashbor', '/');
-        $this->breadcrumbs->add('Prospek Metaflex', '/');
-        $this->breadcrumbs->add('Alternatif Prospek', '/');
-
         $query = $this->model->getByNoProspectAndAlt($NoProspek, $Alt);
         $qq = (new \App\Models\MXProspekAksesoriModel())->getByProspekAlt($NoProspek, $query->getResult()[0]->Alt);
 
@@ -277,7 +265,7 @@ class MXProspect extends BaseController
 
         $views = [
             'page_title' => 'Copy Prospek',
-            'breadcrumbs' => $this->breadcrumbs->render(),
+            'breadcrumbs' => $this->common->breadcrumbs(uri_string(true)),
             'main_menu' => (new \App\Libraries\Menu())->render(),
             'alternatif' => $this->model->getAlternatif(),
             'copyprospek' => $copyprospek,
@@ -302,16 +290,12 @@ class MXProspect extends BaseController
      */
     public function edit($NoProspek, $Alt): string
     {
-        $this->breadcrumbs->add('Dashbor', '/');
-        $this->breadcrumbs->add('Prospek Metaflex', '/');
-        $this->breadcrumbs->add('Edit Prospek', '/');
-
         $query = $this->model->getByNoProspectAndAlt($NoProspek, $Alt);
         $qq = (new \App\Models\MXProspekAksesoriModel())->getByProspekAlt($NoProspek, $query->getResult()[0]->Alt);
 
         $views = [
             'page_title' => 'Edit Prospek',
-            'breadcrumbs' => $this->breadcrumbs->render(),
+            'breadcrumbs' => $this->common->breadcrumbs(uri_string(true)),
             'main_menu' => (new \App\Libraries\Menu())->render(),
             'alternatif' => $this->model->getAlternatif(),
             'data' => $query->getResult()[0],
@@ -329,10 +313,6 @@ class MXProspect extends BaseController
      */
     public function detail($NoProspek, $Alt): string
     {
-        $this->breadcrumbs->add('Dashbor', '/');
-        $this->breadcrumbs->add('Prospek Metaflex', '/');
-        $this->breadcrumbs->add('Detail Prospek', '/');
-
         $query = $this->model->getDetailByNoProspectAndAlt($NoProspek, $Alt);
         $qq = (new \App\Models\MXProspekAksesoriModel())->getByProspekAlt($NoProspek, $query->getResult()[0]->Alt);
 
@@ -341,7 +321,7 @@ class MXProspect extends BaseController
 
         $views = [
             'page_title' => 'Prospek',
-            'breadcrumbs' => $this->breadcrumbs->render(),
+            'breadcrumbs' => $this->common->breadcrumbs(uri_string(true)),
             'main_menu' => (new \App\Libraries\Menu())->render(),
             'alternatif' => $this->model->getAlternatif(),
             'data' => $query->getResult()[0],

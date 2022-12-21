@@ -615,6 +615,66 @@ body {
   content: ': ';
 }
 
+#dataUsers .account-nav {
+}
+#dataUsers .account-nav.show .dropdown-toggle {
+  border: 1px solid transparent;
+  background-color: #007bff;
+  color: #fff;
+}
+#dataUsers .account-nav.show .dropdown-toggle:hover {
+  border: 1px solid transparent;
+}
+#dataUsers .account-nav.show .dropdown-menu {
+  border-radius: 3px;
+  border: 1px solid #ccc;
+  background-color: #f9f9f9;
+  font-size: inherit;
+  background-clip: inherit;
+}
+#dataUsers .account-nav.show .dropdown-menu.show {
+  top: 0 !important;
+}
+#dataUsers .account-nav .dropdown-toggle {
+  border: 1px solid rgba(0,0,0,.1);
+  background-color: transparent;
+  display: flex;
+  padding: 4px 10px;
+  border-radius: 1px;
+  color: #222;
+}
+#dataUsers .account-nav .dropdown-toggle:after {
+  margin-top: 10px;
+  margin-left: 10px;
+}
+#dataUsers .account-nav .dropdown-toggle:hover {
+  border: 1px solid rgba(0,0,0,.3);
+}
+#dataUsers .account-nav .dropdown-toggle .dropdown-menu.show .dropdown-item {
+  transition: all .5s ease;
+}
+#dataUsers .account-nav .dropdown-toggle .dropdown-menu.show .dropdown-item.active {
+  background-color: transparent;
+  color: inherit;
+  font-weight: 700;
+  padding-left: 25px;
+  position: relative;
+}
+#dataUsers .account-nav .dropdown-toggle .dropdown-menu.show .dropdown-item.active:before {
+  font-family: "Font Awesome 5 Free";
+  position: absolute;
+  font-weight: 900;
+  left: 7px;
+  top: 8px;
+  font-size: 80%;
+  color: rgba(0,0,0,.5);
+  content: "\f08d";
+}
+#dataUsers .account-nav .dropdown-toggle .dropdown-menu.show .dropdown-item:hover {
+  background-color: transparent;
+  color: rgba(0,0,0,.5);
+}
+
 @media only screen and (max-width: 1120px) {
   .sidebar {
     left: -240px;

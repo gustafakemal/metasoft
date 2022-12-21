@@ -22,9 +22,6 @@ class MFProduk extends BaseController
      */
     public function index(): string
 	{
-		$this->breadcrumbs->add('Dashbor', '/');
-        $this->breadcrumbs->add('Data Produk MF', '/mfproduk');
-
         if($this->request->getGet('keyword') !== null) {
             $query_string = [
                 'query' => true,
@@ -39,7 +36,7 @@ class MFProduk extends BaseController
 
 		return view('MFProduk/input', [
 			'page_title' => 'Data Produk MF',
-			'breadcrumbs' => $this->breadcrumbs->render(),
+			'breadcrumbs' => $this->common->breadcrumbs(uri_string(true)),
             'query_string' => $query_string,
             'main_menu' => (new \App\Libraries\Menu())->render()
 		]);
@@ -51,14 +48,11 @@ class MFProduk extends BaseController
      */
     public function edit($id): string
     {
-        $this->breadcrumbs->add('Dashbor', '/');
-        $this->breadcrumbs->add('Data Produk MF', '/mfproduk');
-
         $data = $this->model->getEditingData($id);
 
         return view('MFProduk/edit', [
             'page_title' => 'Edit Produk MF',
-            'breadcrumbs' => $this->breadcrumbs->render(),
+            'breadcrumbs' => $this->common->breadcrumbs(uri_string(true)),
             'data' => $data[0],
             'main_menu' => (new \App\Libraries\Menu())->render()
         ]);

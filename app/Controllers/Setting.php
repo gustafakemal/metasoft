@@ -15,25 +15,40 @@ class Setting extends BaseController
 
     public function modul()
     {
-        $this->breadcrumbs->add('Dashbor', '/');
-
         return view('Setting/modul', [
             'page_title' => 'Modul',
-            'breadcrumbs' => $this->breadcrumbs->render(),
+            'breadcrumbs' => $this->common->breadcrumbs(uri_string(true)),
             'main_menu' => (new \App\Libraries\Menu())->render()
         ]);
     }
 
     public function apiGetModul()
     {
+        $access = $this->common->getAccess(uri_string(true));
+        $navigation = new \App\Libraries\Navigation();
+        $navigation->setAccess($access);
+
         $query = $this->model->getModul();
 
         $data = [];
         foreach ($query->getResult() as $key => $value) {
 
-            $detail = '<a class="btn btn-primary btn-sm item-detail mr-1" href="#" data-id="" title="Detail"><i class="far fa-file-alt"></i></a>';
-            $edit = '<a data-id="' . $value->id . '" class="btn btn-success btn-sm item-edit mr-1" href="#" title="Edit"><i class="far fa-edit"></i></a>';
-            $hapus = '<a class="btn btn-danger btn-sm" href="' . site_url('mfjenisflute/delete/' . $value->id) . '" data-id="' . $value->id . '" onclick="return confirm(\'Apa Anda yakin menghapus data ini?\')" title="Hapus"><i class="fas fa-trash-alt"></i></a>';
+            $detail = $navigation->button('detail', [
+                'data-id' => $value->id,
+            ]);
+            $set_access = $navigation->customButton('<i class="fas fa-lock"></i>', [
+                'class' => 'btn btn-info btn-sm set-user-access mr-1',
+                'title' => 'Set Akses',
+                'data-id' => $value->id,
+                'data-nama' => $value->nama_modul,
+                'data-route' => $value->route,
+            ]);
+            $edit = $navigation->button('edit', [
+                'data-id' => $value->id,
+            ]);
+            $hapus = $navigation->button('delete', [
+                'href' => site_url('setting/modul/delete/' . $value->id),
+            ]);
 
             $data[] = [
                 $key + 1,
@@ -41,14 +56,140 @@ class Setting extends BaseController
                 $value->route,
                 $value->icon,
                 $value->group_menu,
-                $detail . $edit . $hapus
+                $detail . $set_access . $edit . $hapus
             ];
         }
 
         return $this->response->setJSON($data);
     }
 
-    public function apiGetModulById() {}
+    public function apiGetModulById($id)
+    {
+        $query = $this->model->getModulById($id);
+
+        if($query->getNumRows() > 0) {
+            $response = [
+                'success' => true,
+                'data' => $query->getResult()[0]
+            ];
+        } else {
+            $response = [
+                'success' => false,
+                'data' => []
+            ];
+        }
+
+        return $this->response->setJSON($response);
+    }
+
+    public function apiDeleteModul($id)
+    {
+        if ($this->model->deleteModulById($id)) {
+            return redirect()->back()
+                ->with('success', 'Data berhasil dihapus');
+        }
+
+        return redirect()->back()
+            ->with('error', 'Data gagal dihapus');
+    }
+
+    public function apiGetUsers($mod_id)
+    {
+        $query = (new \App\Models\UsersModel())->getAll();
+        $query2 = (new \App\Models\UsersModel())->getUsersAndAccess($mod_id);
+        $query_access = $this->model->getAccessByModul($mod_id);
+
+        if($query_access->getNumRows() > 0) {
+            $users_access = array_map(function ($item) {
+                unset($item->id);
+                unset($item->modul);
+                return $item;
+            }, $query_access->getResult());
+        } else {
+            $users_access = [];
+        }
+
+        $data = [];
+        foreach ($query as $key => $value) {
+
+            if($query_access->getNumRows() > 0) {
+                $access = array_values( array_filter($query_access->getResult(), function ($item) use ($value) {
+                    return $item->nik == $value->UserID;
+                }) );
+                if(count($access) > 0) {
+                    $access = $access[0]->access;
+                } else {
+                    $access = 0;
+                }
+            } else {
+                $access = 0;
+            }
+
+            $detail = $this->setAccessSelectbox($access, $value->UserID, $mod_id);
+
+            $data[] = [
+                $key + 1,
+                $value->UserID,
+                $value->Nama,
+                $value->NIK,
+                $detail,
+            ];
+        }
+
+        return $this->response->setJSON($data);
+    }
+
+    private function setAccessSelectbox($access, $uid, $mod_id)
+    {
+        $level = [
+            '-No Access-',
+            'R (Read)',
+            'R/W (Read/Write)',
+            'R/W/D (Read/Write/Delete)'
+        ];
+
+        $access_string = [];
+        for($i = 0;$i < count($level);$i++) {
+            $active = ($access == $i) ? ' active' : '';
+            $access_string[] = '<a href="#" data-access="' . $i . '" data-nik="' . $uid . '" data-modul="' . $mod_id  .'" class="dropdown-item' . $active . ' opsi-level">' . $level[$i] . '</a>';
+        }
+
+        return '<div class="account-nav dropdown">' .
+                '<button type="button" class="dropdown-toggle" data-toggle="dropdown">' .
+                    $level[$access] .
+                '</button>' .
+                '<div class="dropdown-menu">' .
+                        implode('', $access_string) .
+                '</div>' .
+            '</div>';
+    }
+
+    public function apiSetAccess()
+    {
+        sleep(5);
+        $request = $this->request->getPost();
+
+        $q_existing = $this->model->getAccess($request['nik'], $request['modul']);
+
+        if($q_existing->getNumRows() > 0) {
+            $data = ['access' => $request['access']];
+            $success = $this->model->updateAccess($request['nik'], $request['modul'], $data);
+        } else {
+            $data = [
+                'nik' => $request['nik'],
+                'modul' => $request['modul'],
+                'access' => $request['access']
+            ];
+            $success = $this->model->insertAccess($data);
+        }
+
+        $response = [
+            'success' => $success,
+            'msg' => ($success) ? 'Akses berhasil diset' : 'Terjadi kesalahan'
+        ];
+
+        return $this->response->setJSON($response);
+    }
 
     public function apiAddModul()
     {
@@ -89,13 +230,51 @@ class Setting extends BaseController
         return $this->response->setJSON($response);
     }
 
+    public function apiEditModul()
+    {
+        $request = $this->request->getPost();
+
+        $id = (int)$request['id'];
+        unset($request['id']);
+
+        $this->model->setTable('MF_Modul');
+        $this->model->setAllowedFields(['nama_modul', 'route', 'icon', 'group_menu']);
+
+        $rules = [
+            'nama_modul' => 'required',
+            'route' => 'required'
+        ];
+        $this->model->setValidationRules($rules);
+        $messages = [
+            'nama_modul' => [
+                'required' => 'Nama modul wajib diisi'
+            ],
+            'route' => [
+                'required' => 'Route wajib diisi'
+            ]
+        ];
+        $this->model->setValidationMessages($messages);
+
+        if($this->model->update($id, $request)) {
+            $response = [
+                'success' => true,
+                'msg' => 'Modul ' . $request['nama_modul'] . ' berhasil diupdate.'
+            ];
+        } else {
+            $response = [
+                'success' => false,
+                'msg' => '<p>' . implode('</p><p>', $this->model->errors()) . '</p>'
+            ];
+        }
+
+        return $this->response->setJSON($response);
+    }
+
     public function accessRight()
     {
-        $this->breadcrumbs->add('Dashbor', '/');
-
         return view('Setting/accessright', [
             'page_title' => 'Hak Akses',
-            'breadcrumbs' => $this->breadcrumbs->render(),
+            'breadcrumbs' => $this->common->breadcrumbs(uri_string(true)),
             'main_menu' => (new \App\Libraries\Menu())->render()
         ]);
     }

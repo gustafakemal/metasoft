@@ -59,7 +59,7 @@ class MXAksesori extends BaseController
                 'data-aktif' => $value->aktif . '|Y,T',
             ]);
             $hapus = $navigation->button('delete', [
-                'data-href' => site_url('mxaksesori/delete/' . $value->id),
+                'href' => site_url('mxaksesori/delete/' . $value->id),
             ]);
 
             $CreateDate = (Time::parse($value->added))->toDateTimeString();

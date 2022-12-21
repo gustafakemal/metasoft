@@ -131,8 +131,6 @@ $(function () {
             const nik = $(this).attr('data-nik')
             const modul = $(this).attr('data-modul')
 
-            console.log(nik, access, modul)
-
             $.ajax({
                 type: 'POST',
                 url: `${HOST}/setting/modul/set/access`,

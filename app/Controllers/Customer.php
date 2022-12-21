@@ -55,7 +55,7 @@ class Customer extends BaseController
                 'data-id' => $value->NoPemesan,
             ]);
             $hapus = $navigation->button('delete', [
-                'data-href' => site_url('customer/delete/' . $value->NoPemesan),
+                'href' => site_url('pelanggan/delete/' . $value->NoPemesan),
             ]);
 			
 			$CreateDate = (Time::parse($value->CreateDate))->toDateTimeString();

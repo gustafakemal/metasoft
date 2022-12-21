@@ -60,7 +60,7 @@ class MXSolventTinta extends BaseController
                 'data-aktif' => $value->aktif . '|Y,T',
             ]);
             $hapus = $navigation->button('delete', [
-                'data-href' => site_url('mxsolventtinta/delete/' . $value->id),
+                'href' => site_url('mxsolventtinta/delete/' . $value->id),
             ]);
 
             $data[] = [

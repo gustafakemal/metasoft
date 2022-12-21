@@ -61,7 +61,7 @@ class MFJenisFlute extends BaseController
                 'data-aktif' => $value->aktif . '|Y,T',
             ]);
             $hapus = $navigation->button('delete', [
-                'data-href' => site_url('jenisflute/delete/' . $value->id),
+                'href' => site_url('jenisflute/delete/' . $value->id),
             ]);
 		
 			$data[] = [

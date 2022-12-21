@@ -83,8 +83,11 @@ class CustomerModel extends Model
      */
     public function deleteById($NoPemesan)
     {
+//        return $this->where('NoPemesan', $NoPemesan)
+//            ->delete();
         return $this->where('NoPemesan', $NoPemesan)
-            ->delete();
+            ->set(['FlagAktif' => 'N'])
+            ->update();
     }
 
     /**

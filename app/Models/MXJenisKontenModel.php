@@ -84,6 +84,7 @@ class MXJenisKontenModel extends Model
     public function deleteById($ID)
     {
         return $this->where('ID', $ID)
-            ->delete();
+            ->set(['Aktif' => 'T'])
+            ->update();
     }
 }

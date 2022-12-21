@@ -60,7 +60,7 @@ class MXJenisFilm extends BaseController
                 'data-aktif' => $value->aktif . '|Y,T',
             ]);
             $hapus = $navigation->button('delete', [
-                'data-href' => site_url('mxjenisfilm/delete/' . $value->id),
+                'href' => site_url('mxjenisfilm/delete/' . $value->id),
             ]);
 
             $data[] = [

@@ -86,27 +86,27 @@
                 </div>
                 <div class="modal-body">
                     <div class="row">
-                        <div class="col-sm-4">Nama Modul </div>
+                        <div class="col-sm-3">Nama Modul </div>
                         <div class="col-sm-8">
-                            <div class="nama_modul"></div>
+                            : <span class="nama_modul"></span>
                         </div>
                     </div>
                     <div class="row">
-                        <div class="col-sm-4">Route </div>
+                        <div class="col-sm-3">Route </div>
                         <div class="col-sm-8">
-                            <div class="route"></div>
+                            : <span class="route"></span>
                         </div>
                     </div>
                     <div class="row">
-                        <div class="col-sm-4">Icon Menu</div>
+                        <div class="col-sm-3">Icon Menu</div>
                         <div class="col-sm-8">
-                            <div class="icon"></div>
+                            : <span class="icon"></span>
                         </div>
                     </div>
                     <div class="form-group row">
-                        <div class="col-sm-4">Group/Parent</div>
+                        <div class="col-sm-3">Group/Parent</div>
                         <div class="col-sm-8">
-                            <div class="group_menu"></div>
+                            : <span class="group_menu"></span>
                         </div>
                     </div>
                 </div>

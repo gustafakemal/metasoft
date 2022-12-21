@@ -58,7 +58,7 @@ class Sales extends BaseController
                'data-aktif' => $value->FlagAktif . '|A,N',
             ]);
             $hapus = $navigation->button('delete', [
-                'data-href' => site_url('sales/delete/' . $value->SalesID),
+                'href' => site_url('sales/delete/' . $value->SalesID),
             ]);
 		
 			$data[] = [

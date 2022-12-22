@@ -12,14 +12,14 @@ $(function () {
 		},
 		createdRow: ['No', 'Tanggal dibuat', 'Jenis Film', 'Berat Jenis', 'Harga', 'Status Aktif', 'Action'],
 		initComplete: function () {
-			const url = window.location.pathname.replace(/\//,'')
-			$.get(`${HOST}/api/common/addButton?url=${url}`, function (response) {
-				if(response.success) {
-					$("#dataList_wrapper .dataTables_length").prepend(response.data);
-				}
-			})
-			$.get(`${HOST}/api/common/reloadExportButton?url=${url}`, function (response) {
-				if(response.success) {
+			const url = window.location.href;
+			$.ajax({
+				type: 'POST',
+				url: `${HOST}/api/common/dt_navigation`,
+				dataType: 'JSON',
+				data: {url, buttons: ['reload-export', 'add']},
+				beforeSend: function (){},
+				success: function (response) {
 					$("#dataList_wrapper .dataTables_length").prepend(response.data);
 				}
 			})

@@ -18,6 +18,7 @@ class Priviledge
         'login',
         'api/common/addButton',
         'api/common/reloadExportButton',
+        'api/common/dt_navigation',
         'logout',
         'auth/verify'
     ];

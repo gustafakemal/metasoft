@@ -40,6 +40,7 @@ $routes->get('logout', 'Auth::logout');
 
 // Whitelist
 $routes->group('api', static function ($routes) {
+    $routes->post('common/dt_navigation', 'CommonAPI::dt_navigation');
     $routes->get('common/addButton', 'CommonAPI::addButton');
     $routes->get('common/reloadExportButton', 'CommonAPI::reloadExportButton');
 });

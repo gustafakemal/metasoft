@@ -11,25 +11,53 @@ class CommonAPI extends BaseController
         $this->navigation = new \App\Libraries\Navigation();
     }
 
-    public function addButton()
+    private function getPath($url)
     {
-        $uri = $this->request->getGet('url');
-        $access = $this->common->getAccess($uri);
-        $this->navigation->setAccess($access);
+        $path_url = ltrim(str_replace(base_url(), '', $url), "/");
+
+        return $path_url;
+    }
+
+    public function dt_navigation()
+    {
+        $url = $this->getPath($this->request->getPost('url'));
+        $buttons = $this->request->getPost('buttons');
+
+        $datas = [];
+        foreach ($buttons as $btn) {
+            switch ($btn) {
+                case 'reload-export':
+                    $data = $this->reloadExportButton($url);
+                    break;
+                case 'add':
+                    $data = $this->addButton($url);
+                    break;
+                default:
+                    $data = null;
+                    break;
+            }
+            $datas[] = $data;
+        }
+
         return $this->response->setJSON([
             'success' => true,
-            'data' => $this->navigation->button('add'),
+            'data' => implode('', $datas)
         ]);
     }
 
-    public function reloadExportButton()
+    public function addButton($uri)
     {
-        $uri = $this->request->getGet('url');
         $access = $this->common->getAccess($uri);
         $this->navigation->setAccess($access);
-        return $this->response->setJSON([
-            'success' => true,
-            'data' => $this->navigation->reloadExportButton()
-        ]);
+
+        return $this->navigation->button('add');
+    }
+
+    public function reloadExportButton($uri)
+    {
+        $access = $this->common->getAccess($uri);
+        $this->navigation->setAccess($access);
+
+        return $this->navigation->reloadExportButton();
     }
 }

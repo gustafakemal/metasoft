@@ -23,9 +23,14 @@ $(function () {
         },
         createdRow: ['No', 'Nama Modul', 'Route', 'Icon', 'Parent/Group', 'Action'],
         initComplete: function () {
-            const url = window.location.pathname.replace(/\//,'')
-            $.get(`${HOST}/api/common/addButton?url=${url}`, function (response) {
-                if(response.success) {
+            const url = window.location.href;
+            $.ajax({
+                type: 'POST',
+                url: `${HOST}/api/common/dt_navigation`,
+                dataType: 'JSON',
+                data: {url, buttons: ['add']},
+                beforeSend: function (){},
+                success: function (response) {
                     $("#dataList_wrapper .dataTables_length").prepend(response.data);
                 }
             })

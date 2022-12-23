@@ -85,12 +85,14 @@ class Filters extends BaseConfig
 
     public function __construct()
     {
+        $priviledge = new \App\Libraries\Priviledge();
         if(service('auth')->isLoggedIn()) {
-            $priviledge = new \App\Libraries\Priviledge();
             $this->filters['login']['before'] = array_merge($this->filters['login']['before'], $priviledge->path());
             $this->filters['restricted'] = [
                 'before' => $priviledge->restricted()
             ];
+        } else {
+            $this->filters['login']['before'] = array_merge($this->filters['login']['before'], $priviledge->unAuthenticated());
         }
     }
 

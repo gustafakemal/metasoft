@@ -2,6 +2,15 @@
 
 namespace App\Libraries;
 
+/**
+ * Class Priviledge
+ *
+ * Kelas ini HANYA Di KONSUMSI oleh kelas Filter (App/Config/Filter)
+ * menyediakan fungsi-fungsi untuk menentukan path/route mana saja
+ * yang boleh/tidak oleh user.
+ *
+ */
+
 class Priviledge
 {
     private $modul;
@@ -25,7 +34,9 @@ class Priviledge
 
     public function __construct()
     {
-        $this->modul = session()->get('priv');
+        if( service('auth')->isLoggedIn() ) {
+            $this->modul = session()->get('priv');
+        }
 
         $this->accessDefinition = new AccessDefinition();
     }
@@ -46,6 +57,26 @@ class Priviledge
         }
 
         return $path;
+    }
+
+    /**
+     * Method ini kita gunakan saat user belum login / belum ter-autentikasi     *
+     *
+     * @return array
+     */
+    public function unAuthenticated(): array
+    {
+        $availableRoutes = $this->accessDefinition->availableRoutes();
+
+        $routes = [];
+
+        foreach ($availableRoutes as $key => $val) {
+            if( ! in_array($key, self::WILDCARD_PATH) ) {
+                $routes[] = $key;
+            }
+        }
+
+        return $routes;
     }
 
     /**

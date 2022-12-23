@@ -3,7 +3,7 @@
 
 <head>
     <meta charset="UTF-8">
-    <title>404 Error | Halaman tidak tersedia :: Meta</title>
+    <title>403 Restricted | Anda tidak diperkenankan mengakses resource ini :: Meta</title>
     <meta name="description" content="Meta App.">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
 

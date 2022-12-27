@@ -16,7 +16,7 @@
     <link rel="stylesheet" type="text/css" href="<?= site_url('css/style.css'); ?>" />
 </head>
 
-<body>
+<body style="background-color: #f9f9f9">
 
     <div id="page">
 
@@ -47,9 +47,6 @@
                         <div class="form-group">
                             <button type="submit" name="login" class="btn btn-primary">Login</button>
                         </div>
-                        <p class="text-muted">
-                            Masukkan dengan UserID berikut passwordnya.
-                        </p>
                     </form>
                 </div>
 

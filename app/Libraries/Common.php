@@ -85,10 +85,10 @@ class Common
 
         if( count($filtered) > 0 ) {
             if( $filtered[0]->group_menu != null ) {
-                $bc->add($filtered[0]->group_menu, 'pelanggan');
+                $bc->add($filtered[0]->group_menu, $filtered[0]->route);
             }
 
-            $bc->add($filtered[0]->nama_modul, 'pelanggan');
+            $bc->add($filtered[0]->nama_modul, $filtered[0]->route);
         }
 
         return $bc->render();

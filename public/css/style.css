@@ -330,7 +330,7 @@ body {
   width: calc(100% - 240px);
   margin-left: 240px;
   margin-top: 70px;
-  min-height: calc(100vh - 90px);
+  min-height: calc(100vh - 70px);
   display: flex;
   flex-direction: column;
   transition: margin-left .3s ease, width .3s ease;

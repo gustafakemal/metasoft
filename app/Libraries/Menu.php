@@ -95,8 +95,7 @@ class Menu
 
         $children = [];
         foreach ($this->child($group_menu) as $key => $item) {
-            $namamodul = '<i class="fas fa-arrow-circle-right text-dark"></i> ' . $item->nama_modul;
-            $children[] = $this->childItem($item->route, $namamodul);
+            $children[] = $this->childItem($item->route, $item->nama_modul);
         }
 
         $grup_icon = $this->getGroupMenuIcon($group_menu);

@@ -28,6 +28,7 @@ class Priviledge
         'api/common/addButton',
         'api/common/reloadExportButton',
         'api/common/dt_navigation',
+        'parentmodule',
         'logout',
         'auth/verify'
     ];

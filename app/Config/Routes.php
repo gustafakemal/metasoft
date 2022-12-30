@@ -44,6 +44,7 @@ $routes->group('api', static function ($routes) {
     $routes->get('common/addButton', 'CommonAPI::addButton');
     $routes->get('common/reloadExportButton', 'CommonAPI::reloadExportButton');
 });
+$routes->get('parentmodule', 'Home::parentModule');
 
 $routes->group('pelanggan', static function ($routes) {
     $routes->get('/', 'Customer::index');

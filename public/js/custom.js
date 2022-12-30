@@ -36,4 +36,31 @@ $(function () {
     $('body').tooltip({
        selector: '[data-toggle="tooltip"]'
     });
+
+    $('form[name="login"]').on('submit', function (e) {
+        e.preventDefault();
+        const formData = new FormData(this)
+
+        $.ajax({
+            type: 'POST',
+            url: `${HOST}/auth/verify`,
+            dataType: 'JSON',
+            data: formData,
+            processData: false,
+            contentType: false,
+            beforeSend: function () {
+                $('form[name="login"] input, form[name="login"] button').prop('disabled', true)
+            },
+            success: function (response) {
+                if(response.success) {
+                    window.location.href = response.redirect
+                } else {
+                    $('.error_msg').html(`<div class="alert alert-danger">${response.msg}</div>`)
+                }
+            },
+            complete: function () {
+                $('form[name="login"] input, form[name="login"] button').prop('disabled', false)
+            }
+        })
+    })
 });

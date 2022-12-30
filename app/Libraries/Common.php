@@ -19,6 +19,22 @@ class Common
             $this->strPad($time->hour) . ':' . $this->strPad($time->minute);
     }
 
+    public function urlCharEncode($url)
+    {
+        return str_replace(
+            ["+", "/", "=", " "],
+            ["", "_", "", "-"],
+            $url);
+    }
+
+    public function urlCharDecode($url)
+    {
+        return str_replace(
+            ["-", "_"],
+            [" ", "/"],
+            $url);
+    }
+
     public function isExist()
     {
         return [
@@ -85,10 +101,16 @@ class Common
 
         if( count($filtered) > 0 ) {
             if( $filtered[0]->group_menu != null ) {
-                $bc->add($filtered[0]->group_menu, $filtered[0]->route);
+                $url = $this->urlCharEncode($filtered[0]->group_menu);
+                $route = site_url('parentmodule?parent=' . $url);
+                $bc->add($filtered[0]->group_menu, $route);
             }
 
             $bc->add($filtered[0]->nama_modul, $filtered[0]->route);
+        }
+
+        if( url_is('parentmodule') ) {
+            $bc->add('Parent', '/');
         }
 
         return $bc->render();

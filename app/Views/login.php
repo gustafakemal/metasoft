@@ -29,8 +29,11 @@
                 </div>
 
                 <div class="login-box">
-                    <?= form_open('auth/verify');?>
+                    <?php //echo form_open('auth/verify');?>
+                    <form name="login">
                         <h2 class="title">Login</h2>
+
+                        <div class="error_msg"></div>
                         
                         <?php if(session()->has('error')) : ?>
                         <div class="alert alert-danger"><?= session()->get('error');?></div>
@@ -75,6 +78,7 @@
     <?php if(url_is('customer')) : ?>
         <script src="<?= site_url('js/customer.js'); ?>"></script>
     <?php endif;?>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/crypto-js/4.1.1/crypto-js.min.js" integrity="sha512-E8QSvWZ0eCLGk4km3hxSsNmGWbLtSCSUcewDQPQWZF6pEU8GlT8a5fF32wOl1i8ftdMhssTrF/OhyGWwonTcXA==" crossorigin="anonymous" referrerpolicy="no-referrer"></script>
     <script src="<?= site_url('js/custom.js'); ?>"></script>
     <!-- -->
 

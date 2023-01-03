@@ -758,6 +758,31 @@ body {
   color: rgba(0,0,0,.5);
 }
 
+.prospek_jumlah-order {
+  display: flex;
+  flex-wrap: wrap;
+  align-items: flex-start;
+}
+.prospek_jumlah-order .input--jml {
+  width: 100px;
+}
+.prospek_jumlah-order .jml-item-val {
+  margin-right: 3px;
+}
+.prospek_jumlah-order .jml-item-val .val {
+  padding: 4px 12px;
+  border: 1px solid #ddd;
+  border-radius: 3px;
+  display: inline-block;
+  background-color: #f9f9f9;
+}
+.prospek_jumlah-order .jml-item-val .del {
+}
+.prospek_jumlah-order .jml-val-child {
+  display: flex;
+  flex-wrap: wrap;
+}
+
 @media only screen and (max-width: 1120px) {
   .sidebar {
     left: -240px;

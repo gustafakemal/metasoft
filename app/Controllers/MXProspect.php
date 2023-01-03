@@ -99,6 +99,16 @@ class MXProspect extends BaseController
                 }, $data_request['aksesori']);
                 $pa_model = new \App\Models\MXProspekAksesoriModel();
                 $pa_model->insertBatch($data_aksesori);
+
+                $data_jumlah = array_map(function ($item) use ($noprospek, $data_request) {
+                    return [
+                        'NoProspek' => $noprospek,
+                        'Alt' => $data_request['Alt'],
+                        'Jumlah' => $item
+                    ];
+                }, $data_request['jml']);
+                $pj_model = new \App\Models\MXProspekJumlahModel();
+                $pj_model->insertBatch($data_jumlah);
             }
 
             if($type == 'alt' || $type == 'copyprospek') {
@@ -292,6 +302,7 @@ class MXProspect extends BaseController
     {
         $query = $this->model->getByNoProspectAndAlt($NoProspek, $Alt);
         $qq = (new \App\Models\MXProspekAksesoriModel())->getByProspekAlt($NoProspek, $query->getResult()[0]->Alt);
+        $jml = (new \App\Models\MXProspekJumlahModel())->getByProspekAlt($NoProspek, $query->getResult()[0]->Alt);
 
         $views = [
             'page_title' => 'Edit Prospek',
@@ -299,7 +310,8 @@ class MXProspect extends BaseController
             'main_menu' => (new \App\Libraries\Menu())->render(),
             'alternatif' => $this->model->getAlternatif(),
             'data' => $query->getResult()[0],
-            'prospek_aksesori' => $qq->getResult()
+            'prospek_aksesori' => $qq->getResult(),
+            'jumlah' => ($jml->getNumRows() > 0) ? $jml->getResult() : []
         ];
 
         $views = array_merge($views, $this->requiredFields());
@@ -357,6 +369,20 @@ class MXProspect extends BaseController
                 $pa_model = new \App\Models\MXProspekAksesoriModel();
                 $pa_model->delByProspek($noprospek, $data_request['Alt']);
                 $pa_model->insertBatch($data_aksesori);
+            }
+
+            if( array_key_exists('jml', $data_request) && count($data_request['jml']) > 0) {
+                $noprospek = $data_request['NoProspek'];
+                $data_jumlah = array_map(function ($item) use ($noprospek, $data_request) {
+                    return [
+                        'NoProspek' => $noprospek,
+                        'Alt' => $data_request['Alt'],
+                        'Jumlah' => $item
+                    ];
+                }, $data_request['jml']);
+                $pj_model = new \App\Models\MXProspekJumlahModel();
+                $pj_model->delByProspek($noprospek, $data_request['Alt']);
+                $pj_model->insertBatch($data_jumlah);
             }
 
             return redirect()->back()

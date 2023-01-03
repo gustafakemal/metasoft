@@ -8,12 +8,12 @@ $(function () {
             falseSearchable: [0, 10, 11, 12],
             falseOrderable: [0, 10, 11, 12],
             falseVisibility: [13],
-            width: ['0(30)','1(100)','2(90)','3(120)','4(120)', '10(120)'],
+            width: ['0(30)', '1(100)', '2(90)', '3(120)', '4(120)', '10(120)'],
             custom: [
                 {
-                    "targets": [0,1,2,3,4,5, 6, 7, 8, 9],
+                    "targets": [0, 1, 2, 3, 4, 5, 6, 7, 8, 9],
                     "createdCell": function (td, cellData, rowData, row, col) {
-                        if ( rowData[13] === 1 ) {
+                        if (rowData[13] === 1) {
                             $(td).css('font-weight', 700).css('font-style', 'italic')
                         }
                     },
@@ -45,7 +45,7 @@ $(function () {
 
     $('#dataList').on('change', 'input.chbx', function (e) {
         const confirmation = confirm('Yakin mengubah ?')
-        if(confirmation) {
+        if (confirmation) {
             const priority = ($(this).is(':checked')) ? 1 : 0;
             const NoProspek = $(this).attr('data-no-prospek')
             $.ajax({
@@ -56,12 +56,12 @@ $(function () {
                 beforeSend: function () {
                 },
                 success: function (response) {
-                    if(response.success) {
+                    if (response.success) {
                         dt.reload();
                     }
                 },
                 complete: function (response) {
-                    if(response.responseJSON.success) {
+                    if (response.responseJSON.success) {
                         setTimeout(() => {
                             $('.chbx').bootstrapToggle({
                                 on: 'Ya',
@@ -78,10 +78,10 @@ $(function () {
     })
 
     let aksesories = [];
-    $('button.add-acc').on('click', function() {
+    $('button.add-acc').on('click', function () {
         const val = $('select[name="aksesoris"] option:selected').val()
 
-        if( val !== '0' && ! aksesories.includes(val) ) {
+        if (val !== '0' && !aksesories.includes(val)) {
             const label = $('select[name="aksesoris"] option:selected').text()
 
             const elem = `<div class="row mb-1 bscolor" id="bscolor-${val}">
@@ -100,9 +100,48 @@ $(function () {
         $(`select[name="aksesoris"] option[value="0"]`).prop('selected', true);
     })
 
+    let jml_order = [];
+    $('.add-jml').on('click', function (e) {
+        e.preventDefault();
+        const val = $('input[name="Jumlah"]').val();
+
+        if(val == '') {
+            return false;
+        }
+        let num;
+
+        if(jml_order.length > 0) {
+            num = jml_order[jml_order.length - 1] + 1
+        } else {
+            num = 0;
+        }
+
+        const elem_val = `<div class="jml-item-val" id="item-${num}">
+                            <input type="hidden" name="jml[]" value="${val}" />
+                            <span class="val">${val}</span>
+                            <button type="button" class="btn btn-danger btn-sm del-jml" id="jml-${num}">
+                                <i class="fas fa-trash-alt"></i>
+                            </button>
+                           </div>`;
+
+        jml_order.push(num)
+        $('.jml-val-child').append(elem_val);
+        $('input[name="Jumlah"]').val('');
+    })
+
+    $('.jml-val-child').on('click', '.del-jml', function (e) {
+        e.preventDefault();
+
+        const id = $(this).attr('id').split('-')[1]
+        $(`.jml-val-child #item-${id}`).remove();
+        jml_order = jml_order.filter((item) => {
+            return item != id;
+        })
+    })
+
     $('select[name="BagMaking"]').on('change', function () {
         const val = $(this).val();
-        if(val === '1') {
+        if (val === '1') {
             $('select[name="Bottom"]').prop('disabled', false);
         } else {
             $('select[name="Bottom"]').prop('disabled', true);
@@ -111,7 +150,7 @@ $(function () {
 
     $('select[name="Roll_Pcs"]').on('change', function () {
         const val = $(this).val();
-        if(val === 'P') {
+        if (val === 'P') {
             $('select[name="Finishing"]').prop('disabled', false);
         } else {
             $('select[name="Finishing"]').prop('disabled', true);
@@ -131,7 +170,7 @@ $(function () {
         e.preventDefault();
 
         const confirmation = confirm('Hapus prospek?')
-        if(confirmation) {
+        if (confirmation) {
             const NoProspek = $(this).attr('data-no-prospek');
             const Alt = $(this).attr('data-alt');
             const Status = $(this).attr('data-status');

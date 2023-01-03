@@ -1,0 +1,16 @@
+<?php
+
+namespace App\Models;
+
+class MXProspekJumlahModel extends \CodeIgniter\Model
+{
+    protected $table = 'MX_Prospek_Jumlah';
+    protected $allowedFields = ['NoProspek', 'Alt', 'Jumlah'];
+
+    public function getByProspekAlt($NoProspek, $Alt)
+    {
+        return $this->select('*')
+            ->where('Alt', $Alt)
+            ->get();
+    }
+}

@@ -278,15 +278,15 @@ endforeach; ?>
         <label for="jumlah" class="col-lg-2 col-sm-12 col-form-label">Jumlah</label>
         <div class="col-lg-10 col-sm-12">
             <div class="prospek_jumlah-order">
-                <div class="btn--nav mr-1">
-                    <button type="button" class="btn btn-sm btn-primary add-jml">
-                        <i class="fas fa-plus-circle"></i>
-                    </button>
-                </div>
                 <div class="input--jml mr-1" id="jml-0">
                     <div class="input-group">
                         <input type="text" class="form-control form-control-sm" name="Jumlah" placeholder="Jumlah">
                     </div>
+                </div>
+                <div class="btn--nav mr-1">
+                    <button type="button" class="btn btn-sm btn-primary add-jml">
+                        <i class="fas fa-plus-circle"></i>
+                    </button>
                 </div>
                 <div class="jml-val-child">
 
@@ -310,8 +310,10 @@ endforeach; ?>
                         </div>
                         <div class="col-6">
                             <select id="finishing" name="Finishing" class="form-control" disabled>
+                                <option value="TP">TP</option>
                                 <option value="CS">CS</option>
                                 <option value="CSG">CS GUSET</option>
+                                <option value="3SS">3SS</option>
                                 <option value="4SS">4SS</option>
                             </select>
                         </div>

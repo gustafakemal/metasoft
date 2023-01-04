@@ -31,12 +31,12 @@
             <th>Nama Produk</th>
             <th>Pemesan</th>
             <th>Jumlah</th>
-            <th>Area</th>
             <th>Diinput</th>
             <th>Catatan</th>
-            <th>Status</th>
             <th>Proses</th>
             <th>Prioritas</th>
+            <th>Est</th>
+            <th>Smpl</th>
             <th>Action</th>
 		</tr>
 	</thead>

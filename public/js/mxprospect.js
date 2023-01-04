@@ -81,6 +81,11 @@ $(function () {
     $('button.add-acc').on('click', function () {
         const val = $('select[name="aksesoris"] option:selected').val()
 
+        let accessor = []
+        // if( $('.bs-child').length > 0 ) {
+        //     $('.bs-child').each((item))
+        // }
+
         if (val !== '0' && !aksesories.includes(val)) {
             const label = $('select[name="aksesoris"] option:selected').text()
 

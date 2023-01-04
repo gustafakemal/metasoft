@@ -313,29 +313,27 @@
         <label for="jumlah" class="col-lg-2 col-sm-12 col-form-label">Jumlah</label>
         <div class="col-lg-10 col-sm-12">
             <div class="prospek_jumlah-order">
-                <div class="btn--nav mr-1">
+                <div class="input--jml mr-1" id="jml-0">
+                    <div class="input-group">
+                        <input type="number" class="form-control form-control-sm" name="Jumlah" placeholder="Jumlah">
+                    </div>
+                </div>
+                <div class="btn--nav mr-3">
                     <button type="button" class="btn btn-sm btn-primary add-jml">
                         <i class="fas fa-plus-circle"></i>
                     </button>
                 </div>
-                <div class="input--jml mr-1" id="jml-0">
-                    <div class="input-group">
-                        <input type="text" class="form-control form-control-sm" name="Jumlah" placeholder="Jumlah">
-                    </div>
-                </div>
-                <div class="jml-val-child">
-                    <?php if(count($jumlah) > 0) : ?>
-                        <?php for($i = 0;$i<count($jumlah);$i++) : ?>
-                                <div class="jml-item-val" id="item-<?= $i ;?>">
-                                    <input type="hidden" name="jml[]" value="<?= $jumlah[$i]->Jumlah?>" />
-                                    <span class="val"><?= $jumlah[$i]->Jumlah ;?></span>
-                                    <button type="button" class="btn btn-danger btn-sm del-jml" id="jml-<?= $i ;?>">
-                                        <i class="fas fa-trash-alt"></i>
-                                    </button>
-                                </div>
-                        <?php endfor;?>
-                    <?php endif;?>
-                </div>
+                <?php if(count($jumlah) > 0) : ?>
+                    <?php for($i = 0;$i<count($jumlah);$i++) : ?>
+                        <div class="jml-item-val" id="item-<?= $jumlah[$i]->Jumlah ;?>">
+                            <input type="hidden" name="jml[]" value="<?= $jumlah[$i]->Jumlah?>" />
+                            <span class="val"><?= $jumlah[$i]->Jumlah ;?></span>
+                            <button type="button" class="btn btn-danger btn-sm del-jml" id="jml-<?= $jumlah[$i]->Jumlah ;?>">
+                                <i class="fas fa-trash-alt"></i>
+                            </button>
+                        </div>
+                    <?php endfor;?>
+                <?php endif;?>
             </div>
         </div>
     </div>

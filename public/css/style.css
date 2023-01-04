@@ -767,7 +767,7 @@ body {
   width: 100px;
 }
 .prospek_jumlah-order .jml-item-val {
-  margin-right: 3px;
+  margin-right: 8px;
 }
 .prospek_jumlah-order .jml-item-val .val {
   padding: 4px 12px;
@@ -775,6 +775,7 @@ body {
   border-radius: 3px;
   display: inline-block;
   background-color: #f9f9f9;
+  transition: all .3s ease;
 }
 .prospek_jumlah-order .jml-item-val .del {
 }

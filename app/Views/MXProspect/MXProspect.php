@@ -280,10 +280,11 @@ endforeach; ?>
             <div class="prospek_jumlah-order">
                 <div class="input--jml mr-1" id="jml-0">
                     <div class="input-group">
-                        <input type="text" class="form-control form-control-sm" name="Jumlah" placeholder="Jumlah">
+                        <input type="number" class="form-control form-control-sm" name="Jumlah" placeholder="Jumlah">
                     </div>
                 </div>
-                <div class="btn--nav mr-1">
+
+                <div class="btn--nav mr-3">
                     <button type="button" class="btn btn-sm btn-primary add-jml">
                         <i class="fas fa-plus-circle"></i>
                     </button>

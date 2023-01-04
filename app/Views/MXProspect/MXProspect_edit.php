@@ -308,28 +308,67 @@
         <label class="col-lg-2 col-sm-12 col-form-label"><strong style="font-size: 16px">Jumlah Order </strong> </label>
     </div>
 
-	<Div class="row">
-        <div class="col-4">
-            <div class="form-group row">
-                <label for="jumlah" class="col-6">Jumlah </label>
-                <div class="col-6">
-                    <input value="<?= $data->Jumlah;?>" id="jumlah" name="Jumlah" type="number" class="form-control">
-				</div>
+
+    <div class="form-group row">
+        <label for="jumlah" class="col-lg-2 col-sm-12 col-form-label">Jumlah</label>
+        <div class="col-lg-10 col-sm-12">
+            <div class="prospek_jumlah-order">
+                <div class="btn--nav mr-1">
+                    <button type="button" class="btn btn-sm btn-primary add-jml">
+                        <i class="fas fa-plus-circle"></i>
+                    </button>
+                </div>
+                <div class="input--jml mr-1" id="jml-0">
+                    <div class="input-group">
+                        <input type="text" class="form-control form-control-sm" name="Jumlah" placeholder="Jumlah">
+                    </div>
+                </div>
+                <div class="jml-val-child">
+                    <?php if(count($jumlah) > 0) : ?>
+                        <?php for($i = 0;$i<count($jumlah);$i++) : ?>
+                                <div class="jml-item-val" id="item-<?= $i ;?>">
+                                    <input type="hidden" name="jml[]" value="<?= $jumlah[$i]->Jumlah?>" />
+                                    <span class="val"><?= $jumlah[$i]->Jumlah ;?></span>
+                                    <button type="button" class="btn btn-danger btn-sm del-jml" id="jml-<?= $i ;?>">
+                                        <i class="fas fa-trash-alt"></i>
+                                    </button>
+                                </div>
+                        <?php endfor;?>
+                    <?php endif;?>
+                </div>
             </div>
         </div>
-		<div class="col-2">
-            <div class="form-group row pr-5">
-                <select id="roll_pc" name="Roll_Pcs" class="form-control">
-                    <option<?= ($data->Roll_Pcs == 'R') ? ' selected' : '';?> value="R">ROLL</option>
-					<option<?= ($data->Roll_Pcs == 'P') ? ' selected' : '';?> value="P">PCS</option>
-                </select>
+    </div>
 
+    <div class="row">
+        <div class="col-6">
+            <div class="form-group row">
+                <label for="satuan" class="col-lg-4 col-sm-12 col-form-label">Satuan</label>
+                <div class="col-lg-8 col-sm-12">
+
+                    <div class="row">
+                        <div class="col-6">
+                            <select id="roll_pc" name="Roll_Pcs" class="form-control">
+                                <option<?= ($data->Roll_Pcs == 'R') ? ' selected' : '';?> value="R">ROLL</option>
+                                <option<?= ($data->Roll_Pcs == 'P') ? ' selected' : '';?> value="P">PCS</option>
+                            </select>
+                        </div>
+                        <div class="col-6">
+                            <select id="finishing" name="Finishing" class="form-control" disabled>
+                                <option<?= ($data->Finishing == 'CS') ? ' selected' : '';?> value="CS">CS</option>
+                                <option<?= ($data->Finishing == 'CS GUSET') ? ' selected' : '';?> value="CSG">CS GUSET</option>
+                                <option<?= ($data->Finishing == '4SS') ? ' selected' : '';?> value="4SS">4SS</option>
+                            </select>
+                        </div>
+                    </div>
+
+                </div>
             </div>
         </div>
         <div class="col-3">
             <div class="form-group row">
-                <label for="toleransi" class="col-lg-7 col-sm-12 col-form-label">Toleransi (%)</label>
-                <div class="col-lg-5 col-sm-12">
+                <label for="toleransi" class="col-lg-4 col-sm-12 col-form-label">Toleransi</label>
+                <div class="col-lg-8 col-sm-12">
                     <input value="<?= $data->Toleransi;?>" id="toleransi" name="Toleransi" type="number" class="form-control">
                 </div>
             </div>
@@ -340,7 +379,7 @@
                 <div class="col-lg-6 col-sm-12">
                     <select id="parsial" name="Parsial" class="form-control">
                         <option<?= ($data->Parsial == 'T') ? ' selected' : '';?> value="T">Tidak</option>
-						<option<?= ($data->Parsial == 'Y') ? ' selected' : '';?> value="Y">Ya</option>
+                        <option<?= ($data->Parsial == 'Y') ? ' selected' : '';?> value="Y">Ya</option>
                     </select>
                 </div>
             </div>

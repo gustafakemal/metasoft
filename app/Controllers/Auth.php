@@ -43,7 +43,7 @@ class Auth extends BaseController
         if($result['isValid']) {
             $response = [
                 'success' => true,
-                'redirect' => '/',
+                'redirect' => base_url(),
                 'msg' => ''
             ];
         } else {

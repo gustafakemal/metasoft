@@ -34,22 +34,22 @@
         <div class="logo">
             <img src="<?=site_url('images/logo.png');?>" alt="" />
         </div>
-        <div class="site-wrapper">
-            <div class="site-nav dropdown">
-                <button type="button" class="dropdown-toggle" data-toggle="dropdown">
-                    <div class="caption"><span>Site:</span>PALMERAH</div>
-                </button>
-                <div class="dropdown-menu">
-                    <a href="#" class="dropdown-item active">Palmerah</a>
-                    <a href="#" class="dropdown-item">Cikarang</a>
-                    <a href="#" class="dropdown-item">Bandung</a>
-                    <a href="#" class="dropdown-item">Bawen</a>
-                    <a href="#" class="dropdown-item">Surabaya</a>
-                    <a href="#" class="dropdown-item">Bali</a>
-                    <a href="#" class="dropdown-item">Medan</a>
-                </div>
-            </div>
-        </div>
+<!--        <div class="site-wrapper">-->
+<!--            <div class="site-nav dropdown">-->
+<!--                <button type="button" class="dropdown-toggle" data-toggle="dropdown">-->
+<!--                    <div class="caption"><span>Site:</span>PALMERAH</div>-->
+<!--                </button>-->
+<!--                <div class="dropdown-menu">-->
+<!--                    <a href="#" class="dropdown-item active">Palmerah</a>-->
+<!--                    <a href="#" class="dropdown-item">Cikarang</a>-->
+<!--                    <a href="#" class="dropdown-item">Bandung</a>-->
+<!--                    <a href="#" class="dropdown-item">Bawen</a>-->
+<!--                    <a href="#" class="dropdown-item">Surabaya</a>-->
+<!--                    <a href="#" class="dropdown-item">Bali</a>-->
+<!--                    <a href="#" class="dropdown-item">Medan</a>-->
+<!--                </div>-->
+<!--            </div>-->
+<!--        </div>-->
         <div class="top-nav">
             <div class="account-nav dropdown">
                 <button type="button" class="dropdown-toggle" data-toggle="dropdown">

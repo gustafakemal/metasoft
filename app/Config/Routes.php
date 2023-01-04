@@ -250,6 +250,7 @@ $routes->group('listprospek', static function ($routes) {
 
 $routes->group('queueestimasi', static function ($routes) {
     $routes->get('/', 'MXEstimasi::index');
+    $routes->get('api', 'MXEstimasi::apiGetAll');
     $routes->post('calculate', 'MXEstimasi::calculate');
 });
 

@@ -184,6 +184,9 @@
     <script type="module" src="<?=site_url('js/mxprospect.js');?>"></script>
     <script src="<?=site_url('third-party/bootstrap/js/bootstrap4-toggle.min.js');?>"></script>
 <?php endif;?>
+<?php if (url_is('queueestimasi*')): ?>
+    <script type="module" src="<?=site_url('js/mxestimasi.js');?>"></script>
+<?php endif;?>
 <script src="<?=site_url('js/custom.js');?>"></script>
 
 <!-- -->

@@ -25,33 +25,33 @@ class MXProspectModel extends Model
     ];
 
     protected $validationMessages = [
-        'NamaProduk'        => [
+        'NamaProduk' => [
             'required' => 'Field Nama Produk harus diisi.',
         ],
-        'Kapasitas'        => [
+        'Kapasitas' => [
             'required' => 'Field Kapasitas harus diisi.',
             'greater_than' => 'Field Kapasitas harus diisi.',
         ],
-        'Tebal'        => [
+        'Tebal' => [
             'required' => 'Dimensi (Tebal) harus diisi.',
             'greater_than' => 'Dimensi (Tebal) harus diisi.',
         ],
-        'Panjang'        => [
+        'Panjang' => [
             'required' => 'Dimensi (Panjang) harus diisi.',
             'greater_than' => 'Dimensi (Panjang) harus diisi.',
         ],
-        'Lebar'        => [
+        'Lebar' => [
             'required' => 'Dimensi (Lebar) harus diisi.',
             'greater_than' => 'Dimensi (Lebar) harus diisi.',
         ],
-        'Pitch'        => [
+        'Pitch' => [
             'required' => 'Dimensi (Pitch) harus diisi.',
             'greater_than' => 'Dimensi (Pitch) harus diisi.',
         ],
-        'Material1'        => [
+        'Material1' => [
             'required' => 'Field Material harus diisi.',
         ],
-        'TebalMat1'        => [
+        'TebalMat1' => [
             'required' => 'Field tebal material harus diisi.',
             'greater_than' => 'Field tebal material harus diisi.',
         ],
@@ -60,9 +60,9 @@ class MXProspectModel extends Model
     public function getAlternatif()
     {
         $query = $this->selectMax('Alt')
-                        ->get();
+            ->get();
 
-        if($query->getResult()[0]->Alt == null) {
+        if ($query->getResult()[0]->Alt == null) {
             return 1;
         }
 
@@ -83,7 +83,7 @@ class MXProspectModel extends Model
     private function lastIdCounter($length)
     {
         $id = ($this->get()->getLastRow() == null) ? 0 : $this->get()->getLastRow()->NoProspek;
-        $last_id = (int)substr($id, 4);
+        $last_id = (int) substr($id, 4);
         $new_id = $last_id + 1;
         return str_pad($new_id, $length, "0", STR_PAD_LEFT);
     }
@@ -100,19 +100,36 @@ class MXProspectModel extends Model
     public function getByKeyword($keyword)
     {
         $keyword_upper = strtoupper($keyword);
-        $where = "MX_Prospek.Status > 0 AND (MX_Prospek.NamaProduk like '%".$keyword."%' OR MX_Prospek.NamaProduk like '%" . $keyword_upper . "%' OR MX_Prospek.NoProspek like '%".$keyword."%')";
+        $where = "MX_Prospek.Status > 0 AND (MX_Prospek.NamaProduk like '%" . $keyword . "%' OR MX_Prospek.NamaProduk like '%" . $keyword_upper . "%' OR MX_Prospek.NoProspek like '%" . $keyword . "%')";
         return $this->select('*')
-                    ->join('CustomerFile', 'MX_Prospek.Pemesan = CustomerFile.NoPemesan')
-                    ->join('MX_AreaKirim', 'MX_Prospek.Area = MX_AreaKirim.ID')
-                    ->where($where)
-                    ->get();
+            ->join('CustomerFile', 'MX_Prospek.Pemesan = CustomerFile.NoPemesan')
+            ->join('MX_AreaKirim', 'MX_Prospek.Area = MX_AreaKirim.ID')
+            ->where($where)
+            ->get();
+    }
+
+    public function getByStatus($status)
+    {
+        $where = "MX_Prospek.Status = " . $status;
+        return $this->select('MX_Prospek.*, UserPass.Nama CreatedByName, convert(varchar(10), Created, 103) CreatedDate , convert(varchar(8), Created, 108) CreatedTime')
+        /*
+        Kolom CreatedByName = Nama Pembuat Prospek / Sales
+        Kolom CreatedDate = Tanggal pembuatan format dd/mm/yyyy
+        Kolom CreatedTime = Jam pembuatan format hh:mm:ss
+         */
+
+            ->join('CustomerFile', 'MX_Prospek.Pemesan = CustomerFile.NoPemesan')
+            ->join('MX_AreaKirim', 'MX_Prospek.Area = MX_AreaKirim.ID')
+            ->join('UserPass', 'MX_Prospek.CreatedBy=UserPass.UserID')
+            ->where($where)
+            ->get();
     }
 
     public function getByNoProspectAndAlt($NoProspek, $Alt)
     {
         return $this->where('NoProspek', $NoProspek)
-                    ->where('Alt', $Alt)
-                    ->get();
+            ->where('Alt', $Alt)
+            ->get();
     }
 
     public function getDetailByNoProspectAndAlt($NoProspek, $Alt)
@@ -132,37 +149,37 @@ class MXProspectModel extends Model
     public function getMaxAlt($NoProspek)
     {
         return $this->selectMax('Alt')
-                    ->where('NoProspek', $NoProspek)
-                    ->get();
+            ->where('NoProspek', $NoProspek)
+            ->get();
     }
 
     public function updateData($data, $NoProspek, $Alt)
     {
         return $this->where('NoProspek', $NoProspek)
-                    ->where('Alt', $Alt)
-                    ->set($data)
-                    ->update();
+            ->where('Alt', $Alt)
+            ->set($data)
+            ->update();
     }
 
     public function deleteProspek($NoProspek, $Alt)
     {
         return $this->where('NoProspek', $NoProspek)
-                    ->where('Alt', $Alt)
-                    ->delete();
+            ->where('Alt', $Alt)
+            ->delete();
     }
 
     public function setPriority($NoProspek, $priority = 1)
     {
         return $this->where('NoProspek', $NoProspek)
-                    ->set(['Prioritas' => $priority])
-                    ->update();
+            ->set(['Prioritas' => $priority])
+            ->update();
     }
 
     public function setRestUnpriority($NoProspek, $priority = false)
     {
         return $this->where('NoProspek !=', $NoProspek)
-                    ->where('Status', 10)
-                    ->set(['Prioritas' => $priority])
-                    ->update();
+            ->where('Status', 10)
+            ->set(['Prioritas' => $priority])
+            ->update();
     }
 }

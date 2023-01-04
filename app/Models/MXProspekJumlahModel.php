@@ -10,6 +10,7 @@ class MXProspekJumlahModel extends \CodeIgniter\Model
     public function getByProspekAlt($NoProspek, $Alt)
     {
         return $this->select('*')
+            ->where('NoProspek', $NoProspek)
             ->where('Alt', $Alt)
             ->get();
     }

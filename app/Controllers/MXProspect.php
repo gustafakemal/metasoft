@@ -148,15 +148,18 @@ class MXProspect extends BaseController
                 $minta = '<div class="switch-nav dropdown">
                             <button type="button" class="dropdown-toggle" data-toggle="dropdown">
                                 <div class="fungsi">
-                                    ---
+                                    --
                                 </div>
                                 <div class="dropdown-menu dropdown-menu-right">
                                     <a href="#" class="dropdown-item">Estimasi</a>
                                     <a href="#" class="dropdown-item">Sample</a>
                                     <a href="#" class="dropdown-item">Batal</a>
+                                    <a href="#" class="dropdown-item">Selesai</a>
                                 </div>
                             </button>
                         </div>';
+
+//                $minta = $this->prosesDropdown($row->Status);
 
                 if($sess_access[0]->access == 3) {
                     $action = '<div class="btn-group" role="group" aria-label="Basic example">' . $edit . $alt . $hapus . '</div>';
@@ -166,19 +169,34 @@ class MXProspect extends BaseController
 
                 $is_checked = ($row->Prioritas) ? ' checked' : '';
 
+                $est = '<button class="btn btn-sm btn-secondary" type="button"><i class="fas fa-file"></i></button>';
+                $smpl = '<button class="btn btn-sm btn-secondary" type="button"><i class="fas fa-file"></i></button>';
+
+                $jml_model = new \App\Models\MXProspekJumlahModel();
+                $jml_query = $jml_model->getByProspekAlt($row->NoProspek, $row->Alt);
+
+                $jml = [];
+                if($jml_query->getNumRows() > 0) {
+                    foreach($jml_query->getResult() as $r) {
+                        $jml[] = $r->Jumlah;
+                    }
+                } else {
+                    $jml[] = 0;
+                }
+
                 $results[] = [
                     $key + 1,
                     $row->NoProspek,
                     $row->Alt,
                     $row->NamaProduk,
                     $row->NamaPemesan,
-                    $row->Jumlah,
-                    $row->Nama,
+                    implode(', ', $jml),
                     $this->common->dateFormat($row->Created),
                     $row->Catatan,
-                    $this->status[$row->Status],
                     $minta,
                     '<input' . $is_checked . ' type="checkbox" data-size="xs" class="chbx" data-no-prospek="' . $row->NoProspek . '" data-no-prospek="' . $row->Alt . '">',
+                    $est,
+                    $smpl,
                     $action,
                     $row->Prioritas
                 ];

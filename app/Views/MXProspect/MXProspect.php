@@ -283,6 +283,7 @@ endforeach; ?>
                         <input type="number" class="form-control form-control-sm" name="Jumlah" placeholder="Jumlah">
                     </div>
                 </div>
+
                 <div class="btn--nav mr-3">
                     <button type="button" class="btn btn-sm btn-primary add-jml">
                         <i class="fas fa-plus-circle"></i>
@@ -310,8 +311,10 @@ endforeach; ?>
                         </div>
                         <div class="col-6">
                             <select id="finishing" name="Finishing" class="form-control" disabled>
+                                <option value="TP">TP</option>
                                 <option value="CS">CS</option>
                                 <option value="CSG">CS GUSET</option>
+                                <option value="3SS">3SS</option>
                                 <option value="4SS">4SS</option>
                             </select>
                         </div>

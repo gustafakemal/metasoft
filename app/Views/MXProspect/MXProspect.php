@@ -278,15 +278,15 @@ endforeach; ?>
         <label for="jumlah" class="col-lg-2 col-sm-12 col-form-label">Jumlah</label>
         <div class="col-lg-10 col-sm-12">
             <div class="prospek_jumlah-order">
-                <div class="btn--nav mr-1">
+                <div class="input--jml mr-1" id="jml-0">
+                    <div class="input-group">
+                        <input type="number" class="form-control form-control-sm" name="Jumlah" placeholder="Jumlah">
+                    </div>
+                </div>
+                <div class="btn--nav mr-3">
                     <button type="button" class="btn btn-sm btn-primary add-jml">
                         <i class="fas fa-plus-circle"></i>
                     </button>
-                </div>
-                <div class="input--jml mr-1" id="jml-0">
-                    <div class="input-group">
-                        <input type="text" class="form-control form-control-sm" name="Jumlah" placeholder="Jumlah">
-                    </div>
                 </div>
                 <div class="jml-val-child">
 

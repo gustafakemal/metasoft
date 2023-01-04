@@ -100,43 +100,45 @@ $(function () {
         $(`select[name="aksesoris"] option[value="0"]`).prop('selected', true);
     })
 
-    let jml_order = [];
     $('.add-jml').on('click', function (e) {
         e.preventDefault();
+        let jml_order = [];
+        if( $('.jml-item-val').length > 0 ) {
+            $('.jml-item-val').each(function (idx) {
+                const ord = parseInt($(this).find('.val').text());
+                jml_order.push(ord)
+            })
+        }
         const val = $('input[name="Jumlah"]').val();
 
-        if(val == '') {
+        if(val === '' || val === '0' || jml_order.includes(parseInt(val))) {
+            $('input[name="Jumlah"]').val('');
             return false;
         }
-        let num;
 
-        if(jml_order.length > 0) {
-            num = jml_order[jml_order.length - 1] + 1
-        } else {
-            num = 0;
-        }
-
-        const elem_val = `<div class="jml-item-val" id="item-${num}">
+        const elem_val = `<div class="jml-item-val" id="item-${val}">
                             <input type="hidden" name="jml[]" value="${val}" />
                             <span class="val">${val}</span>
-                            <button type="button" class="btn btn-danger btn-sm del-jml" id="jml-${num}">
+                            <button type="button" class="btn btn-danger btn-sm del-jml" id="jml-${val}">
                                 <i class="fas fa-trash-alt"></i>
                             </button>
                            </div>`;
 
-        jml_order.push(num)
-        $('.jml-val-child').append(elem_val);
+        jml_order.push(parseInt(val))
+        $('.prospek_jumlah-order').append(elem_val);
+
+        startBlinking(`.prospek_jumlah-order #item-${val} .val`)
+        setTimeout(() => {
+            stopBlinking()
+        }, 500)
         $('input[name="Jumlah"]').val('');
     })
 
-    $('.jml-val-child').on('click', '.del-jml', function (e) {
+    $('.prospek_jumlah-order').on('click', '.del-jml', function (e) {
         e.preventDefault();
 
         const id = $(this).attr('id').split('-')[1]
-        $(`.jml-val-child #item-${id}`).remove();
-        jml_order = jml_order.filter((item) => {
-            return item != id;
-        })
+        $(`.prospek_jumlah-order #item-${id}`).remove();
     })
 
     $('select[name="BagMaking"]').on('change', function () {
@@ -218,3 +220,28 @@ $(function () {
     })
 
 })
+
+let blinkInterval = null;
+function startBlinking(element)
+{
+    if (!blinkInterval) {
+        blinkInterval = setInterval(function () {
+            blink(element)
+        }, 100);
+    }
+    return blinkInterval;
+}
+
+function stopBlinking()
+{
+    if (blinkInterval) clearInterval(blinkInterval);
+    blinkInterval = null;
+}
+
+function blink(element)
+{
+    $(element).css('background-color', '#f7e8b5');
+    setTimeout(function () {
+        $(element).css('background-color', '#f9f9f9');
+    }, 500);
+}

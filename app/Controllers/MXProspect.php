@@ -270,6 +270,7 @@ class MXProspect extends BaseController
     {
         $query = $this->model->getByNoProspectAndAlt($NoProspek, $Alt);
         $qq = (new \App\Models\MXProspekAksesoriModel())->getByProspekAlt($NoProspek, $query->getResult()[0]->Alt);
+        $jml = (new \App\Models\MXProspekJumlahModel())->getByProspekAlt($NoProspek, $query->getResult()[0]->Alt);
 
         $copyprospek = ($this->request->getGet('copyprospek') != null && $this->request->getGet('copyprospek') == '1') ? 1 : 0;
 
@@ -280,7 +281,8 @@ class MXProspect extends BaseController
             'alternatif' => $this->model->getAlternatif(),
             'copyprospek' => $copyprospek,
             'data' => $query->getResult()[0],
-            'prospek_aksesori' => $qq->getResult()
+            'prospek_aksesori' => $qq->getResult(),
+            'jumlah' => ($jml->getNumRows() > 0) ? $jml->getResult() : []
         ];
 
         $views = array_merge($views, $this->requiredFields());

@@ -248,6 +248,10 @@ $routes->group('listprospek', static function ($routes) {
     $routes->post('delete', 'MXProspect::delete');
 });
 
+$routes->group('queueestimasi', static function ($routes) {
+    $routes->get('/', 'MXEstimasi::index');
+    $routes->post('calculate', 'MXEstimasi::calculate');
+});
 
 $routes->group('produk', static function ($routes) {
     $routes->get('/', 'MFProduk::index');

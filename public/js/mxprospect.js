@@ -77,16 +77,18 @@ $(function () {
         }
     })
 
-    let aksesories = [];
     $('button.add-acc').on('click', function () {
         const val = $('select[name="aksesoris"] option:selected').val()
 
         let accessor = []
-        // if( $('.bs-child').length > 0 ) {
-        //     $('.bs-child').each((item))
-        // }
+        if( $('.bscolor').length > 0 ) {
+            $('.bscolor').each(function(k, v) {
+                const value = $(this).find(`input[name="aksesori[]"]`).val()
+                accessor.push(value)
+            })
+        }
 
-        if (val !== '0' && !aksesories.includes(val)) {
+        if (val !== '0' && !accessor.includes(val)) {
             const label = $('select[name="aksesoris"] option:selected').text()
 
             const elem = `<div class="row mb-1 bscolor" id="bscolor-${val}">
@@ -100,7 +102,7 @@ $(function () {
                         </div>`
 
             $('.bs-child').append(elem)
-            aksesories.push(val)
+            accessor.push(val)
         }
         $(`select[name="aksesoris"] option[value="0"]`).prop('selected', true);
     })
@@ -165,12 +167,8 @@ $(function () {
     })
 
     $('.bs-child').on('click', '.delbs', function (e) {
-        const split_el = $(this).attr('id').split('-')
-        const idx = aksesories.indexOf(split_el[1]);
-        if (idx !== -1) {
-            aksesories.splice(idx, 1);
-        }
-        $(`.bs-child #bscolor-${split_el[1]}`).remove()
+        const id = $(this).attr('id').split('-')[1];
+        $(`.bs-child #bscolor-${id}`).remove()
     })
 
     $('#dataList').on('click', '.del-prospek', function (e) {

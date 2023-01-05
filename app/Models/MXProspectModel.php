@@ -111,7 +111,7 @@ class MXProspectModel extends Model
     public function getByStatus($status)
     {
         $where = "MX_Prospek.Status = " . $status;
-        return $this->select('MX_Prospek.*, UserPass.Nama CreatedByName, convert(varchar(10), Created, 103) CreatedDate , convert(varchar(8), Created, 108) CreatedTime')
+        return $this->select('MX_Prospek.*, UserPass.Nama CreatedByName, CustomerFile.NamaPemesan, convert(varchar(10), Created, 103) CreatedDate , convert(varchar(8), Created, 108) CreatedTime')
         /*
         Kolom CreatedByName = Nama Pembuat Prospek / Sales
         Kolom CreatedDate = Tanggal pembuatan format dd/mm/yyyy

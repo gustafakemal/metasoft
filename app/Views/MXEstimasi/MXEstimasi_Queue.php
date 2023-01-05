@@ -31,6 +31,7 @@
             <th>Pemesan</th>
             <th>Jumlah</th>
             <th>Diinput</th>
+            <th>Sales</th>
             <th>Catatan</th>
             <th>Action</th>
 		</tr>

@@ -245,11 +245,13 @@ $routes->group('listprospek', static function ($routes) {
     $routes->post('add', 'MXProspect::altProcess');
     $routes->get('edit/(:any)/(:num)', 'MXProspect::edit/$1/$2');
     $routes->post('set/priority', 'MXProspect::setPriority');
+    $routes->get('set/proses', 'MXProspect::setProses');
     $routes->post('delete', 'MXProspect::delete');
 });
 
 $routes->group('queueestimasi', static function ($routes) {
     $routes->get('/', 'MXEstimasi::index');
+    $routes->get('api', 'MXEstimasi::apiGetAll');
     $routes->post('calculate', 'MXEstimasi::calculate');
 });
 

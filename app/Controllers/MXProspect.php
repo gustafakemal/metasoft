@@ -132,10 +132,10 @@ class MXProspect extends BaseController
                 $desc = 'Input';
                 break;
             case 20:
-                $desc = 'Sample';
+                $desc = 'Estimasi';
                 break;
             case 30:
-                $desc = 'Estimasi';
+                $desc = 'Sample';
                 break;
             default:
                 $desc = '';
@@ -193,23 +193,8 @@ class MXProspect extends BaseController
             foreach ($query->getResult() as $key => $row) {
 
                 $edit = '<a title="Edit" data-toggle="tooltip" data-placement="top" class="btn btn-sm btn-success edit-rev-item" href="'. site_url('listprospek/edit/' . $row->NoProspek . '/' . $row->Alt) .'" title="Edit"><i class="far fa-edit"></i></a>';
-//                $alt = '<a title="Tambah Alt" data-toggle="tooltip" data-placement="top" class="btn btn-sm btn-info alt-item" href="'. site_url('listprospek/add/' . $row->NoProspek . '/' . $row->Alt) .'" title="Alt"><i class="far fa-clone"></i></a>';
                 $alt = '<a title="Tambah Alt" data-toggle="tooltip" data-placement="top" class="btn btn-sm btn-info alt-item" data-no-prospek="' . $row->NoProspek . '" data-alt="' . $row->Alt . '" href="#" title="Alt"><i class="far fa-clone"></i></a>';
                 $hapus = '<a title="Hapus" data-toggle="tooltip" data-placement="top" class="btn btn-sm btn-danger del-prospek" data-no-prospek="' . $row->NoProspek . '" data-alt="' . $row->Alt . '" data-status="' . $row->Status . '" href="#"><i class="far fa-trash-alt"></i></a>';
-
-//                $minta = '<div class="switch-nav dropdown">
-//                            <button type="button" class="dropdown-toggle" data-toggle="dropdown">
-//                                <div class="fungsi">
-//                                    Input
-//                                </div>
-//                                <div class="dropdown-menu dropdown-menu-right">
-//                                    <a href="#" class="dropdown-item">Estimasi</a>
-//                                    <a href="#" class="dropdown-item">Sample</a>
-//                                    <a href="#" class="dropdown-item">Batal</a>
-//                                    <a href="#" class="dropdown-item">Selesai</a>
-//                                </div>
-//                            </button>
-//                        </div>';
 
                 $minta = $this->prosesDropdown($row->Status, $row->NoProspek, $row->Alt);
 

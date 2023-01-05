@@ -118,9 +118,9 @@ class MXProspectModel extends Model
         Kolom CreatedTime = Jam pembuatan format hh:mm:ss
          */
 
-            ->join('CustomerFile', 'MX_Prospek.Pemesan = CustomerFile.NoPemesan')
-            ->join('MX_AreaKirim', 'MX_Prospek.Area = MX_AreaKirim.ID')
-            ->join('UserPass', 'MX_Prospek.CreatedBy=UserPass.UserID')
+            ->join('CustomerFile', 'MX_Prospek.Pemesan = CustomerFile.NoPemesan', 'left')
+            ->join('MX_AreaKirim', 'MX_Prospek.Area = MX_AreaKirim.ID', 'left')
+            ->join('UserPass', 'MX_Prospek.CreatedBy=UserPass.UserID', 'left')
             ->where($where)
             ->get();
     }

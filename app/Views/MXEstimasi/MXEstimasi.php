@@ -450,6 +450,7 @@
                     <tbody>
                         <tr class="odd">
                             <td><a class="btn btn-sm btn-danger far fa-trash-alt"></a></td>
+                            
                             <td>
                                 <select id="warnatinta" name="warnatinta" class="form-control">
                                     <option value="">Pilih</option>
@@ -461,6 +462,7 @@
                             <td>
                                 <input value="" id="coverage" name="coverage" type="number" class="form-control">
                             </td>
+                    
                         </tr>
                     </tbody>
                 </table>
@@ -473,7 +475,112 @@
             <button type="submit" class="btn btn-primary">Kalkulasi</button>
         </div>
     </div>
-
 </form>
+
+
+<!-- Modal Hasil Kalkulasi otomatis-->
+
+<div class="modal fade" id="kalkulasiModal" tabindex="-1" aria-hidden="true">
+    <div class="modal-dialog modal-lg">
+      <div class="modal-content width=60%">
+        <div class="modal-header">
+          <h5 class="modal-title">Hasil Kalkulasi</h5>
+        </div>
+        <div class="modal-body">
+            <div class="row">
+                <div class="col-6">
+                    <div class="form-group row">
+                        <label for="jumlahup" class="col-lg-6 col-sm-12 col-form-label">Jumlah Up</label>
+                        <div class="col-lg-6 col-sm-12">
+                        <input value="<?php ?>" id="jumlahup" name="jumlahup" type="number" class="form-control">
+                        </div>
+                    </div>
+                </div>
+                <div class="col-6">
+                    <div class="form-group row">
+                        <label for="lebarfilm" class="col-lg-5 col-sm-12 col-form-label">Lebar Film </label>
+                        <div class="col-lg-7 col-sm-12">
+                        <input value="<?php ?>" id="lebarfilm" name="lebarfilm" type="number" class="form-control">
+                        </div>
+                    </div>
+                </div>
+            </div>
+            <div class="row">
+                <div class="col-6">
+                    <div class="form-group row">
+                        <label for="jumlahpitch" class="col-lg-6 col-sm-12 col-form-label">Jumlah Pitch</label>
+                        <div class="col-lg-6 col-sm-12">
+                        <input disabled value="<?php ?>" id="jumlahpitch" name="jumlahpitch" type="number" class="form-control">
+                        </div>
+                    </div>
+                </div>
+                <div class="col-6">
+                    <div class="form-group row">
+                        <label for="colorbar" class="col-lg-5 col-sm-12 col-form-label">Color Bar </label>
+                        <div class="col-lg-7 col-sm-12">
+                        <input disabled value="<?php ?>" id="colorbar" name="colorbar" type="number" class="form-control">
+                        </div>
+                    </div>
+                </div>
+            </div>
+            <div class="row">
+                <div class="col-6">
+                    <div class="form-group row">
+                        <label for="circum" class="col-lg-6 col-sm-12 col-form-label">Circum</label>
+                        <div class="col-lg-6 col-sm-12">
+                        <input disabled value="<?php ?>" id="circum" name="circum" type="number" class="form-control">
+                        </div>
+                    </div>
+                </div>
+                <div class="col-6">
+                    <div class="form-group row">
+                        <label for="runmeter" class="col-lg-5 col-sm-12 col-form-label">Running Meter</label>
+                        <div class="col-lg-7 col-sm-12">
+                        <input disabled value="<?php ?>" id="runmeter" name="runmeter" type="number" class="form-control">
+                        </div>
+                    </div>
+                </div>
+            </div>
+            <div class="row">
+                <div class="col-6">
+                    <div class="form-group row">
+                        <label for="waste" class="col-lg-6 col-sm-12 col-form-label">Waste</label>
+                        <div class="col-lg-6 col-sm-12">
+                        <input disabled value="<?php ?>" id="waste" name="waste" type="number" class="form-control">
+                        </div>
+                    </div>
+                </div>
+                <div class="col-6">
+                    <div class="form-group row">
+                        <label for="wasteps" class="col-lg-5 col-sm-12 col-form-label">Waste Persiapan</label>
+                        <div class="col-lg-7 col-sm-12">
+                        <input disabled value="<?php ?>" id="wasteps" name="wasteps" type="number" class="form-control">
+                        </div>
+                    </div>
+                </div>
+            </div>
+            <div class="row">
+                <div class="col-6">
+                    <div class="form-group row">
+                        <label for="jum_truk" class="col-lg-6 col-sm-12 col-form-label">Jumlah Truk</label>
+                        <div class="col-lg-6 col-sm-12">
+                        <input disabled value="<?php ?>" id="jum_truk" name="jum_truk" type="number" class="form-control">
+                        </div>
+                    </div>
+                </div>
+            </div>
+            
+        </div>
+        <div class="modal-footer">
+          <button type="button" class="btn btn-secondary" data-dismiss="modal">Batal</button>
+          <a href=""  class="btn btn-primary  mb-2">Buat Estimasi</a>
+        </div>
+      </div>
+    </div>
+  </div>
+
+<!-- SCRIPTS -->
+
+
 
 <?= $this->endSection() ?>

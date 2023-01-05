@@ -574,6 +574,10 @@ class MXProspect extends BaseController
      */
     private function requiredFields(): array
     {
+        $finishing = (new \App\Models\SegmenModel())->asObject()
+                                                    ->where('Kategori', 'Jenis Pieces MX')
+                                                    ->where('FlagAktif', 'A')
+                                                    ->findAll();
         return [
             'customers' => (new \App\Models\CustomerModel())->getCustomers(),
             'jenisproduk' => (new \App\Models\MXJenisProdukModel())->asObject()->findAll(),
@@ -584,6 +588,7 @@ class MXProspect extends BaseController
             'bottom' => (new \App\Models\MXBottomModel())->asObject()->findAll(),
             'aksesori' => (new \App\Models\MXAksesoriModel())->asObject()->findAll(),
             'areakirim' => (new \App\Models\MXAreaKirimModel())->asObject()->findAll(),
+            'finishing' => $finishing,
         ];
     }
 }

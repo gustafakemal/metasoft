@@ -40,11 +40,15 @@ class MXProspect extends BaseController
      */
     public function add(): string
     {
+        $jenistinta = (new \App\Models\MXMerkTintaModel())->where('Kategori', 'Jenis Tinta MX')
+            ->get();
+
         $views = [
             'page_title' => 'Input Prospek',
             'breadcrumbs' => $this->common->breadcrumbs(uri_string(true)),
             'main_menu' => (new \App\Libraries\Menu())->render(),
             'alternatif' => $this->model->getAlternatif(),
+            'jenistinta' => $jenistinta->getResult(),
         ];
 
         $views = array_merge($views, $this->requiredFields());
@@ -125,6 +129,58 @@ class MXProspect extends BaseController
 
     }
 
+    private function prosesDropdown($proses, $noprospek, $alt)
+    {
+        switch($proses) {
+            case 10:
+                $desc = 'Input';
+                break;
+            case 20:
+                $desc = 'Estimasi';
+                break;
+            case 30:
+                $desc = 'Sample';
+                break;
+            default:
+                $desc = '';
+                break;
+        }
+
+        $navigasi = function ($val, $noprospek, $alt) {
+            return 'listprospek/set/proses?val='.$val.'&noprospek='. $noprospek .'&alt=' . $alt;
+        };
+
+        $minta = '<div class="switch-nav dropdown">
+                            <button type="button" class="dropdown-toggle" data-toggle="dropdown" id="drp-proses">
+                                    ' . $desc . '
+                             </button>
+                                <div class="dropdown-menu dropdown-menu-right" aria-labelledby="drp-proses">
+                                    <a href="' . site_url($navigasi(10, $noprospek, $alt)) . '" class="dropdown-item' . (($proses == 10) ? ' active' : '') . '">Input</a>
+                                    <a href="' . site_url($navigasi(20, $noprospek, $alt)) . '" class="dropdown-item' . (($proses == 20) ? ' active' : '') . '">Estimasi</a>
+                                    <a href="' . site_url($navigasi(30, $noprospek, $alt)) . '" class="dropdown-item' . (($proses == 30) ? ' active' : '') . '">Sample</a>
+                                    <a href="' . site_url($navigasi(0, $noprospek, $alt)) . '" class="dropdown-item' . (($proses == 0) ? ' active' : '') . '">Batal</a>
+                                    <a href="' . site_url($navigasi(0, $noprospek, $alt)) . '" class="dropdown-item">Selesai</a>
+                                </div>
+                        </div>';
+
+        return $minta;
+    }
+
+    public function setProses()
+    {
+        $val = $this->request->getGet('val');
+        $noprospek = $this->request->getGet('noprospek');
+        $alt = $this->request->getGet('alt');
+
+        $data = ['Status' => (int) $val];
+
+        if( $this->model->updateData($data, $noprospek, $alt) ) {
+            return redirect()->back();
+        } else {
+            return redirect()->back();
+        }
+    }
+
     /**
      * @return \CodeIgniter\HTTP\ResponseInterface
      */
@@ -141,25 +197,10 @@ class MXProspect extends BaseController
             foreach ($query->getResult() as $key => $row) {
 
                 $edit = '<a title="Edit" data-toggle="tooltip" data-placement="top" class="btn btn-sm btn-success edit-rev-item" href="'. site_url('listprospek/edit/' . $row->NoProspek . '/' . $row->Alt) .'" title="Edit"><i class="far fa-edit"></i></a>';
-//                $alt = '<a title="Tambah Alt" data-toggle="tooltip" data-placement="top" class="btn btn-sm btn-info alt-item" href="'. site_url('listprospek/add/' . $row->NoProspek . '/' . $row->Alt) .'" title="Alt"><i class="far fa-clone"></i></a>';
                 $alt = '<a title="Tambah Alt" data-toggle="tooltip" data-placement="top" class="btn btn-sm btn-info alt-item" data-no-prospek="' . $row->NoProspek . '" data-alt="' . $row->Alt . '" href="#" title="Alt"><i class="far fa-clone"></i></a>';
                 $hapus = '<a title="Hapus" data-toggle="tooltip" data-placement="top" class="btn btn-sm btn-danger del-prospek" data-no-prospek="' . $row->NoProspek . '" data-alt="' . $row->Alt . '" data-status="' . $row->Status . '" href="#"><i class="far fa-trash-alt"></i></a>';
 
-                $minta = '<div class="switch-nav dropdown">
-                            <button type="button" class="dropdown-toggle" data-toggle="dropdown">
-                                <div class="fungsi">
-                                    --
-                                </div>
-                                <div class="dropdown-menu dropdown-menu-right">
-                                    <a href="#" class="dropdown-item">Estimasi</a>
-                                    <a href="#" class="dropdown-item">Sample</a>
-                                    <a href="#" class="dropdown-item">Batal</a>
-                                    <a href="#" class="dropdown-item">Selesai</a>
-                                </div>
-                            </button>
-                        </div>';
-
-//                $minta = $this->prosesDropdown($row->Status);
+                $minta = $this->prosesDropdown($row->Status, $row->NoProspek, $row->Alt);
 
                 if($sess_access[0]->access == 3) {
                     $action = '<div class="btn-group" role="group" aria-label="Basic example">' . $edit . $alt . $hapus . '</div>';

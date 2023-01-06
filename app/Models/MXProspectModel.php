@@ -111,16 +111,16 @@ class MXProspectModel extends Model
     public function getByStatus($status)
     {
         $where = "MX_Prospek.Status = " . $status;
-        return $this->select('MX_Prospek.*, UserPass.Nama CreatedByName, convert(varchar(10), Created, 103) CreatedDate , convert(varchar(8), Created, 108) CreatedTime')
+        return $this->select('MX_Prospek.*, UserPass.Nama CreatedByName, CustomerFile.NamaPemesan, convert(varchar(10), Created, 103) CreatedDate , convert(varchar(8), Created, 108) CreatedTime')
         /*
         Kolom CreatedByName = Nama Pembuat Prospek / Sales
         Kolom CreatedDate = Tanggal pembuatan format dd/mm/yyyy
         Kolom CreatedTime = Jam pembuatan format hh:mm:ss
          */
 
-            ->join('CustomerFile', 'MX_Prospek.Pemesan = CustomerFile.NoPemesan')
-            ->join('MX_AreaKirim', 'MX_Prospek.Area = MX_AreaKirim.ID')
-            ->join('UserPass', 'MX_Prospek.CreatedBy=UserPass.UserID')
+            ->join('CustomerFile', 'MX_Prospek.Pemesan = CustomerFile.NoPemesan', 'left')
+            ->join('MX_AreaKirim', 'MX_Prospek.Area = MX_AreaKirim.ID', 'left')
+            ->join('UserPass', 'MX_Prospek.CreatedBy=UserPass.UserID', 'left')
             ->where($where)
             ->get();
     }
@@ -134,13 +134,17 @@ class MXProspectModel extends Model
 
     public function getDetailByNoProspectAndAlt($NoProspek, $Alt)
     {
-        return $this->select('MX_Prospek.*, CustomerFile.NamaPemesan, MX_JenisProduk.Nama as NamaJenisProduk, MX_Konten.Nama as NamaKonten, MX_Segmen.Nama as NamaSegmen, MX_BagMaking.Nama as NamaBagMaking, MX_AreaKirim.Nama as NamaArea')
-            ->join('CustomerFile', 'MX_Prospek.Pemesan = CustomerFile.NoPemesan')
-            ->join('MX_JenisProduk', 'MX_Prospek.JenisProduk = MX_JenisProduk.ID')
-            ->join('MX_Konten', 'MX_Prospek.Konten = MX_Konten.ID')
-            ->join('MX_Segmen', 'MX_Prospek.Segmen = MX_Segmen.ID')
-            ->join('MX_BagMaking', 'MX_Prospek.BagMaking = MX_BagMaking.ID')
-            ->join('MX_AreaKirim', 'MX_Prospek.Area = MX_AreaKirim.ID')
+        return $this->select('MX_Prospek.*, CustomerFile.NamaPemesan, MX_JenisProduk.nama as NamaJenisProduk, MX_Konten.Nama as NamaKonten, MX_Segmen.Nama as NamaSegmen, Mat1.Nama as NamaMaterial1, Mat2.Nama as NamaMaterial2, Mat3.Nama as NamaMaterial3, Mat4.Nama as NamaMaterial4, MX_BagMaking.Nama as NamaBagMaking, MX_AreaKirim.Nama as NamaArea')
+            ->join('CustomerFile', 'MX_Prospek.Pemesan = CustomerFile.NoPemesan', 'left')
+            ->join('MX_JenisProduk', 'MX_Prospek.JenisProduk = MX_JenisProduk.id', 'left')
+            ->join('MX_Konten', 'MX_Prospek.Konten = MX_Konten.ID', 'left')
+            ->join('MX_Segmen', 'MX_Prospek.Segmen = MX_Segmen.ID', 'left')
+            ->join('MX_Material Mat1', 'MX_Prospek.Material1 = Mat1.ID', 'left')
+            ->join('MX_Material Mat2', 'MX_Prospek.Material2 = Mat2.ID', 'left')
+            ->join('MX_Material Mat3', 'MX_Prospek.Material3 = Mat3.ID', 'left')
+            ->join('MX_Material Mat4', 'MX_Prospek.Material4 = Mat4.ID', 'left')
+            ->join('MX_BagMaking', 'MX_Prospek.BagMaking = MX_BagMaking.ID', 'left')
+            ->join('MX_AreaKirim', 'MX_Prospek.Area = MX_AreaKirim.ID', 'left')
             ->where('MX_Prospek.NoProspek', $NoProspek)
             ->where('MX_Prospek.Alt', $Alt)
             ->get();

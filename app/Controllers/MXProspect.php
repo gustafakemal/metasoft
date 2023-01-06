@@ -40,11 +40,15 @@ class MXProspect extends BaseController
      */
     public function add(): string
     {
+        $jenistinta = (new \App\Models\MXMerkTintaModel())->where('Kategori', 'Jenis Tinta MX')
+            ->get();
+
         $views = [
             'page_title' => 'Input Prospek',
             'breadcrumbs' => $this->common->breadcrumbs(uri_string(true)),
             'main_menu' => (new \App\Libraries\Menu())->render(),
             'alternatif' => $this->model->getAlternatif(),
+            'jenistinta' => $jenistinta->getResult(),
         ];
 
         $views = array_merge($views, $this->requiredFields());

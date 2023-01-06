@@ -184,19 +184,32 @@ endforeach; ?>
     </div>
 
     <div class="row">
-        <div class="col-6">
+        <div class="col-4">
             <div class="row">
-                <label for="maxjoin" class="col-lg-4 col-sm-12 col-form-label">Maksimal Join </label>
-                <div class="col-lg-8 col-sm-12">
+                <label for="maxjoin" class="col-lg-6 col-sm-12 col-form-label">Maksimal Join </label>
+                <div class="col-lg-6 col-sm-12">
                     <input type="number" class="form-control" id="maxjoin" name="MaxJoin">
                 </div>
             </div>
         </div>
-        <div class="col-6">
-            <div class="form-group row">
+        <div class="col-4">
+            <div class="form-group row justify-content-end">
                 <label for="warnatape" class="col-lg-4 col-sm-12 col-form-label">Warna Tape</label>
-                <div class="col-lg-8 col-sm-12">
+                <div class="col-lg-7 col-sm-12">
                     <input type="text" class="form-control" id="warnatape" name="WarnaTape">
+                </div>
+            </div>
+        </div>
+        <div class="col-4">
+            <div class="form-group row justify-content-end">
+                <label for="JenisTinta" class="col-lg-4 col-sm-12 col-form-label">Jenis Tinta</label>
+                <div class="col-lg-7 col-sm-12">
+                    <select id="jenistinta" name="JenisTinta" class="form-control">
+                        <option value="">Pilih</option>
+                        <?php foreach ($jenistinta as $jt) : ?>
+                            <option value="<?= $jt->OpsiVal;?>"><?= $jt->OpsiTeks;?></option>
+                        <?php endforeach;?>
+                    </select>
                 </div>
             </div>
         </div>

@@ -52,10 +52,7 @@
                 <label for="pemesan" class="col-lg-4 col-sm-12 col-form-label">Pemesan</label>
                 <div class="col-lg-8 col-sm-12">
                     <select id="pemesan" name="Pemesan" class="form-control" readonly>
-                        <option value="">Pilih</option>
-                        <?php foreach ($customers as $key => $customer) : ?>
-                            <option<?= ($customer->NoPemesan == $data->Pemesan) ? ' selected' : '';?> value="<?= $customer->NoPemesan;?>"><?= $customer->NamaPemesan;?></option>
-                        <?php endforeach;?>
+                        <option value="<?= $data->Pemesan ?: '';?>"><?= ($data->Pemesan) ? $data->NamaPemesan : '-';?></option>
                     </select>
                 </div>
             </div>
@@ -65,10 +62,7 @@
                 <label for="jenisproduk" class="col-lg-4 col-sm-12 col-form-label">Jenis Produk</label>
                 <div class="col-lg-8 col-sm-12">
                     <select id="jenisproduk" name="JenisProduk" class="form-control" readonly>
-                        <option value="">Pilih</option>
-                        <?php foreach ($jenisproduk as $key => $jp) : ?>
-                            <option<?= ($jp->id == $data->JenisProduk) ? ' selected' : '';?> value="<?= $jp->id;?>"><?= $jp->nama;?></option>
-                        <?php endforeach;?>
+                        <option value="<?= $data->JenisProduk;?>"><?= $data->NamaJenisProduk;?></option>
                     </select>
                 </div>
             </div>
@@ -81,10 +75,7 @@
                 <label for="segmen" class="col-lg-4 col-sm-12 col-form-label">Segmen</label>
                 <div class="col-lg-8 col-sm-12">
                     <select id="segmen" name="Segmen" class="form-control" readonly>
-                        <option value="">Pilih</option>
-                        <?php foreach ($segmen as $key => $segmen) : ?>
-                            <option<?= ($segmen->ID == $data->Segmen) ? ' selected' : '';?> value="<?= $segmen->ID;?>"><?= $segmen->Nama;?></option>
-                        <?php endforeach;?>
+                        <option value="<?= $data->Segmen;?>"><?= $data->NamaSegmen;?></option>
                     </select>
                 </div>
             </div>
@@ -94,10 +85,7 @@
                 <label for="konten" class="col-lg-4 col-sm-12 col-form-label">Konten</label>
                 <div class="col-lg-8 col-sm-12">
                     <select id="konten" name="Konten" class="form-control" readonly>
-                        <option value="">Pilih</option>
-                        <?php foreach ($konten as $key => $kt) : ?>
-                            <option<?= ($kt->ID == $data->Konten) ? ' selected' : '';?> value="<?= $kt->ID;?>"><?= $kt->Nama;?></option>
-                        <?php endforeach;?>
+                        <option value="<?= $data->Konten;?>"><?= $data->NamaKonten;?></option>
                     </select>
                 </div>
             </div>
@@ -124,37 +112,25 @@
         <label class="col-lg-2 col-sm-12 col-form-label">Material<span class="text-danger">*</span></label>
         <div class="col-sm-2">
             <select readonly id="material1" step="any" name="Material1" class="form-control">
-                <option value="">Pilih</option>
-                <?php foreach ($material as $key => $mt) : ?>
-                    <option<?= ($mt->id == $data->Material1) ? ' selected' : '';?> value="<?= $mt->id;?>"><?= $mt->nama;?></option>
-                <?php endforeach;?>
+                <option value="<?= $data->Material1;?>"><?= $data->NamaMaterial1;?></option>
             </select>
 			<input readonly value="<?= ((int)$data->TebalMat1 == 0) ? '0'.$data->TebalMat1 : $data->TebalMat1;?>" type="number" step="any" class="form-control" id="tebalmat1" name="TebalMat1" placeholder="Tebal">
         </div>
         <div class="col-sm-2">
             <select readonly id="material2" name="Material2" class="form-control">
-                <option value="">Pilih</option>
-                <?php foreach ($material as $key => $mt) : ?>
-                    <option<?= ($mt->id == $data->Material2) ? ' selected' : '';?> value="<?= $mt->id;?>"><?= $mt->nama;?></option>
-                <?php endforeach;?>
+                <option value="<?= $data->Material2;?>"><?= $data->NamaMaterial2;?></option>
             </select>
 			<input readonly value="<?= ((int)$data->TebalMat2 == 0) ? '0'.$data->TebalMat2 : $data->TebalMat2;?>" type="number" step="any" class="form-control" id="tebalmat2" name="TebalMat2" placeholder="Tebal">
         </div>
         <div class="col-sm-2">
             <select readonly id="material3" name="Material3" class="form-control">
-                <option value="">Pilih</option>
-                <?php foreach ($material as $key => $mt) : ?>
-                    <option<?= ($mt->id == $data->Material3) ? ' selected' : '';?> value="<?= $mt->id;?>"><?= $mt->nama;?></option>
-                <?php endforeach;?>
+                <option value="<?= $data->Material3;?>"><?= $data->NamaMaterial3;?></option>
             </select>
 			<input readonly value="<?= ((int)$data->TebalMat3 == 0) ? '0'.$data->TebalMat3 : $data->TebalMat3;?>" type="number" step="any" class="form-control" id="tebalmat3" name="TebalMat3" placeholder="Tebal">
         </div>
         <div class="col-sm-2">
             <select readonly id="material4" name="Material4" class="form-control">
-                <option value="">Pilih</option>
-                <?php foreach ($material as $key => $mt) : ?>
-                    <option<?= ($mt->id == $data->Material4) ? ' selected' : '';?> value="<?= $mt->id;?>"><?= $mt->nama;?></option>
-                <?php endforeach;?>
+                <option value="<?= $data->Material4;?>"><?= $data->NamaMaterial4;?></option>
             </select>
 			<input readonly value="<?= ((int)$data->TebalMat4 == 0) ? '0'.$data->TebalMat4 : $data->TebalMat4;?>" type="number" step="any" class="form-control" id="tebalmat4" name="TebalMat4" placeholder="Tebal">
         </div>
@@ -229,10 +205,7 @@
                 <label for="bagmaking" class="col-lg-4 col-sm-12 col-form-label">Bag Making</label>
                 <div class="col-lg-8 col-sm-12">
                     <select readonly  id="bagmaking" name="BagMaking" class="form-control">
-                        <option value="">Pilih</option>
-                        <?php foreach ($bagmaking as $key => $bm) : ?>
-                            <option<?= ($bm->ID == $data->BagMaking) ? ' selected' : '';?> value="<?= $bm->ID;?>"><?= $bm->Nama;?></option>
-                        <?php endforeach;?>
+                        <option value="<?= $data->BagMaking;?>"><?= $data->NamaBagMaking;?></option>
                     </select>
                 </div>
             </div>
@@ -242,10 +215,7 @@
                 <label for="bottom" class="col-lg-4 col-sm-12 col-form-label">Bottom</label>
                 <div class="col-lg-8 col-sm-12">
                     <select readonly id="bottom" name="Bottom" class="form-control" disabled>
-                        <option value="">Pilih</option>
-                        <?php foreach ($bottom as $key => $bt) : ?>
-                            <option<?= ($bt->ID == $data->Bottom) ? ' selected' : '';?> value="<?= $bt->ID;?>"><?= $bt->Nama;?></option>
-                        <?php endforeach;?>
+                        <option value="<?= $data->Bottom;?>"><?= $data->Bottom;?></option>
                     </select>
                 </div>
             </div>
@@ -382,10 +352,7 @@
                 <label for="area" class="col-lg-5 col-sm-12 col-form-label">Area</label>
                 <div class="col-lg-7 col-sm-12">
                     <select  readonly  id="area" name="Area" class="form-control">
-                        <option value="">Pilih</option>
-                        <?php foreach ($areakirim as $key => $a_k) : ?>
-                            <option<?= ($data->Area == $a_k->ID) ? ' selected' : '';?> value="<?= $a_k->ID;?>"><?= $a_k->Nama;?></option>
-                        <?php endforeach;?>
+                        <option value="<?= $data->Area;?>"><?= $data->NamaArea;?></option>
                     </select>
                 </div>
             </div>
@@ -409,13 +376,39 @@
     <div class="row">
         <div class="col-4">
             <div class="form-group row">
+                <label for="jml_up" class="col-lg-6 col-sm-12 col-form-label">Jumlah Up</label>
+                <div class="col-lg-6 col-sm-12">
+                    <input type="number" name="JumlahUp" class="form-control" id="jml_up" />
+                </div>
+            </div>
+        </div>
+
+        <div class="col-4">
+            <div class="form-group row">
+                <label for="lbr_film" class="col-lg-5 col-sm-12 col-form-label">Lebar Film</label>
+                <div class="col-lg-7 col-sm-12">
+                    <input type="number" name="LebarFilm" class="form-control" id="lbr_film" />
+                </div>
+            </div>
+        </div>
+
+        <div class="col-4">
+            <div class="form-group row">
+                <label for="lbr_film" class="col-lg-5 col-sm-12 col-form-label">Lebar Film</label>
+                <div class="col-lg-7 col-sm-12">
+                    <input type="number" name="LebarFilm" class="form-control" id="lbr_film" />
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <div class="row">
+        <div class="col-4">
+            <div class="form-group row">
                 <label for="jenistinta" class="col-lg-6 col-sm-12 col-form-label">Jenis Tinta</label>
                 <div class="col-lg-6 col-sm-12">
-                    <select id="jenistinta" name="jenistinta" class="form-control">
-                        <option value="">Pilih</option>
-                        <?php foreach ($jenistinta as $key => $jt) : ?>
-                            <option>  </option>
-                        <?php endforeach;?>  
+                    <select id="jenistinta" name="jenistinta" class="form-control" disabled>
+                        <option value="<?= $jenistinta->OpsiVal;?>"><?= $jenistinta->OpsiTeks;?></option>
                     </select>
                 </div>
             </div>
@@ -426,10 +419,10 @@
                 <label for="adhesive" class="col-lg-5 col-sm-12 col-form-label">Adhesive </label>
                 <div class="col-lg-7 col-sm-12">
                     <select id="adhesive" name="adhesive" class="form-control">
-                        <option value="">Pilih</option>
-                        <?php foreach ($adhesive as $key => $ads) : ?>
-                            <option>  </option>
-                        <?php endforeach;?>                    
+                        <option value=""<?= (!$data->JenisAdhesive) ? ' selected' : '';?>>Pilih</option>
+                        <?php foreach ($adhesive as $ads) : ?>
+                            <option value="<?= $ads->OpsiVal;?>"><?= $ads->OpsiTeks;?></option>
+                        <?php endforeach;?>
                     </select>
                 </div>
             </div>
@@ -439,7 +432,7 @@
     <div>
         <div class="row">
             <div class="col-sm-12">
-                <table class="table table-bordered table-striped" style="width: 40%;">
+                <table class="table table-bordered table-striped tbl-tinta" style="width: 40%;">
                     <thead>
                         <tr>
                             <th><button type="button" class="btn btn-sm btn-primary add-acc"><i class="fas fa-plus-circle"></i></button></th>
@@ -448,15 +441,18 @@
                         </tr>
                     </thead>
                     <tbody>
-                        <tr class="odd">
-                            <td><a class="btn btn-sm btn-danger far fa-trash-alt"></a></td>
-                            
+                        <tr class="odd" data-key="0">
+                            <td>
+                                <button class="btn btn-sm btn-danger del-tinta" data-id="0" type="button" disabled>
+                                    <i class="far fa-trash-alt"></i>
+                                </button>
+                            </td>
                             <td>
                                 <select id="warnatinta" name="warnatinta" class="form-control">
                                     <option value="">Pilih</option>
-                                    <?php foreach ($warnatinta as $key => $wt) : ?>
-                                        <option>  </option>
-                                     <?php endforeach;?>                     
+                                    <?php foreach ($tinta as $t) : ?>
+                                        <option value="<?= $t->id;?>"><?= $t->nama;?></option>
+                                    <?php endforeach;?>
                                 </select>
                             </td>
                             <td>
@@ -472,14 +468,13 @@
 
 	<div class="row mt-4">
         <div class="col-12">
-            <button type="submit" class="btn btn-primary">Kalkulasi</button>
+            <button type="button" data-toggle="modal" data-target="#kalkulasiModal" class="btn btn-primary">Kalkulasi</button>
         </div>
     </div>
 </form>
 
 
 <!-- Modal Hasil Kalkulasi otomatis-->
-
 <div class="modal fade" id="kalkulasiModal" tabindex="-1" aria-hidden="true">
     <div class="modal-dialog modal-lg">
       <div class="modal-content width=60%">

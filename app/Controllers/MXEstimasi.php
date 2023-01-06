@@ -23,6 +23,55 @@ class MXEstimasi extends BaseController
         ]);
     }
 
+    private function formSatuan($satuan, $pieces = null)
+    {
+        if($satuan === 'R') {
+            $arr = [
+                'label' => 'Bottom',
+                'form_name' => 'MeterRoll'
+            ];
+        } else {
+            if($pieces == 'CS') {
+                $arr = [
+                    'label' => 'Centre Seal',
+                    'form_name' => 'CentreSeal'
+                ];
+            } else {
+                $arr = [
+                    'label' => 'Gusset',
+                    'form_name' => 'Gusset'
+                ];
+            }
+        }
+
+        return $arr;
+    }
+
+    public function calculate($noprospek, $alt)
+    {
+        $data = $this->model->getDetailByNoProspectAndAlt($noprospek, $alt);
+        $qq = (new \App\Models\MXProspekAksesoriModel())->getByProspekAlt($noprospek, $alt);
+        $jml = (new \App\Models\MXProspekJumlahModel())->getByProspekAlt($noprospek, $alt);
+        $jenistinta = (new \App\Models\MXMerkTintaModel())->where('Kategori', 'Jenis Tinta MX')
+                                                        ->where('OpsiVal', $data->getResult()[0]->JenisTinta)
+                                                            ->get();
+        $adhesive = (new \App\Models\MXMerkTintaModel())->where('Kategori', 'Jenis Adhesive MX')
+            ->get();
+        $tinta = (new \App\Models\MXJenisTinta())->getByMerk($jenistinta->getResult()[0]->OpsiTeks);
+
+        return view('MXEstimasi/MXEstimasi', [
+            'page_title' => 'Antrian Estimasi',
+            'breadcrumbs' => $this->common->breadcrumbs(uri_string(true)),
+            'main_menu' => (new \App\Libraries\Menu())->render(),
+            'prospek_aksesori' => $qq->getResult(),
+            'jumlah' => ($jml->getNumRows() > 0) ? $jml->getResult() : [],
+            'data' => $data->getResult()[0],
+            'jenistinta' => ($jenistinta->getNumRows() > 0) ? $jenistinta->getResult()[0] : null,
+            'adhesive' => $adhesive->getResult(),
+            'tinta' => $tinta->getResult()
+        ]);
+    }
+
     public function apiGetAll()
     {
         $query = $this->model->getByStatus(20);

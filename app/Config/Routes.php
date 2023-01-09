@@ -251,6 +251,7 @@ $routes->group('listprospek', static function ($routes) {
 
 $routes->group('queueestimasi', static function ($routes) {
     $routes->get('/', 'MXEstimasi::index');
+    $routes->get('api/tinta', 'MXEstimasi::warnaTinta');
     $routes->get('api', 'MXEstimasi::apiGetAll');
     $routes->get('edit/(:any)/(:num)', 'MXEstimasi::calculate/$1/$2');
 });

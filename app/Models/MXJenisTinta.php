@@ -13,4 +13,11 @@ class MXJenisTinta extends \CodeIgniter\Model
         return $this->where('merk', $merk)
                     ->get();
     }
+
+    public function getTinta()
+    {
+        return $this->select('id, nama, merk')
+                    ->orderBy('nama', 'asc')
+                    ->get();
+    }
 }

@@ -51,7 +51,7 @@
             <div class="form-group row">
                 <label for="pemesan" class="col-lg-4 col-sm-12 col-form-label">Pemesan</label>
                 <div class="col-lg-8 col-sm-12">
-                    <select id="pemesan" name="Pemesan" class="form-control" readonly>
+                    <select id="pemesan" name="Pemesan" class="form-control" disabled>
                         <option value="<?= $data->Pemesan ?: '';?>"><?= ($data->Pemesan) ? $data->NamaPemesan : '-';?></option>
                     </select>
                 </div>
@@ -61,7 +61,7 @@
             <div class="form-group row">
                 <label for="jenisproduk" class="col-lg-4 col-sm-12 col-form-label">Jenis Produk</label>
                 <div class="col-lg-8 col-sm-12">
-                    <select id="jenisproduk" name="JenisProduk" class="form-control" readonly>
+                    <select id="jenisproduk" name="JenisProduk" class="form-control" disabled>
                         <option value="<?= $data->JenisProduk;?>"><?= $data->NamaJenisProduk;?></option>
                     </select>
                 </div>
@@ -74,7 +74,7 @@
             <div class="form-group row">
                 <label for="segmen" class="col-lg-4 col-sm-12 col-form-label">Segmen</label>
                 <div class="col-lg-8 col-sm-12">
-                    <select id="segmen" name="Segmen" class="form-control" readonly>
+                    <select id="segmen" name="Segmen" class="form-control" disabled>
                         <option value="<?= $data->Segmen;?>"><?= $data->NamaSegmen;?></option>
                     </select>
                 </div>
@@ -84,7 +84,7 @@
             <div class="form-group row">
                 <label for="konten" class="col-lg-4 col-sm-12 col-form-label">Konten</label>
                 <div class="col-lg-8 col-sm-12">
-                    <select id="konten" name="Konten" class="form-control" readonly>
+                    <select id="konten" name="Konten" class="form-control" disabled>
                         <option value="<?= $data->Konten;?>"><?= $data->NamaKonten;?></option>
                     </select>
                 </div>
@@ -111,13 +111,13 @@
 	<div class="form-group row">
         <label class="col-lg-2 col-sm-12 col-form-label">Material<span class="text-danger">*</span></label>
         <div class="col-sm-2">
-            <select readonly id="material1" step="any" name="Material1" class="form-control">
+            <select disabled id="material1" step="any" name="Material1" class="form-control">
                 <option value="<?= $data->Material1;?>"><?= $data->NamaMaterial1;?></option>
             </select>
 			<input readonly value="<?= ((int)$data->TebalMat1 == 0) ? '0'.$data->TebalMat1 : $data->TebalMat1;?>" type="number" step="any" class="form-control" id="tebalmat1" name="TebalMat1" placeholder="Tebal">
         </div>
         <div class="col-sm-2">
-            <select readonly id="material2" name="Material2" class="form-control">
+            <select disabled id="material2" name="Material2" class="form-control">
                 <option value="<?= $data->Material2;?>"><?= $data->NamaMaterial2;?></option>
             </select>
 			<input readonly value="<?= ((int)$data->TebalMat2 == 0) ? '0'.$data->TebalMat2 : $data->TebalMat2;?>" type="number" step="any" class="form-control" id="tebalmat2" name="TebalMat2" placeholder="Tebal">
@@ -129,7 +129,7 @@
 			<input readonly value="<?= ((int)$data->TebalMat3 == 0) ? '0'.$data->TebalMat3 : $data->TebalMat3;?>" type="number" step="any" class="form-control" id="tebalmat3" name="TebalMat3" placeholder="Tebal">
         </div>
         <div class="col-sm-2">
-            <select readonly id="material4" name="Material4" class="form-control">
+            <select disabled id="material4" name="Material4" class="form-control">
                 <option value="<?= $data->Material4;?>"><?= $data->NamaMaterial4;?></option>
             </select>
 			<input readonly value="<?= ((int)$data->TebalMat4 == 0) ? '0'.$data->TebalMat4 : $data->TebalMat4;?>" type="number" step="any" class="form-control" id="tebalmat4" name="TebalMat4" placeholder="Tebal">
@@ -149,7 +149,7 @@
             <div class="form-group row">
                 <label for="eyemark" class="col-lg-5 col-sm-12 col-form-label">Eyemark</label>
                 <div class="col-lg-7 col-sm-12">
-                    <select readonly id="eyemark" name="Eyemark" class="form-control">
+                    <select disabled id="eyemark" name="Eyemark" class="form-control">
                         <option<?= ($data->Eyemark == 1) ? ' selected' : '';?> value="1">Eyemark Only</option>
                         <option<?= ($data->Eyemark == 2) ? ' selected' : '';?> value="2">Eyemark & Block Color</option>
                     </select>
@@ -160,7 +160,7 @@
             <div class="form-group row">
                 <label for="roll_direction" class="col-lg-4 col-sm-12 col-form-label">Roll Direction</label>
                 <div class="col-lg-8 col-sm-12">
-                    <select readonly id="rolldirection" name="RollDirection" id="rolldirection" class="form-control">
+                    <select disabled id="rolldirection" name="RollDirection" id="rolldirection" class="form-control">
                         <option<?= ($data->RollDirection == 'Y') ? ' selected' : '';?> value="Y">Terbaca</option>
                         <option<?= ($data->RollDirection == 'T') ? ' selected' : '';?> value="T">Tidak Terbaca</option>
                     </select>
@@ -204,7 +204,7 @@
             <div class="form-group row">
                 <label for="bagmaking" class="col-lg-4 col-sm-12 col-form-label">Bag Making</label>
                 <div class="col-lg-8 col-sm-12">
-                    <select readonly  id="bagmaking" name="BagMaking" class="form-control">
+                    <select disabled id="bagmaking" name="BagMaking" class="form-control">
                         <option value="<?= $data->BagMaking;?>"><?= $data->NamaBagMaking;?></option>
                     </select>
                 </div>
@@ -214,7 +214,7 @@
             <div class="form-group row">
                 <label for="bottom" class="col-lg-4 col-sm-12 col-form-label">Bottom</label>
                 <div class="col-lg-8 col-sm-12">
-                    <select readonly id="bottom" name="Bottom" class="form-control" disabled>
+                    <select id="bottom" name="Bottom" class="form-control" disabled>
                         <option value="<?= $data->Bottom;?>"><?= $data->Bottom;?></option>
                     </select>
                 </div>
@@ -227,7 +227,7 @@
             <div class="form-group row">
                 <label for="filling" class="col-lg-4 col-sm-12 col-form-label">Open For Filling</label>
                 <div class="col-lg-8 col-sm-12">
-                    <select readonly id="filling" name="OpenForFilling" class="form-control">
+                    <select disabled id="filling" name="OpenForFilling" class="form-control">
                         <option value="">Pilih</option>
 						<option<?= ($data->OpenForFilling == 'T') ? ' selected' : '';?> value="T">Top</option>
 						<option<?= ($data->OpenForFilling == 'B') ? ' selected' : '';?> value="B">Bottom</option>
@@ -394,34 +394,35 @@
 
         <div class="col-4">
             <div class="form-group row">
-                <label for="lbr_film" class="col-lg-5 col-sm-12 col-form-label">Lebar Film</label>
+                <label for="<?= $form_satuan['form_name'];?>" class="col-lg-5 col-sm-12 col-form-label"><?= $form_satuan['label'];?></label>
                 <div class="col-lg-7 col-sm-12">
-                    <input type="number" name="LebarFilm" class="form-control" id="lbr_film" />
+                    <input type="number" name="<?= $form_satuan['form_name'];?>" class="form-control" id="<?= $form_satuan['form_name'];?>" />
                 </div>
             </div>
         </div>
+
     </div>
 
     <div class="row">
-        <div class="col-4">
-            <div class="form-group row">
-                <label for="jenistinta" class="col-lg-6 col-sm-12 col-form-label">Jenis Tinta</label>
-                <div class="col-lg-6 col-sm-12">
-                    <select id="jenistinta" name="jenistinta" class="form-control" disabled>
-                        <option value="<?= $jenistinta->OpsiVal;?>"><?= $jenistinta->OpsiTeks;?></option>
-                    </select>
-                </div>
-            </div>
-        </div>
+<!--        <div class="col-4">-->
+<!--            <div class="form-group row">-->
+<!--                <label for="jenistinta" class="col-lg-6 col-sm-12 col-form-label">Jenis Tinta</label>-->
+<!--                <div class="col-lg-6 col-sm-12">-->
+<!--                    <select id="jenistinta" name="jenistinta" class="form-control" disabled>-->
+<!--                        <option value="--><?php //echo $jenistinta->OpsiVal;?><!--">--><?php //echo $jenistinta->OpsiTeks;?><!--</option>-->
+<!--                    </select>-->
+<!--                </div>-->
+<!--            </div>-->
+<!--        </div>-->
         
         <div class="col-4">
             <div class="form-group row">
-                <label for="adhesive" class="col-lg-5 col-sm-12 col-form-label">Adhesive </label>
-                <div class="col-lg-7 col-sm-12">
+                <label for="adhesive" class="col-lg-6 col-sm-12 col-form-label">Adhesive </label>
+                <div class="col-lg-6 col-sm-12">
                     <select id="adhesive" name="adhesive" class="form-control">
                         <option value=""<?= (!$data->JenisAdhesive) ? ' selected' : '';?>>Pilih</option>
                         <?php foreach ($adhesive as $ads) : ?>
-                            <option value="<?= $ads->OpsiVal;?>"><?= $ads->OpsiTeks;?></option>
+                            <option value="<?= $ads->id;?>"><?= $ads->nama;?></option>
                         <?php endforeach;?>
                     </select>
                 </div>
@@ -441,25 +442,12 @@
                         </tr>
                     </thead>
                     <tbody>
-                        <tr class="odd" data-key="0">
-                            <td>
-                                <button class="btn btn-sm btn-danger del-tinta" data-id="0" type="button" disabled>
-                                    <i class="far fa-trash-alt"></i>
-                                </button>
-                            </td>
-                            <td>
-                                <select id="warnatinta" name="warnatinta" class="form-control">
-                                    <option value="">Pilih</option>
-                                    <?php foreach ($tinta as $t) : ?>
-                                        <option value="<?= $t->id;?>"><?= $t->nama;?></option>
-                                    <?php endforeach;?>
-                                </select>
-                            </td>
-                            <td>
-                                <input value="" id="coverage" name="coverage" type="number" class="form-control">
-                            </td>
-                    
-                        </tr>
+                    <tr class="odd zero-record">
+                        <td colspan="3">
+                            <div class="text-center font-italic text-muted">Belum ada tinta</div>
+                        </td>
+                    </tr>
+
                     </tbody>
                 </table>
             </div>
@@ -468,7 +456,8 @@
 
 	<div class="row mt-4">
         <div class="col-12">
-            <button type="button" data-toggle="modal" data-target="#kalkulasiModal" class="btn btn-primary">Kalkulasi</button>
+<!--            <button type="button" data-toggle="modal" data-target="#kalkulasiModal" class="btn btn-primary">Kalkulasi</button>-->
+            <button type="button" class="btn btn-primary open-kalkulasi">Kalkulasi</button>
         </div>
     </div>
 </form>
@@ -487,7 +476,7 @@
                     <div class="form-group row">
                         <label for="jumlahup" class="col-lg-6 col-sm-12 col-form-label">Jumlah Up</label>
                         <div class="col-lg-6 col-sm-12">
-                        <input value="<?php ?>" id="jumlahup" name="jumlahup" type="number" class="form-control">
+                        <div class="jumlah_up font-weight-bold"></div>
                         </div>
                     </div>
                 </div>
@@ -495,7 +484,7 @@
                     <div class="form-group row">
                         <label for="lebarfilm" class="col-lg-5 col-sm-12 col-form-label">Lebar Film </label>
                         <div class="col-lg-7 col-sm-12">
-                        <input value="<?php ?>" id="lebarfilm" name="lebarfilm" type="number" class="form-control">
+                            <div class="lebar_film font-weight-bold"></div>
                         </div>
                     </div>
                 </div>

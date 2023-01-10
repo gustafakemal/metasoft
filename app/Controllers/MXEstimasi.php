@@ -47,6 +47,13 @@ class MXEstimasi extends BaseController
         return $arr;
     }
 
+    public function warnaTinta()
+    {
+        $tinta = (new \App\Models\MXJenisTinta())->getTinta();
+
+        return $this->response->setJSON($tinta->getResult());
+    }
+
     public function calculate($noprospek, $alt)
     {
         $data = $this->model->getDetailByNoProspectAndAlt($noprospek, $alt);
@@ -55,9 +62,12 @@ class MXEstimasi extends BaseController
         $jenistinta = (new \App\Models\MXMerkTintaModel())->where('Kategori', 'Jenis Tinta MX')
                                                         ->where('OpsiVal', $data->getResult()[0]->JenisTinta)
                                                             ->get();
-        $adhesive = (new \App\Models\MXMerkTintaModel())->where('Kategori', 'Jenis Adhesive MX')
-            ->get();
+//        $adhesive = (new \App\Models\MXMerkTintaModel())->where('Kategori', 'Jenis Adhesive MX')
+//            ->get();
+        $adhesive = (new \App\Models\MXAdhesiveModel())->asObject()->orderBy('nama', 'asc')->findAll();
         $tinta = (new \App\Models\MXJenisTinta())->getByMerk($jenistinta->getResult()[0]->OpsiTeks);
+
+        $result = $data->getResult()[0];
 
         return view('MXEstimasi/MXEstimasi', [
             'page_title' => 'Antrian Estimasi',
@@ -65,10 +75,11 @@ class MXEstimasi extends BaseController
             'main_menu' => (new \App\Libraries\Menu())->render(),
             'prospek_aksesori' => $qq->getResult(),
             'jumlah' => ($jml->getNumRows() > 0) ? $jml->getResult() : [],
-            'data' => $data->getResult()[0],
+            'data' => $result,
             'jenistinta' => ($jenistinta->getNumRows() > 0) ? $jenistinta->getResult()[0] : null,
-            'adhesive' => $adhesive->getResult(),
-            'tinta' => $tinta->getResult()
+            'adhesive' => $adhesive,
+            'tinta' => $tinta->getResult(),
+            'form_satuan' => $this->formSatuan($result->Roll_Pcs, $result->Finishing)
         ]);
     }
 
@@ -84,7 +95,7 @@ class MXEstimasi extends BaseController
         if($query->getNumRows() > 0) {
             foreach ($query->getResult() as $key => $row) {
 
-                $edit = '<a title="Edit" data-toggle="tooltip" data-placement="top" class="btn btn-sm btn-success edit-rev-item" href="'. site_url('listprospek/edit/' . $row->NoProspek . '/' . $row->Alt) .'" title="Edit"><i class="fas fa-calculator"></i></a>';
+                $edit = '<a title="Edit" data-toggle="tooltip" data-placement="top" class="btn btn-sm btn-success edit-rev-item" href="'. site_url('queueestimasi/edit/' . $row->NoProspek . '/' . $row->Alt) .'" title="Edit"><i class="fas fa-calculator"></i></a>';
 
                 $jml_model = new \App\Models\MXProspekJumlahModel();
                 $jml_query = $jml_model->getByProspekAlt($row->NoProspek, $row->Alt);

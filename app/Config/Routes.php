@@ -256,6 +256,11 @@ $routes->group('queueestimasi', static function ($routes) {
     $routes->get('edit/(:any)/(:num)', 'MXEstimasi::calculate/$1/$2');
 });
 
+$routes->group('listestimasi', static function ($routes) {
+    $routes->get('/', 'MXEstimasi::listhasil');
+
+});
+
 $routes->group('produk', static function ($routes) {
     $routes->get('/', 'MFProduk::index');
     $routes->post('/', 'MFProduk::productSearch');

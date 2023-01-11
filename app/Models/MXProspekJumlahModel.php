@@ -14,4 +14,11 @@ class MXProspekJumlahModel extends \CodeIgniter\Model
             ->where('Alt', $Alt)
             ->get();
     }
+
+    public function delByProspek($NoProspek, $Alt)
+    {
+        return $this->where('NoProspek', $NoProspek)
+            ->where('Alt', $Alt)
+            ->delete();
+    }
 }

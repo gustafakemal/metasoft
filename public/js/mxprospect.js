@@ -79,14 +79,22 @@ $(function () {
 
     let aksesories = [];
     $('button.add-acc').on('click', function () {
-        const val = $('select[name="aksesoris"] option:selected').val()
+        const val = parseInt($('select[name="aksesoris"] option:selected').val())
 
         let accessor = []
-        // if( $('.bs-child').length > 0 ) {
-        //     $('.bs-child').each((item))
-        // }
+        if( $('.bs-child').length > 0 ) {
+            $('.bs-child').each(function (idx) {
+                const ord = $(this).find('input[name="aksesori[]"]')
+                for(let x = 0;x < ord.length;x++) {
+                    const df = parseInt(ord[x].defaultValue);
+                    if(!accessor.includes(df)) {
+                        accessor.push(df)
+                    }
+                }
+            })
+        }
 
-        if (val !== '0' && !aksesories.includes(val)) {
+        if (val !== '0' && !accessor.includes(val)) {
             const label = $('select[name="aksesoris"] option:selected').text()
 
             const elem = `<div class="row mb-1 bscolor" id="bscolor-${val}">
@@ -100,7 +108,7 @@ $(function () {
                         </div>`
 
             $('.bs-child').append(elem)
-            aksesories.push(val)
+            accessor.push(val)
         }
         $(`select[name="aksesoris"] option[value="0"]`).prop('selected', true);
     })

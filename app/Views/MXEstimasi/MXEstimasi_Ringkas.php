@@ -349,11 +349,9 @@
 
 <div class="row mt-4">
     <div class="col-12">
-        <button type="button" class="btn btn-primary" data-toggle="modal" data-target="#exampleModal">Simpan</button>
+        <button type="button" class="btn btn-primary">Simpan</button>
     </div>
 </div>
 
-</form>
-</div>
 
 <?=$this->endSection()?>

@@ -90,32 +90,51 @@ class MXEstimasi extends BaseController
         $noprospek = $this->request->getGet('noprospek');
         $alt = $this->request->getGet('alt');
 
-//        $data = $this->model->getDetailByNoProspectAndAlt($noprospek, $alt)->getResult()[0];
-//
-//        $model_mx_estimasi = new \App\Models\MXEstimasiModel();
-//
-//        $jumlah_pitch = $model_mx_estimasi->getPitch($data->Roll_Pcs, $data->Pitch);
-//        if(!$data->Finishing) {
-//            $color_bar = $model_mx_estimasi->getColorBar($data->Roll_Pcs, $data->Finishing);
-//        } else {
-//            $color_bar = '-';
-//        }
-//        $circum = $model_mx_estimasi->getCircum($data->Roll_Pcs, $data->Pitch);
-//
-//        $jumlah_up = $this->request->getGet('jumlah_up');
-//        $lebar_film = $this->request->getGet('lebar_film');
-//        $jumlah_pitch = $this->request->getGet('jumlah_pitch');
-//        $color_bar = $this->request->getGet('color_bar');
-//        $circum = $this->request->getGet('circum');
-//        $running_meter = $this->request->getGet('running_meter');
-//        $waste = $this->request->getGet('waste');
-//        $waste_persiapan = $this->request->getGet('waste_persiapan');
-//        $jumlah_truk = $this->request->getGet('jumlah_truk');
+        $data = $this->model->getDetailByNoProspectAndAlt($noprospek, $alt)->getResult()[0];
+
+        $model_mx_estimasi = new \App\Models\MXEstimasiModel();
+
+        $jumlah_pitch = $model_mx_estimasi->getPitch($data->Roll_Pcs, $data->Pitch);
+        if(!$data->Finishing) {
+            $color_bar = $model_mx_estimasi->getColorBar($data->Roll_Pcs, $data->Finishing);
+        } else {
+            $color_bar = '-';
+        }
+        $circum = $model_mx_estimasi->getCircum($data->Roll_Pcs, $data->Pitch);
+
+        $data_jumlah = (new \App\Models\MXProspekJumlahModel())->getByProspekAlt($noprospek, $alt)->getResult();
+        $jumlah_array = array_map(function ($item) {
+            return $item->Jumlah;
+        }, $data_jumlah);
+
+        $kalkulasi = [];
+        foreach ($jumlah_array as $key => $row) {
+            $running_meter = $model_mx_estimasi->getRunningMeter($data->Roll_Pcs, $row, (int)$data->Gusset, (int)$data->JumlahUp, (int)$data->Pitch, (int)$data->LebarFilm);
+            $kalkulasi[] = ['Otomatis' => [
+                'JumlahUp' => $data->JumlahUp,
+                'LebarFilm' => $data->LebarFilm,
+                'JumlahPitch' => $jumlah_pitch,
+                'ColorBar' => $color_bar,
+                'RunningMeter' => $running_meter,
+                'Circum' => $circum,
+                ],
+                'PemakaianFilm' => [
+                        [
+                            'Layer' => '',
+                            'Film' => '',
+                            'Tebal' => ''
+                        ]
+                    ]
+            ];
+        }
 
         return view('MXEstimasi/MXEstimasi_Preview', [
             'page_title' => 'Antrian Estimasi',
             'breadcrumbs' => $this->common->breadcrumbs(uri_string(true)),
             'main_menu' => (new \App\Libraries\Menu())->render(),
+            'data_jumlah' => $data_jumlah,
+            'jumlah_array' => $jumlah_array,
+            'kalkulasi' => $kalkulasi
         ]);
     }
 

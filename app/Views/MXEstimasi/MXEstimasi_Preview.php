@@ -54,13 +54,15 @@
 <!-- Tab links -->
 <div class="tab">
     <!-- Loop sebanyak alternatif jumlah -->
-    <button class="tablinks" onclick="openTab(event, 10)"><!-- jumlah -->10</button>
-    <button class="tablinks" onclick="openTab(event, 20)"><!-- jumlah -->20</button>
+    <?php foreach ($jumlah_array as $jml) : ?>
+    <button class="tablinks" onclick="openTab(event, <?= $jml;?>)"><?= $jml;?></button>
+    <?php endforeach;?>
 </div>
 
 
 <!-- Loop sebanyak alternatif jumlah -->
-<div id="10" class="tabcontent">
+<?php foreach ($jumlah_array as $key => $jml) : ?>
+<div id="<?= $jml;?>" class="tabcontent">
     <div class="form-group row">
         <label class="col-lg-2 col-sm-12 col-form-label"><strong style="font-size: 20px">Hasil Kalkulasi Otomatis</strong></label>
     </div>
@@ -74,9 +76,9 @@
                         <th style="width: 250px;">Jumlah Pitch</th>
                     </tr>
                     <tr>
-                        <td></td>
-                        <td></td>
-                        <td></td> 
+                        <td><?= $kalkulasi[$key]['Otomatis']['JumlahUp'];?></td>
+                        <td><?= $kalkulasi[$key]['Otomatis']['LebarFilm'];?></td>
+                        <td><?= $kalkulasi[$key]['Otomatis']['JumlahPitch'];?></td>
                     </tr>
                     <tr>   
                         <th style="width: 250px;">Color Bar</th>
@@ -338,16 +340,8 @@
 
 
 </div>
+<?php endforeach;?>
 <!-- akhir dari yg dilooping -->
-
-    <div id="20" class="tabcontent">
-        <div class="form-group row">
-            <label class="col-lg-2 col-sm-12 col-form-label"><strong style="font-size: 20px">Hasil Kalkulasi Otomatis</strong></label>
-        </div>
-        <div>
-            sadasdadas
-        </div>
-    </div>
 
 
 

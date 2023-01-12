@@ -71,9 +71,9 @@ class MXEstimasiModel extends Model
     {
         $circum = 0;
         if ($roll_pcs == 'R') {
-            $circum = getPitch($roll_pcs, $pitch) * $pitch;
+            $circum = $this->getPitch($roll_pcs, $pitch) * $pitch;
         } else {
-            $circum = getPitch($roll_pcs, $pitch) * $pitch;
+            $circum = $this->getPitch($roll_pcs, $pitch) * $pitch;
         }
         return $circum;
     }

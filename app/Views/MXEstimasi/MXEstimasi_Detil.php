@@ -503,7 +503,5 @@
     </div>
 </div>
 
-</form>
-</div>
 
 <?=$this->endSection()?>

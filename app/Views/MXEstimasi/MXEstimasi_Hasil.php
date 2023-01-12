@@ -3,6 +3,10 @@
   
    // Dilihat oleh Estimator : Muncul milik semua sales
    // Dilihat oleh Sales : Muncul milik sales tsb
+
+   // Jika buton diklik 
+   // Estimator/ Sales Manager lihat MXEstimasi_Detil 
+   // Sales lihat MXEstimasi_Ringkas 
 ?>
 
 <?= $this->extend('theme') ?>
@@ -35,7 +39,7 @@
             <th>Diinput</th>
             <th>Sales</th>
             <th>Catatan</th>
-            <th>Action</th> <!--action hanya buton utk view MXEstimasi_Detil / MXEstimasi_Ringkas -->
+            <th>Action</th> <!--action hanya buton utk view hasil-->
 		</tr>
 	</thead>
 </table>

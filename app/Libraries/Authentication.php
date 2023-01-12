@@ -31,7 +31,7 @@ class Authentication
                  * Priviledges
                  */
                 $db = \Config\Database::connect();
-                $priv = $db->query("select a.id as modul_id, a.nama_modul, a.route, a.icon, a.group_menu, b.access, b.nik from MF_Modul a right join MF_ModulAccess b on a.id = b.modul where b.nik='" . $UserID . "'");
+                $priv = $db->query("select a.id as modul_id, a.nama_modul, a.route, a.icon, a.group_menu, b.access, b.nik from MF_Modul a right join MF_ModulAccess b on a.id = b.modul where b.nik='" . $UserID . "' order by a.group_sort, a.modul_sort");
 
                 $parsePriv = [];
                 if($priv->getNumRows() > 0) {

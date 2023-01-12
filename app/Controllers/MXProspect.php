@@ -40,16 +40,40 @@ class MXProspect extends BaseController
      */
     public function add(): string
     {
+        $jenistinta = (new \App\Models\MXMerkTintaModel())->where('Kategori', 'Jenis Tinta MX')
+            ->get();
+
         $views = [
             'page_title' => 'Input Prospek',
             'breadcrumbs' => $this->common->breadcrumbs(uri_string(true)),
             'main_menu' => (new \App\Libraries\Menu())->render(),
             'alternatif' => $this->model->getAlternatif(),
+            'jenistinta' => $jenistinta->getResult(),
         ];
 
         $views = array_merge($views, $this->requiredFields());
 
         return view('MXProspect/MXProspect', $views);
+    }
+
+    private function material1_check($material, $tebal)
+    {
+        if(!$material || !$tebal ) {
+            return false;
+        }
+
+        return true;
+    }
+
+    private function other_material_check($arrmaterial)
+    {
+        foreach ($arrmaterial as $arr) {
+            if(($arr['material'] && !$arr['tebal']) || (!$arr['material'] && $arr['tebal'])) {
+                return false;
+            }
+        }
+
+        return true;
     }
 
     /**
@@ -83,6 +107,24 @@ class MXProspect extends BaseController
 
         $data_request = $this->transformDataRequest($data, $type);
         $data_request['Status'] = 10;
+
+        // Material & Tebal checking
+        $mat1_check = $this->material1_check($data_request['Material1'], $data['TebalMat1']);
+        $other_check = $this->other_material_check([
+            ['material' => $data_request['Material2'], 'tebal' => $data_request['TebalMat2']],
+            ['material' => $data_request['Material3'], 'tebal' => $data_request['TebalMat3']],
+            ['material' => $data_request['Material4'], 'tebal' => $data_request['TebalMat4']]
+        ]);
+        if(!$mat1_check) {
+            return redirect()->back()
+                ->with('error', 'Jenis Material1 & Tebal harus diisi');
+        }
+
+        if(!$other_check) {
+            return redirect()->back()
+                ->with('error', 'Periksa jenis & tebal Mat1');
+        }
+        //-------------
 
         /** Insert form isian ke DB */
         $insert_data = $this->model->insert($data_request, false);

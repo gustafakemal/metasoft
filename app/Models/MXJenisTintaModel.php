@@ -10,11 +10,12 @@ class MXJenisTintaModel extends Model
     protected $useTimestamps = true;
     protected $createdField = 'added';
     protected $updatedField = 'updated';
-    protected $allowedFields = ['id', 'nama', 'harga', 'aktif', "added", 'added_by', 'updated', 'updated_by', 'merk'];
+    protected $allowedFields = ['id', 'nama', 'harga', 'aktif', "added", 'added_by', 'updated', 'updated_by', 'merk', 'gsm'];
     protected $validationRules = [
         'nama' => 'required',
         'harga' => 'required',
         'merk' => 'required',
+        'gsm' => 'required',
     ];
     protected $validationMessages = [
         'nama' => [
@@ -25,6 +26,9 @@ class MXJenisTintaModel extends Model
         ],
         'merk' => [
             'required' => 'Field Merk harus diisi.',
+        ],
+        'gsm' => [
+            'required' => 'Field Gsm harus diisi.',
         ],
     ];
 

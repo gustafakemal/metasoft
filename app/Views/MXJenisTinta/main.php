@@ -20,6 +20,7 @@
 			<th>Tanggal dibuat</th>
 			<th>Jenis Tinta</th>
 			<th>Merk</th>
+			<th>Gsm</th>
 			<th>Harga</th>
 			<th>Status Aktif</th>
 			<th>Dibuat</th>
@@ -62,6 +63,10 @@
 								</select>
 
 
+							</div>
+							<div class="form-group">
+								<label for="gsm">Gsm <span class="text-danger">*</span></label>
+								<input name="gsm" type="number" class="form-control" id="gsm" value="0">
 							</div>
 							<div class="form-group">
 								<label for="harga">Harga <span class="text-danger">*</span></label>
@@ -112,6 +117,10 @@
 						<div class="item">
 							<label>Merk</label>
 							<div class="dataDet merk"></div>
+						</div>
+						<div class="item">
+							<label>Gsm</label>
+							<div class="dataDet gsm"></div>
 						</div>
 						<div class="item">
 							<label>Harga</label>

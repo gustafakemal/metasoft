@@ -324,11 +324,9 @@ endforeach; ?>
                         </div>
                         <div class="col-6">
                             <select id="finishing" name="Finishing" class="form-control" disabled>
-                                <option value="TP">TP</option>
-                                <option value="CS">CS</option>
-                                <option value="CSG">CS GUSET</option>
-                                <option value="3SS">3SS</option>
-                                <option value="4SS">4SS</option>
+                                <?php foreach ($finishing as $finish) : ?>
+                                    <option value="<?= $finish->OpsiVal;?>"><?= $finish->OpsiTeks;?></option>
+                                <?php endforeach;?>
                             </select>
                         </div>
                     </div>

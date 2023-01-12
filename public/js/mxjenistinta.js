@@ -4,13 +4,13 @@ $(function () {
 
 	const config = {
 		columnDefs: {
-			falseSearchable: [0, 11],
-			falseOrderable: [0, 11],
-			falseVisibility: [1,7,8,9,10],
-			width: ['2(120)','3(150)','4(100)','5(100)','6(80)'],
+			falseSearchable: [0, 12],
+			falseOrderable: [0, 12],
+			falseVisibility: [1,8,9,10,11],
+			width: ['2(120)','3(150)','4(50)','5(50)','6(80)','7(60)'],
 			//className: 10
 		},
-		createdRow: ['No', 'Tanggal dibuat', 'Jenis Tinta', 'Merk', 'Harga', 'Status Aktif', 'Action'],
+		createdRow: ['No', 'Tanggal dibuat', 'Jenis Tinta', 'Merk', 'Gsm', 'Harga', 'Status Aktif', 'Action'],
 		initComplete: function () {
 			const url = window.location.href;
 			$.ajax({
@@ -120,6 +120,7 @@ $(function () {
 		const id = $(this).attr('data-id');
 		const nama = $(this).attr('data-nama');
 		const harga = $(this).attr('data-harga');
+		const gsm = $(this).attr('data-gsm');
 		const create_date = $(this).attr('data-added');
 		const aktif_arr = $(this).attr('data-aktif').split('|');
 		const aktif_opt_arr = aktif_arr[1].split(',');
@@ -141,9 +142,10 @@ $(function () {
 		$(`#dataList tr:nth-child(${row}) td:nth-child(2)`).html(`<input type="text" class="form-control" value="${create_date}" readonly />`)
 		$(`#dataList tr:nth-child(${row}) td:nth-child(3)`).html(`<input type="text" class="form-control" placeholder="Jenis tinta" value="${nama}" name="nama" />`)
 		$(`#dataList tr:nth-child(${row}) td:nth-child(4)`).html(`${merk}`)
-		$(`#dataList tr:nth-child(${row}) td:nth-child(5)`).html(`<input type="number" class="form-control" placeholder="Harga" value="${parseInt(harga)}" name="harga" /><input type="hidden" value="${id}" name="id" />`)
-		$(`#dataList tr:nth-child(${row}) td:nth-child(6)`).html(`${aktif}`)
-		$(`#dataList tr:nth-child(${row}) td:nth-child(7)`).html(`${btn}`)
+		$(`#dataList tr:nth-child(${row}) td:nth-child(5)`).html(`<input type="number" class="form-control" placeholder="Gsm" value="${parseInt(gsm)}" name="gsm" />`)
+		$(`#dataList tr:nth-child(${row}) td:nth-child(6)`).html(`<input type="number" class="form-control" placeholder="Harga" value="${parseInt(harga)}" name="harga" /><input type="hidden" value="${id}" name="id" />`)
+		$(`#dataList tr:nth-child(${row}) td:nth-child(7)`).html(`${aktif}`)
+		$(`#dataList tr:nth-child(${row}) td:nth-child(8)`).html(`${btn}`)
 
 		$(`#dataList tr:nth-child(${row}`).attr('id', 'selected')
 
@@ -171,6 +173,7 @@ $(function () {
 				id: $('input[name="id"]').val(),
 				nama: $('input[name="nama"]').val().toUpperCase(),
 				merk: $('select[name="merk"] option:selected').val(),
+				gsm: $('input[name="gsm"]').val(),
 				harga: $('input[name="harga"]').val(),
 				aktif: $('select[name="aktif"] option:selected').val()
 			};

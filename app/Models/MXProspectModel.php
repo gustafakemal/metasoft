@@ -134,13 +134,14 @@ class MXProspectModel extends Model
 
     public function getDetailByNoProspectAndAlt($NoProspek, $Alt)
     {
-        return $this->select('MX_Prospek.*, CustomerFile.NamaPemesan, MX_JenisProduk.Nama as NamaJenisProduk, MX_Konten.Nama as NamaKonten, MX_Segmen.Nama as NamaSegmen, MX_BagMaking.Nama as NamaBagMaking, MX_AreaKirim.Nama as NamaArea')
+        return $this->select('MX_Prospek.*, CustomerFile.NamaPemesan, MX_JenisProduk.Nama as NamaJenisProduk, MX_Konten.Nama as NamaKonten, MX_Segmen.Nama as NamaSegmen, MX_BagMaking.Nama as NamaBagMaking, MX_AreaKirim.Nama as NamaArea, MX_Adhesive.nama Adhesive')
             ->join('CustomerFile', 'MX_Prospek.Pemesan = CustomerFile.NoPemesan')
             ->join('MX_JenisProduk', 'MX_Prospek.JenisProduk = MX_JenisProduk.ID')
             ->join('MX_Konten', 'MX_Prospek.Konten = MX_Konten.ID')
             ->join('MX_Segmen', 'MX_Prospek.Segmen = MX_Segmen.ID')
             ->join('MX_BagMaking', 'MX_Prospek.BagMaking = MX_BagMaking.ID')
-            ->join('MX_AreaKirim', 'MX_Prospek.Area = MX_AreaKirim.ID')
+            ->join('MX_AreaKirim', 'MX_Prospek.Area = MX_AreaKirim.ID', 'left')
+            ->join('MX_Adhesive', 'MX_Prospek.JenisAdhesive = MX_Adhesive.id', 'left')
             ->where('MX_Prospek.NoProspek', $NoProspek)
             ->where('MX_Prospek.Alt', $Alt)
             ->get();

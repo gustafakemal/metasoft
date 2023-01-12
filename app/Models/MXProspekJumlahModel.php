@@ -3,9 +3,10 @@
 namespace App\Models;
 
 class MXProspekJumlahModel extends \CodeIgniter\Model
+
 {
     protected $table = 'MX_Prospek_Jumlah';
-    protected $allowedFields = ['NoProspek', 'Alt', 'Jumlah'];
+    protected $allowedFields = ['NoProspek', 'Alt', 'Jumlah', 'JumlahUp', 'LebarFilm', 'JumlahPitch', 'ColorBar', 'Circum', 'RunningMeter', 'Circum', 'RunningMeter', 'Waste', 'WastePersiapan', 'JumlahTruk'];
 
     public function getByProspekAlt($NoProspek, $Alt)
     {
@@ -20,5 +21,15 @@ class MXProspekJumlahModel extends \CodeIgniter\Model
         return $this->where('NoProspek', $NoProspek)
             ->where('Alt', $Alt)
             ->delete();
+    }
+
+    public function updateByProspekAltJumlah($NoProspek, $Alt, $Jumlah, $data)
+    {
+
+        return $this->where("NoProspek", $NoProspek)
+            ->where("Alt", $Alt)
+            ->where("Jumlah", $Jumlah)
+            ->set($data)
+            ->update();
     }
 }

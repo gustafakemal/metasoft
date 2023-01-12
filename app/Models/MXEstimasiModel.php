@@ -57,7 +57,7 @@ class MXEstimasiModel extends Model
             }
         }
     }
-    private function getPitch($roll_pcs, $pitch)
+    public function getPitch($roll_pcs, $pitch)
     {
         $jumlah_pitch = 0;
         if ($roll_pcs == 'R') {
@@ -67,7 +67,7 @@ class MXEstimasiModel extends Model
         }
         return $jumlah_pitch;
     }
-    private function getCircum($roll_pcs, $pitch)
+    public function getCircum($roll_pcs, $pitch)
     {
         $circum = 0;
         if ($roll_pcs == 'R') {
@@ -96,8 +96,8 @@ class MXEstimasiModel extends Model
         $query_ukuranfilm = $this->query($teks_sql)->get();
 
         $result = $query_ukuranfilm->row();
-        $ukuran_film = result->Ukuran_Film;
-        $rubroll = result->Rubroll;
+        $ukuran_film = $result->Ukuran_Film;
+        $rubroll = $result->Rubroll;
         return $ukuran_film;
     }
     private function getWaste($roll_pcs, $running_meter)
@@ -109,7 +109,7 @@ class MXEstimasiModel extends Model
         $query_waste = $this->query($teks_sql)->get();
 
         $result = $query_waste->row();
-        $waste = result->Waste;
+        $waste = $result->Waste;
        
         return $waste;
     }
@@ -122,10 +122,10 @@ class MXEstimasiModel extends Model
             ->where($where)
             ->get();
         $result = $query_konstanta->row();
-        $wastepersiapan = result->nilai;
+        $wastepersiapan = $result->nilai;
         return $wastepersiapan;
     }
-    private function getColorBar($roll_pcs, $finishing)
+    public function getColorBar($roll_pcs, $finishing)
     {
         $colorbar = 0;
         if ($roll_pcs == 'R') {
@@ -137,10 +137,10 @@ class MXEstimasiModel extends Model
                 $colorbar = 8;
             }
         }
-        return colorbar;
+        return $colorbar;
     }
 
-    private function getRunningMeter($roll_pcs, $jumlah, $meter_roll, $jumlah_up, $pitch, $lebar_film)
+    public function getRunningMeter($roll_pcs, $jumlah, $meter_roll, $jumlah_up, $pitch, $lebar_film)
     {
         $running_meter = 0;
         if ($roll_pcs == 'R') {
@@ -170,8 +170,8 @@ class MXEstimasiModel extends Model
             ->where($where)
             ->get();
         $result = $query_material->row();
-        $beratjenis = result->BeratJenis;
-        $harga = result->Harga;
+        $beratjenis = $result->BeratJenis;
+        $harga = $result->Harga;
 
         $where = "kategori='Correction' and nama='Film'";
         $query_konstanta = $this->select('*')
@@ -179,7 +179,7 @@ class MXEstimasiModel extends Model
             ->where($where)
             ->get();
         $result = $query_konstanta->row();
-        $corr_film = result->nilai;
+        $corr_film = $result->nilai;
 
         if ($roll_pcs == 'R') {
             $pemakaian = ($lebar * $pitch * $tebalmat * $jumlahpcs * ($beratjenis / 1000000000) / (1 - $waste)) + ($lebar_film * $tebalmat * ($beratjenis / 1000000000) * $wastepersiapan) * $corr_film;
@@ -202,7 +202,7 @@ class MXEstimasiModel extends Model
             ->where($where)
             ->get();
         $result = $query_konstanta->row();
-        $coating_weight = result->konstanta;
+        $coating_weight = $result->konstanta;
 
         $solid_content = 0;
         $where = "kategori = 'Solid Content' and nama='Adhesive'";
@@ -211,7 +211,7 @@ class MXEstimasiModel extends Model
             ->where($where)
             ->get();
         $resultSolidContent = $querySolidContent->row();
-        $solid_content = resultSolidContent->nilai;
+        $solid_content = $resultSolidContent->nilai;
 
         $corr_adhesive = 0;
         $where = "kategori='Correction' and nama='Adhesive'";
@@ -220,7 +220,7 @@ class MXEstimasiModel extends Model
             ->where($where)
             ->get();
         $resultCorrAdhesive = $queryCorrAdhesive->row();
-        $corr_adhesive = resultCorrAdhesive->nilai;
+        $corr_adhesive = $resultCorrAdhesive->nilai;
 
         $konst = 0;
         if($material3==0){
@@ -247,7 +247,7 @@ class MXEstimasiModel extends Model
             ->where($where)
             ->get();
         $result = $query_konstanta->row();
-        $coating_weight = result->konstanta;
+        $coating_weight = $result->konstanta;
 
         $solid_content = 0;
         $where = "kategori = 'Solid Content' and nama='Solvent Adhesive'";
@@ -256,7 +256,7 @@ class MXEstimasiModel extends Model
             ->where($where)
             ->get();
         $resultSolidContent = $querySolidContent->row();
-        $solid_content = resultSolidContent->nilai;
+        $solid_content = $resultSolidContent->nilai;
 
         $corr_adhesive = 0;
         $where = "kategori='Correction' and nama='Adhesive'";
@@ -265,7 +265,7 @@ class MXEstimasiModel extends Model
             ->where($where)
             ->get();
         $resultCorrAdhesive = $queryCorrAdhesive->row();
-        $corr_adhesive = resultCorrAdhesive->nilai;
+        $corr_adhesive = $resultCorrAdhesive->nilai;
 
         $konst = 0;
         if($material3==0){
@@ -315,7 +315,7 @@ class MXEstimasiModel extends Model
         $jumlah_up = ($jumlahup == 0) ? $this->getJumlahUp($roll_pcs, $finishing, $color_bar, $width_w_trim) : $jumlahup;
         $lebar_film = ($lebarfilm == 0) ? $this->getTtlWidth($jumlah_up) : $lebarfilm;
         $jumlah_pitch = $this->getPitch($roll_pcs, $pitch);
-        $circum = $this->getCircum($roll_pcs, $pitch)
+        $circum = $this->getCircum($roll_pcs, $pitch);
         $running_meter = $this->getRunningMeter($roll_pcs, $jumlah, $meterroll, $jumlah_up, $pitch, $lebar_film);
         $waste = $this->getWaste($roll_pcs, $running_meter);
         $waste_persiapan = $this->getWastePersiapan($roll_pcs);

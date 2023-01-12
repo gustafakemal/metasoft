@@ -2,6 +2,8 @@
 
 namespace App\Controllers;
 
+use Config\App;
+
 class MXEstimasi extends BaseController
 {
     private $model;
@@ -54,7 +56,7 @@ class MXEstimasi extends BaseController
         return $this->response->setJSON($tinta->getResult());
     }
 
-    public function calculate($noprospek, $alt)
+    public function edit($noprospek, $alt)
     {
         $data = $this->model->getDetailByNoProspectAndAlt($noprospek, $alt);
         $qq = (new \App\Models\MXProspekAksesoriModel())->getByProspekAlt($noprospek, $alt);
@@ -81,6 +83,93 @@ class MXEstimasi extends BaseController
             'tinta' => $tinta->getResult(),
             'form_satuan' => $this->formSatuan($result->Roll_Pcs, $result->Finishing)
         ]);
+    }
+
+    public function calculate()
+    {
+        $noprospek = $this->request->getGet('noprospek');
+        $alt = $this->request->getGet('alt');
+
+//        $data = $this->model->getDetailByNoProspectAndAlt($noprospek, $alt)->getResult()[0];
+//
+//        $model_mx_estimasi = new \App\Models\MXEstimasiModel();
+//
+//        $jumlah_pitch = $model_mx_estimasi->getPitch($data->Roll_Pcs, $data->Pitch);
+//        if(!$data->Finishing) {
+//            $color_bar = $model_mx_estimasi->getColorBar($data->Roll_Pcs, $data->Finishing);
+//        } else {
+//            $color_bar = '-';
+//        }
+//        $circum = $model_mx_estimasi->getCircum($data->Roll_Pcs, $data->Pitch);
+//
+//        $jumlah_up = $this->request->getGet('jumlah_up');
+//        $lebar_film = $this->request->getGet('lebar_film');
+//        $jumlah_pitch = $this->request->getGet('jumlah_pitch');
+//        $color_bar = $this->request->getGet('color_bar');
+//        $circum = $this->request->getGet('circum');
+//        $running_meter = $this->request->getGet('running_meter');
+//        $waste = $this->request->getGet('waste');
+//        $waste_persiapan = $this->request->getGet('waste_persiapan');
+//        $jumlah_truk = $this->request->getGet('jumlah_truk');
+
+        return view('MXEstimasi/MXEstimasi_Preview', [
+            'page_title' => 'Antrian Estimasi',
+            'breadcrumbs' => $this->common->breadcrumbs(uri_string(true)),
+            'main_menu' => (new \App\Libraries\Menu())->render(),
+        ]);
+    }
+
+    public function submitKelengkapanData()
+    {
+        $data = $this->request->getPost();
+
+        $model_mx_estimasi = new \App\Models\MXEstimasiModel();
+
+//        $jumlah_pitch = $model_mx_estimasi->getPitch($data['Roll_Pcs'], $data['Pitch']);
+//        if(array_key_exists('finishing')) {
+//            $color_bar = $model_mx_estimasi->getColorBar($data['Roll_Pcs'], $data['Finishing']);
+//        } else {
+//            $color_bar = '-';
+//        }
+//        $circum = $model_mx_estimasi->getCircum($data['Roll_Pcs'], $data['Pitch']);
+
+        $data_tinta = $this->request->getPost('warnatinta');
+        $data_coverage = $this->request->getPost('coverage');
+        if( count($data_tinta) == 0 || count($data_tinta) != count($data_coverage) ) {
+            return $this->response->setJSON([
+                'success' => false,
+                'msg' => 'Tinta & coverage harus diisi'
+            ]);
+        }
+
+        $data_upd = array_filter($data, function ($item) {
+            return $item !== 'NoProspek' && $item !== 'Alt' && $item !== 'warnatinta' && $item !== 'coverage';
+        }, ARRAY_FILTER_USE_KEY);
+
+        $update_prospek = $this->model->updateData($data_upd, $data['NoProspek'], $data['Alt']);
+
+        $data_prospek_tinta = [];
+        for($i = 0;$i < count($data_tinta);$i++) {
+            $data_prospek_tinta[] = [
+                'NoProspek' => $data['NoProspek'],
+                'Alt' => $data['Alt'],
+                'Tinta' => $data_tinta[$i],
+                'Coverage' => $data_coverage[$i],
+            ];
+        }
+        $insert_prospek_tinta = (new \App\Models\MXProspekTinta())->insertBatch($data_prospek_tinta);
+
+        if($update_prospek && $insert_prospek_tinta) {
+            return $this->response->setJSON([
+                'success' => true,
+                'redirect_uri' => base_url() . '/calculate?noprospek=' . $data['NoProspek'] . '&alt=' . $data['Alt']
+            ]);
+        } else {
+            return $this->response->setJSON([
+                'success' => true,
+                'msg' => 'Terjadi kesalahan'
+            ]);
+        }
     }
 
     public function apiGetAll()

@@ -23,7 +23,7 @@
 <div class="alert alert-danger"><?=session()->get('error');?></div>
 <?php endif;?>
 
-<?php echo form_open('estimasipreview'); ?>
+<?php //echo form_open('estimasipreview'); ?>
 
 <div class="row">
     <div class="col-6">
@@ -54,12 +54,13 @@
 <!-- Tab links -->
 <div class="tab">
     <!-- Loop sebanyak alternatif jumlah -->
-    <button class="tablinks" onclick="openTab(event, $jumlah)"><!-- jumlah --></button>
+    <button class="tablinks" onclick="openTab(event, 10)"><!-- jumlah -->10</button>
+    <button class="tablinks" onclick="openTab(event, 20)"><!-- jumlah -->20</button>
 </div>
 
 
 <!-- Loop sebanyak alternatif jumlah -->
-<div id="$jumlah" class="tabcontent">
+<div id="10" class="tabcontent">
     <div class="form-group row">
         <label class="col-lg-2 col-sm-12 col-form-label"><strong style="font-size: 20px">Hasil Kalkulasi Otomatis</strong></label>
     </div>
@@ -334,8 +335,19 @@
             </div>
         </div>
     </div>
+
+
 </div>
 <!-- akhir dari yg dilooping -->
+
+    <div id="20" class="tabcontent">
+        <div class="form-group row">
+            <label class="col-lg-2 col-sm-12 col-form-label"><strong style="font-size: 20px">Hasil Kalkulasi Otomatis</strong></label>
+        </div>
+        <div>
+            sadasdadas
+        </div>
+    </div>
 
 
 

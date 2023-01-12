@@ -34,12 +34,12 @@ $(function () {
                                 </button>
                             </td>
                             <td>
-                                <select id="warnatinta" name="warnatinta" class="form-control">
+                                <select id="warnatinta" name="warnatinta[]" class="form-control">
                                     <option value="">Pilih</option>
                                 </select>
                             </td>
                             <td>
-                                <input value="" id="coverage" name="coverage" type="number" class="form-control">
+                                <input value="" id="coverage" name="coverage[]" type="number" class="form-control">
                             </td>
                         </tr>`
         $('.tbl-tinta tbody').append(tr_elem)
@@ -66,13 +66,46 @@ $(function () {
         }
     })
 
-    $('.open-kalkulasi').on('click', function (e) {
-        $('#kalkulasiModal').modal({show: true});
-        const jml_up = ($('input[name="JumlahUp"]').val() == '') ? '-' : $('input[name="JumlahUp"]').val()
-        const lebar_film = ($('input[name="LebarFilm"]').val() == '') ? '-' : $('input[name="LebarFilm"]').val()
-        $('#kalkulasiModal .jumlah_up').html(jml_up)
-        $('#kalkulasiModal .lebar_film').html(lebar_film)
-    })
+    // $('.open-kalkulasi').on('click', function (e) {
+    //     $('#kalkulasiModal').modal({show: true});
+    //     const jml_up = ($('input[name="JumlahUp"]').val() == '') ? '-' : $('input[name="JumlahUp"]').val()
+    //     const lebar_film = ($('input[name="LebarFilm"]').val() == '') ? '-' : $('input[name="LebarFilm"]').val()
+    //     $('#kalkulasiModal .jumlah_up').html(jml_up)
+    //     $('#kalkulasiModal .lebar_film').html(lebar_film)
+    // })
+
+    $('form[name="kelengkapandata"]').on('submit', function (e) {
+        e.preventDefault();
+        const formData = new FormData(this)
+        console.log($('select[name="warnatinta[]"]').val());
+        // let formData = {
+        //     JumlahUp: $('input[name="JumlahUp"]').val(),
+        //     LebarFilm: $('input[name="LebarFilm"]').val(),
+        //     ProspekTinta: $('select[name="warnatinta[]"]').val()
+        // }
+        // if($('.dynamic-satuan-field').length > 0) {
+        //     const dynamic_name = $('.dynamic-satuan-field').attr('name');
+        //     const newobj = {[dynamic_name]: $('.dynamic-satuan-field').val()}
+        //     Object.assign(formData, newobj)
+        // }
+        // console.log(formData);
+        $.ajax({
+            type: 'POST',
+            url: `${HOST}/queueestimasi/set`,
+            dataType: 'json',
+            data: formData,
+            processData: false,
+            contentType: false,
+            success: function (response) {
+                if(response.success) {
+                    location.href = response.redirect_uri
+                }
+            },
+            complete: function (res, stat, xhr) {
+                console.log(res)
+            }
+        })
+    });
 })
 
 function getTinta(data_key) {

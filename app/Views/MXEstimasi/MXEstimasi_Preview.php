@@ -53,10 +53,10 @@
 
 <!-- Tab links -->
 <div class="tab">
+    <button class="tablinks"><strong>Jumlah Order</strong></button>
     <!-- Loop sebanyak alternatif jumlah -->
-    <?php foreach ($jumlah_array as $jml) : ?>
-    <button class="tablinks" onclick="openTab(event, <?= $jml;?>)"><?= $jml;?></button>
-    <?php endforeach;?>
+    <button class="tablinks" onclick="openTab(event, 500)"><!-- jumlah -->500</button>
+    <button class="tablinks" onclick="openTab(event, 1000)"><!-- jumlah -->1000</button>
 </div>
 
 
@@ -64,7 +64,276 @@
 <?php foreach ($jumlah_array as $key => $jml) : ?>
 <div id="<?= $jml;?>" class="tabcontent">
     <div class="form-group row">
-        <label class="col-lg-2 col-sm-12 col-form-label"><strong style="font-size: 20px">Hasil Kalkulasi Otomatis</strong></label>
+        <label class="col-lg-6 col-sm-12 col-form-label"><strong style="font-size: 20px">Hasil Kalkulasi Otomatis</strong></label>
+    </div>
+    <div>
+        <div class="row">
+            <div class="col-sm-12">
+                <table class="table table-bordered table-striped">
+                <thead>
+                    <tr>
+                        <th style="width: 300px;">Jumlah Up</th>
+                        <th style="width: 300px;">Lebar Film</th>
+                        <th style="width: 300px;">Jumlah Pitch</th>
+                        <th style="width: 300px;">Color Bar</th>
+                        <th style="width: 300px;">Running Meter</th>
+                        <th style="width: 300px;">Circum</th>
+                        <th style="width: 300px;">Waste</th>
+                        <th style="width: 300px;">Waste Persiapan</th>
+                        <th style="width: 300px;">Jumlah Truk</th>
+                    </tr>
+                </thead>
+                    <tr>
+                        <td><?= $kalkulasi[$key]['Otomatis']['JumlahUp'];?></td>
+                        <td><?= $kalkulasi[$key]['Otomatis']['LebarFilm'];?></td>
+                        <td><?= $kalkulasi[$key]['Otomatis']['JumlahPitch'];?></td>
+                    </tr>
+                </table>
+            </div>
+        </div>
+    </div>
+
+    <div class="form-group row">
+        <label class="col-lg-2 col-sm-12 col-form-label"><strong style="font-size: 20px">Pemakaian Film</strong></label>
+    </div>
+
+    <div>
+        <div class="row">
+            <div class="col-sm-12">
+                <table class="table table-bordered table-striped">
+                    <thead>
+                        <tr>
+                            <th style="width: 100px;">Layer</th>
+                            <th style="width: 300px;">Film</th>
+                            <th style="width: 150px;">Tebal</th>
+                            <th style="width: 250px;">Harga</th>
+                            <th style="width: 250px;">Pemakaian</th>
+                            <th style="width: 250px;">Biaya</th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                        <tr>
+                            <td></td>
+                            <td></td>
+                            <td></td>
+                            <td></td>
+                            <td></td>
+                            <td></td>
+                        </tr>
+                        <tr class="odd tot">
+                            <td></td>
+                            <td></td>
+                            <td></td>
+                            <td>TOTAL</td>
+                            <td><!-- sum pemakaian --></td>
+                            <td><!-- sum biaya --></td>
+                        </tr>
+                    </tbody>
+                </table>
+            </div>
+        </div>
+    </div>
+
+    <div class="form-group row">
+        <label class="col-lg-2 col-sm-12 col-form-label"><strong style="font-size: 20px">Pemakaian Tinta</strong></label>
+    </div>
+
+    <div>
+        <div class="row">
+            <div class="col-sm-12">
+                <table class="table table-bordered table-striped">
+                    <thead>
+                        <tr>
+                            <th style="width: 100px;"></th>
+                            <th style="width: 300px;">Tinta</th>
+                            <th style="width: 150px;">Coverage</th>
+                            <th style="width: 250px;">Harga</th>
+                            <th style="width: 250px;">Pemakaian</th>
+                            <th style="width: 250px;">Biaya</th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                        <tr>
+                            <td></td>
+                            <td></td>
+                            <td></td>
+                            <td></td>
+                            <td></td>
+                            <td></td>
+                        </tr>
+                        <tr class="odd tot">
+                            <td></td>
+                            <td></td>
+                            <td></td>
+                            <td>TOTAL</td>
+                            <td><!-- sum pemakaian --></td>
+                            <td><!-- sum biaya --></td>
+                        </tr>
+                    </tbody>
+                </table>
+            </div>
+        </div>
+    </div>
+
+    <div class="form-group row">
+        <label class="col-lg-5 col-sm-12 col-form-label"><strong style="font-size: 20px">Pemakaian Solvent</strong></label>
+    </div>
+
+    <div>
+        <div class="row">
+            <div class="col-sm-12">
+                <table class="table table-bordered table-striped">
+                    <thead>
+                        <tr>
+                            <th style="width: 100px;"></th>
+                            <th style="width: 300px;">Jenis</th>
+                            <th style="width: 250px;">Harga</th>
+                            <th style="width: 250px;">Pemakaian</th>
+                            <th style="width: 250px;">Biaya</th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                        <tr>
+                            <td></td>
+                            <td></td>
+                            <td></td>
+                            <td></td>
+                            <td></td>
+                        </tr>
+                        <tr class="odd tot">
+                            <td></td>
+                            <td></td>
+                            <td>TOTAL</td>
+                            <td><!-- sum pemakaian --></td>
+                            <td><!-- sum biaya --></td>
+                        </tr>
+                    </tbody>
+                </table>
+            </div>
+        </div>
+    </div>
+
+    <div class="form-group row">
+        <label class="col-lg-4 col-sm-12 col-form-label"><strong style="font-size: 20px">Pemakaian Adhesive</strong></label>
+    </div>
+
+    <div>
+        <div class="row">
+            <div class="col-sm-12">
+                <table class="table table-bordered table-striped">
+                    <thead>
+                        <tr>
+                            <th style="width: 100px;"></th>
+                            <th style="width: 300px;">Jenis</th>
+                            <th style="width: 150px;">Luasan(PxL)</th>
+                            <th style="width: 250px;">Harga</th>
+                            <th style="width: 250px;">Pemakaian</th>
+                            <th style="width: 250px;">Biaya</th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                        <tr>
+                            <td></td>
+                            <td></td>
+                            <td></td>
+                            <td></td>
+                            <td></td>
+                            <td></td>
+                        </tr>
+                        <tr class="odd tot">
+                            <td></td>
+                            <td></td>
+                            <td></td>
+                            <td>TOTAL</td>
+                            <td><!-- sum pemakaian --></td>
+                            <td><!-- sum biaya --></td>
+                        </tr>
+                    </tbody>
+                </table>
+            </div>
+        </div>
+    </div>
+
+    <div class="form-group row">
+        <label class="col-lg-4 col-sm-12 col-form-label"><strong style="font-size: 20px">Biaya Lain-lain</strong></label>
+    </div>
+
+    <div>
+        <div class="row">
+            <div class="col-sm-12">
+                <table class="table table-bordered table-striped">
+                    <thead>
+                        <tr>
+                            <th style="width: 100px;"></th>
+                            <th style="width: 300px;">Nama</th>
+                            <th style="width: 150px;">Keterangan</th>
+                            <th style="width: 250px;">Harga</th>
+                            <th style="width: 250px;">Pemakaian</th>
+                            <th style="width: 250px;">Biaya</th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                        <tr>
+                            <td></td>
+                            <td></td>
+                            <td></td>
+                            <td></td>
+                            <td></td>
+                            <td></td>
+                        </tr>
+                        <tr class="odd tot">
+                            <td></td>
+                            <td></td>
+                            <td></td>
+                            <td></td>
+                            <td>TOTAL</td>
+                            <td><!-- sum biaya --></td>
+                        </tr>
+                    </tbody>
+                </table>
+            </div>
+        </div>
+    </div>
+
+    <div class="form-group row">
+        <label class="col-lg-4 col-sm-12 col-form-label"><strong style="font-size: 20px">Harga Jual</strong></label>
+    </div>
+
+    <div>
+        <div class="row">
+            <div class="col-sm-12">
+                <table class="table table-bordered table-striped">
+                    <thead>
+                        <tr>
+                            <th style="width: 300px;">Biaya Material</th>
+                            <th style="width: 300px;">Biaya/Pcs/Roll</th>
+                            <th style="width: 300px;">Harga Manager</th>
+                            <th style="width: 300px;">Harga Senior</th>
+                            <th style="width: 300px;">Harga Junior</th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                        <tr>
+                            <td></td>
+                            <td></td>
+                            <td></td>
+                            <td></td>
+                            <td></td>
+                        </tr>
+                    </tbody>
+                </table>
+            </div>
+        </div>
+    </div>
+
+
+</div>
+<!-- akhir dari yg dilooping -->
+
+<!-- Loop sebanyak alternatif jumlah -->
+<div id="1000" class="tabcontent">
+    <div class="form-group row">
+        <label class="col-lg-6 col-sm-12 col-form-label"><strong style="font-size: 20px">Hasil Kalkulasi Otomatis</strong></label>
     </div>
     <div>
         <div class="row">
@@ -72,30 +341,26 @@
                 <table class="table table-bordered table-striped">
                     <tr>
                         <th style="width: 300px;">Jumlah Up</th>
-                        <th style="width: 150px;">Lebar Film</th>
-                        <th style="width: 250px;">Jumlah Pitch</th>
+                        <th style="width: 300px;">Lebar Film</th>
+                        <th style="width: 300px;">Jumlah Pitch</th>
+                        <th style="width: 300px;">Color Bar</th>
+                        <th style="width: 300px;">Running Meter</th>
                     </tr>
                     <tr>
-                        <td><?= $kalkulasi[$key]['Otomatis']['JumlahUp'];?></td>
-                        <td><?= $kalkulasi[$key]['Otomatis']['LebarFilm'];?></td>
-                        <td><?= $kalkulasi[$key]['Otomatis']['JumlahPitch'];?></td>
+                        <td></td>
+                        <td></td>
+                        <td></td> 
+                        <td></td>
+                        <td></td>
                     </tr>
                     <tr>   
-                        <th style="width: 250px;">Color Bar</th>
-                        <th style="width: 250px;">Running Meter</th>
                         <th style="width: 300px;">Circum</th>
+                        <th style="width: 300px;">Waste</th>
+                        <th style="width: 300px;">Waste Persiapan</th>
+                        <th style="width: 300px;">Jumlah Truk</th>
                     </tr>
                     <tr>
                         <td></td>
-                        <td></td>
-                        <td></td>
-                    </tr>
-                    <tr>
-                        <th style="width: 150px;">Waste</th>
-                        <th style="width: 250px;">Waste Persiapan</th>
-                        <th style="width: 250px;">Jumlah Truk</th>
-                    </tr>
-                    <tr>
                         <td></td>
                         <td></td>
                         <td></td>
@@ -345,11 +610,12 @@
 
 
 
+<br>
 <div class="row">
-    <div class="col-6">
+    <div class="col-1">
         <button type="button" class="btn btn-primary">Kembali</button>
     </div>
-    <div class="col-6">
+    <div class="col-1">
         <button type="button" class="btn btn-primary">Simpan</button>
     </div>
 </div>

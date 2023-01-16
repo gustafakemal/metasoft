@@ -61,7 +61,8 @@
 
 
 <!-- Loop sebanyak alternatif jumlah -->
-<div id="500" class="tabcontent">
+<?php foreach ($jumlah_array as $key => $jml) : ?>
+<div id="<?= $jml;?>" class="tabcontent">
     <div class="form-group row">
         <label class="col-lg-6 col-sm-12 col-form-label"><strong style="font-size: 20px">Hasil Kalkulasi Otomatis</strong></label>
     </div>
@@ -83,15 +84,9 @@
                     </tr>
                 </thead>
                     <tr>
-                        <td></td>
-                        <td></td>
-                        <td></td>
-                        <td></td>
-                        <td></td>
-                        <td></td>
-                        <td></td>
-                        <td></td>
-                        <td></td>
+                        <td><?= $kalkulasi[$key]['Otomatis']['JumlahUp'];?></td>
+                        <td><?= $kalkulasi[$key]['Otomatis']['LebarFilm'];?></td>
+                        <td><?= $kalkulasi[$key]['Otomatis']['JumlahPitch'];?></td>
                     </tr>
                 </table>
             </div>
@@ -610,7 +605,9 @@
 
 
 </div>
+<?php endforeach;?>
 <!-- akhir dari yg dilooping -->
+
 
 
 <br>

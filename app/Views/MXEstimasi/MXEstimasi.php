@@ -376,7 +376,7 @@
             <div class="form-group row">
                 <label for="jml_up" class="col-lg-6 col-sm-12 col-form-label">Jumlah Up</label>
                 <div class="col-lg-6 col-sm-12">
-                    <input type="number" name="JumlahUp" class="form-control" id="jml_up" />
+                    <input value="<?= (int)$data->JumlahUp;?>" type="number" name="JumlahUp" class="form-control" id="jml_up" />
                 </div>
             </div>
         </div>
@@ -385,7 +385,7 @@
             <div class="form-group row">
                 <label for="lbr_film" class="col-lg-5 col-sm-12 col-form-label">Lebar Film</label>
                 <div class="col-lg-7 col-sm-12">
-                    <input type="number" name="LebarFilm" class="form-control" id="lbr_film" />
+                    <input value="<?= (int)$data->LebarFilm;?>" type="number" name="LebarFilm" class="form-control" id="lbr_film" />
                 </div>
             </div>
         </div>
@@ -394,7 +394,7 @@
             <div class="form-group row">
                 <label for="<?= $form_satuan['form_name'];?>" class="col-lg-5 col-sm-12 col-form-label"><?= $form_satuan['label'];?></label>
                 <div class="col-lg-7 col-sm-12">
-                    <input type="number" name="<?= $form_satuan['form_name'];?>" class="form-control dynamic-satuan-field" id="<?= $form_satuan['form_name'];?>" />
+                    <input value="<?= (int)$data->{$form_satuan['form_name']};?>" type="number" name="<?= $form_satuan['form_name'];?>" class="form-control dynamic-satuan-field" id="<?= $form_satuan['form_name'];?>" />
                 </div>
             </div>
         </div>
@@ -420,7 +420,7 @@
                     <select id="adhesive" name="JenisAdhesive" class="form-control">
                         <option value=""<?= (!$data->JenisAdhesive) ? ' selected' : '';?>>Pilih</option>
                         <?php foreach ($adhesive as $ads) : ?>
-                            <option value="<?= $ads->id;?>"><?= $ads->nama;?></option>
+                            <option<?= ($data->JenisAdhesive == $ads->id) ? ' selected' : '' ?> value="<?= $ads->id;?>"><?= $ads->nama;?></option>
                         <?php endforeach;?>
                     </select>
                 </div>
@@ -440,11 +440,42 @@
                         </tr>
                     </thead>
                     <tbody>
-                    <tr class="odd zero-record">
-                        <td colspan="3">
-                            <div class="text-center font-italic text-muted">Belum ada tinta</div>
-                        </td>
-                    </tr>
+                    <?php if(count($prospek_tinta) > 0) :
+                        $option_tinta = array_map(function ($item) {
+                            return '<option value="'. $item->id .'">'. $item->nama .' - '. $item->merk .'</option>';
+                        }, $tinta);
+
+                        $generate_tinta_option = function ($tinta_id) use ($tinta) {
+                            $option_tinta = array_map(function ($item) use ($tinta_id) {
+                                $selected = ($item->id == $tinta_id) ? " selected" : "";
+                                return '<option' . $selected . ' value="'. $item->id .'">'. $item->nama .' - '. $item->merk .'</option>';
+                            }, $tinta);
+                            return implode('', $option_tinta);
+                        };
+                    foreach ($prospek_tinta as $key => $pt) : ?>
+                        <tr class="odd" data-key="<?= $key;?>">
+                            <td>
+                                <button class="btn btn-sm btn-danger del-tinta" data-id="<?= $key;?>" type="button">
+                                    <i class="far fa-trash-alt"></i>
+                                </button>
+                            </td>
+                            <td>
+                                <select id="warnatinta" name="warnatinta[]" class="form-control">
+                                    <?= $generate_tinta_option($pt->Tinta);?>
+                                </select>
+                            </td>
+                            <td>
+                                <input value="<?= (int)$pt->Coverage;?>" id="coverage" name="coverage[]" type="number" class="form-control">
+                            </td>
+                        </tr>
+                    <?php endforeach;
+                    else : ?>
+                        <tr class="odd zero-record">
+                            <td colspan="3">
+                                <div class="text-center font-italic text-muted">Belum ada tinta</div>
+                            </td>
+                        </tr>
+                    <?php endif;?>
 
                     </tbody>
                 </table>

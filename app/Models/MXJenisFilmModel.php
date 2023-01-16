@@ -95,4 +95,12 @@ class MXJenisFilmModel extends Model
             ->set(['aktif' => 'T'])
             ->update();
     }
+
+    public function getNama($id)
+    {
+        return $this->select('nama, harga, berat_jenis')
+                    ->where('id', $id)
+                    ->get()
+                    ->getFirstRow();
+    }
 }

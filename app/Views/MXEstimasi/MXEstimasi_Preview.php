@@ -30,7 +30,7 @@
         <div class="form-group row">
             <label for="no_prospek" class="col-lg-4 col-sm-12 col-form-label">NoProspek</label>
             <div class="col-lg-8 col-sm-12">
-                <input value="" disabled type="text" class="form-control" id="no_prospek" value="" name="NoProspek">
+                <input disabled type="text" class="form-control" id="no_prospek" value="<?= $data->NoProspek;?>" name="NoProspek">
             </div>
         </div>
     </div>
@@ -38,7 +38,7 @@
         <div class="form-group row">
             <label for="alt" class="col-lg-4 col-sm-12 col-form-label">Alternatif</label>
             <div class="col-lg-2 col-sm-12">
-                <input value="" disabled type="number" class="form-control" id="alt" name="Alt">
+                <input value="<?= $data->Alt;?>" disabled type="number" class="form-control" id="alt" name="Alt">
             </div>
         </div>
     </div>
@@ -47,7 +47,7 @@
 <div class="form-group row">
     <label for="namaproduk" class="col-lg-2 col-sm-12 col-form-label">Nama Produk</label>
     <div class="col-lg-10 col-sm-12">
-        <input value="" disabled type="text" class="form-control" id="namaproduk" name="NamaProduk">
+        <input value="<?= $data->NamaProduk;?>" disabled type="text" class="form-control" id="namaproduk" name="NamaProduk">
     </div>
 </div>
 
@@ -76,9 +76,9 @@
                         <th style="width: 250px;">Jumlah Pitch</th>
                     </tr>
                     <tr>
-                        <td><?= $kalkulasi[$key]['Otomatis']['JumlahUp'];?></td>
-                        <td><?= $kalkulasi[$key]['Otomatis']['LebarFilm'];?></td>
-                        <td><?= $kalkulasi[$key]['Otomatis']['JumlahPitch'];?></td>
+                        <td><?= $kalkulasi[$key]['JumlahUp'];?></td>
+                        <td><?= $kalkulasi[$key]['LebarFilm'];?></td>
+                        <td><?= $kalkulasi[$key]['JumlahPitch'];?></td>
                     </tr>
                     <tr>   
                         <th style="width: 250px;">Color Bar</th>
@@ -86,9 +86,9 @@
                         <th style="width: 300px;">Circum</th>
                     </tr>
                     <tr>
-                        <td></td>
-                        <td></td>
-                        <td></td>
+                        <td><?= $kalkulasi[$key]['ColorBar'];?></td>
+                        <td><?= $kalkulasi[$key]['RunningMeter'];?></td>
+                        <td><?= $kalkulasi[$key]['Circum'];?></td>
                     </tr>
                     <tr>
                         <th style="width: 150px;">Waste</th>
@@ -124,14 +124,16 @@
                         </tr>
                     </thead>
                     <tbody>
+                    <?php foreach ($jenis_film as $jf) : ?>
                         <tr>
-                            <td></td>
-                            <td></td>
-                            <td></td>
-                            <td></td>
+                            <td><?= $jf['Layer'];?></td>
+                            <td><?= $jf['Nama'];?></td>
+                            <td><?= $jf['Tickness'];?></td>
+                            <td><?= $jf['Harga'];?></td>
                             <td></td>
                             <td></td>
                         </tr>
+                    <?php endforeach;?>
                         <tr class="odd tot">
                             <td></td>
                             <td></td>
@@ -165,14 +167,16 @@
                         </tr>
                     </thead>
                     <tbody>
+                    <?php foreach ($jenis_tinta as $key => $jt) : ?>
                         <tr>
-                            <td></td>
-                            <td></td>
-                            <td></td>
-                            <td></td>
+                            <td><?= $key + 1;?></td>
+                            <td><?= $jt->nama;?></td>
+                            <td><?= number_format($jt->Coverage, 2);?></td>
+                            <td><?= number_format($jt->hargatinta, 2);?></td>
                             <td></td>
                             <td></td>
                         </tr>
+                    <?php endforeach;?>
                         <tr class="odd tot">
                             <td></td>
                             <td></td>

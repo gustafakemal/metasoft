@@ -12,7 +12,7 @@ class AccessDefinition
     /**
      * READ access pattern
      */
-    private const READ = '/(^%s$|^%s\/api|^%s\/rev|^%s\/detail)/';
+    private const READ = '/(^%s$|^%s\/api|^%s\/rev|^%s\/detail|^%s\/calculate)/';
 
     /**
      * WRITE access pattern
@@ -67,7 +67,7 @@ class AccessDefinition
      */
     public function read(): array
     {
-        $pattern = sprintf(self::READ, $this->route, $this->route, $this->route, $this->route);
+        $pattern = sprintf(self::READ, $this->route, $this->route, $this->route, $this->route, $this->route);
         return $this->filter($pattern);
     }
 

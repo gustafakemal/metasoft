@@ -18,7 +18,7 @@
     <div class="alert alert-danger"><?=session()->get('error');?></div>
 <?php endif;?>
 
-<?php echo form_open('inputestimasi');?>
+<form name="kelengkapandata">
 
     <div class="row">
         <div class="col-6">
@@ -42,7 +42,7 @@
     <div class="form-group row">
         <label for="namaproduk" class="col-lg-2 col-sm-12 col-form-label">Nama Produk <span class="text-danger">*</span></label>
         <div class="col-lg-10 col-sm-12">
-            <input type="text" class="form-control" id="namaproduk" value="<?= $data->NamaProduk;?>" name="NamaProduk" readonly>
+            <input type="text" class="form-control" id="namaproduk" value="<?= $data->NamaProduk;?>" name="NamaProduk" disabled>
         </div>
     </div>
 
@@ -95,16 +95,16 @@
     <div class="form-group row">
         <label class="col-lg-2 col-sm-12 col-form-label">Dimensi (mm)<span class="text-danger">*</span></label>
         <div class="col-sm-2">
-            <input readonly value="<?= $data->Tebal;?>" type="number" step="any" class="form-control" id="tebal" name="Tebal" placeholder="Tebal">
+            <input disabled value="<?= $data->Tebal;?>" type="number" step="any" class="form-control" id="tebal" name="Tebal" placeholder="Tebal">
         </div>
 		<div class="col-sm-2">
-            <input readonly value="<?= $data->Panjang;?>" type="number" step="any" class="form-control" id="panjang" name="Panjang" placeholder="Panjang">
+            <input disabled value="<?= $data->Panjang;?>" type="number" step="any" class="form-control" id="panjang" name="Panjang" placeholder="Panjang">
         </div>
         <div class="col-sm-2">
-            <input readonly value="<?= $data->Lebar;?>" type="number" step="any" class="form-control" id="lebar" name="Lebar" placeholder="Lebar">
+            <input disabled value="<?= $data->Lebar;?>" type="number" step="any" class="form-control" id="lebar" name="Lebar" placeholder="Lebar">
         </div>
         <div class="col-sm-2">
-            <input readonly value="<?= $data->Pitch;?>" type="number" step="any" class="form-control" id="pitch" name="Pitch" placeholder="Pitch">
+            <input disabled value="<?= $data->Pitch;?>" type="number" step="any" class="form-control" id="pitch" name="Pitch" placeholder="Pitch">
         </div>
     </div>
 
@@ -114,25 +114,25 @@
             <select disabled id="material1" step="any" name="Material1" class="form-control">
                 <option value="<?= $data->Material1;?>"><?= $data->NamaMaterial1;?></option>
             </select>
-			<input readonly value="<?= ((int)$data->TebalMat1 == 0) ? '0'.$data->TebalMat1 : $data->TebalMat1;?>" type="number" step="any" class="form-control" id="tebalmat1" name="TebalMat1" placeholder="Tebal">
+			<input disabled value="<?= ((int)$data->TebalMat1 == 0) ? '0'.$data->TebalMat1 : $data->TebalMat1;?>" type="number" step="any" class="form-control" id="tebalmat1" name="TebalMat1" placeholder="Tebal">
         </div>
         <div class="col-sm-2">
             <select disabled id="material2" name="Material2" class="form-control">
                 <option value="<?= $data->Material2;?>"><?= $data->NamaMaterial2;?></option>
             </select>
-			<input readonly value="<?= ((int)$data->TebalMat2 == 0) ? '0'.$data->TebalMat2 : $data->TebalMat2;?>" type="number" step="any" class="form-control" id="tebalmat2" name="TebalMat2" placeholder="Tebal">
+			<input disabled value="<?= ((int)$data->TebalMat2 == 0) ? '0'.$data->TebalMat2 : $data->TebalMat2;?>" type="number" step="any" class="form-control" id="tebalmat2" name="TebalMat2" placeholder="Tebal">
         </div>
         <div class="col-sm-2">
-            <select readonly id="material3" name="Material3" class="form-control">
+            <select disabled id="material3" name="Material3" class="form-control">
                 <option value="<?= $data->Material3;?>"><?= $data->NamaMaterial3;?></option>
             </select>
-			<input readonly value="<?= ((int)$data->TebalMat3 == 0) ? '0'.$data->TebalMat3 : $data->TebalMat3;?>" type="number" step="any" class="form-control" id="tebalmat3" name="TebalMat3" placeholder="Tebal">
+			<input disabled value="<?= ((int)$data->TebalMat3 == 0) ? '0'.$data->TebalMat3 : $data->TebalMat3;?>" type="number" step="any" class="form-control" id="tebalmat3" name="TebalMat3" placeholder="Tebal">
         </div>
         <div class="col-sm-2">
             <select disabled id="material4" name="Material4" class="form-control">
                 <option value="<?= $data->Material4;?>"><?= $data->NamaMaterial4;?></option>
             </select>
-			<input readonly value="<?= ((int)$data->TebalMat4 == 0) ? '0'.$data->TebalMat4 : $data->TebalMat4;?>" type="number" step="any" class="form-control" id="tebalmat4" name="TebalMat4" placeholder="Tebal">
+			<input disabled value="<?= ((int)$data->TebalMat4 == 0) ? '0'.$data->TebalMat4 : $data->TebalMat4;?>" type="number" step="any" class="form-control" id="tebalmat4" name="TebalMat4" placeholder="Tebal">
         </div>
     </div>
 				
@@ -141,7 +141,7 @@
             <div class="form-group row">
                 <label for="warna" class="col-lg-6 col-sm-12 col-form-label">Warna</label>
                 <div class="col-lg-6 col-sm-12">
-                    <input readonly value="<?= $data->Warna;?>" type="number" class="form-control" id="warna" name="Warna" placeholder="Jumlah Warna">
+                    <input disabled value="<?= $data->Warna;?>" type="number" class="form-control" id="warna" name="Warna" placeholder="Jumlah Warna">
                 </div>
             </div>
         </div>
@@ -172,7 +172,7 @@
 	<div class="form-group row">
         <label for="catatan" class="col-lg-2 col-sm-12 col-form-label">Catatan Produk</label>
         <div class="col-lg-10 col-sm-12">
-            <input readonly value="<?= $data->Catatan;?>" type="text" class="form-control" id="catatan" name="Catatan">
+            <input disabled value="<?= $data->Catatan;?>" type="text" class="form-control" id="catatan" name="Catatan">
         </div>
     </div>
 
@@ -185,7 +185,7 @@
             <div class="row">
                 <label for="maxjoin" class="col-lg-4 col-sm-12 col-form-label">Maksimal Join </label>
                 <div class="col-lg-8 col-sm-12">
-                    <input readonly value="<?= $data->MaxJoin;?>" type="number" class="form-control" id="maxjoin" name="MaxJoin">
+                    <input disabled value="<?= $data->MaxJoin;?>" type="number" class="form-control" id="maxjoin" name="MaxJoin">
                 </div>
             </div>
         </div>
@@ -193,7 +193,7 @@
             <div class="form-group row">
                 <label for="warnatape" class="col-lg-4 col-sm-12 col-form-label">Warna Tape</label>
                 <div class="col-lg-8 col-sm-12">
-                    <input readonly value="<?= $data->WarnaTape;?>" type="text" class="form-control" id="warnatape" name="WarnaTape">
+                    <input disabled value="<?= $data->WarnaTape;?>" type="text" class="form-control" id="warnatape" name="WarnaTape">
                 </div>
             </div>
         </div>
@@ -246,7 +246,6 @@
                                       <div class="col-sm col-form-label"><?= $pa->nama;?></div>
                                       <div class="col-sm-auto">
                                       </div>
-                                      <input type="hidden" name="aksesori[]" value="<?= $pa->id;?>">
                                   </div>
                               <?php endforeach;
                         } ?>
@@ -268,7 +267,6 @@
                 <?php if(count($jumlah) > 0) : ?>
                     <?php for($i = 0;$i<count($jumlah);$i++) : ?>
                         <div class="jml-item-val" id="item-<?= $jumlah[$i]->Jumlah ;?>">
-                            <input type="hidden" name="jml[]" value="<?= $jumlah[$i]->Jumlah?>" />
                             <span class="val"><?= $jumlah[$i]->Jumlah ;?></span>
                         </div>
                     <?php endfor;?>
@@ -285,13 +283,13 @@
 
                     <div class="row">
                         <div class="col-6">
-                            <select readonly id="roll_pc" name="Roll_Pcs" class="form-control">
+                            <select disabled id="roll_pc" name="Roll_Pcs" class="form-control">
                                 <option<?= ($data->Roll_Pcs == 'R') ? ' selected' : '';?> value="R">ROLL</option>
                                 <option<?= ($data->Roll_Pcs == 'P') ? ' selected' : '';?> value="P">PCS</option>
                             </select>
                         </div>
                         <div class="col-6">
-                            <select  readonly id="finishing" name="Finishing" class="form-control" disabled>
+                            <select readonly id="finishing" name="Finishing" class="form-control" disabled>
                                 <option<?= ($data->Finishing == 'CS') ? ' selected' : '';?> value="CS">CS</option>
                                 <option<?= ($data->Finishing == 'CS GUSET') ? ' selected' : '';?> value="CSG">CS GUSET</option>
                                 <option<?= ($data->Finishing == '4SS') ? ' selected' : '';?> value="4SS">4SS</option>
@@ -306,7 +304,7 @@
             <div class="form-group row">
                 <label for="toleransi" class="col-lg-4 col-sm-12 col-form-label">Toleransi</label>
                 <div class="col-lg-8 col-sm-12">
-                    <input readonly value="<?= $data->Toleransi;?>" id="toleransi" name="Toleransi" type="number" class="form-control">
+                    <input disabled value="<?= $data->Toleransi;?>" id="toleransi" name="Toleransi" type="number" class="form-control">
                 </div>
             </div>
         </div>
@@ -314,7 +312,7 @@
             <div class="form-group row">
                 <label for="parsial" class="col-lg-6 col-sm-12 col-form-label">Partial Qty</label>
                 <div class="col-lg-6 col-sm-12">
-                    <select readonly id="parsial" name="Parsial" class="form-control">
+                    <select disabled id="parsial" name="Parsial" class="form-control">
                         <option<?= ($data->Parsial == 'T') ? ' selected' : '';?> value="T">Tidak</option>
                         <option<?= ($data->Parsial == 'Y') ? ' selected' : '';?> value="Y">Ya</option>
                     </select>
@@ -326,7 +324,7 @@
     <div class="form-group row">
         <label for="keterangan" class="col-lg-2 col-sm-12 col-form-label">Keterangan</label>
         <div class="col-lg-10 col-sm-12">
-            <input readonly value="<?= $data->Keterangan;?>" id="keterangan" name="Keterangan" type="text" class="form-control">
+            <input disabled value="<?= $data->Keterangan;?>" id="keterangan" name="Keterangan" type="text" class="form-control">
         </div>
     </div>
 
@@ -339,7 +337,7 @@
             <div class="form-group row">
                 <label for="jalur" class="col-lg-6 col-sm-12 col-form-label">Jalur Pengiriman </label>
                 <div class="col-lg-6 col-sm-12">
-                    <select readonly id="jalur" name="Jalur" class="form-control">
+                    <select disabled id="jalur" name="Jalur" class="form-control">
                         <option<?= ($data->Jalur == 'D') ? ' selected' : '';?> value="D">Darat</option>
 						<option<?= ($data->Jalur == 'L') ? ' selected' : '';?> value="L">Laut</option>
 						<option<?= ($data->Jalur == 'U') ? ' selected' : '';?> value="U">Udara</option>
@@ -351,7 +349,7 @@
             <div class="form-group row">
                 <label for="area" class="col-lg-5 col-sm-12 col-form-label">Area</label>
                 <div class="col-lg-7 col-sm-12">
-                    <select  readonly  id="area" name="Area" class="form-control">
+                    <select disabled  id="area" name="Area" class="form-control">
                         <option value="<?= $data->Area;?>"><?= $data->NamaArea;?></option>
                     </select>
                 </div>
@@ -361,7 +359,7 @@
             <div class="form-group row">
                 <label for="kapasitas" class="col-lg-5 col-sm-12 col-form-label">Kapasitas Angkut<span class="text-danger">*</span></label>
                 <div class="col-lg-4 col-sm-12">
-                    <input readonly value="<?= $data->Kapasitas;?>" id="kapasitas" name="Kapasitas" type="number" class="form-control" placeholder="Ton">
+                    <input disabled value="<?= $data->Kapasitas;?>" id="kapasitas" name="Kapasitas" type="number" class="form-control" placeholder="Ton">
                 </div>
             </div>
         </div>
@@ -396,7 +394,7 @@
             <div class="form-group row">
                 <label for="<?= $form_satuan['form_name'];?>" class="col-lg-5 col-sm-12 col-form-label"><?= $form_satuan['label'];?></label>
                 <div class="col-lg-7 col-sm-12">
-                    <input type="number" name="<?= $form_satuan['form_name'];?>" class="form-control" id="<?= $form_satuan['form_name'];?>" />
+                    <input type="number" name="<?= $form_satuan['form_name'];?>" class="form-control dynamic-satuan-field" id="<?= $form_satuan['form_name'];?>" />
                 </div>
             </div>
         </div>
@@ -419,7 +417,7 @@
             <div class="form-group row">
                 <label for="adhesive" class="col-lg-6 col-sm-12 col-form-label">Adhesive </label>
                 <div class="col-lg-6 col-sm-12">
-                    <select id="adhesive" name="adhesive" class="form-control">
+                    <select id="adhesive" name="JenisAdhesive" class="form-control">
                         <option value=""<?= (!$data->JenisAdhesive) ? ' selected' : '';?>>Pilih</option>
                         <?php foreach ($adhesive as $ads) : ?>
                             <option value="<?= $ads->id;?>"><?= $ads->nama;?></option>
@@ -457,7 +455,7 @@
 	<div class="row mt-4">
         <div class="col-12">
 <!--            <button type="button" data-toggle="modal" data-target="#kalkulasiModal" class="btn btn-primary">Kalkulasi</button>-->
-            <button type="button" class="btn btn-primary open-kalkulasi">Kalkulasi</button>
+            <button type="submit" class="btn btn-primary open-kalkulasi">Kalkulasi</button>
         </div>
     </div>
 </form>

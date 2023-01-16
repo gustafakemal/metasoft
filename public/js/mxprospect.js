@@ -78,13 +78,18 @@ $(function () {
     })
 
     $('button.add-acc').on('click', function () {
-        const val = $('select[name="aksesoris"] option:selected').val()
+        const val = parseInt($('select[name="aksesoris"] option:selected').val())
 
         let accessor = []
-        if( $('.bscolor').length > 0 ) {
-            $('.bscolor').each(function(k, v) {
-                const value = $(this).find(`input[name="aksesori[]"]`).val()
-                accessor.push(value)
+        if( $('.bs-child').length > 0 ) {
+            $('.bs-child').each(function (idx) {
+                const ord = $(this).find('input[name="aksesori[]"]')
+                for(let x = 0;x < ord.length;x++) {
+                    const df = parseInt(ord[x].defaultValue);
+                    if(!accessor.includes(df)) {
+                        accessor.push(df)
+                    }
+                }
             })
         }
 

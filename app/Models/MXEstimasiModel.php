@@ -2,18 +2,17 @@
 
 namespace App\Models;
 
-use CodeIgniter\I18n\Time;
 use CodeIgniter\Model;
 
 class MXEstimasiModel extends Model
 {
+
     protected $table = 'MX_Prospek_Jumlah';
     protected $useTimestamps = true;
     protected $createdField = 'Created';
     protected $updatedField = 'Updated';
     protected $allowedFields = ['NoProspek', 'Alt', 'Tanggal', 'NamaProduk', 'Pemesan', 'Segmen', 'Konten', 'JenisProduk', 'Tebal', 'Panjang', 'Lebar', 'Pitch', 'Material1', 'TebalMat1', 'Material2', 'TebalMat2', 'Material3', 'TebalMat3', 'Material4', 'TebalMat4', 'Warna', 'Eyemark', 'RollDirection', 'Catatan', 'MaxJoin', 'WarnaTape', 'BagMaking', 'Bottom', 'OpenForFilling', 'Roll_Pcs', 'Finishing', 'Toleransi', 'Parsial', 'Keterangan', 'Area', 'Jalur', 'Kapasitas', 'Created', 'CreatedBy', 'Updated', 'UpdatedBy', 'Status', 'JenisTinta', 'JenisAdhesive', 'JenisPieces', 'Sales', 'Estimator', 'EstimasiUpdated', 'EstimasiUpdatedBy', 'EstimasiChecked', 'EstimasiCheckedBy', 'MeterRoll', 'Gusset', 'CentreSeal', 'Prioritas'];
 
-    
     private function getJumlahUp($roll_pcs, $finishing, $color_bar, $width_w_trim)
     {
         $jumlah_up = 0;
@@ -38,24 +37,25 @@ class MXEstimasiModel extends Model
         }
         return $jumlah_up;
     }
-    private function get_widthwtrim($roll_pcs, $finishing, $lebar, $color_bar)
+    private function get_widthwtrim($roll_pcs, $finishing, $lebar_jadi, $color_bar)
     {
         $widthwtrim = 0;
         if ($roll_pcs == 'R') {
-            $widthwtrim = $lebar;
+            $widthwtrim = $lebar_jadi;
         } else {
             if ($finishing == 'CS') {
-                $widthwtrim = $lebar + ($color_bar * 2);
+                $widthwtrim = $lebar_jadi + ($color_bar * 2);
             } elseif ($finishing == 'CS Gusset') {
-                $widthwtrim = $lebar + ($color_bar * 2);
+                $widthwtrim = $lebar_jadi + ($color_bar * 2);
             } elseif ($finishing == '4SS') {
-                $widthwtrim = $lebar + ($color_bar * 2);
+                $widthwtrim = $lebar_jadi + ($color_bar * 2);
             } elseif ($finishing == '3SS') {
-                $widthwtrim = $lebar + ($color_bar * 4);
+                $widthwtrim = $lebar_jadi + ($color_bar * 4);
             } elseif ($finishing == 'STP') {
-                $widthwtrim = $lebar;
+                $widthwtrim = $lebar_jadi;
             }
         }
+        return $widthwtrim;
     }
     public function getPitch($roll_pcs, $pitch)
     {
@@ -103,26 +103,26 @@ class MXEstimasiModel extends Model
     private function getWaste($roll_pcs, $running_meter)
     {
         $waste = 0.0000;
-       
+
         $teks_sql = "select Waste from MX_WasteRoll ";
         $teks_sql .= "where Awal in (select max(Awal) from MX_WasteRoll where Awal<=" . $running_meter . ")";
-        $query_waste = $this->query($teks_sql)->get();
+        //$query_waste = $this->query($teks_sql)->get();
 
-        $result = $query_waste->row();
-        $waste = $result->Waste;
-       
+        $result = $this->query($teks_sql)->getResult();
+        //dd($result);
+        $waste = $result[0]->Waste;
+
         return $waste;
     }
     private function getWastePersiapan($roll_pcs)
     {
         $wastepersiapan = 0.0000;
-        $where = "kategori='Campuran' and nama='Waste Persiapan'";
-        $query_konstanta = $this->select('*')
-            ->from('MX_Konstanta')
-            ->where($where)
-            ->get();
-        $result = $query_konstanta->row();
-        $wastepersiapan = $result->nilai;
+        $teks_sql = "select nilai from MX_Konstanta ";
+        $teks_sql .= "where kategori='Campuran' and nama='Waste Persiapan'";
+        $result = $this->query($teks_sql)->getResult();
+        //dd($teks_sql);
+        $wastepersiapan = $result[0]->nilai;
+
         return $wastepersiapan;
     }
     public function getColorBar($roll_pcs, $finishing)
@@ -146,7 +146,7 @@ class MXEstimasiModel extends Model
         if ($roll_pcs == 'R') {
             $running_meter = ($jumlah * $meter_roll) / $jumlah_up;
         } else {
-            $running_meter = $jumlah * ($pitch / 1000) / $lebar_film;
+            $running_meter = $jumlah * ($pitch / 1000) / $jumlah_up;
         }
         return $running_meter;
     }
@@ -155,186 +155,277 @@ class MXEstimasiModel extends Model
         $jumlah_pcs = 0;
         if ($roll_pcs == 'R') {
             $jumlah_pcs = $meter_roll / ($pitch / 1000) * $jumlah;
-        }else{
+        } else {
             $jumlah_pcs = $jumlah;
         }
         return $jumlah_pcs;
     }
 
-    public function getPemakaianMaterial($roll_pcs, $finishing, $material, $lebar, $pitch, $tebalmat, $jumlahpcs, $waste, $lebar_film, $wastepersiapan)
+    public function getPemakaianMaterial($roll_pcs, $finishing, $material, $lebar_buka, $pitch, $tebalmat, $jumlahpcs, $waste, $lebar_film, $wastepersiapan)
     {
         $pemakaian = 0.0000;
         $where = "id=$material";
-        $query_material = $this->select('*')
-            ->from('MX_Material')
+        $tabel = $this->db->table('MX_JenisFilm');
+        $query_material = $tabel->select('*')
             ->where($where)
             ->get();
-        $result = $query_material->row();
-        $beratjenis = $result->BeratJenis;
-        $harga = $result->Harga;
+        $result = $query_material->getResult();
+        $row = $result[0];
+        $beratjenis = $row->berat_jenis;
+        $harga = $row->harga;
+        //dd($beratjenis);
 
         $where = "kategori='Correction' and nama='Film'";
-        $query_konstanta = $this->select('*')
-            ->from('MX_Konstanta')
+        $tabel = $this->db->table('MX_Konstanta');
+        $query_konstanta = $tabel->select('*')
             ->where($where)
             ->get();
-        $result = $query_konstanta->row();
-        $corr_film = $result->nilai;
+        $result = $query_konstanta->getResult();
+        $row = $result[0];
+        $corr_film = $row->nilai;
+        //dd($corr_film);
+        //dd($tebalmat);
+        //dd($jumlahpcs);
+        //dd($waste);
 
         if ($roll_pcs == 'R') {
-            $pemakaian = ($lebar * $pitch * $tebalmat * $jumlahpcs * ($beratjenis / 1000000000) / (1 - $waste)) + ($lebar_film * $tebalmat * ($beratjenis / 1000000000) * $wastepersiapan) * $corr_film;
-        }else{
-            if(($finishing=='3SS')||($finishing=='STP')){
-                $pemakaian = ($lebar * $pitch * $tebalmat * $jumlahpcs * ($beratjenis / 1000000000) / (1 - $waste)) + ($lebar_film * $tebalmat * ($beratjenis / 1000000000) * $wastepersiapan) * $corr_film;    
+            $pemakaian = (($lebar_buka * $tebalmat * $jumlahpcs * $beratjenis / 1000000000) * $pitch / (1 - $waste)) + (($lebar_film * $tebalmat * $beratjenis / 1000000) * $wastepersiapan) * $corr_film;
+        } else {
+            if (($finishing == '3SS') || ($finishing == 'STP')) {
+                $pemakaian = (($lebar_buka * $tebalmat * $jumlahpcs * $beratjenis / 1000000000) * $pitch / (1 - $waste)) + (($lebar_film * $tebalmat * $beratjenis / 1000000) * $wastepersiapan) * $corr_film;
+            } else if ($finishing == 'CS') {
+                $pemakaian = (($lebar_buka * $tebalmat * $jumlahpcs * $beratjenis / 1000000000) * $pitch / (1 - $waste)) + (($lebar_film * $tebalmat * $beratjenis / 1000000) * $wastepersiapan) * $corr_film;
+
             }
         }
         $hasil = array();
         $biaya = $pemakaian * $harga;
-        $hasil[] = ['biaya'=>$biaya,'pakai'=>$pemakaian];
+        $hasil[] = ['biaya' => $biaya, 'pakai' => $pemakaian];
+
         return $hasil;
     }
-    public function getPakaiAdhesive($roll_pcs, $jenis_adhesive, $lebar, $pitch, $jumlah_pcs, $waste, $lebar_film, $waste_persiapan, $material3, $material4){
+    public function getPakaiAdhesive($roll_pcs, $jenis_adhesive, $lebar, $pitch, $jumlah_pcs, $waste, $lebar_film, $waste_persiapan, $material3, $material4)
+    {
         $pakaiadhesive = 0.0000;
         $coating_weight = 0;
-        $where = "id=".$jenis_adhesive;
+
+        $where = "id=" . $jenis_adhesive;
+        $tabel = $this->db->table('MX_Adhesive');
         $query_konstanta = $this->select('*')
-            ->from('MX_Adhesive')
             ->where($where)
             ->get();
-        $result = $query_konstanta->row();
-        $coating_weight = $result->konstanta;
+        $result = $query_konstanta->getResult();
+        $row = $result[0];
+        $coating_weight = $row->konstanta;
 
         $solid_content = 0;
         $where = "kategori = 'Solid Content' and nama='Adhesive'";
-        $querySolidContent = $this->select('*')
-            ->from('MX_Kostanta')
+        $tabel = $this->db->table('MX_Kostanta');
+        $querySolidContent = $tabel->select('*')
             ->where($where)
             ->get();
-        $resultSolidContent = $querySolidContent->row();
-        $solid_content = $resultSolidContent->nilai;
+        $resultSolidContent = $querySolidContent->getResult();
+        $row = $result[0];
+        $solid_content = $row->nilai;
 
         $corr_adhesive = 0;
         $where = "kategori='Correction' and nama='Adhesive'";
-        $queryCorrAdhesive = $this->select('*')
-            ->from('MX_Konstanta')
+        $tabel = $this->db->table('MX_Kostanta');
+        $queryCorrAdhesive = $tabel->select('*')
             ->where($where)
             ->get();
-        $resultCorrAdhesive = $queryCorrAdhesive->row();
-        $corr_adhesive = $resultCorrAdhesive->nilai;
+        $resultCorrAdhesive = $queryCorrAdhesive->getResult();
+        $row = $result[0];
+        $corr_adhesive = $row->nilai;
 
         $konst = 0;
-        if($material3==0){
+        if ($material3 == 0) {
             $konst = 1;
-        }else{
-            if($material4==0){
+        } else {
+            if ($material4 == 0) {
                 $konst = 2;
-            }  else{
+            } else {
                 $konst = 3;
             }
         }
-        $luasan = (($lebar * $pitch * $jumlah_pcs/1000000)/(1-$waste))+($lebar_film * $waste_persiapan/1000);
-        $pakaiadhesive = $coating_weight * $luasan/1000 * $solid_content * $konst * $corr_adhesive;
+        $luasan = (($lebar * $pitch * $jumlah_pcs / 1000000) / (1 - $waste)) + ($lebar_film * $waste_persiapan / 1000);
+        $pakaiadhesive = $coating_weight * $luasan / 1000 * $solid_content * $konst * $corr_adhesive;
         $hasil = array();
-        $hasil[] = ['CoatingWeight'=>$coating_weight,'SolidContent'=>$solid_content,'Luas'=>$luasan,'Pakai'=>$pakaiadhesive];
+        $hasil[] = ['CoatingWeight' => $coating_weight, 'SolidContent' => $solid_content, 'Luas' => $luasan, 'Pakai' => $pakaiadhesive];
         return $hasil;
     }
-    public function getPakaiSolventAdhesive($roll_pcs, $jenis_adhesive, $lebar, $pitch, $jumlah_pcs, $waste, $lebar_film, $waste_persiapan, $material3, $material4){
+    public function getPakaiSolventAdhesive($roll_pcs, $jenis_adhesive, $lebar, $pitch, $jumlah_pcs, $waste, $lebar_film, $waste_persiapan, $material3, $material4)
+    {
         $pakaiadhesive = 0.0000;
         $coating_weight = 0;
-        $where = "id=".$jenis_adhesive;
-        $query_konstanta = $this->select('*')
-            ->from('MX_Adhesive')
+        $where = "id=" . $jenis_adhesive;
+        $tabel = $this->db->table('MX_Adhesive');
+        $query_konstanta = $tabel->select('*')
             ->where($where)
             ->get();
-        $result = $query_konstanta->row();
-        $coating_weight = $result->konstanta;
+        $result = $query_konstanta->getResult();
+        $row = $result[0];
+        $coating_weight = $row->konstanta;
 
         $solid_content = 0;
         $where = "kategori = 'Solid Content' and nama='Solvent Adhesive'";
-        $querySolidContent = $this->select('*')
-            ->from('MX_Kostanta')
+        $tabel = $this->db->table('MX_Kostanta');
+        $querySolidContent = $tabel->select('*')
             ->where($where)
             ->get();
-        $resultSolidContent = $querySolidContent->row();
-        $solid_content = $resultSolidContent->nilai;
+        $resultSolidContent = $querySolidContent > getResult();
+        $row = $result[0];
+        $solid_content = $row->nilai;
 
         $corr_adhesive = 0;
         $where = "kategori='Correction' and nama='Adhesive'";
+        $tabel = $this->db->table('MX_Kostanta');
         $queryCorrAdhesive = $this->select('*')
-            ->from('MX_Konstanta')
             ->where($where)
             ->get();
-        $resultCorrAdhesive = $queryCorrAdhesive->row();
-        $corr_adhesive = $resultCorrAdhesive->nilai;
+        $resultCorrAdhesive = $queryCorrAdhesive > getResult();
+        $row = $result[0];
+        $corr_adhesive = $row->nilai;
 
         $konst = 0;
-        if($material3==0){
+        if ($material3 == 0) {
             $konst = 1;
-        }else{
-            if($material4==0){
+        } else {
+            if ($material4 == 0) {
                 $konst = 2;
-            }  else{
+            } else {
                 $konst = 3;
             }
         }
-        $luasan = (($lebar * $pitch * $jumlah_pcs/1000000)/(1-$waste))+($lebar_film * $waste_persiapan/1000);
-        $pakaiadhesive = $coating_weight * $luasan/1000 * $solid_content * $konst * $corr_adhesive;
-        $hasil[] = ['CoatingWeight'=>$coating_weight,'SolidContent'=>$solid_content,'Luas'=>$luasan,'Pakai'=>$pakaiadhesive];
+        $luasan = (($lebar * $pitch * $jumlah_pcs / 1000000) / (1 - $waste)) + ($lebar_film * $waste_persiapan / 1000);
+        $pakaiadhesive = $coating_weight * $luasan / 1000 * $solid_content * $konst * $corr_adhesive;
+        $hasil[] = ['CoatingWeight' => $coating_weight, 'SolidContent' => $solid_content, 'Luas' => $luasan, 'Pakai' => $pakaiadhesive];
         return $hasil;
+    }
+    private function getLebarBuka($roll_pcs, $finishing, $lebar, $centre_seal, $gusset, $meter_roll)
+    {
+        $lebar_buka = 0;
+        if ($roll_pcs == 'R') {
+            $lebar_buka = $lebar;
+        } else {
+            if ($finishing == 'CS') {
+                $lebar_buka = $lebar * 2 + $centre_seal * 2;
+            } elseif ($finishing == 'CS Gusset') {
+                $lebar_buka = $lebar * 2 + $gusset * 4 + 10 * 2;
+            } elseif ($finishing == '4SS') {
+                $lebar_buka = $lebar * 2 + $gusset * 4 + 10 * 2;
+            } elseif ($finishing == '3SS') {
+                $lebar_buka = 0;
+            } elseif ($finishing == 'STP') {
+                $lebar_buka = 0;
+            }
+        }
+
+        return $lebar_buka;
     }
     public function getFormulaOtomatis($NoProspek, $Alt, $jumlah)
     {
-
-        $this->load->model('MXProspectModel');
-        $query_prospect = $this->MXProspectModel->getDetailByNoProspectAndAlt($NoProspek, $Alt);
-        $res_prospect = $query_prospect->row();
+        $tbl_opsi = $this->db->table('MasterOpsi');
+        $tbl_konstanta = $this->db->table('MX_Konstanta');
+        $tbl_tinta = $this->db->table('MX_Prospek_Tinta');
+        $tbl_solventtinta = $this->db->table('MX_SolventTinta');
+        $tbl_adhesive = $this->db->table('MX_Adhesive');
+        $tbl_jenistinta = $this->db->table('MX_JenisTinta');
+        $mxprospectmodel = new \App\Models\MXProspectModel();
+        //$mxprospectmodel = $this->load->model('MXProspectModel');
+        $query_prospect = $mxprospectmodel->getDetailByNoProspectAndAlt($NoProspek, $Alt);
+        //return ($query_prospect);
+        $res_prospect = $query_prospect->getResult();
+        $data_prospect = $res_prospect[0];
+        //return ($data_prospect);
+        //return $data_prospect->Roll_Pcs;
         $res = array();
-        $roll_pcs = $res_prospect->Roll_Pcs;
-        $finishing = $res_prospect->Finishing;
-        $pitch = $res_prospect->Pitch;
-        $jumlahup = $res_prospect->JumlahUp;
-        $lebarfilm = $res_prospect->LebarFilm;
-        $meterroll = $res_prospect->MeterRoll;
-        $tebal = $res_prospect->Tebal;
-        $panjang = $res_prospect->Panjang;
-        $lebar = $res_prospect->Lebar;
-        $material1 = (!$res_prospect->Material1)?0:$res_prospect->Material1;
-        $tebalmat1 = (!$res_prospect->Material1)?0:$res_prospect->TebalMat1;
-        $material2 = (!$res_prospect->Material2)?0:$res_prospect->Material2;
-        $tebalmat2 = (!$res_prospect->Material2)?0:$res_prospect->TebalMat2;
-        $material3 = (!$res_prospect->Material3)?0:$res_prospect->Material3;
-        $tebalmat3 = (!$res_prospect->Material3)?0:$res_prospect->TebalMat3;
-        $material4 = (!$res_prospect->Material4)?0:$res_prospect->Material4;
-        $tebalmat4 = (!$res_prospect->Material4)?0:$res_prospect->TebalMat4;
-        $adhesive = $res_prospect->Adhesive;
-        $jenis_adhesive = $res_prospect->JenisAdhesive;
-        $kapasitas = $res_prospect->Kapsitas;
+        $roll_pcs = $data_prospect->Roll_Pcs;
+        $finishing = $data_prospect->Finishing;
+        $pitch = $data_prospect->Pitch;
+        $jumlahup = $data_prospect->JumlahUp;
+        $lebarfilm = $data_prospect->LebarFilm;
+        $meterroll = $data_prospect->MeterRoll;
+        $tebal = $data_prospect->Tebal;
+        $panjang = $data_prospect->Panjang;
+        $lebar = $data_prospect->Lebar;
+        $centre_seal = ($data_prospect->CentreSeal) ? $data_prospect->CentreSeal : 0;
+        $gusset = ($data_prospect->Gusset) ? $data_prospect->Gusset : 0;
+        $meter_roll = ($data_prospect->MeterRoll) ? $data_prospect->MeterRoll : 0;
+        $lebar_buka = $this->getLebarBuka($roll_pcs, $finishing, $lebar, $centre_seal, $gusset, $meter_roll);
+        //dd($lebar_buka);
+        $material1 = (!$data_prospect->Material1) ? 0 : $data_prospect->Material1;
+        $tebalmat1 = (!$data_prospect->Material1) ? 0 : $data_prospect->TebalMat1;
+        $material2 = (!$data_prospect->Material2) ? 0 : $data_prospect->Material2;
+        $tebalmat2 = (!$data_prospect->Material2) ? 0 : $data_prospect->TebalMat2;
+        $material3 = (!$data_prospect->Material3) ? 0 : $data_prospect->Material3;
+        $tebalmat3 = (!$data_prospect->Material3) ? 0 : $data_prospect->TebalMat3;
+        $material4 = (!$data_prospect->Material4) ? 0 : $data_prospect->Material4;
+        $tebalmat4 = (!$data_prospect->Material4) ? 0 : $data_prospect->TebalMat4;
+
+        $jenis_adhesive = $data_prospect->JenisAdhesive;
+        $adhesive = ($jenis_adhesive == 0) ? '' : $data_prospect->Adhesive;
+        $kapasitas = $data_prospect->Kapasitas;
 
         $color_bar = $this->getColorBar($roll_pcs, $finishing);
-        $width_w_trim = $this->get_widthwtrim($roll_pcs, $finishing);
+        //dd($color_bar);
+        $width_w_trim = $this->get_widthwtrim($roll_pcs, $finishing, $lebar_buka, $color_bar);
+        //dd($width_w_trim);
         $jumlah_up = ($jumlahup == 0) ? $this->getJumlahUp($roll_pcs, $finishing, $color_bar, $width_w_trim) : $jumlahup;
+        //dd($jumlah_up);
         $lebar_film = ($lebarfilm == 0) ? $this->getTtlWidth($jumlah_up) : $lebarfilm;
+        //dd($lebar_film);
         $jumlah_pitch = $this->getPitch($roll_pcs, $pitch);
+        //dd($jumlah_pitch);
         $circum = $this->getCircum($roll_pcs, $pitch);
+        //dd($circum);
         $running_meter = $this->getRunningMeter($roll_pcs, $jumlah, $meterroll, $jumlah_up, $pitch, $lebar_film);
+        //dd($running_meter);
         $waste = $this->getWaste($roll_pcs, $running_meter);
+        //dd($waste);
         $waste_persiapan = $this->getWastePersiapan($roll_pcs);
+        //dd($waste_persiapan);
         $jumlah_pcs = $this->getJumlahPcs($roll_pcs, $meterroll, $pitch, $jumlah);
+        //dd($jumlah_pcs);
         $arrMaterial1 = array();
-        $arrMaterial1[] = $this->getPemakaianMaterial($roll_pcs, $finishing, $material1, $lebar, $pitch, $tebalmat1, $jumlah_pcs, $waste, $lebar_film, $waste_persiapan);
-        $pakai_material1 = ($res_prospect->Material1==0)?0:$arrMaterial1['pakai'];
-        $biaya_material1 = ($res_prospect->Material1==0)?0:$arrMaterial1['biaya'];
-        $pakai_material2 = ($res_prospect->Material2==0)?0:$this->getPemakaianMaterial($roll_pcs, $finishing, $material2, $lebar, $pitch, $tebalmat2, $jumlah_pcs, $waste, $lebar_film, $waste_persiapan);
-        $pakai_material3 = ($res_prospect->Material3==0)?0:$this->getPemakaianMaterial($roll_pcs, $finishing, $material3, $lebar, $pitch, $tebalmat3, $jumlah_pcs, $waste, $lebar_film, $waste_persiapan);
-        $pakai_material4 = ($res_prospect->Material4==0)?0:$this->getPemakaianMaterial($roll_pcs, $finishing, $material4, $lebar, $pitch, $tebalmat4, $jumlah_pcs, $waste, $lebar_film, $waste_persiapan);
-        
+        $arrMaterial2 = array();
+        $arrMaterial3 = array();
+        $arrMaterial4 = array();
+        $arrMaterial1 = $this->getPemakaianMaterial($roll_pcs, $finishing, $material1, $lebar_buka, $pitch, $tebalmat1, $jumlah_pcs, $waste, $lebar_film, $waste_persiapan);
+        //dd($arrMaterial1[0]['biaya']);
+        $pakai_material1 = ($data_prospect->Material1 == 0) ? 0 : $arrMaterial1[0]['pakai'];
+        $biaya_material1 = ($data_prospect->Material1 == 0) ? 0 : $arrMaterial1[0]['biaya'];
+        $pakai_material2 = 0;
+        $biaya_material2 = 0;
+        $pakai_material3 = 0;
+        $biaya_material3 = 0;
+        $pakai_material4 = 0;
+        $biaya_material4 = 0;
+        if ($data_prospect->Material2 != 0) {
+            $arrMaterial2 = $this->getPemakaianMaterial($roll_pcs, $finishing, $material2, $lebar_buka, $pitch, $tebalmat2, $jumlah_pcs, $waste, $lebar_film, $waste_persiapan);
+            $pakai_material2 = $arrMaterial2[0]['pakai'];
+            $biaya_material2 = $arrMaterial2[0]['biaya'];
+        }
+        if ($data_prospect->Material3 != 0) {
+            //dd('Material3');
+            $arrMaterial3 = $this->getPemakaianMaterial($roll_pcs, $finishing, $material3, $lebar_buka, $pitch, $tebalmat3, $jumlah_pcs, $waste, $lebar_film, $waste_persiapan);
+            $pakai_material3 = $arrMaterial3[0]['pakai'];
+            $biaya_material3 = $arrMaterial3[0]['biaya'];
+        }
+        //dd($arrMaterial3);
+        if ($data_prospect->Material4 != 0) {
+            $arrMaterial4 = $this->getPemakaianMaterial($roll_pcs, $finishing, $material4, $lebar_buka, $pitch, $tebalmat4, $jumlah_pcs, $waste, $lebar_film, $waste_persiapan);
+            $pakai_material4 = $arrMaterial4[0]['pakai'];
+            $biaya_material4 = $arrMaterial4[0]['biaya'];
+        }
+        //dd($arrMaterial4);
         $totalpakaimaterial = $pakai_material1 + $pakai_material2 + $pakai_material3 + $pakai_material4;
-
+        //dd($totalpakaimaterial);
         $res = array();
         $res['NoProspek'] = $NoProspek;
         $res['Alt'] = $Alt;
-        $res['Jumlah'] = $Jumlah;
-        
+        $res['Jumlah'] = $jumlah;
+
         $res['roll_pcs'] = $roll_pcs;
         $res['jumlah_up'] = $jumlah_up;
         $res['lebar_film'] = $lebar_film;
@@ -344,171 +435,231 @@ class MXEstimasiModel extends Model
         $res['running_meter'] = $running_meter;
         $res['waste'] = $waste;
         $res['waste_perisapan'] = $waste_persiapan;
+        $res['pakai_material1'] = $pakai_material1;
+        $res['pakai_material2'] = $pakai_material2;
+        $res['pakai_material3'] = $pakai_material3;
+        $res['pakai_material4'] = $pakai_material4;
+        $res['biaya_material1'] = $biaya_material1;
+        $res['biaya_material2'] = $biaya_material2;
+        $res['biaya_material3'] = $biaya_material3;
+        $res['biaya_material4'] = $biaya_material4;
 
+        //dd($res);
         $where = "Kategori='Ratio Tinta Solvent MX'";
-        $queryRatio = $this->select('CONVERT(money, OpsiVal) OpsiVal')
-            ->from('MasterOpsi')
+        $queryRatio = $tbl_opsi->select('OpsiTeks, CONVERT(money, OpsiVal) OpsiVal')
             ->where($where)
             ->get();
-       
-        $dataRatio = $queryRatio->result_array();
-
-        $ratio_tinta=0;
+        $dataRatio = $queryRatio->getResult();
+        //dd($dataRatio);
+        $ratio_tinta = 0;
         $ratio_solvent = 0;
         foreach ($dataRatio as $row):
-            if($row['OpsiTeks']=='Tinta') $ratio_tinta = $row['Opsival'];
-            if($row['OpsiTeks']=='Solvent') $ratio_solvent = $row['Opsival'];
-        endforeach; 
+            if ($row->OpsiTeks == 'Tinta') {
+                $ratio_tinta = $row->OpsiVal;
+            }
 
+            if ($row->OpsiTeks == 'Solvent') {
+                $ratio_solvent = $row->OpsiVal;
+            }
+
+        endforeach;
+        //dd($ratio_tinta);
         $where2 = "kategori='Correction' and nama='Tinta'";
-        $query_konstanta2 = $this->select('*')
-            ->from('MX_Konstanta')
+        $query_konstanta2 = $tbl_konstanta->select('*')
             ->where($where2)
             ->get();
-        $result2 = $query_konstanta2->row();
-        $corr_tinta = $result2->nilai;
+        $resKonstanta2 = $query_konstanta2->getResult();
+        $row = $resKonstanta2[0];
+        $corr_tinta = $row->nilai;
 
         $where2 = "kategori='Correction' and nama='Solvent'";
-        $queryCorrSolvent = $this->select('*')
-            ->from('MX_Konstanta')
+        $queryCorrSolvent = $tbl_konstanta->select('*')
             ->where($where2)
             ->get();
-        $resultCorrSolvent = $queryCorrSolvent->row();
-        $corr_solvent = $resultCorrSolvent->nilai;
+        $resCorrSolvent = $queryCorrSolvent->getResult();
+        $row = $resCorrSolvent[0];
+        $corr_solvent = $row->nilai;
 
         $where3 = "Kategori='Solvent Non OPP MX'";
-        $querySolventNonOPP = $this->select('Opsiteks, CONVERT(money, OpsiVal) OpsiVal')
-            ->from('MasterOpsi')
+        $querySolventNonOPP = $tbl_opsi->select('OpsiTeks, CONVERT(money, OpsiVal) OpsiVal')
             ->where($where)
             ->get();
-        $dataSolventNonOPP = $querySolventNonOPP->result_array();
+        $dataSolventNonOPP = $querySolventNonOPP->getResult();
 
-        $toluene=0;
+        $toluene = 0;
         $ia = 0;
         $mek = 0;
         $ipa = 0;
         foreach ($dataSolventNonOPP as $row):
-            if($row['OpsiTeks']=='TOLUENE') $toluene = $row['Opsival'];
-            if($row['OpsiTeks']=='IA') $ia = $row['Opsival'];
-            if($row['OpsiTeks']=='MEK') $mek = $row['Opsival'];
-            if($row['OpsiTeks']=='IPA') $ipa = $row['Opsival'];
-        endforeach; 
+            if ($row->OpsiTeks == 'TOLUENE') {
+                $toluene = $row->OpsiVal;
+            }
+
+            if ($row->OpsiTeks == 'IA') {
+                $ia = $row->OpsiVal;
+            }
+
+            if ($row->OpsiTeks == 'MEK') {
+                $mek = $row->OpsiVal;
+            }
+
+            if ($row->OpsiTeks == 'IPA') {
+                $ipa = $row->OpsiVal;
+            }
+
+        endforeach;
 
         $where4 = "Kategori='Solvent OPP MX'";
-        $querySolventOPP = $this->select('Opsiteks, CONVERT(money, OpsiVal) OpsiVal')
-            ->from('MasterOpsi')
+        $querySolventOPP = $tbl_opsi->select('OpsiTeks, CONVERT(money, OpsiVal) OpsiVal')
             ->where($where)
             ->get();
-        $dataSolventOPP = $querySolventOPP->result_array();
+        $dataSolventOPP = $querySolventOPP->getResult();
 
-        $tolueneOPP=0;
+        $tolueneOPP = 0;
         $iaOPP = 0;
         $mekOPP = 0;
         $ipaOPP = 0;
         foreach ($dataSolventOPP as $row):
-            if($row['OpsiTeks']=='TOLUENE') $tolueneOPP = $row['Opsival'];
-            if($row['OpsiTeks']=='IA') $iaOPP = $row['Opsival'];
-            if($row['OpsiTeks']=='MEK') $mekOPP = $row['Opsival'];
-            if($row['OpsiTeks']=='IPA') $ipaOPP = $row['Opsival'];
-        endforeach; 
+            if ($row->OpsiTeks == 'TOLUENE') {
+                $tolueneOPP = $row->OpsiVal;
+            }
 
-        $where = "NoProspek='".$NoProspek."' AND Alt=".$Alt;
-        $query_konstanta = $this->select('MX_Prospek_Tinta.Tinta Tinta, MX_Prospek_Tinta.Coverage Coverage, MX_JenisTinta.harga Harga, MX_JenisTinta.gsm Gsm')
-            ->from('MX_Prospek_Tinta')
-            ->join('MX_JenisTinta', 'MX_Prospek_Tinta.Tinta = MX_JenisTinta.id', 'left') 
+            if ($row->OpsiTeks == 'IA') {
+                $iaOPP = $row->OpsiVal;
+            }
+
+            if ($row->OpsiTeks == 'MEK') {
+                $mekOPP = $row->OpsiVal;
+            }
+
+            if ($row->OpsiTeks == 'IPA') {
+                $ipaOPP = $row->OpsiVal;
+            }
+
+        endforeach;
+        //dd('Test 1');
+
+        $where = "NoProspek='" . $NoProspek . "' AND Alt=" . $Alt;
+        $query_konstanta = $tbl_tinta->select('MX_Prospek_Tinta.Tinta Tinta, MX_Prospek_Tinta.Coverage Coverage, MX_JenisTinta.harga Harga, MX_JenisTinta.gsm Gsm')
+            ->join('MX_JenisTinta', 'MX_Prospek_Tinta.Tinta = MX_JenisTinta.id', 'left')
             ->where($where)
             ->get();
-        $result = $query_konstanta->row();
-        $rawdata = $query_konstanta->result_array();
-        $data_pakaitinta   =  array();
+        $rawdata = $query_konstanta->getResult();
+        $data_pakaitinta = array();
         $totalpakaitinta = 0;
-        foreach ($rawdata as $row):                                                     
-            $tinta = $row['Tinta'];
-            $coverage = $row['Coverage'];
-            $harga = $row['Harga'];
-            $gsm = $row['Gsm'];
-            $pakai = (($lebar * $pitch * $jumlah_pcs * $gsm * $ratio_tinta/1000000000) * $coverage/(1-$waste) + ($lebar_film * $gsm * $ratio_tinta/1000000) * $coverage * $waste_persiapan) * $corr_tinta;
+        foreach ($rawdata as $row):
+            $tinta = $row->Tinta;
+            $coverage = $row->Coverage;
+            $harga = $row->Harga;
+            $gsm = $row->Gsm;
+            $pakai = (($lebar * $pitch * $jumlah_pcs * $gsm * $ratio_tinta / 1000000000) * $coverage / (1 - $waste) + ($lebar_film * $gsm * $ratio_tinta / 1000000) * $coverage * $waste_persiapan) * $corr_tinta;
             $biaya = $harga * $pakai;
             $totalpakaitinta += $pakai;
-            $data_pakaitinta[] = ['tinta'=>$tinta,'harga'=>$harga,'pakai'=>$pakai,'biaya'=>$biaya];
-        endforeach; 
-        
-        
-        $query_hargasolvent = $this->select('upper(nama) nama, harga')
-            ->from('MX_SolventTinta')
+            $data_pakaitinta[] = ['tinta' => $tinta, 'harga' => $harga, 'pakai' => $pakai, 'biaya' => $biaya];
+        endforeach;
+        //dd('Test 2');
+
+        $query_hargasolvent = $tbl_solventtinta->select('id, upper(nama) nama, harga')
             ->get();
-        $result = $query_hargasolvent->row();
-        $rawdatahargasolvent = $query_hargasolvent->result_array();
+        $rawdatahargasolvent = $query_hargasolvent->getResult();
         $hargasolvent = array();
-        foreach ($rawdatahargasolvent as $row):      
-                                                     
-            $id = $row['id'];                                               
-            $nama = $row['nama'];
-            $harga = $row['harga'];
-            $hargasolvent[$nama] = $i.";".$harga;
+        foreach ($rawdatahargasolvent as $row):
+
+            $id = $row->id;
+            $nama = trim($row->nama);
+            $harga = $row->harga;
+            $hargasolvent[$nama] = $id . ";" . $harga;
         endforeach;
 
-
-        $query_hargaadhesive = $this->select('upper(nama) nama, konstanta, hargaadhesive, hargasolvent')
-            ->from('MX_Adhesive')
+        $query_hargaadhesive = $tbl_adhesive->select('id, upper(nama) nama, konstanta, hargaadhesive, hargasolvent')
             ->get();
-        $result = $query_hargaadhesive->row();
-        $rawdatahargaadhesive = $query_hargaadhesive->result_array();
+        $rawdatahargaadhesive = $query_hargaadhesive->getResult();
         $hargaadhesive = array();
         $hargasolventadhesive = array();
-        foreach ($rawdatahargaadhesive as $row):      
-                                                     
-            $id = $row['id'];                                               
-            $nama = $row['nama'];
-            $harga_solvent = $row['hargasolvent'];
-            $harga_adhesive = $row['hargaadhesive'];
+        foreach ($rawdatahargaadhesive as $row):
+
+            $id = $row->id;
+            $nama = trim($row->nama);
+            $harga_solvent = $row->hargasolvent;
+            $harga_adhesive = $row->hargaadhesive;
             $hargaadhesive[$nama] = $harga_solvent;
             $hargasolventadhesive[$nama] = $harga_adhesive;
         endforeach;
 
-        $data_pakaisolvent   =  array();
-        $Solvent = $totalpakaitinta * ($ratio_tinta/100) * ($ratio_solvent/100);
-        $pakaiSolventNOPPToluene = $Solvent * $toluene/(1-$waste) *$corr_solvent;
-        $pakaiSolventNOPPIA = $Solvent * $ia/(1-$waste) *$corr_solvent;
-        $pakaiSolventNOPPMEK = $Solvent * $mek/(1-$waste) *$corr_solvent;
-        $pakaiSolventNOPPIPA = $Solvent * $ipa/(1-$waste) *$corr_solvent;
+        $data_pakaisolvent = array();
+        $Solvent = $totalpakaitinta * ($ratio_tinta / 100) * ($ratio_solvent / 100);
+        $pakaiSolventNOPPToluene = $Solvent * $toluene / (1 - $waste) * $corr_solvent;
+        $pakaiSolventNOPPIA = $Solvent * $ia / (1 - $waste) * $corr_solvent;
+        $pakaiSolventNOPPMEK = $Solvent * $mek / (1 - $waste) * $corr_solvent;
+        $pakaiSolventNOPPIPA = $Solvent * $ipa / (1 - $waste) * $corr_solvent;
         $pakaiSolventNonOPP = $pakaiSolventNOPPToluene + $pakaiSolventNOPPIA + $pakaiSolventNOPPMEK + $pakaiSolventNOPPIPA;
-        $data_pakaisolvent[] = ['kategori'=>'NonOPP','jenis'=>explode(";",hargasolvent['TOLUENE'])[0],'pakai'=>$pakaiSolventNOPPToluene, 'harga'=>explode(";",hargasolvent['TOLUENE'])[1], 'biaya'=>$pakaiSolventNOPPToluene*explode(";",hargasolvent['TOLUENE'])[1]];
-        $data_pakaisolvent[] = ['kategori'=>'NonOPP','jenis'=>explode(";",hargasolvent['IA'])[0],'pakai'=>$pakaiSolventNOPPIA, 'harga'=>explode(";",hargasolvent['IA'])[1], 'biaya'=>$pakaiSolventNOPPIA*explode(";",hargasolvent['IA'])[1]];
-        $data_pakaisolvent[] = ['kategori'=>'NonOPP','jenis'=>explode(";",hargasolvent['MEK'])[0],'pakai'=>$pakaiSolventNOPPMEK, 'harga'=>explode(";",hargasolvent['MEK'])[1], 'biaya'=>$pakaiSolventNOPPMEK*explode(";",hargasolvent['MEK'])[1]];
-        $data_pakaisolvent[] = ['kategori'=>'NonOPP','jenis'=>explode(";",hargasolvent['IPA'])[0],'pakai'=>$pakaiSolventNOPPIPA, 'harga'=>explode(";",hargasolvent['IPA'])[1], 'biaya'=>$pakaiSolventNOPPIPA*explode(";",hargasolvent['IPA'])[1]];
+        if (array_key_exists('TOLUENE', $hargasolvent)) {
+            $data_pakaisolvent[] = ['kategori' => 'NonOPP', 'jenis' => explode(";", $hargasolvent['TOLUENE'])[0], 'pakai' => $pakaiSolventNOPPToluene, 'harga' => explode(";", $hargasolvent['TOLUENE'])[1], 'biaya' => $pakaiSolventNOPPToluene * explode(";", $hargasolvent['TOLUENE'])[1]];
+        }
 
+        if (array_key_exists('IA', $hargasolvent)) {
+            $data_pakaisolvent[] = ['kategori' => 'NonOPP', 'jenis' => explode(";", $hargasolvent['IA'])[0], 'pakai' => $pakaiSolventNOPPIA, 'harga' => explode(";", $hargasolvent['IA'])[1], 'biaya' => $pakaiSolventNOPPIA * explode(";", $hargasolvent['IA'])[1]];
+        }
 
-        $pakaiSolventOPPToluene = $Solvent * $tolueneOPP/(1-$waste) *$corr_solvent;
-        $pakaiSolventOPPIA = $Solvent * $iaOPP/(1-$waste) *$corr_solvent;
-        $pakaiSolventOPPMEK = $Solvent * $mekOPP/(1-$waste) *$corr_solvent;
-        $pakaiSolventOPPIPA = $Solvent * $ipaOPP/(1-$waste) *$corr_solvent;
+        if (array_key_exists('MEK', $hargasolvent)) {
+            $data_pakaisolvent[] = ['kategori' => 'NonOPP', 'jenis' => explode(";", $hargasolvent['MEK'])[0], 'pakai' => $pakaiSolventNOPPMEK, 'harga' => explode(";", $hargasolvent['MEK'])[1], 'biaya' => $pakaiSolventNOPPMEK * explode(";", $hargasolvent['MEK'])[1]];
+        }
+
+        if (array_key_exists('IPA', $hargasolvent)) {
+            $data_pakaisolvent[] = ['kategori' => 'NonOPP', 'jenis' => explode(";", $hargasolvent['IPA'])[0], 'pakai' => $pakaiSolventNOPPIPA, 'harga' => explode(";", $hargasolvent['IPA'])[1], 'biaya' => $pakaiSolventNOPPIPA * explode(";", $hargasolvent['IPA'])[1]];
+        }
+
+        //dd($data_pakaisolvent);
+
+        $pakaiSolventOPPToluene = $Solvent * $tolueneOPP / (1 - $waste) * $corr_solvent;
+        $pakaiSolventOPPIA = $Solvent * $iaOPP / (1 - $waste) * $corr_solvent;
+        $pakaiSolventOPPMEK = $Solvent * $mekOPP / (1 - $waste) * $corr_solvent;
+        $pakaiSolventOPPIPA = $Solvent * $ipaOPP / (1 - $waste) * $corr_solvent;
         $pakaiSolventOPP = $pakaiSolventOPPToluene + $pakaiSolventOPPIA + $pakaiSolventOPPMEK + $pakaiSolventOPPIPA;
-        $data_pakaisolvent[] = ['kategori'=>'OPP','jenis'=>explode(";",hargasolvent['TOLUENE'])[0],'pakai'=>$pakaiSolventOPPToluene, 'harga'=>explode(";",hargasolvent['TOLUENE'])[1], 'biaya'=>$pakaiSolventOPPToluene*explode(";",hargasolvent['TOLUENE'])[1]];
-        $data_pakaisolvent[] = ['kategori'=>'OPP','jenis'=>explode(";",hargasolvent['IA'])[0],'pakai'=>$pakaiSolventOPPIA, 'harga'=>explode(";",hargasolvent['IA'])[1], 'biaya'=>$pakaiSolventOPPIA*explode(";",hargasolvent['IA'])[1]];
-        $data_pakaisolvent[] = ['kategori'=>'OPP','jenis'=>explode(";",hargasolvent['MEK'])[0],'pakai'=>$pakaiSolventOPPMEK, 'harga'=>explode(";",hargasolvent['MEK'])[1], 'biaya'=>$pakaiSolventOPPMEK*explode(";",hargasolvent['MEK'])[1]];
-        $data_pakaisolvent[] = ['kategori'=>'OPP','jenis'=>explode(";",hargasolvent['IPA'])[0],'pakai'=>$pakaiSolventOPPIPA, 'harga'=>explode(";",hargasolvent['IPA'])[1], 'biaya'=>$pakaiSolventOPPIPA*explode(";",hargasolvent['IPA'])[1]];
+        if (array_key_exists('TOLUENE', $hargasolvent)) {
+            $data_pakaisolvent[] = ['kategori' => 'OPP', 'jenis' => explode(";", $hargasolvent['TOLUENE'])[0], 'pakai' => $pakaiSolventOPPToluene, 'harga' => explode(";", $hargasolvent['TOLUENE'])[1], 'biaya' => $pakaiSolventOPPToluene * explode(";", $hargasolvent['TOLUENE'])[1]];
+        }
 
-        $data_pakaiadhesive   =  array();
-        $pakaiAdhesive = $this->getPakaiAdhesive($roll_pcs, $jenis_adhesive, $lebar, $pitch, $jumlah_pcs,$waste, $lebar_film, $waste_persiapan, $material3, $material4);
-        $data_pakaiadhesive[] = ['kategori'=>'Adhesive','jenis'=>$jenis_adhesive,'coating_weight'=>$pakaiAdhesive['CoatingWeight'],'solid_content'=>$pakaiAdhesive['SolidContent'],'luas'=>$pakaiAdhesive['Luas'],'pakai'=>pakaiAdhesive['Pakai'], 'harga'=>hargaadhesive[strtoupper($jenis_adhesive)], 'biaya'=>pakaiAdhesive['Pakai']*hargaadhesive[strtoupper($jenis_adhesive)]];
-        
-        $pakaiSolventAdhesive = $this->getPakaiSolventAdhesive($roll_pcs, $jenis_adhesive, $lebar, $pitch, $jumlah_pcs,$waste, $lebar_film, $waste_persiapan, $material3, $material4);
-        $data_pakaiadhesive[] = ['kategori'=>'Adhesive','jenis'=>$jenis_adhesive,'coating_weight'=>$pakaiSolventAdhesive['CoatingWeight'],'solid_content'=>$pakaiSolventAdhesive['SolidContent'],'luas'=>$pakaiSolventAdhesive['Luas'],'pakai'=>pakaiSolventAdhesive['Pakai'], 'harga'=>hargasolventadhesive[strtoupper($jenis_adhesive)], 'biaya'=>pakaiSolventAdhesive['Pakai']*hargasolventadhesive[strtoupper($jenis_adhesive)]];
-        
-       
+        if (array_key_exists('IA', $hargasolvent)) {
+            $data_pakaisolvent[] = ['kategori' => 'OPP', 'jenis' => explode(";", $hargasolvent['IA'])[0], 'pakai' => $pakaiSolventOPPIA, 'harga' => explode(";", $hargasolvent['IA'])[1], 'biaya' => $pakaiSolventOPPIA * explode(";", $hargasolvent['IA'])[1]];
+        }
 
-        $jumlah_truk = CEIL(($totalpakaimaterial + $totalpakaitinta + $pakaiSolventNonOPP + $pakaiSolventOPP + $pakaiAdhesive + $pakaiSolventAdhesive)/($kapasitas*1000));
+        if (array_key_exists('MEK', $hargasolvent)) {
+            $data_pakaisolvent[] = ['kategori' => 'OPP', 'jenis' => explode(";", $hargasolvent['MEK'])[0], 'pakai' => $pakaiSolventOPPMEK, 'harga' => explode(";", $hargasolvent['MEK'])[1], 'biaya' => $pakaiSolventOPPMEK * explode(";", $hargasolvent['MEK'])[1]];
+        }
+
+        if (array_key_exists('IPA', $hargasolvent)) {
+            $data_pakaisolvent[] = ['kategori' => 'OPP', 'jenis' => explode(";", $hargasolvent['IPA'])[0], 'pakai' => $pakaiSolventOPPIPA, 'harga' => explode(";", $hargasolvent['IPA'])[1], 'biaya' => $pakaiSolventOPPIPA * explode(";", $hargasolvent['IPA'])[1]];
+        }
+
+        //dd($data_pakaisolvent);
+
+        $data_pakaiadhesive = array();
+        $totalpakaiadhesive = 0;
+        $totalpakaisolventadhesive = 0;
+        if (!($jenis_adhesive == 0)) {
+            //dd($jenis_adhesive);
+            $pakaiAdhesive = $this->getPakaiAdhesive($roll_pcs, $jenis_adhesive, $lebar, $pitch, $jumlah_pcs, $waste, $lebar_film, $waste_persiapan, $material3, $material4);
+            $data_pakaiadhesive[] = ['kategori' => 'Adhesive', 'jenis' => $jenis_adhesive, 'coating_weight' => $pakaiAdhesive['CoatingWeight'], 'solid_content' => $pakaiAdhesive['SolidContent'], 'luas' => $pakaiAdhesive['Luas'], 'pakai' => pakaiAdhesive['Pakai'], 'harga' => hargaadhesive[strtoupper($jenis_adhesive)], 'biaya' => pakaiAdhesive['Pakai'] * hargaadhesive[strtoupper($jenis_adhesive)]];
+            $pakaiSolventAdhesive = $this->getPakaiSolventAdhesive($roll_pcs, $jenis_adhesive, $lebar, $pitch, $jumlah_pcs, $waste, $lebar_film, $waste_persiapan, $material3, $material4);
+            $data_pakaiadhesive[] = ['kategori' => 'Adhesive', 'jenis' => $jenis_adhesive, 'coating_weight' => $pakaiSolventAdhesive['CoatingWeight'], 'solid_content' => $pakaiSolventAdhesive['SolidContent'], 'luas' => $pakaiSolventAdhesive['Luas'], 'pakai' => pakaiSolventAdhesive['Pakai'], 'harga' => hargasolventadhesive[strtoupper($jenis_adhesive)], 'biaya' => pakaiSolventAdhesive['Pakai'] * hargasolventadhesive[strtoupper($jenis_adhesive)]];
+            $totalpakaiadhesive = pakaiAdhesive['Pakai'];
+            $totalpakaisolventadhesive = pakaiSolventAdhesive['Pakai'];
+        }
+
+        //dd($data_pakaiadhesive);
+
+        $jumlah_truk = CEIL(($totalpakaimaterial + $totalpakaitinta + $pakaiSolventNonOPP + $pakaiSolventOPP + $totalpakaiadhesive + $totalpakaisolventadhesive) / ($kapasitas * 1000));
         $res['pakai_tinta'] = $data_pakaitinta;
         $res['pakai_solvent'] = $data_pakaisolvent;
         $res['pakai_totalsolventnopp'] = $pakaiSolventNonOPP;
         $res['pakai_totalsolventopp'] = $pakaiSolventOPP;
         $res['pakai_adhesive'] = $data_pakaiadhesive;
         $res['jumlah_truk'] = $jumlah_truk;
+
+        //dd($res);
         return $res;
 
     }
-    
 
- 
 }

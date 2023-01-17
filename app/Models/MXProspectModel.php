@@ -15,10 +15,8 @@ class MXProspectModel extends Model
 
     protected $validationRules = [
         'NamaProduk' => 'required',
-        'Tebal' => 'required|greater_than[0]',
         'Panjang' => 'required|greater_than[0]',
         'Lebar' => 'required|greater_than[0]',
-        'Pitch' => 'required|greater_than[0]',
         'Material1' => 'required',
         'TebalMat1' => 'required|greater_than[0]',
         'Kapasitas' => 'required|greater_than[0]',
@@ -32,10 +30,6 @@ class MXProspectModel extends Model
             'required' => 'Field Kapasitas harus diisi.',
             'greater_than' => 'Field Kapasitas harus diisi.',
         ],
-        'Tebal' => [
-            'required' => 'Dimensi (Tebal) harus diisi.',
-            'greater_than' => 'Dimensi (Tebal) harus diisi.',
-        ],
         'Panjang' => [
             'required' => 'Dimensi (Panjang) harus diisi.',
             'greater_than' => 'Dimensi (Panjang) harus diisi.',
@@ -43,10 +37,6 @@ class MXProspectModel extends Model
         'Lebar' => [
             'required' => 'Dimensi (Lebar) harus diisi.',
             'greater_than' => 'Dimensi (Lebar) harus diisi.',
-        ],
-        'Pitch' => [
-            'required' => 'Dimensi (Pitch) harus diisi.',
-            'greater_than' => 'Dimensi (Pitch) harus diisi.',
         ],
         'Material1' => [
             'required' => 'Field Material harus diisi.',

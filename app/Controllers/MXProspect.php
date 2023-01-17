@@ -117,12 +117,14 @@ class MXProspect extends BaseController
         ]);
         if(!$mat1_check) {
             return redirect()->back()
-                ->with('error', 'Jenis Material1 & Tebal harus diisi');
+                ->with('error', 'Jenis Material1 & Tebal harus diisi')
+                ->withInput();
         }
 
         if(!$other_check) {
             return redirect()->back()
-                ->with('error', 'Periksa jenis & tebal Mat1');
+                ->with('error', 'Periksa jenis & tebal Mat1')
+                ->withInput();
         }
         //-------------
 
@@ -162,7 +164,8 @@ class MXProspect extends BaseController
                             ->with('success', 'Data berhasil ditambahkan');
         } else {
             return redirect()->back()
-                ->with('error', '<p>' . implode('</p><p>', $this->model->errors()) . '</p>');
+                ->with('error', '<p>' . implode('</p><p>', $this->model->errors()) . '</p>')
+                ->withInput();
         }
 
     }
@@ -488,7 +491,8 @@ class MXProspect extends BaseController
                 ->with('success', 'Data berhasil diupdate.');
         } else {
             return redirect()->back()
-                ->with('error', '<p>' . implode('</p><p>', $this->model->errors()) . '</p>');
+                ->with('error', '<p>' . implode('</p><p>', $this->model->errors()) . '</p>')
+                ->withInput();
         }
     }
 

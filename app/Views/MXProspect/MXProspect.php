@@ -1,5 +1,11 @@
 <? // Form Input Prospek Metaflex ?>
 
+<?php
+if(old('jml[]')) {
+    dd(old('jml'));
+}
+?>
+
 <?= $this->extend('theme') ?>
 
 <?= $this->section('title') ?>
@@ -23,7 +29,7 @@
     <div class="form-group row">
         <label for="namaproduk" class="col-lg-2 col-sm-12 col-form-label">Nama Produk <span class="text-danger">*</span></label>
         <div class="col-lg-10 col-sm-12">
-            <input type="text" class="form-control" id="namaproduk" name="NamaProduk" style="text-transform: uppercase">
+            <input type="text" class="form-control" id="namaproduk" value="<?= old('NamaProduk');?>" name="NamaProduk" style="text-transform: uppercase">
         </div>
     </div>
 
@@ -35,7 +41,10 @@
                     <select id="pemesan" name="Pemesan" class="form-control">
                         <option value="">Pilih</option>
                         <?php foreach ($customers as $key => $customer) : ?>
-                            <option value="<?= $customer->NoPemesan; ?>"><?= $customer->NamaPemesan; ?></option>
+                            <?php
+                            $selected = (old('Pemesan') && old('Pemesan') == $customer->NoPemesan) ? ' selected' : '';
+                            ?>
+                            <option<?= $selected;?> value="<?= $customer->NoPemesan; ?>"><?= $customer->NamaPemesan; ?></option>
                         <?php endforeach; ?>
                     </select>
                 </div>
@@ -48,7 +57,10 @@
                     <select id="jenisproduk" name="JenisProduk" class="form-control">
                         <option value="">Pilih</option>
                         <?php foreach ($jenisproduk as $key => $jp) : ?>
-                            <option value="<?= $jp->id; ?>"><?= $jp->nama; ?></option>
+                            <?php
+                            $selected = (old('JenisProduk') && old('JenisProduk') == $jp->id) ? ' selected' : '';
+                            ?>
+                            <option<?= $selected;?> value="<?= $jp->id; ?>"><?= $jp->nama; ?></option>
                         <?php endforeach; ?>
                     </select>
                 </div>
@@ -64,7 +76,10 @@
                     <select id="segmen" name="Segmen" class="form-control">
                         <option value="">Pilih</option>
                         <?php foreach ($segmen as $key => $segmen) : ?>
-                            <option value="<?= $segmen->ID; ?>"><?= $segmen->Nama; ?></option>
+                            <?php
+                            $selected = (old('Segmen') && old('Segmen') == $segmen->ID) ? ' selected' : '';
+                            ?>
+                            <option<?= $selected;?> value="<?= $segmen->ID; ?>"><?= $segmen->Nama; ?></option>
                         <?php endforeach; ?>
                     </select>
                 </div>
@@ -77,7 +92,10 @@
                     <select id="konten" name="Konten" class="form-control">
                         <option value="">Pilih</option>
                         <?php foreach ($konten as $key => $kt) : ?>
-                            <option value="<?= $kt->ID; ?>"><?= $kt->Nama; ?></option>
+                            <?php
+                            $selected = (old('Konten') && old('Konten') == $kt->ID) ? ' selected' : '';
+                            ?>
+                            <option<?= $selected;?> value="<?= $kt->ID; ?>"><?= $kt->Nama; ?></option>
                         <?php endforeach; ?>
                     </select>
                 </div>
@@ -88,54 +106,49 @@
     <div class="form-group row">
         <label class="col-lg-2 col-sm-12 col-form-label">Dimensi (mm)<span class="text-danger">*</span></label>
         <div class="col-sm-2">
-            <input type="number" step="any" class="form-control" id="tebal" name="Tebal" placeholder="Tebal">
+            <input type="number" step="any" class="form-control" id="tebal" value="<?= old('Tebal');?>" name="Tebal" placeholder="Tebal">
         </div>
         <div class="col-sm-2">
-            <input type="number" step="any" class="form-control" id="panjang" name="Panjang" placeholder="Panjang">
+            <input type="number" step="any" class="form-control" id="lebar" value="<?= old('Lebar');?>" name="Lebar" placeholder="Lebar">
         </div>
         <div class="col-sm-2">
-            <input type="number" step="any" class="form-control" id="lebar" name="Lebar" placeholder="Lebar">
+            <input type="number" step="any" class="form-control" id="panjang" value="<?= old('Panjang');?>" name="Panjang" placeholder="Panjang">
         </div>
         <div class="col-sm-2">
-            <input type="number" step="any" class="form-control" id="pitch" name="Pitch" placeholder="Pitch">
+            <input type="number" step="any" class="form-control" id="pitch" value="<?= old('Pitch');?>" name="Pitch" placeholder="Pitch">
         </div>
     </div>
 
 <?php
-$materials = [];
-foreach ($material as $key => $mat) :
-    $materials[] = '<option value="' . $mat->id . '">' . $mat->nama . '</option>';
-endforeach; ?>
+$material_form = function ($name) use ($material) {
+    $id = strtolower($name);
+    $open = '<select id="'.$id.'" step="any" name="'.$name.'" class="form-control"><option value="">Pilih</option>';
+    $materials = [];
+    foreach ($material as $key => $mat) :
+        $selected = old($name) && old($name) == $mat->id ? ' selected' : '';
+        $materials[] = '<option'.$selected.' value="' . $mat->id . '">' . $mat->nama . '</option>';
+    endforeach;
+    return $open . implode('', $materials) . '</select>';
+}
+?>
 
     <div class="form-group row">
         <label class="col-lg-2 col-sm-12 col-form-label">Material<span class="text-danger">*</span></label>
         <div class="col-sm-2">
-            <select id="material1" step="any" name="Material1" class="form-control">
-                <option value="">Pilih</option>
-                <?= implode('', $materials); ?>
-            </select>
-            <input type="number" step="any" class="form-control" id="tebalmat1" name="TebalMat1" placeholder="Tebal">
+            <?php echo $material_form('Material1');?>
+            <input type="number" value="<?= old('TebalMat1');?>" step="any" class="form-control" id="tebalmat1" name="TebalMat1" placeholder="Tebal">
         </div>
         <div class="col-sm-2">
-            <select id="material2" name="Material2" class="form-control">
-                <option value="">Pilih</option>
-                <?= implode('', $materials); ?>
-            </select>
-            <input type="number" step="any" class="form-control" id="tebalmat2" name="TebalMat2" placeholder="Tebal">
+            <?php echo $material_form('Material2');?>
+            <input type="number" value="<?= old('TebalMat2');?>" step="any" class="form-control" id="tebalmat2" name="TebalMat2" placeholder="Tebal">
         </div>
         <div class="col-sm-2">
-            <select id="material3" name="Material3" class="form-control">
-                <option value="">Pilih</option>
-                <?= implode('', $materials); ?>
-            </select>
-            <input type="number" step="any" class="form-control" id="tebalmat3" name="TebalMat3" placeholder="Tebal">
+            <?php echo $material_form('Material3');?>
+            <input type="number" step="any" class="form-control" value="<?= old('TebalMat3');?>" id="tebalmat3" name="TebalMat3" placeholder="Tebal">
         </div>
         <div class="col-sm-2">
-            <select id="material4" name="Material4" class="form-control">
-                <option value="">Pilih</option>
-                <?= implode('', $materials); ?>
-            </select>
-            <input type="number" step="any" class="form-control" id="tebalmat4" name="TebalMat4" placeholder="Tebal">
+            <?php echo $material_form('Material4');?>
+            <input type="number" step="any" class="form-control" value="<?= old('TebalMat4');?>" id="tebalmat4" name="TebalMat4" placeholder="Tebal">
         </div>
     </div>
 
@@ -144,7 +157,7 @@ endforeach; ?>
             <div class="form-group row">
                 <label for="warna" class="col-lg-6 col-sm-12 col-form-label">Warna</label>
                 <div class="col-lg-6 col-sm-12">
-                    <input type="number" class="form-control" id="warna" name="Warna" placeholder="Jumlah Warna">
+                    <input type="number" value="<?= old('Warna');?>" class="form-control" id="warna" name="Warna" placeholder="Jumlah Warna">
                 </div>
             </div>
         </div>
@@ -153,8 +166,8 @@ endforeach; ?>
                 <label for="eyemark" class="col-lg-5 col-sm-12 col-form-label">Eyemark</label>
                 <div class="col-lg-7 col-sm-12">
                     <select id="eyemark" name="Eyemark" class="form-control">
-                        <option value="1">Eyemark Only</option>
-                        <option value="2">Eyemark & Block Color</option>
+                        <option<?= (old('Eyemark') && old('Eyemark') == '1') ? ' selected' : '';?> value="1">Eyemark Only</option>
+                        <option<?= (old('Eyemark') && old('Eyemark') == '2') ? ' selected' : '';?> value="2">Eyemark & Block Color</option>
                     </select>
                 </div>
             </div>
@@ -164,8 +177,8 @@ endforeach; ?>
                 <label for="roll_direction" class="col-lg-4 col-sm-12 col-form-label">Roll Direction</label>
                 <div class="col-lg-8 col-sm-12">
                     <select id="rolldirection" name="RollDirection" id="rolldirection" class="form-control">
-                        <option value="Y">Terbaca</option>
-                        <option value="T">Tidak Terbaca</option>
+                        <option<?= (old('RollDirection') && old('RollDirection') == 'Y') ? ' selected' : '';?> value="Y">Terbaca</option>
+                        <option<?= (old('RollDirection') && old('RollDirection') == 'T') ? ' selected' : '';?> value="T">Tidak Terbaca</option>
                     </select>
                 </div>
             </div>
@@ -175,7 +188,7 @@ endforeach; ?>
     <div class="form-group row">
         <label for="catatan" class="col-lg-2 col-sm-12 col-form-label">Catatan Produk</label>
         <div class="col-lg-10 col-sm-12">
-            <input type="text" class="form-control" id="catatan" name="Catatan">
+            <input type="text" class="form-control" id="catatan" name="Catatan" calue="<?= old('Catatan');?>">
         </div>
     </div>
 
@@ -188,7 +201,7 @@ endforeach; ?>
             <div class="row">
                 <label for="maxjoin" class="col-lg-6 col-sm-12 col-form-label">Maksimal Join </label>
                 <div class="col-lg-6 col-sm-12">
-                    <input type="number" class="form-control" id="maxjoin" name="MaxJoin">
+                    <input type="number" class="form-control" id="maxjoin" name="MaxJoin" value="<?= old('MaxJoin');?>">
                 </div>
             </div>
         </div>
@@ -196,7 +209,7 @@ endforeach; ?>
             <div class="form-group row justify-content-end">
                 <label for="warnatape" class="col-lg-4 col-sm-12 col-form-label">Warna Tape</label>
                 <div class="col-lg-7 col-sm-12">
-                    <input type="text" class="form-control" id="warnatape" name="WarnaTape">
+                    <input type="text" class="form-control" id="warnatape" name="WarnaTape" value="<?= old('WarnaTape');?>">
                 </div>
             </div>
         </div>
@@ -207,7 +220,10 @@ endforeach; ?>
                     <select id="jenistinta" name="JenisTinta" class="form-control">
                         <option value="">Pilih</option>
                         <?php foreach ($jenistinta as $jt) : ?>
-                            <option value="<?= $jt->OpsiVal;?>"><?= $jt->OpsiTeks;?></option>
+                            <?php
+                        $selected = old('JenisTinta') && old('JenisTinta') == $jt->OpsiVal ? ' selected' : '';
+                            ?>
+                            <option<?= $selected;?> value="<?= $jt->OpsiVal;?>"><?= $jt->OpsiTeks;?></option>
                         <?php endforeach;?>
                     </select>
                 </div>
@@ -223,7 +239,10 @@ endforeach; ?>
                     <select id="bagmaking" name="BagMaking" class="form-control">
                         <option value="">Pilih</option>
                         <?php foreach ($bagmaking as $key => $bm) : ?>
-                            <option value="<?= $bm->ID; ?>"><?= $bm->Nama; ?></option>
+                            <?php
+                            $selected = old('BagMaking') && old('BagMaking') == $bm->ID ? ' selected' : '';
+                            ?>
+                            <option<?= $selected;?> value="<?= $bm->ID; ?>"><?= $bm->Nama; ?></option>
                         <?php endforeach; ?>
                     </select>
                 </div>
@@ -236,6 +255,9 @@ endforeach; ?>
                     <select id="bottom" name="Bottom" class="form-control" disabled>
                         <option value="">Pilih</option>
                         <?php foreach ($bottom as $key => $bt) : ?>
+                            <?php
+                            $selected = old('Bottom') && old('Bottom') == $bt->ID ? ' selected' : '';
+                            ?>
                             <option value="<?= $bt->ID; ?>"><?= $bt->Nama; ?></option>
                         <?php endforeach; ?>
                     </select>
@@ -251,8 +273,8 @@ endforeach; ?>
                 <div class="col-lg-8 col-sm-12">
                     <select id="filling" name="OpenForFilling" class="form-control">
                         <option value="">Pilih</option>
-                        <option value="T">Top</option>
-                        <option value="B">Bottom</option>
+                        <option<?= (old('OpenForFilling') && old('OpenForFilling') == 'T') ? ' selected' : '';?> value="T">Top</option>
+                        <option<?= (old('OpenForFilling') && old('OpenForFilling') == 'Y') ? ' selected' : '';?> value="B">Bottom</option>
                     </select>
                 </div>
             </div>
@@ -266,6 +288,9 @@ endforeach; ?>
                             <select id="aksesoris" name="aksesoris" class="form-control">
                                 <option value="0">Pilih</option>
                                 <?php foreach ($aksesori as $key => $ak) : ?>
+                                    <?php
+                                    $selected = old('aksesoris') && old('aksesoris') == $ak->id ? ' selected' : '';
+                                    ?>
                                     <option value="<?= $ak->id; ?>"><?= $ak->nama; ?></option>
                                 <?php endforeach; ?>
                             </select>
@@ -303,7 +328,6 @@ endforeach; ?>
                     </button>
                 </div>
                 <div class="jml-val-child">
-
                 </div>
             </div>
         </div>
@@ -318,14 +342,17 @@ endforeach; ?>
                     <div class="row">
                         <div class="col-6">
                             <select id="roll_pc" name="Roll_Pcs" class="form-control">
-                                <option selected value="R">ROLL</option>
-                                <option value="P">PCS</option>
+                                <option<?= (old('Roll_Pcs') && old('Roll_Pcs') == 'R') ? ' selected' : '';?> value="R">ROLL</option>
+                                <option<?= (old('Roll_Pcs') && old('Roll_Pcs') == 'P') ? ' selected' : '';?> value="P">PCS</option>
                             </select>
                         </div>
                         <div class="col-6">
                             <select id="finishing" name="Finishing" class="form-control" disabled>
                                 <?php foreach ($finishing as $finish) : ?>
-                                    <option value="<?= $finish->OpsiVal;?>"><?= $finish->OpsiTeks;?></option>
+                                    <?php
+                                    $selected = old('Finishing') && old('Finishing') == $finish->OpsiVal ? ' selected' : '';
+                                    ?>
+                                    <option<?= $selected;?> value="<?= $finish->OpsiVal;?>"><?= $finish->OpsiTeks;?></option>
                                 <?php endforeach;?>
                             </select>
                         </div>
@@ -338,7 +365,7 @@ endforeach; ?>
             <div class="form-group row">
                 <label for="toleransi" class="col-lg-4 col-sm-12 col-form-label">Toleransi</label>
                 <div class="col-lg-8 col-sm-12">
-                    <input id="toleransi" name="Toleransi" type="number" class="form-control">
+                    <input id="toleransi" value="<?= old('Toleransi');?>" name="Toleransi" type="number" class="form-control">
                 </div>
             </div>
         </div>
@@ -347,8 +374,8 @@ endforeach; ?>
                 <label for="parsial" class="col-lg-6 col-sm-12 col-form-label">Partial Qty</label>
                 <div class="col-lg-6 col-sm-12">
                     <select id="parsial" name="Parsial" class="form-control">
-                        <option value="T">Tidak</option>
-                        <option value="Y">Ya</option>
+                        <option<?= (old('Parsial') && old('Parsial') == 'T') ? ' selected' : '';?> value="T">Tidak</option>
+                        <option<?= (old('Parsial') && old('Parsial') == 'Y') ? ' selected' : '';?> value="Y">Ya</option>
                     </select>
                 </div>
             </div>
@@ -358,7 +385,7 @@ endforeach; ?>
     <div class="form-group row">
         <label for="keterangan" class="col-lg-2 col-sm-12 col-form-label">Keterangan</label>
         <div class="col-lg-10 col-sm-12">
-            <input id="keterangan" name="Keterangan" type="text" class="form-control">
+            <input id="keterangan" name="Keterangan" type="text" class="form-control" value="<?= old('Keterangan');?>">
         </div>
     </div>
 
@@ -372,9 +399,9 @@ endforeach; ?>
                 <label for="jalur" class="col-lg-6 col-sm-12 col-form-label">Jalur Pengiriman </label>
                 <div class="col-lg-6 col-sm-12">
                     <select id="jalur" name="Jalur" class="form-control">
-                        <option value="D">Darat</option>
-                        <option value="L">Laut</option>
-                        <option value="U">Udara</option>
+                        <option<?= (old('Jalur') && old('Jalur') == 'D') ? ' selected' : '';?> value="D">Darat</option>
+                        <option<?= (old('Jalur') && old('Jalur') == 'L') ? ' selected' : '';?> value="L">Laut</option>
+                        <option<?= (old('Jalur') && old('Jalur') == 'U') ? ' selected' : '';?> value="U">Udara</option>
                     </select>
                 </div>
             </div>
@@ -386,6 +413,9 @@ endforeach; ?>
                     <select id="area" name="Area" class="form-control">
                         <option value="">Pilih</option>
                         <?php foreach ($areakirim as $key => $a_k) : ?>
+                            <?php
+                            $selected = old('Area') && old('Area') == $a_k->ID ? ' selected' : '';
+                            ?>
                             <option value="<?= $a_k->ID; ?>"><?= $a_k->Nama; ?></option>
                         <?php endforeach; ?>
                     </select>
@@ -397,7 +427,7 @@ endforeach; ?>
                 <label for="kapasitas" class="col-lg-5 col-sm-12 col-form-label">Kapasitas Angkut<span
                             class="text-danger">*</span></label>
                 <div class="col-lg-4 col-sm-12">
-                    <input id="kapasitas" name="Kapasitas" type="number" class="form-control" placeholder="Ton">
+                    <input value="<?= old('Kapasitas');?>" id="kapasitas" name="Kapasitas" type="number" class="form-control" placeholder="Ton">
                 </div>
             </div>
         </div>

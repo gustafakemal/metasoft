@@ -135,11 +135,12 @@ class MXProspectModel extends Model
     public function getDetailByNoProspectAndAlt($NoProspek, $Alt)
     {
 
-        return $this->select('MX_Prospek.*, CustomerFile.NamaPemesan, MX_JenisProduk.nama as NamaJenisProduk, MX_Konten.Nama as NamaKonten, MX_Segmen.Nama as NamaSegmen, Mat1.Nama as NamaMaterial1, Mat2.Nama as NamaMaterial2, Mat3.Nama as NamaMaterial3, Mat4.Nama as NamaMaterial4, MX_BagMaking.Nama as NamaBagMaking, MX_AreaKirim.Nama as NamaArea')
+        return $this->select('MX_Prospek.*, CustomerFile.NamaPemesan, MX_JenisProduk.nama as NamaJenisProduk, MX_Konten.Nama as NamaKonten, MX_Segmen.Nama as NamaSegmen, Mat1.Nama as NamaMaterial1, Mat2.Nama as NamaMaterial2, Mat3.Nama as NamaMaterial3, Mat4.Nama as NamaMaterial4, MX_BagMaking.Nama as NamaBagMaking, MX_AreaKirim.Nama as NamaArea, MX_Adhesive.nama Adhesive')
             ->join('CustomerFile', 'MX_Prospek.Pemesan = CustomerFile.NoPemesan', 'left')
             ->join('MX_JenisProduk', 'MX_Prospek.JenisProduk = MX_JenisProduk.id', 'left')
             ->join('MX_Konten', 'MX_Prospek.Konten = MX_Konten.ID', 'left')
             ->join('MX_Segmen', 'MX_Prospek.Segmen = MX_Segmen.ID', 'left')
+            ->join('MX_Adhesive', 'MX_Prospek.JenisAdhesive = MX_Adhesive.id', 'left')
             ->join('MX_Material Mat1', 'MX_Prospek.Material1 = Mat1.ID', 'left')
             ->join('MX_Material Mat2', 'MX_Prospek.Material2 = Mat2.ID', 'left')
             ->join('MX_Material Mat3', 'MX_Prospek.Material3 = Mat3.ID', 'left')

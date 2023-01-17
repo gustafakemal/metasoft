@@ -27,7 +27,7 @@ class MXEstimasi extends BaseController
     {
         if ($satuan === 'R') {
             $arr = [
-                'label' => 'Bottom',
+                'label' => 'Meter Roll',
                 'form_name' => 'MeterRoll',
             ];
         } else {
@@ -35,6 +35,11 @@ class MXEstimasi extends BaseController
                 $arr = [
                     'label' => 'Centre Seal',
                     'form_name' => 'CentreSeal',
+                ];
+            } elseif ($pieces == 'STP') {
+                $arr = [
+                    'label' => 'Bottom',
+                    'form_name' => 'UkuranBottom',
                 ];
             } else {
                 $arr = [
@@ -122,7 +127,7 @@ class MXEstimasi extends BaseController
 
         }
         $res = $model_mx_estimasi->getFormulaOtomatis($noprospek, $alt, $data_jumlah[0]->Jumlah);
-//        dd($res);
+        dd($res);
 
         $jenis_film = [];
         $jf_model = new \App\Models\MXJenisFilmModel();

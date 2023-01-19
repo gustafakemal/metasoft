@@ -162,15 +162,6 @@ $(function () {
         }
     })
 
-    $('select[name="Roll_Pcs"]').on('change', function () {
-        const val = $(this).val();
-        if (val === 'P') {
-            $('select[name="Finishing"]').prop('disabled', false);
-        } else {
-            $('select[name="Finishing"]').prop('disabled', true);
-        }
-    })
-
     $('.bs-child').on('click', '.delbs', function (e) {
         const id = $(this).attr('id').split('-')[1];
         $(`.bs-child #bscolor-${id}`).remove()
@@ -225,6 +216,50 @@ $(function () {
             show: true,
             backdrop: 'static'
         })
+    })
+
+    $('#pemesan').select2({
+        theme: "bootstrap",
+        allowClear: true,
+        placeholder: 'Pemesan',
+        width: null,
+        containerCssClass: ':all:'
+    })
+
+    $('select[name="Roll_Pcs"]').on('change', function (e) {
+        const val = $(this).val();
+        $('select[name="Finishing"]').prop('disabled', true);
+        if(val === 'R') {
+            $('.sat-dym-label').html('Meter Roll')
+            $('.sat-dym-input').html(`<input type="number" step="any" class="form-control" id="meterroll" name="MeterRoll" placeholder="Meter Roll">`)
+            $('select[name="Finishing"] option[value=""]').prop('selected', true)
+        } else {
+            $('.sat-dym-label').html('')
+            $('.sat-dym-input').html('')
+            if (val === 'P') {
+                $('select[name="Finishing"]').prop('disabled', false);
+            }
+        }
+    })
+    $('select[name="Finishing"]').on('change', function (e) {
+        const val = $(this).val();
+        const vars = {
+            'CS': {
+                'label': 'Centre Seal',
+                'field_name': 'CentreSeal'
+            },
+            'STP': {
+                'label': 'Bottom',
+                'field_name': 'UkuranBottom'
+            }
+        }
+        if(vars.hasOwnProperty(val)) {
+            $('.sat-dym-label').html(vars[val].label)
+            $('.sat-dym-input').html(`<input type="number" step="any" class="form-control" id="${vars[val].field_name.lower}" name="${vars[val].field_name}" placeholder="${vars[val].label}">`)
+        } else {
+            $('.sat-dym-label').html('Gusset')
+            $('.sat-dym-input').html(`<input type="number" step="any" class="form-control" id="gusset" name="Gusset" placeholder="Gusset">`)
+        }
     })
 
 })

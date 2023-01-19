@@ -232,6 +232,7 @@ $routes->group('setting', static function ($routes) {
 $routes->group('inputprospek', static function ($routes) {
     $routes->get('/', 'MXProspect::add');
     $routes->post('/', 'MXProspect::addProcess');
+//    $routes->get('api/satuan/(:any)', 'MXProspect::formSatuan/$1');
     $routes->post('api', 'MXProspect::createAlt');
     $routes->post('edit', 'MXProspect::editProcess');
 });

@@ -758,12 +758,14 @@ body {
   color: rgba(0,0,0,.5);
 }
 
-.prospek_jumlah-order {
+.prospek_jumlah-order,
+.prospek_moq {
   display: flex;
   flex-wrap: wrap;
   align-items: flex-start;
 }
-.prospek_jumlah-order .input--jml {
+.prospek_jumlah-order .input--jml,
+.prospek_moq .input--moq {
   width: 100px;
 }
 .prospek_jumlah-order .jml-item-val {

@@ -95,17 +95,17 @@ class MXEstimasi extends BaseController
         $noprospek = $this->request->getGet('noprospek');
         $alt = $this->request->getGet('alt');
 
-//        $data = $this->model->getDetailByNoProspectAndAlt($noprospek, $alt)->getResult()[0];
-//        $data_aksesori = (new \App\Models\MXProspekAksesoriModel())->getByProspekAlt($noprospek, $alt);
-//
+        $data = $this->model->getDetailByNoProspectAndAlt($noprospek, $alt)->getResult()[0];
+
         $model_mx_estimasi = new \App\Models\MXEstimasiModel();
-//
+
 //        $jumlah_pitch = $model_mx_estimasi->getPitch($data->Roll_Pcs, $data->Pitch);
-//        if (!$data->Finishing) {
-//            $color_bar = $model_mx_estimasi->getColorBar($data->Roll_Pcs, $data->Finishing);
-//        } else {
-//            $color_bar = '-';
-//        }
+        $jumlah_pitch = 0;
+        if(!$data->Finishing) {
+            $color_bar = $model_mx_estimasi->getColorBar($data->Roll_Pcs, $data->Finishing);
+        } else {
+            $color_bar = '-';
+        }
 //        $circum = $model_mx_estimasi->getCircum($data->Roll_Pcs, $data->Pitch);
 
         $data_jumlah = (new \App\Models\MXProspekJumlahModel())->getByProspekAlt($noprospek, $alt)->getResult();
@@ -113,59 +113,39 @@ class MXEstimasi extends BaseController
             return $item->Jumlah;
         }, $data_jumlah);
 
-//        $kalkulasi_otomatis = [];
-//        foreach ($jumlah_array as $key => $row) {
+        $kalkulasi = [];
+        foreach ($jumlah_array as $key => $row) {
 //            $running_meter = $model_mx_estimasi->getRunningMeter($data->Roll_Pcs, $row, (int)$data->Gusset, (int)$data->JumlahUp, (int)$data->Pitch, (int)$data->LebarFilm);
-//            $kalkulasi_otomatis[] = [
-//                    'JumlahUp' => $data->JumlahUp,
-//                    'LebarFilm' => $data->LebarFilm,
-//                    'JumlahPitch' => $jumlah_pitch,
-//                    'ColorBar' => $color_bar,
-//                    'RunningMeter' => $running_meter,
-//                    'Circum' => $circum,
-//                    ];
-//
-//        }
-
-//        $results = $model_mx_estimasi->getFormulaOtomatis($noprospek, $alt, $data_jumlah[0]->Jumlah);
-//        dd($results);
-
-        $data = [];
-        foreach ($jumlah_array as $jml) {
-            $results = $model_mx_estimasi->getFormulaOtomatis($noprospek, $alt, $jml);
-            $data[] = $results;
+            $kalkulasi[] = ['Otomatis' => [
+                'JumlahUp' => $data->JumlahUp,
+                'LebarFilm' => $data->LebarFilm,
+                'JumlahPitch' => $jumlah_pitch,
+                'ColorBar' => $color_bar,
+//                'RunningMeter' => $running_meter,
+                'RunningMeter' => 0,
+//                'Circum' => $circum,
+                'Circum' => 0,
+            ],
+                'PemakaianFilm' => [
+                    [
+                        'Layer' => '',
+                        'Film' => '',
+                        'Tebal' => ''
+                    ]
+                ]
+            ];
         }
-
-        $res = $model_mx_estimasi->getFormulaOtomatis($noprospek, $alt, $data_jumlah[0]->Jumlah);
-        dd($data);
-
-        $jenis_film = [];
-        $jf_model = new \App\Models\MXJenisFilmModel();
-        for($x=1;$x<=4;$x++) {
-            $material = 'Material' . $x;
-            $prop = $jf_model->getNama($data->{$material});
-            $jenis_film[] = [
-                'Layer' => 'Layer ' . $x,
-                'Nama' => ($data->{$material}) ? $prop->nama : 0,
-                'Tickness' => ($data->{$material}) ? number_format($prop->berat_jenis, 2) : 0,
-                'Harga' => ($data->{$material}) ? number_format($prop->harga, 2) : 0,
-                'Pemakaian' => '',
-            ] ;
-        }
-//
-//        $prospek_tinta_model = (new \App\Models\MXProspekTinta())->getByNoProspekAndAlt($noprospek, $alt);
 
         return view('MXEstimasi/MXEstimasi_Preview', [
             'page_title' => 'Antrian Estimasi',
             'breadcrumbs' => $this->common->breadcrumbs(uri_string(true)),
             'main_menu' => (new \App\Libraries\Menu())->render(),
-//            'results' => $results,
+            'data_jumlah' => $data_jumlah,
+            'jumlah_array' => $jumlah_array,
+            'kalkulasi' => $kalkulasi,
             'data' => $data,
-//            'data_jumlah' => $data_jumlah,
-//            'jumlah_array' => $jumlah_array,
-//            'kalkulasi' => $kalkulasi_otomatis,
-            'jenis_film' => $jenis_film,
-//            'jenis_tinta' => $prospek_tinta_model->getResult()
+            'noprospek' => $noprospek,
+            'alt' => $alt
         ]);
     }
 

@@ -251,14 +251,18 @@ $(function () {
             'STP': {
                 'label': 'Bottom',
                 'field_name': 'UkuranBottom'
+            },
+            'CS Gusset': {
+                'label': 'Gusset',
+                'field_name': 'Gusset'
             }
         }
         if(vars.hasOwnProperty(val)) {
             $('.sat-dym-label').html(vars[val].label)
             $('.sat-dym-input').html(`<input type="number" step="any" class="form-control" id="${vars[val].field_name.lower}" name="${vars[val].field_name}" placeholder="${vars[val].label}">`)
         } else {
-            $('.sat-dym-label').html('Gusset')
-            $('.sat-dym-input').html(`<input type="number" step="any" class="form-control" id="gusset" name="Gusset" placeholder="Gusset">`)
+            $('.sat-dym-label').html('')
+            $('.sat-dym-input').html(``)
         }
     })
 

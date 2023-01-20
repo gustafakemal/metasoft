@@ -481,7 +481,7 @@ $material_form = function ($name) use ($material) {
         </div>
     </div>
 
-    </form>
+    <?= form_close();?>
 
     <!-- Modal -->
     <div class="modal fade" id="dbProduk" tabindex="-1" aria-labelledby="dbProdukLabel" aria-hidden="true">

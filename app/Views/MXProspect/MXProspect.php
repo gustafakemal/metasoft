@@ -24,7 +24,10 @@ if(old('jml[]')) {
     <div class="alert alert-danger"><?= session()->get('error'); ?></div>
 <?php endif; ?>
 
-<?php echo form_open('inputprospek'); ?>
+<?php //echo form_open('inputprospek'); ?>
+<form name="input_proses">
+
+    <div class="form_msg"></div>
 
     <div class="form-group row">
         <label for="namaproduk" class="col-lg-2 col-sm-12 col-form-label">Nama Produk <span class="text-danger">*</span></label>

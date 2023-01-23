@@ -14,7 +14,7 @@
 
     <link rel="stylesheet" type="text/css" href="<?=site_url('third-party/DataTables/datatables.min.css');?>" />
 
-    <?php if (url_is('inputprospek*')): ?>
+    <?php if (url_is('inputprospek*') || url_is('listprospek*')): ?>
         <link rel="stylesheet" type="text/css" href="<?=site_url('third-party/select2/select2.min.css');?>" />
         <link rel="stylesheet" type="text/css" href="<?=site_url('third-party/select2/select2-bootstrap.min.css');?>" />
     <?php endif;?>

@@ -14,7 +14,11 @@
 
     <link rel="stylesheet" type="text/css" href="<?=site_url('third-party/DataTables/datatables.min.css');?>" />
 
+<<<<<<< HEAD
     <?php if (url_is('inputprospek*') || url_is('listprospek*')): ?>
+=======
+    <?php if (url_is('inputprospek*') || url_is('listprospek')): ?>
+>>>>>>> b1d023ad835f20bf91a59faddaaa593f7f7eb34a
         <link rel="stylesheet" type="text/css" href="<?=site_url('third-party/select2/select2.min.css');?>" />
         <link rel="stylesheet" type="text/css" href="<?=site_url('third-party/select2/select2-bootstrap.min.css');?>" />
     <?php endif;?>

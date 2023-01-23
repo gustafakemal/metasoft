@@ -79,10 +79,8 @@ class MXProspect extends BaseController
     /**
      * Endpoint ini digunakan untuk memproses inputan
      *
-     * @return RedirectResponse
-     * @throws \ReflectionException
      */
-    public function addProcess(): RedirectResponse
+    public function addProcess()
     {
         $data = $this->request->getPost();
         $alt_get = $this->request->getGet('alt');
@@ -109,65 +107,79 @@ class MXProspect extends BaseController
         $data_request['Status'] = 10;
 
         // Material & Tebal checking
-        $mat1_check = $this->material1_check($data_request['Material1'], $data['TebalMat1']);
-        $other_check = $this->other_material_check([
-            ['material' => $data_request['Material2'], 'tebal' => $data_request['TebalMat2']],
-            ['material' => $data_request['Material3'], 'tebal' => $data_request['TebalMat3']],
-            ['material' => $data_request['Material4'], 'tebal' => $data_request['TebalMat4']]
-        ]);
-        if(!$mat1_check) {
-            return redirect()->back()
-                ->with('error', 'Jenis Material1 & Tebal harus diisi')
-                ->withInput();
-        }
-
-        if(!$other_check) {
-            return redirect()->back()
-                ->with('error', 'Periksa jenis & tebal Mat1')
-                ->withInput();
-        }
+//        $mat1_check = $this->material1_check($data_request['Material1'], $data['TebalMat1']);
+//        $other_check = $this->other_material_check([
+//            ['material' => $data_request['Material2'], 'tebal' => $data_request['TebalMat2']],
+//            ['material' => $data_request['Material3'], 'tebal' => $data_request['TebalMat3']],
+//            ['material' => $data_request['Material4'], 'tebal' => $data_request['TebalMat4']]
+//        ]);
+//        if(!$mat1_check) {
+//            return $this->response->setJSON([
+//                'success' => false,
+//                'msg' => 'Jenis Material1 & Tebal harus diisi'
+//            ]);
+//        }
+//
+//        if(!$other_check) {
+//            return $this->response->setJSON([
+//                'success' => false,
+//                'msg' => 'Periksa jenis & tebal Mat1'
+//            ]);
+//        }
         //-------------
 
-        /** Insert form isian ke DB */
-        $insert_data = $this->model->insert($data_request, false);
+        // Salah satu Roll_Pcs atau Finishing harus diisi
+        // Update validationRules
+        $this->model->satuanRules($data_request);
 
-        if ( $insert_data ) {
-            if( array_key_exists('aksesori', $data_request) && count($data_request['aksesori']) > 0) {
-                $noprospek = $data_request['NoProspek'];
-                $data_aksesori = array_map(function ($item) use ($noprospek, $data_request) {
-                    return [
-                        'NoProspek' => $noprospek,
-                        'Alt' => $data_request['Alt'],
-                        'Aksesori' => $item
-                    ];
-                }, $data_request['aksesori']);
-                $pa_model = new \App\Models\MXProspekAksesoriModel();
-                $pa_model->insertBatch($data_aksesori);
+        // Merge Jumlah Order ke Prospect Rules
+        $this->model->jumlahOrderRules($data_request);
 
-                $data_jumlah = array_map(function ($item) use ($noprospek, $data_request) {
-                    return [
-                        'NoProspek' => $noprospek,
-                        'Alt' => $data_request['Alt'],
-                        'Jumlah' => $item
-                    ];
-                }, $data_request['jml']);
-                $pj_model = new \App\Models\MXProspekJumlahModel();
-                $pj_model->insertBatch($data_jumlah);
-            }
-
-            if($type == 'alt' || $type == 'copyprospek') {
-                return redirect()->to('listprospek/edit/' . $data_request['NoProspek'] . '/' . $data_request['Alt'])
-                    ->with('success', 'Alternatif berhasil ditambahkan');
-            }
-
-            return redirect()->back()
-                            ->with('success', 'Data berhasil ditambahkan');
-        } else {
-            return redirect()->back()
-                ->with('error', '<p>' . implode('</p><p>', $this->model->errors()) . '</p>')
-                ->withInput();
+        if( ! $this->model->validate($data_request) ) {
+            return $this->response->setJSON([
+                'success' => false,
+                'dataError' => $this->model->errors(),
+                'msg' => '<p>' . implode('</p><p>', $this->model->errors()) . '</p>'
+            ]);
         }
 
+        /** Insert form isian ke DB */
+        $this->model->insert($data_request, false);
+
+        if( array_key_exists('aksesori', $data_request) && count($data_request['aksesori']) > 0) {
+            $noprospek = $data_request['NoProspek'];
+            $data_aksesori = array_map(function ($item) use ($noprospek, $data_request) {
+                return [
+                    'NoProspek' => $noprospek,
+                    'Alt' => $data_request['Alt'],
+                    'Aksesori' => $item
+                ];
+                }, $data_request['aksesori']
+            );
+            $pa_model = new \App\Models\MXProspekAksesoriModel();
+            $pa_model->insertBatch($data_aksesori);
+
+            $data_jumlah = array_map(function ($item) use ($noprospek, $data_request) {
+                return [
+                    'NoProspek' => $noprospek,
+                    'Alt' => $data_request['Alt'],
+                    'Jumlah' => $item
+                ];
+                }, $data_request['jml']
+            );
+            $pj_model = new \App\Models\MXProspekJumlahModel();
+            $pj_model->insertBatch($data_jumlah);
+        }
+
+//        if($type == 'alt' || $type == 'copyprospek') {
+//            return redirect()->to('listprospek/edit/' . $data_request['NoProspek'] . '/' . $data_request['Alt'])
+//                    ->with('success', 'Alternatif berhasil ditambahkan');
+//        }
+
+        return $this->response->setJSON([
+            'success' => true,
+            'msg' => 'Data berhasil ditambahkan'
+        ]);
     }
 
     private function prosesDropdown($proses, $noprospek, $alt)

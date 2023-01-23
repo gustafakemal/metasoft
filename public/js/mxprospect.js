@@ -251,15 +251,58 @@ $(function () {
             'STP': {
                 'label': 'Bottom',
                 'field_name': 'UkuranBottom'
+            },
+            'CS Gusset': {
+                'label': 'Gusset',
+                'field_name': 'Gusset'
             }
         }
         if(vars.hasOwnProperty(val)) {
             $('.sat-dym-label').html(vars[val].label)
             $('.sat-dym-input').html(`<input type="number" step="any" class="form-control" id="${vars[val].field_name.lower}" name="${vars[val].field_name}" placeholder="${vars[val].label}">`)
         } else {
-            $('.sat-dym-label').html('Gusset')
-            $('.sat-dym-input').html(`<input type="number" step="any" class="form-control" id="gusset" name="Gusset" placeholder="Gusset">`)
+            $('.sat-dym-label').html('')
+            $('.sat-dym-input').html(``)
         }
+    })
+
+    $('form[name="input_proses"]').on('submit', function (e) {
+        e.preventDefault();
+        $(`input, select`).removeClass('border-danger')
+        const formData = new FormData(this);
+
+        $.ajax({
+            type: 'POST',
+            url: `${HOST}/inputprospek`,
+            dataType: 'JSON',
+            data: formData,
+            processData: false,
+            contentType: false,
+            beforeSend: function () {
+                $('form[name="input_proses"] button').prop('disabled', true)
+                $('form[name="input_proses"] input').prop('readonly', true)
+                $('form[name="input_proses"] select').attr('readonly', true)
+            },
+            success: function (response) {
+                if(response.success) {
+                    $('.form_msg').html(`<div class="alert alert-success">${response.msg}</div>`);
+                } else {
+                    for(const property in response.dataError) {
+                        $(`input[name="${property}"], select[name="${property}"]`).addClass('border-danger')
+                    }
+                    $('.form_msg').html(`<div class="alert alert-danger">${response.msg}</div>`);
+                    $('.form_msg, html, body').animate({
+                        scrollTop: 0
+                    }, 500);
+                }
+            },
+            complete: function () {
+                $('form[name="input_proses"] button').prop('disabled', false)
+                // $('form[name="input_proses"] input, form[name="input_proses"] select').prop('readonly', false)
+                $('form[name="input_proses"] input').prop('readonly', false)
+                $('form[name="input_proses"] select').attr('readonly', false)
+            }
+        })
     })
 
 })

@@ -24,7 +24,7 @@ if(old('jml[]')) {
     <div class="alert alert-danger"><?= session()->get('error'); ?></div>
 <?php endif; ?>
 
-<?php //echo form_open('inputprospek'); ?>
+<?php //echo form_open_multipart('inputprospek'); ?>
 <form name="input_proses">
 
     <div class="form_msg"></div>
@@ -471,8 +471,8 @@ $material_form = function ($name) use ($material) {
         <div class="col-lg-4 col-sm-12">
             <div class="input-group mb-3">
                 <div class="custom-file">
-                    <input type="file" class="custom-file-input" id="inputGroupFile01" aria-describedby="inputGroupFileAddon01">
-                    <label class="custom-file-label" for="inputGroupFile01">Choose file</label>
+                    <input type="file" class="custom-file-input" id="attachmentfile" name="attachment">
+                    <label class="custom-file-label" for="attachmentfile">Choose file</label>
                 </div>
             </div>
         </div>

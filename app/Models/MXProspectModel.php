@@ -2,6 +2,9 @@
 
 namespace App\Models;
 
+use CodeIgniter\Files\File;
+use CodeIgniter\HTTP\IncomingRequest;
+use CodeIgniter\HTTP\Request;
 use CodeIgniter\I18n\Time;
 use CodeIgniter\Model;
 

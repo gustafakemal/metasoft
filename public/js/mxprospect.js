@@ -266,10 +266,22 @@ $(function () {
         }
     })
 
+    $('.custom-file-input').on('change', function (e) {
+        if( $('input[name="attachment"]').get(0).files[0] != undefined ) {
+            const filename = $('input[name="attachment"]').get(0).files[0].name;
+            const nextSibling = e.target.nextElementSibling
+            nextSibling.innerText = filename
+        }
+    })
+
     $('form[name="input_proses"]').on('submit', function (e) {
         e.preventDefault();
         $(`input, select`).removeClass('border-danger')
+        const attachment = $('input[name="attachment"]').get(0).files[0];
         const formData = new FormData(this);
+        formData.append("attachment", attachment)
+
+        console.log(attachment);
 
         $.ajax({
             type: 'POST',
@@ -278,6 +290,7 @@ $(function () {
             data: formData,
             processData: false,
             contentType: false,
+            cache: false,
             beforeSend: function () {
                 $('form[name="input_proses"] button').prop('disabled', true)
                 $('form[name="input_proses"] input').prop('readonly', true)

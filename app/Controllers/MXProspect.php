@@ -76,6 +76,20 @@ class MXProspect extends BaseController
         return true;
     }
 
+    private function attachmentVal()
+    {
+        return [
+            'attachment' => [
+                'label' => 'Image File',
+                'rules' => [
+                    'uploaded[attachment]',
+                    'mime_in[attachment,image/jpg,image/jpeg,image/gif,image/png,image/webp]',
+                    'max_size[attachment,200]',
+                ],
+            ],
+        ];
+    }
+
     /**
      * Endpoint ini digunakan untuk memproses inputan
      *
@@ -106,40 +120,30 @@ class MXProspect extends BaseController
         $data_request = $this->transformDataRequest($data, $type);
         $data_request['Status'] = 10;
 
-        // Material & Tebal checking
-//        $mat1_check = $this->material1_check($data_request['Material1'], $data['TebalMat1']);
-//        $other_check = $this->other_material_check([
-//            ['material' => $data_request['Material2'], 'tebal' => $data_request['TebalMat2']],
-//            ['material' => $data_request['Material3'], 'tebal' => $data_request['TebalMat3']],
-//            ['material' => $data_request['Material4'], 'tebal' => $data_request['TebalMat4']]
-//        ]);
-//        if(!$mat1_check) {
-//            return $this->response->setJSON([
-//                'success' => false,
-//                'msg' => 'Jenis Material1 & Tebal harus diisi'
-//            ]);
-//        }
-//
-//        if(!$other_check) {
-//            return $this->response->setJSON([
-//                'success' => false,
-//                'msg' => 'Periksa jenis & tebal Mat1'
-//            ]);
-//        }
-        //-------------
+        $attch = $this->request->getFile('attachment');
 
-        // Salah satu Roll_Pcs atau Finishing harus diisi
-        // Update validationRules
+        /** Salah satu Roll_Pcs atau Finishing harus diisi
+         * Update validationRules */
         $this->model->satuanRules($data_request);
 
-        // Merge Jumlah Order ke Prospect Rules
+        /** Merge Jumlah Order ke Prospect Rules */
         $this->model->jumlahOrderRules($data_request);
 
+        $form_errors = [];
+
+        /** Merge Rule attachment, jika form attachment terisi */
+        if( $attch->getName() !== '' && $attch->isValid() ) {
+            if( ! $this->validate($this->attachmentVal())) {
+                $form_errors = array_merge($form_errors, $this->validator->getErrors());
+            }
+        }
+
         if( ! $this->model->validate($data_request) ) {
+            $form_errors = array_merge($form_errors, $this->model->errors());
             return $this->response->setJSON([
                 'success' => false,
                 'dataError' => $this->model->errors(),
-                'msg' => '<p>' . implode('</p><p>', $this->model->errors()) . '</p>'
+                'msg' => '<p>' . implode('</p><p>', $form_errors) . '</p>',
             ]);
         }
 
@@ -169,6 +173,12 @@ class MXProspect extends BaseController
             );
             $pj_model = new \App\Models\MXProspekJumlahModel();
             $pj_model->insertBatch($data_jumlah);
+        }
+
+        if( $attch->getName() !== '' && $attch->isValid() ) {
+
+            $filename = $data_request['NoProspek'] . '_' . $data_request['Alt'] . '.' . $attch->guessExtension();
+            $filepath = $attch->move(WRITEPATH . 'uploads/prospek', $filename);
         }
 
 //        if($type == 'alt' || $type == 'copyprospek') {

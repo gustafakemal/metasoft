@@ -17,13 +17,17 @@ body {
   /* Edge */
   color: rgba(0, 0, 0, 0.3);
 }
+
 .form-control:-ms-input-placeholder {
   /* Internet Explorer 10-11 */
   color: rgba(0, 0, 0, 0.3);
 }
+
 .form-control::placeholder {
   color: rgba(0, 0, 0, 0.3);
 }
+
+
 
 .btn:not([name="cancel"]):disabled {
   background-color: #ccc;
@@ -881,3 +885,11 @@ body {
   border: 1px solid #ccc;
   border-top: none;
 }
+
+.mandatory {
+  border-color: #f37575;
+}
+
+/* .select2-container--bootstrap.select2-container{
+  border-color: #f37575;
+} */

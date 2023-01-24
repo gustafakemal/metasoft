@@ -772,10 +772,12 @@ body {
 .prospek_moq .input--moq {
   width: 100px;
 }
-.prospek_jumlah-order .jml-item-val {
+.prospek_jumlah-order .jml-item-val,
+.prospek_moq .moq-item-val {
   margin-right: 8px;
 }
-.prospek_jumlah-order .jml-item-val .val {
+.prospek_jumlah-order .jml-item-val .val,
+.prospek_moq .moq-item-val .m-val {
   padding: 4px 12px;
   border: 1px solid #ddd;
   border-radius: 3px;
@@ -785,7 +787,8 @@ body {
 }
 .prospek_jumlah-order .jml-item-val .del {
 }
-.prospek_jumlah-order .jml-val-child {
+.prospek_jumlah-order .jml-val-child,
+.prospek_moq .moq-val-child {
   display: flex;
   flex-wrap: wrap;
 }
@@ -890,6 +893,10 @@ body {
   border-color: #f37575;
 }
 
-/* .select2-container--bootstrap.select2-container{
-  border-color: #f37575;
-} */
+.custom-file-label.readonly {
+  background-color: #e9ecef;
+}
+
+/*.select2-container--bootstrap .select2-selection {*/
+/*  border: 1px solid #dc3545!important;*/
+/*}*/

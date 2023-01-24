@@ -30,7 +30,7 @@ if(old('jml[]')) {
 <form name="input_proses">
 
 <div class="form-group row">
-    <label for="namaproduk" class="col-lg-2 col-sm-12 col-form-label">Nama Produk </label>
+    <label for="namaproduk" class="col-lg-2 col-sm-12 col-form-label">Nama Produk <span class="text-danger">*</span></label>
     <div class="col-lg-10 col-sm-12">
         <input type="text" class="form-control" id="namaproduk" value="<?= old('NamaProduk');?>"
             name="NamaProduk" style="text-transform: uppercase">
@@ -40,7 +40,7 @@ if(old('jml[]')) {
 <div class="row">
     <div class="col-12">
         <div class="form-group row">
-            <label for="pemesan" class="col-lg-2 col-sm-12 col-form-label">Pemesan </label>
+            <label for="pemesan" class="col-lg-2 col-sm-12 col-form-label">Pemesan <span class="text-danger">*</span></label>
             <div class="col-lg-10 col-sm-12">
                 <select id="pemesan" name="Pemesan" class="form-control">
                     <option value="">Pilih</option>
@@ -59,8 +59,8 @@ if(old('jml[]')) {
 <div class="row">
     <div class="col-5">
         <div class="form-group row">
-            <label for="jenisproduk" class="col-md-5 col-sm-12 col-form-label">Jenis Produk </label>
-            <div class="col-md-7 col-sm-12">
+            <label for="jenisproduk" class="col-md-5 col-sm-12 col-form-label">Jenis Produk <span class="text-danger">*</span></label>
+            <div class="col-md-7 col-sm-12" style="padding-left: 7px">
                 <div style="display: flex">
                     <select id="jenisproduk" name="JenisProduk" class="form-control mr-1">
                         <option value="">Pilih</option>
@@ -79,7 +79,7 @@ if(old('jml[]')) {
     </div>
     <div class="col-4">
         <div class="form-group row">
-            <label for="segmen" class="col-lg-4 col-sm-12 col-form-label">Segmen</label>
+            <label for="segmen" class="col-lg-4 col-sm-12 col-form-label">Segmen <span class="text-danger">*</span></label>
             <div class="col-lg-8 col-sm-12">
                 <select id="segmen" name="Segmen" class="form-control">
                     <option value="">Pilih</option>
@@ -95,7 +95,7 @@ if(old('jml[]')) {
     </div>
     <div class="col-3">
         <div class="form-group row">
-            <label for="konten" class="col-lg-4 col-sm-12 col-form-label">Konten</label>
+            <label for="konten" class="col-lg-4 col-sm-12 col-form-label">Konten <span class="text-danger">*</span></label>
             <div class="col-lg-8 col-sm-12">
                 <select id="konten" name="Konten" class="form-control">
                     <option value="">Pilih</option>
@@ -112,7 +112,7 @@ if(old('jml[]')) {
 </div>
 
 <div class="form-group row">
-    <label for="satuan" class="col-lg-2 col-sm-12 col-form-label">Satuan </label>
+    <label for="satuan" class="col-lg-2 col-sm-12 col-form-label">Satuan <span class="text-danger">*</span></label>
     <div class="col-lg-10 col-sm-12">
 
         <div class="row">
@@ -248,7 +248,7 @@ $material_form = function ($name) use ($material) {
 </div>
 
 <div class="form-group row">
-    <label for="jumlah" class="col-lg-2 col-sm-12 col-form-label">Jumlah </label>
+    <label for="jumlah" class="col-lg-2 col-sm-12 col-form-label">Jumlah <span class="text-danger">*</span></label>
     <div class="col-lg-10 col-sm-12">
         <div class="prospek_jumlah-order">
             <div class="input--jml mr-1 mb-1" id="jml-0">
@@ -442,7 +442,7 @@ $material_form = function ($name) use ($material) {
 <div class="row">
     <div class="col-4">
         <div class="form-group row">
-            <label for="jalur" class="col-lg-6 col-sm-12 col-form-label">Jalur Pengiriman </label>
+            <label for="jalur" class="col-lg-6 col-sm-12 col-form-label">Jalur Pengiriman <span class="text-danger">*</span></label>
             <div class="col-lg-6 col-sm-12">
                 <select id="jalur" name="Jalur" class="form-control">
                     <option<?= (old('Jalur') && old('Jalur') == 'D') ? ' selected' : '';?> value="D">Darat</option>
@@ -455,7 +455,7 @@ $material_form = function ($name) use ($material) {
     </div>
     <div class="col-4">
         <div class="form-group row">
-            <label for="area" class="col-lg-5 col-sm-12 col-form-label">Area</label>
+            <label for="area" class="col-lg-5 col-sm-12 col-form-label">Area <span class="text-danger">*</span></label>
             <div class="col-lg-7 col-sm-12">
                 <select id="area" name="Area" class="form-control">
                     <option value="">Pilih</option>
@@ -489,7 +489,7 @@ $material_form = function ($name) use ($material) {
     <div class="col-lg-4 col-sm-12">
         <div class="input-group mb-3">
             <div class="custom-file">
-                <input type="file" class="custom-file-input" id="inputGroupFile01"
+                <input readonly type="file" class="custom-file-input" id="inputGroupFile01"
                     aria-describedby="inputGroupFileAddon01" name="attachment">
                 <label class="custom-file-label" for="inputGroupFile01">Choose file</label>
             </div>

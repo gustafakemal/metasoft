@@ -112,46 +112,41 @@ $(function () {
         $(`select[name="aksesoris"] option[value="0"]`).prop('selected', true);
     })
 
-    $('.add-jml').on('click', function (e) {
-        e.preventDefault();
-        let jml_order = [];
-        if( $('.jml-item-val').length > 0 ) {
-            $('.jml-item-val').each(function (idx) {
-                const ord = parseInt($(this).find('.val').text());
-                jml_order.push(ord)
-            })
-        }
-        const val = $('input[name="Jumlah"]').val();
+    const objAddJumlah = {
+        childClass: 'jml-item-val',
+        childID: 'item',
+        captionClass: 'val',
+        delClass: 'del-jml',
+        delID: 'jml',
+        hiddenInputName: 'jml[]'
+    };
+    const objAddMoq = {
+        childClass: 'moq-item-val',
+        childID: 'm-item',
+        captionClass: 'm-val',
+        delClass: 'del-moq',
+        delID: 'moq',
+        hiddenInputName: 'moq[]'
+    };
+    $(`.add-jml`).on(
+        'click',
+        addJumlahItem('Jumlah', 'prospek_jumlah-order', objAddJumlah)
+    );
+    $(`.add-moq`).on(
+        'click',
+        addJumlahItem('Moq', 'prospek_moq', objAddMoq)
+    );
 
-        if(val === '' || val === '0' || jml_order.includes(parseInt(val))) {
-            $('input[name="Jumlah"]').val('');
-            return false;
-        }
-
-        const elem_val = `<div class="jml-item-val" id="item-${val}">
-                            <input type="hidden" name="jml[]" value="${val}" />
-                            <span class="val">${val}</span>
-                            <button type="button" class="btn btn-danger btn-sm del-jml" id="jml-${val}">
-                                <i class="fas fa-trash-alt"></i>
-                            </button>
-                           </div>`;
-
-        jml_order.push(parseInt(val))
-        $('.prospek_jumlah-order').append(elem_val);
-
-        startBlinking(`.prospek_jumlah-order #item-${val} .val`)
-        setTimeout(() => {
-            stopBlinking()
-        }, 500)
-        $('input[name="Jumlah"]').val('');
-    })
-
-    $('.prospek_jumlah-order').on('click', '.del-jml', function (e) {
-        e.preventDefault();
-
-        const id = $(this).attr('id').split('-')[1]
-        $(`.prospek_jumlah-order #item-${id}`).remove();
-    })
+    $('.prospek_jumlah-order').on(
+        'click',
+        '.del-jml',
+        delItemJumlah('prospek_jumlah-order', 'item')
+    );
+    $('.prospek_moq').on(
+        'click',
+        '.del-moq',
+        delItemJumlah('prospek_moq', 'm-item')
+    );
 
     $('select[name="BagMaking"]').on('change', function () {
         const val = $(this).val();
@@ -295,6 +290,7 @@ $(function () {
                 $('form[name="input_proses"] button').prop('disabled', true)
                 $('form[name="input_proses"] input').prop('readonly', true)
                 $('form[name="input_proses"] select').attr('readonly', true)
+                $('form[name="input_proses"] .custom-file-label').addClass('readonly')
             },
             success: function (response) {
                 if(response.success) {
@@ -314,6 +310,7 @@ $(function () {
                 // $('form[name="input_proses"] input, form[name="input_proses"] select').prop('readonly', false)
                 $('form[name="input_proses"] input').prop('readonly', false)
                 $('form[name="input_proses"] select').attr('readonly', false)
+                $('form[name="input_proses"] .custom-file-label').removeClass('readonly')
             }
         })
     })
@@ -343,4 +340,49 @@ function blink(element)
     setTimeout(function () {
         $(element).css('background-color', '#f9f9f9');
     }, 500);
+}
+
+function addJumlahItem(inputName, parentClass, obj) {
+    return function (e) {
+        e.preventDefault();
+
+        let jml_order = [];
+        if( $(`.${obj.childClass}`).length > 0 ) {
+            $(`.${obj.childClass}`).each(function (idx) {
+                const ord = parseInt($(this).find(`.${obj.captionClass}`).text());
+                jml_order.push(ord)
+            })
+        }
+        const val = $(`input[name="${inputName}"]`).val();
+
+        if(val === '' || val === '0' || jml_order.includes(parseInt(val))) {
+            $(`input[name="${inputName}"]`).val('');
+            return false;
+        }
+
+        const elem_val = `<div class="${obj.childClass}" id="${obj.childID}-${val}">
+                            <input type="hidden" name="${obj.hiddenInputName}" value="${val}" />
+                            <span class="${obj.captionClass}">${val}</span>
+                            <button type="button" class="btn btn-danger btn-sm ${obj.delClass}" id="${obj.delID}-${val}">
+                                <i class="fas fa-trash-alt"></i>
+                            </button>
+                           </div>`;
+
+        jml_order.push(parseInt(val))
+        $(`.${parentClass}`).append(elem_val);
+
+        startBlinking(`.${parentClass} #${obj.childID}-${val} .${obj.captionClass}`)
+        setTimeout(() => {
+            stopBlinking()
+        }, 500)
+        $(`input[name="${inputName}"]`).val('');
+    }
+}
+
+function delItemJumlah(parentElement, idItem) {
+    return function(e) {
+        e.preventDefault();
+        const id = $(this).attr('id').split('-')[1]
+        $(`.${parentElement} #${idItem}-${id}`).remove();
+    }
 }

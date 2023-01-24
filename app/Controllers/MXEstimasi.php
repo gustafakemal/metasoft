@@ -27,7 +27,7 @@ class MXEstimasi extends BaseController
     {
         if ($satuan === 'R') {
             $arr = [
-                'label' => 'Bottom',
+                'label' => 'Meter Roll',
                 'form_name' => 'MeterRoll',
             ];
         } else {
@@ -35,6 +35,11 @@ class MXEstimasi extends BaseController
                 $arr = [
                     'label' => 'Centre Seal',
                     'form_name' => 'CentreSeal',
+                ];
+            } elseif ($pieces == 'STP') {
+                $arr = [
+                    'label' => 'Bottom',
+                    'form_name' => 'UkuranBottom',
                 ];
             } else {
                 $arr = [
@@ -65,7 +70,8 @@ class MXEstimasi extends BaseController
 //        $adhesive = (new \App\Models\MXMerkTintaModel())->where('Kategori', 'Jenis Adhesive MX')
 //            ->get();
         $adhesive = (new \App\Models\MXAdhesiveModel())->asObject()->orderBy('nama', 'asc')->findAll();
-        $tinta = (new \App\Models\MXJenisTinta())->getByMerk($jenistinta->getResult()[0]->OpsiTeks);
+        $tinta = (new \App\Models\MXJenisTinta())->getTinta();
+        $prospek_tinta = (new \App\Models\MXProspekTinta())->getByNoProspekAndAlt($noprospek, $alt);
 
         $result = $data->getResult()[0];
 
@@ -80,6 +86,7 @@ class MXEstimasi extends BaseController
             'adhesive' => $adhesive,
             'tinta' => $tinta->getResult(),
             'form_satuan' => $this->formSatuan($result->Roll_Pcs, $result->Finishing),
+            'prospek_tinta' => $prospek_tinta->getResult()
         ]);
     }
 
@@ -89,6 +96,7 @@ class MXEstimasi extends BaseController
         $alt = $this->request->getGet('alt');
 
         $data = $this->model->getDetailByNoProspectAndAlt($noprospek, $alt)->getResult()[0];
+        $data_aksesori = (new \App\Models\MXProspekAksesoriModel())->getByProspekAlt($noprospek, $alt);
 
         $model_mx_estimasi = new \App\Models\MXEstimasiModel();
 
@@ -104,38 +112,49 @@ class MXEstimasi extends BaseController
         $jumlah_array = array_map(function ($item) {
             return $item->Jumlah;
         }, $data_jumlah);
-        //die($data_jumlah[0]['Jumlah']);
-        //dd($data_jumlah[0]->Jumlah);
+
+        $kalkulasi_otomatis = [];
+        foreach ($jumlah_array as $key => $row) {
+            $running_meter = $model_mx_estimasi->getRunningMeter($data->Roll_Pcs, $row, (int)$data->Gusset, (int)$data->JumlahUp, (int)$data->Pitch, (int)$data->LebarFilm);
+            $kalkulasi_otomatis[] = [
+                    'JumlahUp' => $data->JumlahUp,
+                    'LebarFilm' => $data->LebarFilm,
+                    'JumlahPitch' => $jumlah_pitch,
+                    'ColorBar' => $color_bar,
+                    'RunningMeter' => $running_meter,
+                    'Circum' => $circum,
+                    ];
+
+        }
         $res = $model_mx_estimasi->getFormulaOtomatis($noprospek, $alt, $data_jumlah[0]->Jumlah);
         dd($res);
-        $kalkulasi = [];
-        foreach ($jumlah_array as $key => $row) {
-            $running_meter = $model_mx_estimasi->getRunningMeter($data->Roll_Pcs, $row, (int) $data->Gusset, (int) $data->JumlahUp, (int) $data->Pitch, (int) $data->LebarFilm);
-            $kalkulasi[] = ['Otomatis' => [
-                'JumlahUp' => $data->JumlahUp,
-                'LebarFilm' => $data->LebarFilm,
-                'JumlahPitch' => $jumlah_pitch,
-                'ColorBar' => $color_bar,
-                'RunningMeter' => $running_meter,
-                'Circum' => $circum,
-            ],
-                'PemakaianFilm' => [
-                    [
-                        'Layer' => '',
-                        'Film' => '',
-                        'Tebal' => '',
-                    ],
-                ],
-            ];
+
+        $jenis_film = [];
+        $jf_model = new \App\Models\MXJenisFilmModel();
+        for($x=1;$x<=4;$x++) {
+            $material = 'Material' . $x;
+            $prop = $jf_model->getNama($data->{$material});
+            $jenis_film[] = [
+                'Layer' => 'Layer ' . $x,
+                'Nama' => ($data->{$material}) ? $prop->nama : 0,
+                'Tickness' => ($data->{$material}) ? number_format($prop->berat_jenis, 2) : 0,
+                'Harga' => ($data->{$material}) ? number_format($prop->harga, 2) : 0,
+                'Pemakaian' => '',
+            ] ;
         }
+
+        $prospek_tinta_model = (new \App\Models\MXProspekTinta())->getByNoProspekAndAlt($noprospek, $alt);
 
         return view('MXEstimasi/MXEstimasi_Preview', [
             'page_title' => 'Antrian Estimasi',
             'breadcrumbs' => $this->common->breadcrumbs(uri_string(true)),
             'main_menu' => (new \App\Libraries\Menu())->render(),
+            'data' => $data,
             'data_jumlah' => $data_jumlah,
             'jumlah_array' => $jumlah_array,
-            'kalkulasi' => $kalkulasi,
+            'kalkulasi' => $kalkulasi_otomatis,
+            'jenis_film' => $jenis_film,
+            'jenis_tinta' => $prospek_tinta_model->getResult()
         ]);
     }
 
@@ -145,13 +164,30 @@ class MXEstimasi extends BaseController
 
         $model_mx_estimasi = new \App\Models\MXEstimasiModel();
 
-//        $jumlah_pitch = $model_mx_estimasi->getJumlahPitch($data['Roll_Pcs'], $data['Pitch']);
-//        if(array_key_exists('finishing')) {
-//            $color_bar = $model_mx_estimasi->getColorBar($data['Roll_Pcs'], $data['Finishing']);
-//        } else {
-//            $color_bar = '-';
-//        }
-//        $circum = $model_mx_estimasi->getCircum($data['Roll_Pcs'], $data['Pitch']);
+        if( !$data['JumlahUp'] || !$data['LebarFilm'] || !$data['JenisAdhesive'] || !array_key_exists('warnatinta', $data) ) {
+            return $this->response->setJSON([
+                'success' => false,
+                'msg' => 'Jumlah Up, Lebar Film & Adhesive harus diisi'
+            ]);
+        }
+
+        $tinta_filter_check = array_filter($data['warnatinta'], fn($i) => $i !== '');
+        $tinta_unique_check = array_unique($data['warnatinta']);
+        $coverage_unique_check = array_unique($data['coverage']);
+
+        if( count($tinta_filter_check) !== count($data['warnatinta']) || count($tinta_unique_check) !== count($data['warnatinta']) ) {
+            return $this->response->setJSON([
+                'success' => false,
+                'msg' => 'Warna tinta tidak boleh kosong & unique'
+            ]);
+        }
+
+        if( count($coverage_unique_check) !== count($data['coverage']) ) {
+            return $this->response->setJSON([
+                'success' => false,
+                'msg' => 'Tiap coverage harus diisi'
+            ]);
+        }
 
         $data_tinta = $this->request->getPost('warnatinta');
         $data_coverage = $this->request->getPost('coverage');
@@ -177,12 +213,16 @@ class MXEstimasi extends BaseController
                 'Coverage' => $data_coverage[$i],
             ];
         }
+
+        $del_ex_prospek_tinta = (new \App\Models\MXProspekTinta())->where('NoProspek', $data['NoProspek'])
+                                                    ->where('Alt', $data['Alt'])
+                                                    ->delete();
         $insert_prospek_tinta = (new \App\Models\MXProspekTinta())->insertBatch($data_prospek_tinta);
 
         if ($update_prospek && $insert_prospek_tinta) {
             return $this->response->setJSON([
                 'success' => true,
-                'redirect_uri' => base_url() . '/calculate?noprospek=' . $data['NoProspek'] . '&alt=' . $data['Alt'],
+                'redirect_uri' => base_url() . '/queueestimasi/calculate?noprospek=' . $data['NoProspek'] . '&alt=' . $data['Alt']
             ]);
         } else {
             return $this->response->setJSON([

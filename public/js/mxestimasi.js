@@ -48,7 +48,8 @@ $(function () {
             getTinta(data_key);
         } else {
             const options = $(`.tbl-tinta tr:first-child select`).html();
-            $(`.tbl-tinta tr[data-key="${data_key}"] select`).append(options);
+            $(`.tbl-tinta tr[data-key="${data_key}"] select`).html('').append(options);
+            $(`.tbl-tinta tr[data-key="${data_key}"] select option:selected`).prop('selected', false);
         }
     })
 
@@ -77,7 +78,7 @@ $(function () {
     $('form[name="kelengkapandata"]').on('submit', function (e) {
         e.preventDefault();
         const formData = new FormData(this)
-        console.log($('select[name="warnatinta[]"]').val());
+        // console.log($('select[name="warnatinta[]"]').val());
         // let formData = {
         //     JumlahUp: $('input[name="JumlahUp"]').val(),
         //     LebarFilm: $('input[name="LebarFilm"]').val(),
@@ -96,13 +97,23 @@ $(function () {
             data: formData,
             processData: false,
             contentType: false,
+            beforeSend: function () {
+                $(`form[name="kelengkapandata"] button`).prop('disabled', true)
+            },
             success: function (response) {
                 if(response.success) {
-                    location.href = response.redirect_uri
+                    window.location.href = response.redirect_uri
+                } else {
+                    $('.floating-msg').addClass('show').html(`
+						<div class="alert alert-danger">${response.msg}</div>
+					`)
                 }
             },
-            complete: function (res, stat, xhr) {
-                console.log(res)
+            complete: function () {
+                $(`form[name="kelengkapandata"] button`).prop('disabled', false)
+                setTimeout(() => {
+                    $('.floating-msg').removeClass('show').html('');
+                }, 3000);
             }
         })
     });

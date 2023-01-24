@@ -129,7 +129,7 @@ class MXSegmen extends BaseController
     {
         $data = $this->request->getPost();
         //$data['added_by'] = current_user()->UserID;
-
+        $data['Nama'] = strtoupper($data['Nama']);
 
         if ($this->model->insert($data)) {
             $msg = 'Data berhasil ditambahkan';

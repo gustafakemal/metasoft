@@ -100,7 +100,7 @@ class MXEstimasi extends BaseController
 
         $model_mx_estimasi = new \App\Models\MXEstimasiModel();
 
-        $jumlah_pitch = $model_mx_estimasi->getPitch($data->Roll_Pcs, $data->Pitch);
+        $jumlah_pitch = $model_mx_estimasi->getJumlahPitch($data->Roll_Pcs, $data->Pitch);
         if (!$data->Finishing) {
             $color_bar = $model_mx_estimasi->getColorBar($data->Roll_Pcs, $data->Finishing);
         } else {

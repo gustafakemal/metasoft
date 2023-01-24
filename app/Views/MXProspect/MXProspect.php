@@ -507,17 +507,34 @@ $material_form = function ($name) use ($material) {
     <div class="modal-dialog modal-lg">
         <div class="modal-content">
             <div class="modal-header">
-                <h5 class="modal-title" id="dbProdukLabel">DB Produk</h5>
+                <h5 class="modal-title" id="dbProdukLabel">Database Jenis Produk</h5>
                 <button type="button" class="close" data-dismiss="modal" aria-label="Close">
                     <span aria-hidden="true">&times;</span>
                 </button>
             </div>
             <div class="modal-body">
-                sdsfs
+                <table id="dataList" class="table table-bordered table-striped" style="width: 100%">
+                    <thead>
+                        <tr>
+                            <th>No</th> <!-- 1 -->
+                            <th>Prospek</th> <!-- 2 -->
+                            <th>Alt</th> <!-- 3 -->
+                            <th>Nama Produk</th> <!-- 4 -->
+                            <th>Material 1</th> <!-- 5 digabung jenis & tebal -->
+                            <th>Material 2</th> <!-- 6 -->
+                            <th>Material 3</th> <!-- 7 -->
+                            <th>Material 4</th> <!-- 8 -->
+                            <th>Tinta</th> <!-- 9 -->
+                            <th>Tinta Khusus</th> <!-- 10 -->
+                            <th>Adhesive</th> <!-- 11 -->
+                            <th>Action</th> <!-- 12 buton utk copy value, close modal-->
+                        </tr>
+                    </thead>
+                </table>
+
             </div>
             <div class="modal-footer">
-                <button name="submit" type="submit" class="btn btn-primary">Simpan</button>
-                <button name="cancel" type="button" class="btn btn-link text-danger" data-dismiss="modal">Batal</button>
+                <button name="cancel" type="button" class="btn btn-link text-danger" data-dismiss="modal">Tutup</button>
             </div>
         </div>
     </div>

@@ -15,47 +15,77 @@ class MXProspectModel extends Model
 
     protected $validationRules = [
         'NamaProduk' => 'required',
-        'Tebal' => 'required|greater_than[0]',
-        'Panjang' => 'required|greater_than[0]',
-        'Lebar' => 'required|greater_than[0]',
-        'Pitch' => 'required|greater_than[0]',
-        'Material1' => 'required',
-        'TebalMat1' => 'required|greater_than[0]',
-        'Kapasitas' => 'required|greater_than[0]',
+        'Pemesan' => 'required',
+        'Segmen' => 'required',
+        'Konten' => 'required',
+        'JenisProduk' => 'required',
+        'Jalur' => 'required',
+        'Area' => 'required',
+        //'Tebal' => 'required|greater_than[0]',
+        //'Panjang' => 'required|greater_than[0]',
+        //'Lebar' => 'required|greater_than[0]',
+        //'Pitch' => 'required|greater_than[0]',
+        //'Material1' => 'required',
+        //'TebalMat1' => 'required|greater_than[0]',
+        //'Kapasitas' => 'required|greater_than[0]',
     ];
 
     protected $validationMessages = [
         'NamaProduk' => [
             'required' => 'Field Nama Produk harus diisi.',
         ],
-        'Kapasitas' => [
-            'required' => 'Field Kapasitas harus diisi.',
-            'greater_than' => 'Field Kapasitas harus diisi.',
+        'NamaProduk' => [
+            'required' => 'Field Nama Produk harus diisi.',
         ],
-        'Tebal' => [
-            'required' => 'Dimensi (Tebal) harus diisi.',
-            'greater_than' => 'Dimensi (Tebal) harus diisi.',
-        ],
-        'Panjang' => [
-            'required' => 'Dimensi (Panjang) harus diisi.',
-            'greater_than' => 'Dimensi (Panjang) harus diisi.',
-        ],
-        'Lebar' => [
-            'required' => 'Dimensi (Lebar) harus diisi.',
-            'greater_than' => 'Dimensi (Lebar) harus diisi.',
-        ],
-        'Pitch' => [
-            'required' => 'Dimensi (Pitch) harus diisi.',
-            'greater_than' => 'Dimensi (Pitch) harus diisi.',
-        ],
-        'Material1' => [
-            'required' => 'Field Material harus diisi.',
-        ],
-        'TebalMat1' => [
-            'required' => 'Field tebal material harus diisi.',
-            'greater_than' => 'Field tebal material harus diisi.',
-        ],
+        // 'Kapasitas' => [
+        //     'required' => 'Field Kapasitas harus diisi.',
+        //     'greater_than' => 'Field Kapasitas harus diisi.',
+        // ],
+        // 'Tebal' => [
+        //     'required' => 'Dimensi (Tebal) harus diisi.',
+        //     'greater_than' => 'Dimensi (Tebal) harus diisi.',
+        // ],
+        // 'Panjang' => [
+        //     'required' => 'Dimensi (Panjang) harus diisi.',
+        //     'greater_than' => 'Dimensi (Panjang) harus diisi.',
+        // ],
+        // 'Lebar' => [
+        //     'required' => 'Dimensi (Lebar) harus diisi.',
+        //     'greater_than' => 'Dimensi (Lebar) harus diisi.',
+        // ],
+        // 'Pitch' => [
+        //     'required' => 'Dimensi (Pitch) harus diisi.',
+        //     'greater_than' => 'Dimensi (Pitch) harus diisi.',
+        // ],
+        // 'Material1' => [
+        //     'required' => 'Field Material harus diisi.',
+        // ],
+        // 'TebalMat1' => [
+        //     'required' => 'Field tebal material harus diisi.',
+        //     'greater_than' => 'Field tebal material harus diisi.',
+        // ],
     ];
+
+    public function satuanRules($data_request)
+    {
+        if (!$data_request['Roll_Pcs']) {
+            $this->setValidationRule('Roll_Pcs', 'required');
+            $this->setValidationMessage('Roll_Pcs', ['required' => 'Field Satuan wajib diisi']);
+        }
+
+        if ($data_request['Roll_Pcs'] && (!array_key_exists('Finishing', $data_request) || !$data_request['Finishing'])) {
+            $this->setValidationRule('Finishing', 'required');
+            $this->setValidationMessage('Finishing', ['required' => 'Field Satuan (Finishing) wajib diisi']);
+        }
+    }
+
+    public function jumlahOrderRules($data_request)
+    {
+        if (!array_key_exists('jml', $data_request)) {
+            $this->setValidationRule('jml', 'required');
+            $this->setValidationMessage('jml', ['required' => 'Field Jumlah wajib diisi']);
+        }
+    }
 
     public function getAlternatif()
     {

@@ -6,7 +6,7 @@ class MXProspekJumlahModel extends \CodeIgniter\Model
 
 {
     protected $table = 'MX_Prospek_Jumlah';
-    protected $allowedFields = ['NoProspek', 'Alt', 'Jumlah', 'JumlahUp', 'LebarFilm', 'JumlahPitch', 'ColorBar', 'Circum', 'RunningMeter', 'Circum', 'RunningMeter', 'Waste', 'WastePersiapan', 'JumlahTruk'];
+    protected $allowedFields = ['NoProspek', 'Alt', 'Jumlah', 'JumlahUp', 'LebarFilm', 'JumlahPitch', 'ColorBar', 'Circum', 'RunningMeter', 'Circum', 'RunningMeter', 'Waste', 'WastePersiapan', 'JumlahTruk', 'Estimator', 'Estimated', 'MOQ'];
 
     public function getByProspekAlt($NoProspek, $Alt)
     {

@@ -55,6 +55,11 @@ $routes->group('pelanggan', static function ($routes) {
     $routes->get('delete/(:num)', 'Customer::delete/$1');
 });
 
+$routes->group('cekmodel', static function ($routes) {
+    $routes->get('/', 'MXCekModel::index');
+    $routes->get('getBankData', 'MXCekModel::getBankData');
+});
+
 $routes->group('sales', static function ($routes) {
     $routes->get('/', 'Sales::index');
     $routes->get('api', 'Sales::apiGetAll');
@@ -171,7 +176,6 @@ $routes->group('mxsegmen', static function ($routes) {
     $routes->put('edit/api', 'MXSegmen::apiEditProcess');
     $routes->get('delete/(:num)', 'MXSegmen::delete/$1');
 });
-
 
 $routes->group('jenisflute', static function ($routes) {
     $routes->get('/', 'MFJenisFlute::index');

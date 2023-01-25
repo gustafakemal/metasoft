@@ -30,12 +30,14 @@ class Priviledge
         'api/common/dt_navigation',
         'parentmodule',
         'logout',
-        'auth/verify'
+        'auth/verify',
+        'cekmodel',
+        'cekmodel/getBankData',
     ];
 
     public function __construct()
     {
-        if( service('auth')->isLoggedIn() ) {
+        if (service('auth')->isLoggedIn()) {
             $this->modul = session()->get('priv');
         }
 
@@ -51,7 +53,7 @@ class Priviledge
 
         $routes = $this->parseFromAccessDefinition();
 
-        for($i = 0;$i < count($routes);$i++) {
+        for ($i = 0; $i < count($routes); $i++) {
             foreach ($routes[$i] as $key => $val) {
                 $path[] = $key;
             }
@@ -72,7 +74,7 @@ class Priviledge
         $routes = [];
 
         foreach ($availableRoutes as $key => $val) {
-            if( ! in_array($key, self::WILDCARD_PATH) ) {
+            if (!in_array($key, self::WILDCARD_PATH)) {
                 $routes[] = $key;
             }
         }
@@ -92,7 +94,7 @@ class Priviledge
         $restricted = [];
 
         foreach ($availableRoutes as $key => $val) {
-            if( ! in_array($key, $this->path()) && ! in_array($key, self::WILDCARD_PATH) ) {
+            if (!in_array($key, $this->path()) && !in_array($key, self::WILDCARD_PATH)) {
                 $restricted[] = $key;
             }
         }
@@ -112,7 +114,7 @@ class Priviledge
 
         $arrayRoutes = [];
 
-        for($i = 0;$i < count($accessRoutes);$i++) {
+        for ($i = 0; $i < count($accessRoutes); $i++) {
             $this->accessDefinition->setRoute($accessRoutes[$i]->route);
             $this->accessDefinition->setAccessLevel($accessRoutes[$i]->access);
             $arrayRoutes[] = $this->accessDefinition->get();
@@ -129,7 +131,7 @@ class Priviledge
     public function accessRoutes(): array
     {
         $newobj = [];
-        for($i = 0;$i < count($this->modul);$i++) {
+        for ($i = 0; $i < count($this->modul); $i++) {
             $newobj[] = (object) [
                 'route' => $this->modul[$i]->route,
                 'access' => $this->modul[$i]->access,

@@ -784,6 +784,33 @@ body {
   flex-wrap: wrap;
 }
 
+
+.prospek_moq {
+  display: flex;
+  flex-wrap: wrap;
+  align-items: flex-start;
+}
+.prospek_moq .input--moq {
+  width: 100px;
+}
+.prospek_moq .moq-item-val {
+  margin-right: 8px;
+}
+.prospek_moq .moq-item-val .val {
+  padding: 4px 12px;
+  border: 1px solid #ddd;
+  border-radius: 3px;
+  display: inline-block;
+  background-color: #f9f9f9;
+  transition: all .3s ease;
+}
+.prospek_moq .moq-item-val .del {
+}
+.prospek_moq .moq-val-child {
+  display: flex;
+  flex-wrap: wrap;
+}
+
 @media only screen and (max-width: 1120px) {
   .sidebar {
     left: -240px;

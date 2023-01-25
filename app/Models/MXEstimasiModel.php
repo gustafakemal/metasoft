@@ -329,7 +329,15 @@ class MXEstimasiModel extends Model
 
         return $lebar_buka;
     }
-    public function getFormulaOtomatis($NoProspek, $Alt, $jumlah)
+    private function getJumlahPesanan($roll_pcs, $finishing, $moq, $jumlahup, $meterroll, $pitch)
+    {
+        if ($roll_pcs == 'R') {
+            return $moq * 6000 * $jumlahup / $meterroll;
+        } else {
+            return $moq * 6000 * $jumlahup / ($pitch / 1000);
+        }
+    }
+    public function getFormulaOtomatis($NoProspek, $Alt, $jumlah = 0, $moq = 0)
     {
         $tbl_opsi = $this->db->table('MasterOpsi');
         $tbl_konstanta = $this->db->table('MX_Konstanta');
@@ -355,6 +363,9 @@ class MXEstimasiModel extends Model
         $panjang = $data_prospect->Panjang;
         $lebar = $data_prospect->Lebar;
         $pitch = ($roll_pcs == 'R') ? $panjang : $lebar;
+        if (!($moq == 0)) {
+            $jumlah = getJumlahPesanan($roll_pcs, $finishing, $moq, $jumlahup, $meterroll, $pitch);
+        }
         $centre_seal = ($data_prospect->CentreSeal) ? $data_prospect->CentreSeal : 0;
         $gusset = ($data_prospect->Gusset) ? $data_prospect->Gusset : 0;
         $ukuran_bottom = ($data_prospect->UkuranBottom) ? $data_prospect->UkuranBottom : 0;
@@ -445,7 +456,6 @@ class MXEstimasiModel extends Model
         $res['NoProspek'] = $NoProspek;
         $res['Alt'] = $Alt;
         $res['Jumlah'] = $jumlah;
-
         $res['roll_pcs'] = $roll_pcs;
         $res['jumlah_up'] = $jumlah_up;
         $res['lebar_film'] = $lebar_film;

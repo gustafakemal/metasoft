@@ -14,6 +14,11 @@
 
     <link rel="stylesheet" type="text/css" href="<?=site_url('third-party/DataTables/datatables.min.css');?>" />
 
+    <?php if (url_is('inputprospek*') || url_is('listprospek*')): ?>
+        <link rel="stylesheet" type="text/css" href="<?=site_url('third-party/select2/select2.min.css');?>" />
+        <link rel="stylesheet" type="text/css" href="<?=site_url('third-party/select2/select2-bootstrap.min.css');?>" />
+    <?php endif;?>
+
     <link rel="stylesheet" type="text/css" href="<?=site_url('css/style.css');?>" />
 </head>
 
@@ -186,6 +191,9 @@
 <?php endif;?>
 <?php if (url_is('queueestimasi*')): ?>
     <script type="module" src="<?=site_url('js/mxestimasi.js');?>"></script>
+<?php endif;?>
+<?php if (url_is('inputprospek*')): ?>
+    <script src="<?=site_url('third-party/select2/select2.js');?>"></script>
 <?php endif;?>
 <script src="<?=site_url('js/custom.js');?>"></script>
 

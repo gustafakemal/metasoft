@@ -103,7 +103,7 @@
             <div class="label">Dimensi (mm)</div>
         </div>
         <div class="col-sm-10">
-            <div class="val"><?= $data->Tebal;?> x <?= $data->Panjang;?> x <?= $data->Lebar;?> x <?= $data->Pitch;?></div>
+            <div class="val"><?= $data->Tebal;?> x <?= $data->Lebar;?> x <?= $data->Panjang;?> x <?= $data->Pitch;?></div>
         </div>
     </div>
 

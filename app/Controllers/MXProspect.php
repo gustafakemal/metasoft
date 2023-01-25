@@ -76,13 +76,49 @@ class MXProspect extends BaseController
         return true;
     }
 
+    private function attachmentVal()
+    {
+        return [
+            'attachment' => [
+                'label' => 'Image File',
+                'rules' => [
+                    'uploaded[attachment]',
+                    'mime_in[attachment,image/jpg,image/jpeg,image/gif,image/png,image/webp]',
+                    'max_size[attachment,2000]',
+                ],
+                'errors' => [
+                    'mime_in' => 'Mime-type attachment tidak diijinkan.',
+                    'max_size' => 'Ukuran attachment terlalu besar.'
+                ]
+            ],
+        ];
+    }
+
+    private function jumlahValidator($data_request, $form_errors)
+    {
+        if( ! array_key_exists('jml', $data_request) && ! array_key_exists('moq', $data_request) ) {
+            $jumlahValidator = [
+                'jml' => [
+                    'label' => 'Jumlah produk',
+                    'rules' => 'required',
+                    'errors' => [
+                        'required' => 'Field Jumlah harus diisi.'
+                    ]
+                ],
+            ];
+            if( ! $this->validate($jumlahValidator) ) {
+                return array_merge($form_errors, $this->validator->getErrors());
+            }
+        }
+
+        return null;
+    }
+
     /**
      * Endpoint ini digunakan untuk memproses inputan
      *
-     * @return RedirectResponse
-     * @throws \ReflectionException
      */
-    public function addProcess(): RedirectResponse
+    public function addProcess()
     {
         $data = $this->request->getPost();
         $alt_get = $this->request->getGet('alt');
@@ -103,68 +139,104 @@ class MXProspect extends BaseController
             $type = 'add';
         }
 
+        $form_errors = [];
+
 //        $type = ( $this->request->getGet('alt') !== null && $this->request->getGet('alt') == '1' ) ? 'alt' : 'add';
 
         $data_request = $this->transformDataRequest($data, $type);
         $data_request['Status'] = 10;
 
-        // Material & Tebal checking
-        $mat1_check = $this->material1_check($data_request['Material1'], $data['TebalMat1']);
-        $other_check = $this->other_material_check([
-            ['material' => $data_request['Material2'], 'tebal' => $data_request['TebalMat2']],
-            ['material' => $data_request['Material3'], 'tebal' => $data_request['TebalMat3']],
-            ['material' => $data_request['Material4'], 'tebal' => $data_request['TebalMat4']]
-        ]);
-        if(!$mat1_check) {
-            return redirect()->back()
-                ->with('error', 'Jenis Material1 & Tebal harus diisi');
+        $attch = $this->request->getFile('attachment');
+
+        /** Salah satu Roll_Pcs atau Finishing harus diisi
+         * Update validationRules */
+        $this->model->satuanRules($data_request);
+
+        /** Merge Jumlah Order ke Prospect Rules */
+        $form_errors = $this->jumlahValidator($data_request, $form_errors) ?: $form_errors;
+
+//        return $this->response->setJSON(['tap' => $this->model->jumlahOrderRules($data_request)]);
+
+        /** Merge Rule attachment, jika form attachment terisi */
+        if( $attch->getName() !== '' && $attch->isValid() ) {
+            if( ! $this->validate($this->attachmentVal())) {
+                $form_errors = array_merge($form_errors, $this->validator->getErrors());
+            }
         }
 
-        if(!$other_check) {
-            return redirect()->back()
-                ->with('error', 'Periksa jenis & tebal Mat1');
+        if( ! $this->model->validate($data_request) || count($form_errors) > 0 || count($this->model->errors()) > 0) {
+            $form_errors = array_merge($this->model->errors(), $form_errors);
+            return $this->response->setJSON([
+                'success' => false,
+                'dataError' => $form_errors,
+                'msg' => '<p>' . implode('</p><p>', $form_errors) . '</p>',
+            ]);
         }
-        //-------------
+
+        if( $attch->getName() !== '' && $attch->isValid() ) {
+            $filename = $data_request['NoProspek'] . '_' . $data_request['Alt'] . '.' . $attch->guessExtension();
+            $filepath = $attch->move(WRITEPATH . 'uploads/prospek', $filename);
+            if( file_exists(WRITEPATH . 'uploads/prospek/' . $filename) ) {
+                $data_request['Lampiran1'] = 1;
+                $data_request['FileLampiran1'] = $filename;
+            }
+        }
 
         /** Insert form isian ke DB */
-        $insert_data = $this->model->insert($data_request, false);
+        $this->model->insert($data_request, false);
 
-        if ( $insert_data ) {
-            if( array_key_exists('aksesori', $data_request) && count($data_request['aksesori']) > 0) {
-                $noprospek = $data_request['NoProspek'];
-                $data_aksesori = array_map(function ($item) use ($noprospek, $data_request) {
-                    return [
-                        'NoProspek' => $noprospek,
-                        'Alt' => $data_request['Alt'],
-                        'Aksesori' => $item
-                    ];
-                }, $data_request['aksesori']);
-                $pa_model = new \App\Models\MXProspekAksesoriModel();
-                $pa_model->insertBatch($data_aksesori);
-
-                $data_jumlah = array_map(function ($item) use ($noprospek, $data_request) {
-                    return [
-                        'NoProspek' => $noprospek,
-                        'Alt' => $data_request['Alt'],
-                        'Jumlah' => $item
-                    ];
-                }, $data_request['jml']);
-                $pj_model = new \App\Models\MXProspekJumlahModel();
-                $pj_model->insertBatch($data_jumlah);
-            }
-
-            if($type == 'alt' || $type == 'copyprospek') {
-                return redirect()->to('listprospek/edit/' . $data_request['NoProspek'] . '/' . $data_request['Alt'])
-                    ->with('success', 'Alternatif berhasil ditambahkan');
-            }
-
-            return redirect()->back()
-                            ->with('success', 'Data berhasil ditambahkan');
-        } else {
-            return redirect()->back()
-                ->with('error', '<p>' . implode('</p><p>', $this->model->errors()) . '</p>');
+        if( array_key_exists('aksesori', $data_request) && count($data_request['aksesori']) > 0) {
+            $data_aksesori = array_map(function ($item) use ($data_request) {
+                return [
+                    'NoProspek' => $data_request['NoProspek'],
+                    'Alt' => $data_request['Alt'],
+                    'Aksesori' => $item
+                ];
+            }, $data_request['aksesori']
+            );
+            $pa_model = new \App\Models\MXProspekAksesoriModel();
+            $pa_model->insertBatch($data_aksesori);
         }
 
+        $pj_model = new \App\Models\MXProspekJumlahModel();
+        if( array_key_exists('jml', $data_request) && count($data_request['jml']) > 0) {
+            $data_jumlah = [];
+            foreach ($data_request['jml'] as $item) {
+                $data_jumlah[] = [
+                    'NoProspek' => $data_request['NoProspek'],
+                    'Alt' => $data_request['Alt'],
+                    'Jumlah' => $item,
+                    'MOQ' => 0
+                ];
+            }
+            $pj_model->insertBatch($data_jumlah);
+        }
+
+        if( array_key_exists('moq', $data_request) && count($data_request['moq']) > 0) {
+            $data_moq = [];
+            foreach ($data_request['moq'] as $item) {
+                $data_moq[] = [
+                    'NoProspek' => $data_request['NoProspek'],
+                    'Alt' => $data_request['Alt'],
+                    'Jumlah' => 0,
+                    'MOQ' => $item
+                ];
+            }
+            $pj_model->insertBatch($data_moq);
+        }
+
+//        if($type == 'alt' || $type == 'copyprospek') {
+//            return redirect()->to('listprospek/edit/' . $data_request['NoProspek'] . '/' . $data_request['Alt'])
+//                    ->with('success', 'Alternatif berhasil ditambahkan');
+//        }
+
+        $success_msg = 'Data berhasil ditambahkan';
+        session()->setFlashdata('success', $success_msg);
+        return $this->response->setJSON([
+            'success' => true,
+            'msg' => $success_msg,
+            'redirect_url' => site_url('listprospek')
+        ]);
     }
 
     private function prosesDropdown($proses, $noprospek, $alt)
@@ -257,7 +329,11 @@ class MXProspect extends BaseController
                 $jml = [];
                 if($jml_query->getNumRows() > 0) {
                     foreach($jml_query->getResult() as $r) {
-                        $jml[] = $r->Jumlah;
+                        if($r->MOQ > 0) {
+                            $jml[] = $r->MOQ . 'MOQ';
+                        } else {
+                            $jml[] = $r->Jumlah;
+                        }
                     }
                 } else {
                     $jml[] = 0;
@@ -488,7 +564,8 @@ class MXProspect extends BaseController
                 ->with('success', 'Data berhasil diupdate.');
         } else {
             return redirect()->back()
-                ->with('error', '<p>' . implode('</p><p>', $this->model->errors()) . '</p>');
+                ->with('error', '<p>' . implode('</p><p>', $this->model->errors()) . '</p>')
+                ->withInput();
         }
     }
 

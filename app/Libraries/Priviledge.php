@@ -30,7 +30,9 @@ class Priviledge
         'api/common/dt_navigation',
         'parentmodule',
         'logout',
-        'auth/verify'
+        'auth/verify',
+        'mxbankdata/api',
+        'mxbankdata/api/([0-9]+)'
     ];
 
     public function __construct()

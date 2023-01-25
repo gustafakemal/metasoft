@@ -55,6 +55,11 @@ $routes->group('pelanggan', static function ($routes) {
     $routes->get('delete/(:num)', 'Customer::delete/$1');
 });
 
+$routes->group('mxbankdata', static function ($routes) {
+    $routes->post('api', 'MXBankData::apiGetAll');
+    $routes->get('api/(:num)', 'MXBankData::getById/$1');
+});
+
 $routes->group('sales', static function ($routes) {
     $routes->get('/', 'Sales::index');
     $routes->get('api', 'Sales::apiGetAll');
@@ -232,6 +237,7 @@ $routes->group('setting', static function ($routes) {
 $routes->group('inputprospek', static function ($routes) {
     $routes->get('/', 'MXProspect::add');
     $routes->post('/', 'MXProspect::addProcess');
+//    $routes->get('api/satuan/(:any)', 'MXProspect::formSatuan/$1');
     $routes->post('api', 'MXProspect::createAlt');
     $routes->post('edit', 'MXProspect::editProcess');
 });

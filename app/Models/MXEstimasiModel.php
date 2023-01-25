@@ -37,27 +37,27 @@ class MXEstimasiModel extends Model
         }
         return $jumlah_up;
     }
-    private function get_widthwtrim($roll_pcs, $finishing, $lebar_jadi, $color_bar)
+    private function get_widthwtrim($roll_pcs, $finishing, $lebar_buka, $color_bar)
     {
         $widthwtrim = 0;
         if ($roll_pcs == 'R') {
-            $widthwtrim = $lebar_jadi;
+            $widthwtrim = $lebar_buka;
         } else {
             if ($finishing == 'CS') {
-                $widthwtrim = $lebar_jadi + ($color_bar * 2);
+                $widthwtrim = $lebar_buka + ($color_bar * 2);
             } elseif ($finishing == 'CS Gusset') {
-                $widthwtrim = $lebar_jadi + ($color_bar * 2);
+                $widthwtrim = $lebar_buka + ($color_bar * 2);
             } elseif ($finishing == '4SS') {
-                $widthwtrim = $lebar_jadi + ($color_bar * 2);
+                $widthwtrim = $lebar_buka + ($color_bar * 2);
             } elseif ($finishing == '3SS') {
-                $widthwtrim = $lebar_jadi + ($color_bar * 4);
+                $widthwtrim = $lebar_buka + ($color_bar * 4);
             } elseif ($finishing == 'STP') {
-                $widthwtrim = $lebar_jadi;
+                $widthwtrim = $lebar_buka;
             }
         }
         return $widthwtrim;
     }
-    public function getPitch($roll_pcs, $pitch)
+    public function getJumlahPitch($roll_pcs, $pitch)
     {
         $jumlah_pitch = 0;
         if ($roll_pcs == 'R') {
@@ -71,33 +71,36 @@ class MXEstimasiModel extends Model
     {
         $circum = 0;
         if ($roll_pcs == 'R') {
-            $circum = $this->getPitch($roll_pcs, $pitch) * $pitch;
+            $circum = $this->getJumlahPitch($roll_pcs, $pitch) * $pitch;
         } else {
-            $circum = $this->getPitch($roll_pcs, $pitch) * $pitch;
+            $circum = $this->getJumlahPitch($roll_pcs, $pitch) * $pitch;
         }
         return $circum;
     }
-    private function getTtlWdtAsli($roll_pcs, $jumlah_up)
+    private function getTtlWdtAsli($roll_pcs, $width_w_trim, $jumlah_up)
     {
         $ttl_wdt_asli = 0;
         if ($roll_pcs == 'R') {
-            $ttl_wdt_asli = $jumlah_up;
+            $ttl_wdt_asli = $width_w_trim * $jumlah_up;
         } else {
-            $ttl_wdt_asli = $jumlah_up;
+            $ttl_wdt_asli = $width_w_trim * $jumlah_up;
         }
         return $ttl_wdt_asli;
 
     }
-    private function getTtlWidth($jumlah_up)
+    private function getTtlWidth($ttl_wdt_asli)
     {
         $ukuran_film = 0.0000;
         $teks_sql = "select UkCetak_Awal, Ukuran_Film, Rubroll from MX_UkuranFilm ";
         $teks_sql .= "where UkCetak_Awal in (select max(UkCetak_Awal) from MX_UkuranFilm where UkCetak_Awal<=" . $ttl_wdt_asli . ")";
-        $query_ukuranfilm = $this->query($teks_sql)->get();
+//        $query_ukuranfilm = $this->query($teks_sql)->get();
+        $result = $this->query($teks_sql)->getResult();
 
-        $result = $query_ukuranfilm->row();
-        $ukuran_film = $result->Ukuran_Film;
-        $rubroll = $result->Rubroll;
+        //      $result = $query_ukuranfilm->row();
+        $ukuran_film = $result[0]->Ukuran_Film;
+        $rubroll = $result[0]->Rubroll;
+        //$ukuran_film = $result->Ukuran_Film;
+        //$rubroll = $result->Rubroll;
         return $ukuran_film;
     }
     private function getWaste($roll_pcs, $running_meter)
@@ -107,7 +110,7 @@ class MXEstimasiModel extends Model
         $teks_sql = "select Waste from MX_WasteRoll ";
         $teks_sql .= "where Awal in (select max(Awal) from MX_WasteRoll where Awal<=" . $running_meter . ")";
         //$query_waste = $this->query($teks_sql)->get();
-
+        //dd($teks_sql);
         $result = $this->query($teks_sql)->getResult();
         //dd($result);
         $waste = $result[0]->Waste;
@@ -133,6 +136,8 @@ class MXEstimasiModel extends Model
         } else {
             if ($finishing == '4SS') {
                 $colorbar = 10;
+            } elseif ($finishing == 'STP') {
+                $colorbar = 6;
             } else {
                 $colorbar = 8;
             }
@@ -140,7 +145,7 @@ class MXEstimasiModel extends Model
         return $colorbar;
     }
 
-    public function getRunningMeter($roll_pcs, $jumlah, $meter_roll, $jumlah_up, $pitch, $lebar_film)
+    public function getRunningMeter($roll_pcs, $finishing, $jumlah, $meter_roll, $jumlah_up, $pitch, $lebar_film)
     {
         $running_meter = 0;
         if ($roll_pcs == 'R') {
@@ -200,7 +205,7 @@ class MXEstimasiModel extends Model
         }
         $hasil = array();
         $biaya = $pemakaian * $harga;
-        $hasil[] = ['biaya' => $biaya, 'pakai' => $pemakaian];
+        $hasil[] = ['harga' => $harga, 'biaya' => $biaya, 'pakai' => $pemakaian];
 
         return $hasil;
     }
@@ -302,7 +307,7 @@ class MXEstimasiModel extends Model
         $hasil[] = ['CoatingWeight' => $coating_weight, 'SolidContent' => $solid_content, 'Luas' => $luasan, 'Pakai' => $pakaiadhesive];
         return $hasil;
     }
-    private function getLebarBuka($roll_pcs, $finishing, $lebar, $centre_seal, $gusset, $meter_roll)
+    private function getLebarBuka($roll_pcs, $finishing, $lebar, $panjang, $centre_seal, $gusset, $meter_roll, $bottom, $color_bar)
     {
         $lebar_buka = 0;
         if ($roll_pcs == 'R') {
@@ -315,9 +320,10 @@ class MXEstimasiModel extends Model
             } elseif ($finishing == '4SS') {
                 $lebar_buka = $lebar * 2 + $gusset * 4 + 10 * 2;
             } elseif ($finishing == '3SS') {
-                $lebar_buka = 0;
+                $lebar_buka = $panjang * 2;
             } elseif ($finishing == 'STP') {
-                $lebar_buka = 0;
+                $lebar_buka = $panjang * 2 + $bottom * 2 + $color_bar * 6;
+                //dd($lebar_buka);
             }
         }
 
@@ -342,18 +348,17 @@ class MXEstimasiModel extends Model
         $res = array();
         $roll_pcs = $data_prospect->Roll_Pcs;
         $finishing = $data_prospect->Finishing;
-        $pitch = $data_prospect->Pitch;
         $jumlahup = $data_prospect->JumlahUp;
         $lebarfilm = $data_prospect->LebarFilm;
         $meterroll = $data_prospect->MeterRoll;
         $tebal = $data_prospect->Tebal;
         $panjang = $data_prospect->Panjang;
         $lebar = $data_prospect->Lebar;
+        $pitch = ($roll_pcs == 'R') ? $panjang : $lebar;
         $centre_seal = ($data_prospect->CentreSeal) ? $data_prospect->CentreSeal : 0;
         $gusset = ($data_prospect->Gusset) ? $data_prospect->Gusset : 0;
+        $ukuran_bottom = ($data_prospect->UkuranBottom) ? $data_prospect->UkuranBottom : 0;
         $meter_roll = ($data_prospect->MeterRoll) ? $data_prospect->MeterRoll : 0;
-        $lebar_buka = $this->getLebarBuka($roll_pcs, $finishing, $lebar, $centre_seal, $gusset, $meter_roll);
-        //dd($lebar_buka);
         $material1 = (!$data_prospect->Material1) ? 0 : $data_prospect->Material1;
         $tebalmat1 = (!$data_prospect->Material1) ? 0 : $data_prospect->TebalMat1;
         $material2 = (!$data_prospect->Material2) ? 0 : $data_prospect->Material2;
@@ -362,24 +367,32 @@ class MXEstimasiModel extends Model
         $tebalmat3 = (!$data_prospect->Material3) ? 0 : $data_prospect->TebalMat3;
         $material4 = (!$data_prospect->Material4) ? 0 : $data_prospect->Material4;
         $tebalmat4 = (!$data_prospect->Material4) ? 0 : $data_prospect->TebalMat4;
-
+        $nama_produk = $data_prospect->NamaProduk;
         $jenis_adhesive = $data_prospect->JenisAdhesive;
+        $jenis_tinta = $data_prospect->JenisTinta;
+
         $adhesive = ($jenis_adhesive == 0) ? '' : $data_prospect->Adhesive;
         $kapasitas = $data_prospect->Kapasitas;
-
+        //dd($adhesive);
         $color_bar = $this->getColorBar($roll_pcs, $finishing);
         //dd($color_bar);
+        $lebar_buka = $this->getLebarBuka($roll_pcs, $finishing, $lebar, $panjang, $centre_seal, $gusset, $meter_roll, $ukuran_bottom, $color_bar);
+        //dd($lebar_buka);
         $width_w_trim = $this->get_widthwtrim($roll_pcs, $finishing, $lebar_buka, $color_bar);
         //dd($width_w_trim);
         $jumlah_up = ($jumlahup == 0) ? $this->getJumlahUp($roll_pcs, $finishing, $color_bar, $width_w_trim) : $jumlahup;
         //dd($jumlah_up);
-        $lebar_film = ($lebarfilm == 0) ? $this->getTtlWidth($jumlah_up) : $lebarfilm;
+        $ttl_wdt_asli = $this->getTtlWdtAsli($roll_pcs, $width_w_trim, $jumlah_up);
+        //dd($ttl_wdt_asli);
+        $ttl_width = $this->getTtlWidth($ttl_wdt_asli);
+        //dd($ttl_width);
+        $lebar_film = ($lebarfilm == 0) ? $ttl_width : $lebarfilm;
         //dd($lebar_film);
-        $jumlah_pitch = $this->getPitch($roll_pcs, $pitch);
+        $jumlah_pitch = $this->getJumlahPitch($roll_pcs, $pitch);
         //dd($jumlah_pitch);
         $circum = $this->getCircum($roll_pcs, $pitch);
         //dd($circum);
-        $running_meter = $this->getRunningMeter($roll_pcs, $jumlah, $meterroll, $jumlah_up, $pitch, $lebar_film);
+        $running_meter = $this->getRunningMeter($roll_pcs, $finishing, $jumlah, $meter_roll, $jumlah_up, $pitch, $lebar_film);
         //dd($running_meter);
         $waste = $this->getWaste($roll_pcs, $running_meter);
         //dd($waste);
@@ -393,28 +406,35 @@ class MXEstimasiModel extends Model
         $arrMaterial4 = array();
         $arrMaterial1 = $this->getPemakaianMaterial($roll_pcs, $finishing, $material1, $lebar_buka, $pitch, $tebalmat1, $jumlah_pcs, $waste, $lebar_film, $waste_persiapan);
         //dd($arrMaterial1[0]['biaya']);
+        $harga_material1 = ($data_prospect->Material1 == 0) ? 0 : $arrMaterial1[0]['harga'];
         $pakai_material1 = ($data_prospect->Material1 == 0) ? 0 : $arrMaterial1[0]['pakai'];
         $biaya_material1 = ($data_prospect->Material1 == 0) ? 0 : $arrMaterial1[0]['biaya'];
+        $harga_material2 = 0;
         $pakai_material2 = 0;
         $biaya_material2 = 0;
+        $harga_material3 = 0;
         $pakai_material3 = 0;
         $biaya_material3 = 0;
+        $harga_material4 = 0;
         $pakai_material4 = 0;
         $biaya_material4 = 0;
         if ($data_prospect->Material2 != 0) {
             $arrMaterial2 = $this->getPemakaianMaterial($roll_pcs, $finishing, $material2, $lebar_buka, $pitch, $tebalmat2, $jumlah_pcs, $waste, $lebar_film, $waste_persiapan);
+            $harga_material2 = $arrMaterial2[0]['harga'];
             $pakai_material2 = $arrMaterial2[0]['pakai'];
             $biaya_material2 = $arrMaterial2[0]['biaya'];
         }
         if ($data_prospect->Material3 != 0) {
             //dd('Material3');
             $arrMaterial3 = $this->getPemakaianMaterial($roll_pcs, $finishing, $material3, $lebar_buka, $pitch, $tebalmat3, $jumlah_pcs, $waste, $lebar_film, $waste_persiapan);
+            $harga_material3 = $arrMaterial3[0]['harga'];
             $pakai_material3 = $arrMaterial3[0]['pakai'];
             $biaya_material3 = $arrMaterial3[0]['biaya'];
         }
         //dd($arrMaterial3);
         if ($data_prospect->Material4 != 0) {
             $arrMaterial4 = $this->getPemakaianMaterial($roll_pcs, $finishing, $material4, $lebar_buka, $pitch, $tebalmat4, $jumlah_pcs, $waste, $lebar_film, $waste_persiapan);
+            $harga_material4 = $arrMaterial4[0]['harga'];
             $pakai_material4 = $arrMaterial4[0]['pakai'];
             $biaya_material4 = $arrMaterial4[0]['biaya'];
         }
@@ -435,6 +455,10 @@ class MXEstimasiModel extends Model
         $res['running_meter'] = $running_meter;
         $res['waste'] = $waste;
         $res['waste_perisapan'] = $waste_persiapan;
+        $res['harga_material1'] = $harga_material1;
+        $res['harga_material2'] = $harga_material2;
+        $res['harga_material3'] = $harga_material3;
+        $res['harga_material4'] = $harga_material4;
         $res['pakai_material1'] = $pakai_material1;
         $res['pakai_material2'] = $pakai_material2;
         $res['pakai_material3'] = $pakai_material3;
@@ -540,11 +564,13 @@ class MXEstimasiModel extends Model
         //dd('Test 1');
 
         $where = "NoProspek='" . $NoProspek . "' AND Alt=" . $Alt;
+        //dd($where);
         $query_konstanta = $tbl_tinta->select('MX_Prospek_Tinta.Tinta Tinta, MX_Prospek_Tinta.Coverage Coverage, MX_JenisTinta.harga Harga, MX_JenisTinta.gsm Gsm')
             ->join('MX_JenisTinta', 'MX_Prospek_Tinta.Tinta = MX_JenisTinta.id', 'left')
             ->where($where)
             ->get();
         $rawdata = $query_konstanta->getResult();
+        //dd($rawdata);
         $data_pakaitinta = array();
         $totalpakaitinta = 0;
         foreach ($rawdata as $row):
@@ -557,7 +583,7 @@ class MXEstimasiModel extends Model
             $totalpakaitinta += $pakai;
             $data_pakaitinta[] = ['tinta' => $tinta, 'harga' => $harga, 'pakai' => $pakai, 'biaya' => $biaya];
         endforeach;
-        //dd('Test 2');
+        //dd($data_pakaitinta);
 
         $query_hargasolvent = $tbl_solventtinta->select('id, upper(nama) nama, harga')
             ->get();

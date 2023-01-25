@@ -91,13 +91,10 @@
 <div class="form-group row">
     <label class="col-lg-2 col-sm-12 col-form-label">Dimensi (mm)</label>
     <div class="col-sm-2">
-        <input value="" disabled class="form-control" id="tebal" name="Tebal">
+        <input value="" disabled class="form-control" id="lebar" name="Lebar">
     </div>
     <div class="col-sm-2">
         <input value="" disabled class="form-control" id="panjang" name="Panjang">
-    </div>
-    <div class="col-sm-2">
-        <input value="" disabled class="form-control" id="lebar" name="Lebar">
     </div>
     <div class="col-sm-2">
         <input value="" disabled class="form-control" id="pitch" name="Pitch">
@@ -332,7 +329,9 @@
                 <tbody>
                     <!-- looping sesuai alt jumlah -->
                     <tr class="odd">
-                        <td><!-- jumlah --></td>
+                        <td>
+                            <!-- jumlah -->
+                        </td>
                         <td></td>
                         <td></td>
                         <td></td>
@@ -352,6 +351,5 @@
         <button type="button" class="btn btn-primary">Simpan</button>
     </div>
 </div>
-
 
 <?=$this->endSection()?>

@@ -276,8 +276,6 @@ $(function () {
         const formData = new FormData(this);
         formData.append("attachment", attachment)
 
-        console.log(attachment);
-
         $.ajax({
             type: 'POST',
             url: `${HOST}/inputprospek`,
@@ -287,17 +285,27 @@ $(function () {
             contentType: false,
             cache: false,
             beforeSend: function () {
-                $('form[name="input_proses"] button').prop('disabled', true)
+                $('form[name="input_proses"] button:not(.show-produk)').prop('disabled', true)
                 $('form[name="input_proses"] input').prop('readonly', true)
                 $('form[name="input_proses"] select').attr('readonly', true)
                 $('form[name="input_proses"] .custom-file-label').addClass('readonly')
             },
             success: function (response) {
                 if(response.success) {
-                    $('.form_msg').html(`<div class="alert alert-success">${response.msg}</div>`);
+                    // $('.form_msg').html(`<div class="alert alert-success">${response.msg}</div>`);
+                    window.location.href = response.redirect_url
                 } else {
                     for(const property in response.dataError) {
                         $(`input[name="${property}"], select[name="${property}"]`).addClass('border-danger')
+                        if(property === 'jml') {
+                            $(`input[name="Jumlah"]`).addClass('border-danger');
+                        }
+                        if(property === 'Pemesan') {
+                            $(`.select2-container--bootstrap .select2-selection`).addClass('border-danger');
+                        }
+                        if(property === 'attachment') {
+                            $(`.custom-file-label`).addClass('border-danger');
+                        }
                     }
                     $('.form_msg').html(`<div class="alert alert-danger">${response.msg}</div>`);
                     $('.form_msg, html, body').animate({
@@ -306,13 +314,91 @@ $(function () {
                 }
             },
             complete: function () {
-                $('form[name="input_proses"] button').prop('disabled', false)
+                $('form[name="input_proses"] button:not(.show-produk)').prop('disabled', false)
                 // $('form[name="input_proses"] input, form[name="input_proses"] select').prop('readonly', false)
                 $('form[name="input_proses"] input').prop('readonly', false)
                 $('form[name="input_proses"] select').attr('readonly', false)
                 $('form[name="input_proses"] .custom-file-label').removeClass('readonly')
             }
         })
+    })
+
+    $('.show-produk').on('click', function (e) {
+        const jenisproduk = $('select[name="JenisProduk"] option:selected').val();
+        $('#dbProduk').modal({
+            show: true,
+            backdrop: 'static'
+        })
+
+        let dtProduk;
+        const dtConfigProduk = {
+            columnDefs: {
+                falseSearchable: [0],
+                falseOrderable: [0],
+                width: ['0(30)'],
+            },
+            createdRow: ['No', 'Prospek', 'Alt', 'Nama Produk', 'Material1 1', 'Material1 2', 'Material1 3', 'Material1 4', 'Tinta', 'Tinta Khusus', 'Adhesive', 'Action'],
+            scrollX: true
+        }
+
+        dtProduk = new Datatable('#dataDbProduk', dtConfigProduk, `${HOST}/mxbankdata/api`, 'POST', {jenisproduk})
+        //dtProduk.load();
+
+        if( ! $.fn.DataTable.isDataTable( '#dataDbProduk' ) ) {
+            dtProduk.load()
+        } else {
+            dtProduk.reload()
+        }
+    })
+
+    $('#dbProduk').on('click', '.load-produk-btn', function (e) {
+        const id = $(this).attr('data-id')
+
+        $('#dbProduk').modal('hide')
+
+        $.ajax({
+            type: 'GET',
+            url: `${HOST}/mxbankdata/api/${id}`,
+            beforeSend: function () {
+                $('form[name="input_proses"] button').prop('disabled', true)
+                $('form[name="input_proses"] input').prop('readonly', true)
+                $('form[name="input_proses"] select').attr('readonly', true)
+                $('form[name="input_proses"] .custom-file-label').addClass('readonly')
+            },
+            success: function (response) {
+                if(response.success) {
+                    console.log($(`select[name="Pemesan"] option[value="5"]`).text())
+                    for(const property in response.data) {
+                        // console.log(property)
+                        $(`input[name="${property}"]`).val(response.data[property])
+                        $(`select[name="${property}"] option[value="${response.data[property]}"]`).prop('selected', true)
+                        if(property === 'Pemesan') {
+                            $(`select[name="${property}"] option[value="${response.data[property]}"]`).attr('selected', 'selected').trigger('change')
+                        }
+                    }
+                }
+            },
+            complete: function () {
+                $('form[name="input_proses"] button').prop('disabled', false)
+                $('form[name="input_proses"] input').prop('readonly', false)
+                $('form[name="input_proses"] select').attr('readonly', false)
+                $('form[name="input_proses"] .custom-file-label').removeClass('readonly')
+            }
+        })
+    })
+
+    $('select[name="JenisProduk"]').on('change', function (e) {
+        const val = $(this).val()
+
+        if( val === '' ) {
+            $('.show-produk').prop('disabled', true)
+        } else {
+            $('.show-produk').prop('disabled', false)
+        }
+    })
+
+    $('#dbProduk').on('hidden.bs.modal', function (event) {
+        $('#dataDbProduk').DataTable().clear().draw().fnDestroy();
     })
 
 })

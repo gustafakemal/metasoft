@@ -7,6 +7,7 @@ use CodeIgniter\HTTP\IncomingRequest;
 use CodeIgniter\HTTP\Request;
 use CodeIgniter\I18n\Time;
 use CodeIgniter\Model;
+use Config\Services;
 
 class MXProspectModel extends Model
 {
@@ -14,7 +15,7 @@ class MXProspectModel extends Model
     protected $useTimestamps = true;
     protected $createdField = 'Created';
     protected $updatedField = 'Updated';
-    protected $allowedFields = ['NoProspek', 'Alt', 'Tanggal', 'NamaProduk', 'Pemesan', 'Segmen', 'Konten', 'JenisProduk', 'Tebal', 'Panjang', 'Lebar', 'Pitch', 'Material1', 'TebalMat1', 'Material2', 'TebalMat2', 'Material3', 'TebalMat3', 'Material4', 'TebalMat4', 'Warna', 'Eyemark', 'RollDirection', 'Catatan', 'MaxJoin', 'WarnaTape', 'BagMaking', 'Bottom', 'OpenForFilling', 'Roll_Pcs', 'Finishing', 'Toleransi', 'Parsial', 'Keterangan', 'Area', 'Jalur', 'Kapasitas', 'Created', 'CreatedBy', 'Updated', 'UpdatedBy', 'Status', 'JenisTinta', 'JenisAdhesive', 'JenisPieces', 'Sales', 'Estimator', 'EstimasiUpdated', 'EstimasiUpdatedBy', 'EstimasiChecked', 'EstimasiCheckedBy', 'MeterRoll', 'Gusset', 'CentreSeal', 'Prioritas', 'JumlahUp', 'LebarFilm'];
+    protected $allowedFields = ['NoProspek', 'Alt', 'Tanggal', 'NamaProduk', 'Pemesan', 'Segmen', 'Konten', 'JenisProduk', 'Tebal', 'Panjang', 'Lebar', 'Pitch', 'Material1', 'TebalMat1', 'Material2', 'TebalMat2', 'Material3', 'TebalMat3', 'Material4', 'TebalMat4', 'Warna', 'Eyemark', 'RollDirection', 'Catatan', 'MaxJoin', 'WarnaTape', 'BagMaking', 'Bottom', 'OpenForFilling', 'Roll_Pcs', 'Finishing', 'Toleransi', 'Parsial', 'Keterangan', 'Area', 'Jalur', 'Kapasitas', 'Created', 'CreatedBy', 'Updated', 'UpdatedBy', 'Status', 'JenisTinta', 'JenisAdhesive', 'JenisPieces', 'Sales', 'Estimator', 'EstimasiUpdated', 'EstimasiUpdatedBy', 'EstimasiChecked', 'EstimasiCheckedBy', 'MeterRoll', 'Gusset', 'CentreSeal', 'Prioritas', 'JumlahUp', 'LebarFilm', 'Lampiran1', 'FileLampiran1'];
 
     protected $validationRules = [
         'NamaProduk' => 'required',
@@ -38,6 +39,12 @@ class MXProspectModel extends Model
         ],
         'Segmen' => [
             'required' => 'Field Segmen harus diisi.',
+        ],
+        'JenisProduk' => [
+            'required' => 'Field Jenis Produk harus diisi.',
+        ],
+        'Konten' => [
+            'required' => 'Field Konten harus diisi.',
         ],
         'Jalur' => [
             'required' => 'Field Jalur harus diisi.',
@@ -73,19 +80,20 @@ class MXProspectModel extends Model
             $this->setValidationMessage('Roll_Pcs', ['required' => 'Field Satuan wajib diisi']);
         }
 
-        if( $data_request['Roll_Pcs'] && (! array_key_exists('Finishing', $data_request) || !$data_request['Finishing']) )
-        {
-            $this->setValidationRule('Finishing', 'required');
-            $this->setValidationMessage('Finishing', ['required' => 'Field Satuan (Finishing) wajib diisi']);
-        }
+//        if( $data_request['Roll_Pcs'] && (! array_key_exists('Finishing', $data_request) || !$data_request['Finishing']) )
+//        {
+//            $this->setValidationRule('Finishing', 'required');
+//            $this->setValidationMessage('Finishing', ['required' => 'Field Satuan (Finishing) wajib diisi']);
+//        }
     }
 
     public function jumlahOrderRules($data_request)
     {
-        if( ! array_key_exists('jml', $data_request) ) {
-            $this->setValidationRule('Jumlah', 'required');
-            $this->setValidationMessage('Jumlah', ['required' => 'Field Jumlah wajib diisi']);
-        }
+//        if( ! array_key_exists('jml', $data_request) ) {
+//            $this->setValidationRule('Jumlah', 'required');
+//            $this->setValidationMessage('Jumlah', ['required' => 'Field Jumlah wajib diisi']);
+//        }
+
     }
 
     public function getAlternatif()

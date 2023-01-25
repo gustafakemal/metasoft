@@ -84,10 +84,34 @@ class MXProspect extends BaseController
                 'rules' => [
                     'uploaded[attachment]',
                     'mime_in[attachment,image/jpg,image/jpeg,image/gif,image/png,image/webp]',
-                    'max_size[attachment,200]',
+                    'max_size[attachment,2000]',
                 ],
+                'errors' => [
+                    'mime_in' => 'Mime-type attachment tidak diijinkan.',
+                    'max_size' => 'Ukuran attachment terlalu besar.'
+                ]
             ],
         ];
+    }
+
+    private function jumlahValidator($data_request, $form_errors)
+    {
+        if( ! array_key_exists('jml', $data_request) && ! array_key_exists('moq', $data_request) ) {
+            $jumlahValidator = [
+                'jml' => [
+                    'label' => 'Jumlah produk',
+                    'rules' => 'required',
+                    'errors' => [
+                        'required' => 'Field Jumlah harus diisi.'
+                    ]
+                ],
+            ];
+            if( ! $this->validate($jumlahValidator) ) {
+                return array_merge($form_errors, $this->validator->getErrors());
+            }
+        }
+
+        return null;
     }
 
     /**
@@ -115,6 +139,8 @@ class MXProspect extends BaseController
             $type = 'add';
         }
 
+        $form_errors = [];
+
 //        $type = ( $this->request->getGet('alt') !== null && $this->request->getGet('alt') == '1' ) ? 'alt' : 'add';
 
         $data_request = $this->transformDataRequest($data, $type);
@@ -127,9 +153,9 @@ class MXProspect extends BaseController
         $this->model->satuanRules($data_request);
 
         /** Merge Jumlah Order ke Prospect Rules */
-        $this->model->jumlahOrderRules($data_request);
+        $form_errors = $this->jumlahValidator($data_request, $form_errors) ?: $form_errors;
 
-        $form_errors = [];
+//        return $this->response->setJSON(['tap' => $this->model->jumlahOrderRules($data_request)]);
 
         /** Merge Rule attachment, jika form attachment terisi */
         if( $attch->getName() !== '' && $attch->isValid() ) {
@@ -138,47 +164,65 @@ class MXProspect extends BaseController
             }
         }
 
-        if( ! $this->model->validate($data_request) ) {
-            $form_errors = array_merge($form_errors, $this->model->errors());
+        if( ! $this->model->validate($data_request) || count($form_errors) > 0 || count($this->model->errors()) > 0) {
+            $form_errors = array_merge($this->model->errors(), $form_errors);
             return $this->response->setJSON([
                 'success' => false,
-                'dataError' => $this->model->errors(),
+                'dataError' => $form_errors,
                 'msg' => '<p>' . implode('</p><p>', $form_errors) . '</p>',
             ]);
+        }
+
+        if( $attch->getName() !== '' && $attch->isValid() ) {
+            $filename = $data_request['NoProspek'] . '_' . $data_request['Alt'] . '.' . $attch->guessExtension();
+            $filepath = $attch->move(WRITEPATH . 'uploads/prospek', $filename);
+            if( file_exists(WRITEPATH . 'uploads/prospek/' . $filename) ) {
+                $data_request['Lampiran1'] = 1;
+                $data_request['FileLampiran1'] = $filename;
+            }
         }
 
         /** Insert form isian ke DB */
         $this->model->insert($data_request, false);
 
         if( array_key_exists('aksesori', $data_request) && count($data_request['aksesori']) > 0) {
-            $noprospek = $data_request['NoProspek'];
-            $data_aksesori = array_map(function ($item) use ($noprospek, $data_request) {
+            $data_aksesori = array_map(function ($item) use ($data_request) {
                 return [
-                    'NoProspek' => $noprospek,
+                    'NoProspek' => $data_request['NoProspek'],
                     'Alt' => $data_request['Alt'],
                     'Aksesori' => $item
                 ];
-                }, $data_request['aksesori']
+            }, $data_request['aksesori']
             );
             $pa_model = new \App\Models\MXProspekAksesoriModel();
             $pa_model->insertBatch($data_aksesori);
+        }
 
-            $data_jumlah = array_map(function ($item) use ($noprospek, $data_request) {
-                return [
-                    'NoProspek' => $noprospek,
+        $pj_model = new \App\Models\MXProspekJumlahModel();
+        if( array_key_exists('jml', $data_request) && count($data_request['jml']) > 0) {
+            $data_jumlah = [];
+            foreach ($data_request['jml'] as $item) {
+                $data_jumlah[] = [
+                    'NoProspek' => $data_request['NoProspek'],
                     'Alt' => $data_request['Alt'],
-                    'Jumlah' => $item
+                    'Jumlah' => $item,
+                    'MOQ' => 0
                 ];
-                }, $data_request['jml']
-            );
-            $pj_model = new \App\Models\MXProspekJumlahModel();
+            }
             $pj_model->insertBatch($data_jumlah);
         }
 
-        if( $attch->getName() !== '' && $attch->isValid() ) {
-
-            $filename = $data_request['NoProspek'] . '_' . $data_request['Alt'] . '.' . $attch->guessExtension();
-            $filepath = $attch->move(WRITEPATH . 'uploads/prospek', $filename);
+        if( array_key_exists('moq', $data_request) && count($data_request['moq']) > 0) {
+            $data_moq = [];
+            foreach ($data_request['moq'] as $item) {
+                $data_moq[] = [
+                    'NoProspek' => $data_request['NoProspek'],
+                    'Alt' => $data_request['Alt'],
+                    'Jumlah' => 0,
+                    'MOQ' => $item
+                ];
+            }
+            $pj_model->insertBatch($data_moq);
         }
 
 //        if($type == 'alt' || $type == 'copyprospek') {
@@ -186,9 +230,12 @@ class MXProspect extends BaseController
 //                    ->with('success', 'Alternatif berhasil ditambahkan');
 //        }
 
+        $success_msg = 'Data berhasil ditambahkan';
+        session()->setFlashdata('success', $success_msg);
         return $this->response->setJSON([
             'success' => true,
-            'msg' => 'Data berhasil ditambahkan'
+            'msg' => $success_msg,
+            'redirect_url' => site_url('listprospek')
         ]);
     }
 
@@ -282,7 +329,11 @@ class MXProspect extends BaseController
                 $jml = [];
                 if($jml_query->getNumRows() > 0) {
                     foreach($jml_query->getResult() as $r) {
-                        $jml[] = $r->Jumlah;
+                        if($r->MOQ > 0) {
+                            $jml[] = $r->MOQ . 'MOQ';
+                        } else {
+                            $jml[] = $r->Jumlah;
+                        }
                     }
                 } else {
                     $jml[] = 0;

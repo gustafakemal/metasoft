@@ -55,6 +55,11 @@ $routes->group('pelanggan', static function ($routes) {
     $routes->get('delete/(:num)', 'Customer::delete/$1');
 });
 
+$routes->group('mxbankdata', static function ($routes) {
+    $routes->post('api', 'MXBankData::apiGetAll');
+    $routes->get('api/(:num)', 'MXBankData::getById/$1');
+});
+
 $routes->group('sales', static function ($routes) {
     $routes->get('/', 'Sales::index');
     $routes->get('api', 'Sales::apiGetAll');

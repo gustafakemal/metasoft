@@ -21,6 +21,7 @@ class MXBankDataModel extends \CodeIgniter\Model
             ->where('MX_BankData.JenisProduk', $jenisproduk)
             ->get();
     }
+	
     public function getByID($id)
     {
         return $this->select('MX_BankData.*, CF.NamaPemesan NamaPemesan, JP.nama KetJenisProduk, M1.Nama as NamaMaterial1, M2.Nama as NamaMaterial2, M3.Nama as NamaMaterial3, M4.Nama as NamaMaterial4, AD.nama KetJenisAdhesive')

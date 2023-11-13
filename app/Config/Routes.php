@@ -57,7 +57,14 @@ $routes->group('pelanggan', static function ($routes) {
 
 $routes->group('cekmodel', static function ($routes) {
     $routes->get('/', 'MXCekModel::index');
+    $routes->get('print', 'MXCekModel::testPrint');
     $routes->get('getBankData', 'MXCekModel::getBankData');
+    $routes->get('getHasilKalkulasi/(:num)/(:num)/(:num)/(:num)', 'MXCekModel::getHasilKalkulasi/$1/$2/$3/$4');
+});
+
+$routes->group('mxbankdata', static function ($routes) {
+    $routes->post('api', 'MXBankData::apiGetAll');
+    $routes->get('api/(:num)', 'MXBankData::getById/$1');
 });
 
 $routes->group('sales', static function ($routes) {
@@ -236,6 +243,8 @@ $routes->group('setting', static function ($routes) {
 $routes->group('inputprospek', static function ($routes) {
     $routes->get('/', 'MXProspect::add');
     $routes->post('/', 'MXProspect::addProcess');
+    $routes->get('detail/(:any)/(:num)', 'MXProspect::attachmentDownload/$1/$2'); // Untuk download attachment
+//    $routes->get('api/satuan/(:any)', 'MXProspect::formSatuan/$1');
     $routes->post('api', 'MXProspect::createAlt');
     $routes->post('edit', 'MXProspect::editProcess');
 });
@@ -259,12 +268,17 @@ $routes->group('queueestimasi', static function ($routes) {
     $routes->get('api', 'MXEstimasi::apiGetAll');
     $routes->get('edit/(:any)/(:num)', 'MXEstimasi::edit/$1/$2');
     $routes->get('calculate', 'MXEstimasi::calculate');
+    $routes->post('calculate', 'MXEstimasi::saveEstimasi');
     $routes->post('set', 'MXEstimasi::submitKelengkapanData');
+    $routes->get('detil', 'MXEstimasi::hasil');
+  
 });
 
-$routes->group('listestimasi', static function ($routes) {
-    $routes->get('/', 'MXEstimasi::listhasil');
-
+$routes->group('hasilestimasi', static function ($routes) {
+    $routes->get('/', 'MXEstimasi::hasil');
+    $routes->get('ringkas/(:any)/(:num)', 'MXEstimasi::hasilEstimasiRingkas/$1/$2');
+    $routes->get('detail/(:any)/(:num)', 'MXEstimasi::hasilEstimasiDetail/$1/$2');
+    $routes->get('printdetail/(:any)', 'MXEstimasi::printEstimasiDetail/$1');
 });
 
 $routes->group('produk', static function ($routes) {

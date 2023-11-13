@@ -8,6 +8,8 @@ namespace App\Libraries;
  * Kelas ini HANYA Di KONSUMSI oleh kelas Filter (App/Config/Filter)
  * menyediakan fungsi-fungsi untuk menentukan path/route mana saja
  * yang boleh/tidak oleh user.
+ * 
+ * Pendefinisian tipe akses sendiri dilakukan di kelas AccessDefinition
  *
  */
 
@@ -32,7 +34,13 @@ class Priviledge
         'logout',
         'auth/verify',
         'cekmodel',
+        'cekmodel/print',
         'cekmodel/getBankData',
+        'cekmodel/getHasilKalkulasi/([0-9]+)/([0-9]+)/([0-9]+)/([0-9]+)',
+        'cekmodel/getHasilEstimasi',
+        'hasilestimasi/printdetail/([0-9]+)/([0-9]+)',
+        'mxbankdata/api',
+        'mxbankdata/api/([0-9]+)',
     ];
 
     public function __construct()
